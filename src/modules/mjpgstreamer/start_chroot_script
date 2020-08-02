@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# <Script Name>
-# <Description what this module does>
-# Written by <Author>
+# MJPGstreamer installer
+# Builds MJPGstreamer for rPi devices
+# Written by Raymond Himle (Adapted from the OctoPi image creation scripts. Thanks Gina and Guysoft!)
 # GPL V3
 ########
 

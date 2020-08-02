@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# <Script Name>
-# <Description what this module does>
-# Written by <Author>
+# Klipper + Moonraker install script
+# Script that installs Klipper and the Moonraker API service
+# Written by Raymond Himle
+# Thanks to KevinOConnor and Arksine
 # GPL V3
 ########
 
@@ -17,7 +18,7 @@ unpack /filesystem/home/pi /home/pi pi
 unpack /filesystem/home/root /root root
 unpack /filesystem/boot /boot
 
-echo "This is an example module, install and set up what you need here!"
+echo "Installing Klipper and Moonraker"
 echo "$MAINSAILOS_VAR"
 
 #sudo -u pi bash /home/pi/./install-custompios.sh

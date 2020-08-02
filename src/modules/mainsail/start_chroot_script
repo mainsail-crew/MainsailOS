@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# <Script Name>
-# <Description what this module does>
-# Written by <Author>
+# MainSail installation script
+# Installs MainSail and nginx
+# Written by Raymond Himle
+# Thanks to meteyou
 # GPL V3
 ########
 
@@ -17,8 +18,7 @@ unpack /filesystem/home/pi /home/pi pi
 unpack /filesystem/home/root /root root
 unpack /filesystem/boot /boot
 
-echo "This is an example module, install and set up what you need here!"
-echo "$MAINSAILOS_VAR"
+echo "Installing nginx and Mainsail"
 
 apt update
 apt install nginx -y
