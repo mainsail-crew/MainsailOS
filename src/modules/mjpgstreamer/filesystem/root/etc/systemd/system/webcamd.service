@@ -1,0 +1,14 @@
+
+[Unit]
+Description=the OctoPi webcam daemon with the user specified config
+
+[Service]
+WorkingDirectory=/root/bin
+StandardOutput=append:/var/log/webcamd.log
+StandardError=append:/var/log/webcamd.log
+ExecStart=/root/bin/webcamd
+Restart=always
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

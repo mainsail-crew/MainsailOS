@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# <Script Name>
+# <Description what this module does>
+# Written by <Author>
+# GPL V3
+########
+
+
+# Source error handling, leave this in place
+set -x
+set -e
+
+source /common.sh
+install_cleanup_trap
+
+unpack /filesystem/home/pi /home/pi pi
+unpack /filesystem/home/root /root root
+unpack /filesystem/boot /boot
+
+echo "This is an example module, install and set up what you need here!"
+echo "$MAINSAILOS_VAR"
+
+apt update
+apt install nginx -y
+rm /etc/nginx/sites-enabled/default
+ln -s /etc/nginx/sites-available/mainsail /etc/nginx/sites-enabled/
+cd /home/pi/mainsail/
+sudo -u pi wget -q -O mainsail.zip https://github.com/meteyou/mainsail/releases/download/v0.1.0/mainsail-beta-0.1.0.zip && unzip mainsail.zip && rm mainsail.zip
+# Run installation steps defined above
+
+# Unpack root at the end, so files are modified before
+unpack /filesystem/root /
