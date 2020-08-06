@@ -1,0 +1,1 @@
+{"webcam":{"url":"webcam/?action=stream"},"gui":{"general":{"printername":""},"dashboard":{"boolWebcam":true,"boolTempchart":true,"boolConsole":false,"hiddenMacros":[],"hiddenTempChart":[]},"webcam":{"bool":true},"gcodefiles":{"countPerPage":10}}}

@@ -9,6 +9,10 @@ upstream apiserver {
     server 127.0.0.1:7125;
 }
 
+location /webcam/ {
+	proxy_pass http://mjpgstreamer/;
+}
+
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
@@ -79,4 +83,8 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Scheme $scheme;
     }
+	
+	location /webcam/ {
+		proxy_pass http://mjpgstreamer/;
+	}
 }
