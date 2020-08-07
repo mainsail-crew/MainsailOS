@@ -9,7 +9,7 @@ upstream apiserver {
     server 127.0.0.1:7125;
 }
 
-location mjpgstreamer {
+upstream mjpgstreamer {
     ip_hash;
     server 127.0.0.1:8080;
 }
