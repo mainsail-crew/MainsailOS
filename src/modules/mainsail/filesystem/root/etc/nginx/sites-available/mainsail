@@ -9,8 +9,9 @@ upstream apiserver {
     server 127.0.0.1:7125;
 }
 
-location /webcam/ {
-	proxy_pass http://mjpgstreamer/;
+location mjpgstreamer {
+    ip_hash;
+    server 127.0.0.1:8080;
 }
 
 server {
@@ -84,7 +85,7 @@ server {
         proxy_set_header X-Scheme $scheme;
     }
 	
-	location /webcam/ {
-		proxy_pass http://mjpgstreamer/;
-	}
+    location /webcam/ {
+        proxy_pass http://mjpgstreamer/;
+    }
 }
