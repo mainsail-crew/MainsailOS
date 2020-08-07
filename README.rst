@@ -12,11 +12,11 @@ Requirements
 #. git
 #. sudo (the script itself calls it, running as root without sudo won't work)
 
-Build OctoPi From within OctoPi / Raspbian / Debian / Ubuntu
+Build MainsailOS From within MainsailOS / Raspbian / Debian / Ubuntu
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-OctoPi can be built from Debian, Ubuntu, Raspbian, or even OctoPi.
-Build requires about 2.5 GB of free space available.
+MainsailOS can be built from Debian, Ubuntu, Raspbian, or even OctoPi.
+Build requires about 5 GB of free space available.
 You can build it by issuing the following commands::
 
     sudo apt-get install gawk util-linux qemu-user-static git p7zip-full python3
