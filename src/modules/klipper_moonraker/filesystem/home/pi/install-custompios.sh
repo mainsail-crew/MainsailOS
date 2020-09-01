@@ -65,7 +65,7 @@ KLIPPY_USER=$USER
 
 KLIPPY_EXEC=${KLIPPER_PYTHON_DIR}/bin/python
 
-KLIPPY_ARGS="${KLIPPER_SOURCE_DIR}/klippy/klippy.py ${HOME}/printer.cfg -l /tmp/klippy.log"
+KLIPPY_ARGS="${KLIPPER_SOURCE_DIR}/klippy/klippy.py ${HOME}/klipper_config/printer.cfg -l /tmp/klippy.log -a /tmp/klippy_uds"
 
 EOF
 }
@@ -103,7 +103,7 @@ MOONRAKER_USER=$USER
 
 MOONRAKER_EXEC=${MOONRAKER_PYTHON_DIR}/bin/python
 
-MOONRAKER_ARGS="${MOONRAKER_SOURCE_DIR}/moonraker/moonraker.py"
+MOONRAKER_ARGS="${MOONRAKER_SOURCE_DIR}/moonraker/moonraker.py -c ${HOME}/klipper_config/moonraker.conf"
 
 EOF
 }

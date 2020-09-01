@@ -20,15 +20,10 @@ echo "Installing Klipper and Moonraker"
 echo "$KLIPPER_MOONRAKER_VAR"
 
 apt update
-apt install wget git -y
+apt install wget git gpiod -y
 cd /home/pi
 sudo -u pi git clone https://github.com/KevinOConnor/klipper
-cd /home/pi/klipper
-sudo -u pi git remote add arksine https://github.com/Arksine/klipper.git; sudo -u pi git fetch arksine; sudo -u pi git checkout arksine/dev-moonraker-testing
-cd /home/pi
 sudo -u pi git clone https://github.com/Arksine/moonraker.git
 sudo -u pi bash /home/pi/./install-custompios.sh
-sed -i -e '$i \cp -n /boot/printer.cfg /home/pi/printer.cfg; chown pi:pi /home/pi/printer.cfg &\n' /etc/rc.local
-sudo -u pi mkdir /home/pi/sdcard
 rm /home/pi/install-custompios.sh
 # Run installation steps defined above
