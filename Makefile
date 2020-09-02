@@ -1,18 +1,24 @@
 all: build
 
-build: raspbian_latest-raspbian.zip
-	docker-compose up -d 
+build: verifyimage
+	docker-compose up -d
 	docker exec -it mainsailos-build build
 	docker-compose down
 
-raspbian_latest-raspbian.zip:
-	cd src/image
-	curl -J -L  http://downloads.raspberrypi.org/raspbian_latest > src/image/raspbian_latest-raspbian.zip
+verifyimage:
+	@if [ ! -f "src/image/raspbian_latest-raspbian.zip" ]; then echo "Raspbian image does not exist. Starting Download..."; curl -J -L  http://downloads.raspberrypi.org/raspbian_latest > src/image/raspbian_latest-raspbian.zip; else \
+	echo "Raspbian image found. Starting checksum verification"; curl -J -L http://downloads.raspberrypi.org/raspbian_latest.sha1 > src/image/raspbian_latest-raspbian.zip.sha1; \
+	IMAGE_SHA1=`sha1sum src/image/raspbian_latest-raspbian.zip | awk '{print $$1}'`; \
+	DL_SHA1=`awk '{print $$1}' src/image/raspbian_latest-raspbian.zip.sha1`; \
+	if [ "$$IMAGE_SHA1" != "$$DL_SHA1" ]; then echo "SHAs do not match."; echo "Got $$IMAGE_SHA1"; echo "Expected $$DL_SHA1"; echo "Starting image download"; curl -J -L  http://downloads.raspberrypi.org/raspbian_latest > src/image/raspbian_latest-raspbian.zip; else echo "SHAs Matched"; fi; fi
 
 clean:
-	rm -rf src/image/*.zip
 	rm -rf src/workspace
 	rm -f src/build.log
+	rm -f src/image/raspbian_latest-raspbian.zip.sha1
+
+distclean:
+	rm -rf src/image/*.zip
 
 test:
 	echo "Soon.. soon"
