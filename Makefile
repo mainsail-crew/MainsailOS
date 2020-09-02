@@ -1,4 +1,4 @@
-all: clean build
+all: build
 
 build: raspbian_latest-raspbian.zip
 	docker-compose up -d 
