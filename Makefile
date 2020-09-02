@@ -3,7 +3,7 @@ all: clean build
 build: raspbian_latest-raspbian.zip
 	docker-compose up -d 
 	docker exec -it mainsailos-build build
-	docker-compose down mainsailos-build
+	docker-compose down
 
 raspbian_latest-raspbian.zip:
 	cd src/image
