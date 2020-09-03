@@ -6,8 +6,8 @@
 - [Downloaded Raspbian Image](http://www.raspbian.org/)
 - Bash
 - Git
-- Docker(https://docs.docker.com/engine/install/ubuntu/)
-- Docker-Compose(https://docs.docker.com/compose/install/)
+- [Docker](https://docs.docker.com/engine/install/ubuntu/)
+- [Docker-Compose](https://docs.docker.com/compose/install/)
 - QEMU for emulation
 - About 5GB of free diskspace for the build
 
