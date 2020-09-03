@@ -11,7 +11,8 @@
 - QEMU for emulation
 - About 5GB of free diskspace for the build
 
-### Packages for Ubuntu 18.04
+### Packages for Ubuntu 18.04/20.04
+** Dekstop variants are known to cause issues during build due to snaps takeing up loop mounts **
 ```bash
 sudo apt-get install gawk make build-essential util-linux \
 qemu-user-static qemu-system-arm \
