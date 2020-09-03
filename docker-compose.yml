@@ -1,0 +1,15 @@
+version: '3.6'
+
+services:
+  custompios:
+    image: guysoft/custompios:devel
+    container_name: mainsailos-build
+    tty: true
+    restart: always
+    privileged: true
+    volumes:
+      - ./src:/distro
+    devices:
+      - /dev/loop-control
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
