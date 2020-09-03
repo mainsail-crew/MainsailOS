@@ -21,4 +21,4 @@ distclean:
 	rm -rf src/image/*.zip
 
 test:
-	echo "Soon.. soon"
+	./run.sh
