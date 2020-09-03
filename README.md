@@ -6,7 +6,8 @@
 - [Downloaded Raspbian Image](http://www.raspbian.org/)
 - Bash
 - Git
-- Docker and Docker-Compose
+- Docker(https://docs.docker.com/engine/install/ubuntu/)
+- Docker-Compose(https://docs.docker.com/compose/install/)
 - QEMU for emulation
 - About 5GB of free diskspace for the build
 
@@ -15,13 +16,6 @@
 sudo apt-get install gawk make build-essential util-linux \
 qemu-user-static qemu-system-arm \
 git p7zip-full python3 curl
-```
-
-```
-curl -fsSL https://get.docker.com | sudo bash
-sudo curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-sudo usermod -aG docker your-user
 ```
 
 ## Compiling source
