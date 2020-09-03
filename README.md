@@ -30,6 +30,6 @@ make distclean - Clean up the source image and trigger a new download
 ```
 
 ### Build layout
-MainsailOS/emulation - Contains dependencies for emulation testing
-MainsailOS/src/image - Contains our base raspbian image
+MainsailOS/emulation - Contains dependencies for emulation testing  
+MainsailOS/src/image - Contains our base raspbian image  
 MainsailOS/src/workspace - Created during build, and output for compiled images
