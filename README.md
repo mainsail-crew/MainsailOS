@@ -13,7 +13,7 @@
 ```bash
 sudo apt-get install gawk make build-essential util-linux \
 qemu-user-static qemu-system-arm \
-git p7zip-full python3
+git p7zip-full python3 curl
 ```
 
 ## Compiling source
