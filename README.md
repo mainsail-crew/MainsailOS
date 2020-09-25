@@ -21,7 +21,7 @@ git p7zip-full python3 curl
 
 ## Compiling source
 ```bash
-git clone https://github.com/RaymondHimle/MainsailOS.git
+git clone https://github.com/raymondh2/MainsailOS.git
 cd MainsailOS/
 make build
 ```
