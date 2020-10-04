@@ -1,19 +1,3 @@
-map $http_upgrade $connection_upgrade {
-    default upgrade;
-    '' close;
-}
-
-upstream apiserver {
-    #edit your api port here
-    ip_hash;
-    server 127.0.0.1:7125;
-}
-
-upstream mjpgstreamer {
-    ip_hash;
-    server 127.0.0.1:8080;
-}
-
 server {
     listen 80 default_server;
 
