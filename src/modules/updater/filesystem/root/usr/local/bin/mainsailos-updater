@@ -1,0 +1,328 @@
+#!/bin/bash
+# MainsailOS Updater Script
+# Written by Nomsplease
+# GPL V3
+########
+
+## Directory Variables
+
+KLIPPER_PYTHON_DIR="${HOME}/klippy-env"
+KLIPPER_SOURCE_DIR="${HOME}/klipper"
+MOONRAKER_PYTHON_DIR="${HOME}/moonraker-env"
+MOONRAKER_SOURCE_DIR="${HOME}/moonraker"
+
+## Arg Variables
+
+Check=0
+Upgrade=0
+KlipperOnly=0
+MoonrakerOnly=0
+ForceUpgrade=0
+
+########################
+# Program flag parsing #
+########################
+arg_parser() {
+    if [ $Check -eq 1 ] && [ $Upgrade -eq 1 ]; then
+        echo "Please provide only check or upgrade flags"
+        exit -1
+    fi
+    if [ $Check -eq 1 ]; then
+        if [ $KlipperOnly -eq 0 ] && [ $MoonrakerOnly -eq 0 ]; then
+            check_klipper
+            check_moonraker
+            exit 1
+        elif [ $KlipperOnly -eq 1 ]; then
+            check_klipper
+            exit 1
+        elif [ $MoonrakerOnly -eq 1 ]; then
+            check_moonraker
+            exit 1
+        fi
+    elif [ $Upgrade -eq 1 ]; then
+        if [ $KlipperOnly -eq 0 ] && [ $MoonrakerOnly -eq 0 ]; then
+            check_klipper_upgrade
+            check_moonraker_upgrade
+            exit 1
+        elif [ $KlipperOnly -eq 1 ]; then
+            check_klipper_upgrade
+            exit 1
+        elif [ $MoonrakerOnly -eq 1 ]; then
+            check_moonraker_upgrade
+            exit 1
+        fi
+    fi
+}
+
+##########################
+# Service Upgrade checks #
+##########################
+check_moonraker() {
+    cd ${MOONRAKER_SOURCE_DIR}
+    MoonrakerLatest=`git log --pretty=format:%H -n 1 $(git rev-parse --abbrev-ref --symbolic-full-name @{u})`
+    MoonrakerCurrent=`git rev-parse HEAD`
+    if [ $MoonrakerCurrent == $MoonrakerLatest ]; then
+        echo "Moonraker up to date"
+        echo "Commit: $MoonrakerCurrent"
+    else
+        echo "Moonraker not up to date"
+        echo "Current commit: $MoonrakerCurrent"
+        echo "Latest Commit: $MoonrakerLatest"
+    fi
+}
+
+check_klipper() {
+    cd ${KLIPPER_SOURCE_DIR}
+    KlipperLatest=`git log --pretty=format:%H -n 1 $(git rev-parse --abbrev-ref --symbolic-full-name @{u})`
+    KlipperCurrent=`git rev-parse HEAD`
+    if [ $KlipperCurrent == $KlipperLatest ]; then
+        echo "Klipper up to date"
+        echo "Commit: $KlipperCurrent"
+    else
+        echo "Klipper not up to date"
+        echo "Current commit: $KlipperCurrent"
+        echo "Latest Commit: $KlipperLatest"
+    fi
+}
+#############################
+# Service Upgrade functions #
+#############################
+check_klipper_upgrade() {
+    cd ${KLIPPER_SOURCE_DIR}
+    KlipperLatest=`git log --pretty=format:%H -n 1 $(git rev-parse --abbrev-ref --symbolic-full-name @{u})`
+    KlipperCurrent=`git rev-parse HEAD`
+    if [ $KlipperCurrent == $KlipperLatest ]; then
+        echo "Kliiper already up to date."
+        if [ $ForceUpgrade -eq 1 ]; then
+            echo "Force flag used, forcing upgrade"
+            upgrade_klipper
+        fi
+    else
+        upgrade_klipper
+    fi
+}
+upgrade_klipper() {
+    report_status "Upgrading Klipper..."
+    cd ${KLIPPER_SOURCE_DIR}
+    git pull
+    install_packages
+    report_status "Installing Klipper..."
+    create_klipper_venv
+    install_klipper_script
+    install_klipper_config
+    RestartKlipper
+}
+
+check_moonraker_upgrade() {
+    cd ${MOONRAKER_SOURCE_DIR}
+    MoonrakerLatest=`git log --pretty=format:%H -n 1 $(git rev-parse --abbrev-ref --symbolic-full-name @{u})`
+    MoonrakerCurrent=`git rev-parse HEAD`
+    if [ $MoonrakerCurrent == $MoonrakerLatest ]; then
+        echo "Moonraker up to date"
+        if [ $ForceUpgrade -eq 1 ]; then
+            echo "Force flag used, forcing upgrade"
+            upgrade_moonraker
+        fi
+    else
+        upgrade_moonraker
+    fi
+}
+upgrade_moonraker() {
+    report_status "Upgrading Moonraker..."
+    cd ${MOONRAKER_SOURCE_DIR}
+    git pull
+    report_status "Installing Moonraker..."
+    create_moonraker_venv
+    install_moonraker_script
+    install_moonraker_config
+    RestartMoonraker
+}
+
+######################################
+# Klipper Specific upgrade Functions #
+######################################
+install_packages()
+{
+    # Packages for python cffi
+    PKGLIST="python-virtualenv virtualenv python-dev libffi-dev build-essential"
+    # kconfig requirements
+    PKGLIST="${PKGLIST} libncurses-dev"
+    # hub-ctrl
+    PKGLIST="${PKGLIST} libusb-dev"
+    # AVR chip installation and building
+    PKGLIST="${PKGLIST} avrdude gcc-avr binutils-avr avr-libc"
+    # ARM chip installation and building
+    PKGLIST="${PKGLIST} stm32flash dfu-util libnewlib-arm-none-eabi"
+    PKGLIST="${PKGLIST} gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0"
+
+    PKGLIST="${PKGLIST} python3-virtualenv python3-dev nginx"
+
+    # Update system package info
+    report_status "Running apt-get update..."
+    sudo apt-get update
+
+    # Install desired packages
+    report_status "Installing packages..."
+    sudo apt-get install --yes ${PKGLIST}
+}
+
+create_klipper_venv()
+{
+    report_status "Updating Klippy python virtual environment..."
+
+    # Create virtualenv if it doesn't already exist
+    [ ! -d ${KLIPPER_PYTHON_DIR} ] && virtualenv ${KLIPPER_PYTHON_DIR}
+
+    # Install/update dependencies
+    ${KLIPPER_PYTHON_DIR}/bin/pip install -r ${KLIPPER_SOURCE_DIR}/scripts/klippy-requirements.txt
+}
+
+install_klipper_script()
+{
+    report_status "Installing Klipper system start script..."
+    sudo cp "${KLIPPER_SOURCE_DIR}/scripts/klipper-start.sh" /etc/init.d/klipper
+    sudo update-rc.d klipper defaults
+}
+
+install_klipper_config()
+{
+    KLIPPER_DEFAULTS_FILE=/etc/default/klipper
+    [ -f $KLIPPER_DEFAULTS_FILE ] && return
+
+    report_status "Installing system start configuration..."
+    sudo /bin/sh -c "cat > $KLIPPER_DEFAULTS_FILE" <<EOF
+# Configuration for /etc/init.d/klipper
+
+KLIPPY_USER=$USER
+
+KLIPPY_EXEC=${KLIPPER_PYTHON_DIR}/bin/python
+
+KLIPPY_ARGS="${KLIPPER_SOURCE_DIR}/klippy/klippy.py ${HOME}/klipper_config/printer.cfg -l /tmp/klippy.log -a /tmp/klippy_uds"
+
+EOF
+}
+
+RestartKlipper() {
+    report_status "Restarting Klipper host software..."
+    sudo /etc/init.d/klipper restart
+}
+
+########################################
+# Moonraker Specific upgrade Functions #
+########################################
+create_moonraker_venv()
+{
+    report_status "Updating Moonraker python virtual environment..."
+
+    # Create virtualenv if it doesn't already exist
+    [ ! -d ${MOONRAKER_PYTHON_DIR} ] && virtualenv -p /usr/bin/python3 ${MOONRAKER_PYTHON_DIR}
+
+    # Install/update dependencies
+    ${MOONRAKER_PYTHON_DIR}/bin/pip install -r ${MOONRAKER_SOURCE_DIR}/scripts/moonraker-requirements.txt
+}
+
+
+install_moonraker_script()
+{
+    report_status "Installing Moonraker system start script..."
+    sudo cp "${MOONRAKER_SOURCE_DIR}/scripts/moonraker-start.sh" /etc/init.d/moonraker
+    sudo update-rc.d moonraker defaults
+}
+
+
+install_moonraker_config()
+{
+    MOONRAKER_DEFAULTS_FILE=/etc/default/moonraker
+    [ -f $MOONRAKER_DEFAULTS_FILE ] && return
+
+    report_status "Installing Moonraker system start configuration..."
+    sudo /bin/sh -c "cat > $MOONRAKER_DEFAULTS_FILE" <<EOF
+# Configuration for /etc/init.d/moonraker
+
+MOONRAKER_USER=$USER
+
+MOONRAKER_EXEC=${MOONRAKER_PYTHON_DIR}/bin/python
+
+MOONRAKER_ARGS="${MOONRAKER_SOURCE_DIR}/moonraker/moonraker.py -c ${HOME}/klipper_config/moonraker.conf"
+
+EOF
+}
+
+RestartMoonraker() {
+    report_status "Restarting moonraker software..."
+    sudo /etc/init.d/moonraker restart
+}
+
+
+####################
+# Helper functions #
+####################
+report_status()
+{
+    echo -e "\n\n###### $1"
+}
+
+verify_ready()
+{
+    if [ "$EUID" -eq 0 ]; then
+        echo "This script must not run as root"
+        exit -1
+    fi
+}
+
+##################
+# Menu functions #
+##################
+print_help() {
+    echo "Usage: mainsailos-update [SERVICE] [OPTION]"
+    echo "  -c, --check          Check for upgrades on all services"
+    echo "  -u, --upgrade        Upgrade MainsailOS service(s). Defaults to all services"
+    echo "  --klipper            Check or upgrade only klipper"
+    echo "  --moonraker          Check or upgrade only Moonraker"
+    echo "  --force              Force upgrade process. Must also use upgrade flag"
+    echo "  -h, -?, --help       Shows this help menu"
+    exit -1
+}
+
+# Force script to exit if an error occurs
+set -e
+
+verify_ready
+
+if [ $# -eq 0 ]; then
+echo "Run flag not specified"
+print_help
+exit -1
+fi
+
+for arg in "$@"
+do
+    case $arg in
+        -c|--check-upgrade)
+        Check=1
+        shift
+        ;;
+        -u|--upgrade)
+        Upgrade=1
+        shift
+        ;;
+        --klipper)
+        KlipperOnly=1
+        shift
+        ;;
+        --moonraker)
+        MoonrakerOnly=1
+        shift
+        ;;
+        --force)
+        ForceUpgrade=1
+        shift
+        ;;
+        -h|--help|-\?)
+        print_help
+        shift
+        ;;
+    esac
+done
+
+arg_parser
