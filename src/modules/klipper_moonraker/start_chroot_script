@@ -23,7 +23,7 @@ apt update
 apt install wget git gpiod -y
 cd /home/pi
 gitclone KLIPPER_MOONRAKER_KLIPPER_REPO klipper
-gitclone KLIPPER_MOONRAKER_MOONRAKER_REPO_SHIP moonraker
+gitclone KLIPPER_MOONRAKER_MOONRAKER_REPO moonraker
 sudo -u pi bash /home/pi/./install-custompios.sh
 rm /home/pi/install-custompios.sh
 # Run installation steps defined above
