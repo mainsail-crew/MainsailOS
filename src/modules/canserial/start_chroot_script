@@ -18,7 +18,7 @@ echo "CANserial"
 echo "$CANSERIAL_VAR"
 
 apt update
-apt install wget git cmake -y
+apt install wget git cmake can-utils -y
 cd /home/pi
 gitclone CANSERIAL_CANSERIAL_REPO CanSerial
 cd CanSerial
