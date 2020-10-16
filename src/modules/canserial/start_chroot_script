@@ -21,5 +21,8 @@ apt update
 apt install wget git -y
 cd /home/pi
 gitclone CANSERIAL_CANSERIAL_REPO CanSerial
+cd CanSerial
+sudo -u pi cmake .
+sudo -u pi make
 
 unpack /filesystem/root /
