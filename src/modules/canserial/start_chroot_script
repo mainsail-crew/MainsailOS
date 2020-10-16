@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Klipper + Moonraker install script
+# Script that installs Klipper and the Moonraker API service
+# Written by Raymond Himle
+# Thanks to KevinOConnor and Arksine
+# GPL V3
+########
+
+
+# Source error handling, leave this in place
+set -x
+set -e
+
+source /common.sh
+install_cleanup_trap
+
+echo "CANserial"
+echo "$CANSERIAL_VAR"
+
+apt update
+apt install wget git -y
+cd /home/pi
+gitclone CANSERIAL_CANSERIAL_REPO CanSerial
+
+unpack /filesystem/root /
