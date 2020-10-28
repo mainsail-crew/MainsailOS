@@ -4,7 +4,7 @@ on:
     tags: 'v*'
 
 jobs:
-  build:
+  raspiosbuild:
     runs-on: ubuntu-latest
 
     steps:
@@ -46,6 +46,7 @@ jobs:
   
   publish:
     name: Upload RaspiOS Asset
+    needs: raspiosbuild
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
