@@ -52,9 +52,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Download RaspiOS Artifact
         uses: actions/download-artifact@v2
-          with:
-            name: mainsailos-raspios-lite-latest.zip
-            path: mainsailos-raspios-lite-latest-${GITHUB_REF#refs/*/}.zip
+        with:
+          name: mainsailos-raspios-lite-latest.zip
+          path: mainsailos-raspios-lite-latest-${GITHUB_REF#refs/*/}.zip
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
