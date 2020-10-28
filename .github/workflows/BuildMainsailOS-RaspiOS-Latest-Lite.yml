@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Install Dependencies
-        run: sudo apt install coreutils p7zip-full qemu-user-static
+        run: sudo apt install coreutils p7zip-full qemu-user-static zip
 
       - name: Checkout CustomPiOS
         uses: actions/checkout@v2
@@ -33,5 +33,14 @@ jobs:
       - name: Build Image
         run: sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
 
-      - name: List image finish
-        run: ls -lash ${{ github.workspace }}/repository/src/workspace/
+      - name: Copy output image
+        run: cp ${{ github.workspace }}/repository/src/workspace/*-raspios-*-lite.img mainsailos-raspios-lite-latest.img
+      
+      - name: Compress the image
+        run: zip mainsailos-raspios-lite-latest.zip mainsailos-raspios-lite-latest.img
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: mainsailos-raspios-lite-latest.zip
+          path: mainsailos-raspios-lite-latest.zip
+      
