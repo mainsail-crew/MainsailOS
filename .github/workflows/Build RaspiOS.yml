@@ -44,7 +44,7 @@ jobs:
           path: mainsailos-raspios-lite-latest.zip
 
       - name: Upload RaspiOS Asset
-        if: ${{ github.event_name == 'release' }}
+        if: ${{ github.event_name == 'published' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
