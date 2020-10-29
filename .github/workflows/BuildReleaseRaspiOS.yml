@@ -1,4 +1,4 @@
-name: Build MainsailOS - RapsiOS
+name: Build and Release MainsailOS - RapsiOS
 on:
   release:
     types: [ published, prereleased, released ]
