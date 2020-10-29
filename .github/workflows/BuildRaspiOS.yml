@@ -1,6 +1,7 @@
 name: Build MainsailOS - RapsiOS
 on:
   push:
+  pull_request: [ opened, edited ]
 
 jobs:
   raspiosbuild:
@@ -42,14 +43,3 @@ jobs:
         with:
           name: mainsailos-raspios-lite-latest.zip
           path: mainsailos-raspios-lite-latest.zip
-
-      - name: Upload RaspiOS Asset
-        if: ${{ github.event_name == 'published' }}
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: mainsailos-raspios-lite-latest.zip
-          asset_name: mainsailos-raspios-lite-latest-${GITHUB_REF#refs/*/}.zip
-          asset_content_type: application/zip
