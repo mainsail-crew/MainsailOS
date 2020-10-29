@@ -1,7 +1,6 @@
-name: Build Pre-Release MainsailOS
+name: Build MainsailOS - RapsiOS
 on:
   push:
-    tags: 'v*'
 
 jobs:
   raspiosbuild:
@@ -43,26 +42,14 @@ jobs:
         with:
           name: mainsailos-raspios-lite-latest.zip
           path: mainsailos-raspios-lite-latest.zip
-  
-  publish:
-    name: Upload RaspiOS Asset
-    needs: raspiosbuild
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Download RaspiOS Artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: mainsailos-raspios-lite-latest.zip
-          path: mainsailos-raspios-lite-latest-${GITHUB_REF#refs/*/}.zip
-      - name: Upload Release Asset
-        id: upload-release-asset 
+
+      - name: Upload RaspiOS Asset
+        if: ${{ github.event_name == 'release' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./mainsailos-raspios-lite-latest-${GITHUB_REF#refs/*/}.zip
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: mainsailos-raspios-lite-latest.zip
           asset_name: mainsailos-raspios-lite-latest-${GITHUB_REF#refs/*/}.zip
           asset_content_type: application/zip
