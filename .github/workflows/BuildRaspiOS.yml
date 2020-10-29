@@ -1,7 +1,8 @@
 name: Build MainsailOS - RapsiOS
 on:
   push:
-  pull_request: [ opened, edited ]
+  pull_request:
+    types: [ opened, edited ]
 
 jobs:
   raspiosbuild:
