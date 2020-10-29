@@ -1,6 +1,5 @@
 name: Build MainsailOS - RapsiOS
 on:
-  push:
   pull_request:
     types: [ opened, edited ]
 
