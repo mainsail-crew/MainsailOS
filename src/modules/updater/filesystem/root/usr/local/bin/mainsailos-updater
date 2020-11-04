@@ -59,7 +59,7 @@ arg_parser() {
 ##########################
 check_moonraker() {
     cd ${MOONRAKER_SOURCE_DIR}
-    git fetch
+    git fetch -q
     MoonrakerLatest=`git log --pretty=format:%H -n 1 $(git rev-parse --abbrev-ref --symbolic-full-name @{u})`
     MoonrakerCurrent=`git rev-parse HEAD`
     if [ $MoonrakerCurrent == $MoonrakerLatest ]; then
@@ -74,7 +74,7 @@ check_moonraker() {
 
 check_klipper() {
     cd ${KLIPPER_SOURCE_DIR}
-    git fetch
+    git fetch -q
     KlipperLatest=`git log --pretty=format:%H -n 1 $(git rev-parse --abbrev-ref --symbolic-full-name @{u})`
     KlipperCurrent=`git rev-parse HEAD`
     if [ $KlipperCurrent == $KlipperLatest ]; then
