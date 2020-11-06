@@ -1,0 +1,55 @@
+name: Build and Release MainsailOS - RapsiOS
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  raspiosbuild:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Dependencies
+        run: sudo apt install coreutils p7zip-full qemu-user-static zip
+
+      - name: Checkout CustomPiOS
+        uses: actions/checkout@v2
+        with:
+          repository: 'guysoft/CustomPiOS'
+          path: CustomPiOS
+      
+      - name: Checkout MainsailOS Project
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}
+          path: repository
+          submodules: true
+
+      - name: Download Raspbian Source Image
+        run: aria2c -d repository/src/image/ --seed-time=0 https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent
+      
+      - name: Update CustomPiOS Paths
+        run: cd repository/src && ../../CustomPiOS/src/update-custompios-paths
+
+      - name: Build Image
+        run: sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
+
+      - name: Copy output image
+        run: cp ${{ github.workspace }}/repository/src/workspace/*-raspios-*-lite.img mainsailos-raspios-lite-latest.img
+      
+      - name: Compress the image
+        run: zip mainsailos-raspios-lite-latest.zip mainsailos-raspios-lite-latest.img
+
+      - uses: actions/upload-artifact@v1
+        with:
+          name: mainsailos-raspios-lite-latest.zip
+          path: mainsailos-raspios-lite-latest.zip
+
+      - name: Upload RaspiOS Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: mainsailos-raspios-lite-latest.zip
+          asset_name: mainsailos-rpi-lite-${{ github.event.release.tag_name }}.zip
+          asset_content_type: application/zip
