@@ -104,6 +104,7 @@ check_klipper_upgrade() {
     fi
 }
 upgrade_klipper() {
+    StopKlipper
     report_status "Upgrading Klipper..."
     cd ${KLIPPER_SOURCE_DIR}
     git pull
@@ -130,6 +131,7 @@ check_moonraker_upgrade() {
     fi
 }
 upgrade_moonraker() {
+    StopMoonraker
     report_status "Upgrading Moonraker..."
     cd ${MOONRAKER_SOURCE_DIR}
     git pull
@@ -204,6 +206,11 @@ KLIPPY_ARGS="${KLIPPER_SOURCE_DIR}/klippy/klippy.py ${HOME}/klipper_config/print
 EOF
 }
 
+StopKlipper() {
+    report_status "Stopping Klipper host software..."
+    sudo /etc/init.d/klipper stop
+}
+
 RestartKlipper() {
     report_status "Restarting Klipper host software..."
     sudo /etc/init.d/klipper restart
@@ -248,6 +255,11 @@ MOONRAKER_EXEC=${MOONRAKER_PYTHON_DIR}/bin/python
 MOONRAKER_ARGS="${MOONRAKER_SOURCE_DIR}/moonraker/moonraker.py -c ${HOME}/klipper_config/moonraker.conf"
 
 EOF
+}
+
+StopMoonraker() {
+    report_status "Stopping moonraker software..."
+    sudo /etc/init.d/moonraker stop
 }
 
 RestartMoonraker() {
