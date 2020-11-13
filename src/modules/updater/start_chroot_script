@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# MailsailOS updater installer
+# Written by Nomsplease
+# GPL V3
+########
+
+
+# Source error handling, leave this in place
+set -x
+set -e
+
+source /common.sh
+install_cleanup_trap
+
+unpack /filesystem/root /
+
+## Just to make sure its executable
+chmod +x /usr/local/bin/mainsailos-updater
