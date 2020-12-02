@@ -22,7 +22,9 @@ install_packages()
     PKGLIST="${PKGLIST} stm32flash dfu-util libnewlib-arm-none-eabi"
     PKGLIST="${PKGLIST} gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0"
 
-    PKGLIST="${PKGLIST} python3-virtualenv python3-dev nginx"
+    PKGLIST="${PKGLIST} python3-virtualenv python3-dev nginx libopenjp2-7 python3-libgpiod"
+
+
 
     # Update system package info
     report_status "Running apt-get update..."
