@@ -106,6 +106,7 @@ Restart=always
 RestartSec=10
 EOF
 # Use systemctl to enable the klipper systemd service script
+	sudo systemctl daemon-reload
     sudo systemctl enable moonraker.service
 }
 
