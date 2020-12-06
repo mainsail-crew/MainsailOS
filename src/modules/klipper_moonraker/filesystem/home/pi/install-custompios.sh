@@ -6,6 +6,8 @@ KLIPPER_PYTHON_DIR="${HOME}/klippy-env"
 KLIPPER_SOURCE_DIR="${HOME}/klipper"
 MOONRAKER_PYTHON_DIR="${HOME}/moonraker-env"
 MOONRAKER_SOURCE_DIR="${HOME}/moonraker"
+CONFIG_PATH="/home/pi/moonraker.conf"
+SYSTEMDDIR="/etc/systemd/system"
 
 
 install_packages()
@@ -101,13 +103,12 @@ WantedBy=multi-user.target
 Type=simple
 User=$USER
 RemainAfterExit=yes
-ExecStart=${PYTHONDIR}/bin/python ${SRCDIR}/moonraker/moonraker.py -c ${CONFIG_PATH}
+ExecStart=${MOONRAKER_PYTHON_DIR}/bin/python ${MOONRAKER_SOURCE_DIR}/moonraker/moonraker.py -c ${CONFIG_PATH}
 Restart=always
 RestartSec=10
 EOF
 # Use systemctl to enable the klipper systemd service script
-	sudo systemctl daemon-reload
-    sudo systemctl enable moonraker.service
+	sudo systemctl enable moonraker.service
 }
 
 
