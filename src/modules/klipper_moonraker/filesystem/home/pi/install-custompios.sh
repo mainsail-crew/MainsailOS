@@ -86,29 +86,29 @@ create_moonraker_venv()
 
 install_moonraker_script()
 {
-    report_status "Installing Moonraker system start script..."
-    sudo cp "${MOONRAKER_SOURCE_DIR}/scripts/moonraker-start.sh" /etc/init.d/moonraker
-    sudo update-rc.d moonraker defaults
-}
-
-
-install_moonraker_config()
-{
-    MOONRAKER_DEFAULTS_FILE=/etc/default/moonraker
-    [ -f $MOONRAKER_DEFAULTS_FILE ] && return
-
-    report_status "Installing Moonraker system start configuration..."
-    sudo /bin/sh -c "cat > $MOONRAKER_DEFAULTS_FILE" <<EOF
-# Configuration for /etc/init.d/moonraker
-
-MOONRAKER_USER=$USER
-
-MOONRAKER_EXEC=${MOONRAKER_PYTHON_DIR}/bin/python
-
-MOONRAKER_ARGS="${MOONRAKER_SOURCE_DIR}/moonraker/moonraker.py -c ${HOME}/klipper_config/moonraker.conf"
-
+# Create systemd service file
+    SERVICE_FILE="${SYSTEMDDIR}/moonraker.service"
+    [ -f $SERVICE_FILE ] && [ $FORCE_DEFAULTS = "n" ] && return
+    report_status "Installing system start script..."
+    sudo /bin/sh -c "cat > ${SERVICE_FILE}" << EOF
+#Systemd service file for moonraker
+[Unit]
+Description=Starts Moonraker on startup
+After=network.target
+[Install]
+WantedBy=multi-user.target
+[Service]
+Type=simple
+User=$USER
+RemainAfterExit=yes
+ExecStart=${PYTHONDIR}/bin/python ${SRCDIR}/moonraker/moonraker.py -c ${CONFIG_PATH}
+Restart=always
+RestartSec=10
 EOF
+# Use systemctl to enable the klipper systemd service script
+    sudo systemctl enable moonraker.service
 }
+
 
 # Helper functions
 report_status()
@@ -137,5 +137,4 @@ install_klipper_config
 report_status "Installing Moonraker..."
 create_moonraker_venv
 install_moonraker_script
-install_moonraker_config
 report_status "Install Complete!"
