@@ -11,10 +11,18 @@ KLIPPER_SOURCE_DIR="${HOME}/klipper"
 MOONRAKER_PYTHON_DIR="${HOME}/moonraker-env"
 MOONRAKER_SOURCE_DIR="${HOME}/moonraker"
 
+## Bash Color
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+PURP='\033[0;35m'
+CYAN='\033[0;36m'
+NOCOLOR='\033[0m'
+
 ## Arg Variables
 
 Check=0
 Upgrade=0
+Changelog=0
 KlipperOnly=0
 MoonrakerOnly=0
 ForceUpgrade=0
@@ -24,7 +32,7 @@ ForceUpgrade=0
 ########################
 arg_parser() {
     if [ $Check -eq 1 ] && [ $Upgrade -eq 1 ]; then
-        echo "Please provide only check or upgrade flags"
+        echo_error "Please provide only check or upgrade flags"
         exit -1
     fi
     if [ $Check -eq 1 ]; then
@@ -51,6 +59,18 @@ arg_parser() {
             check_moonraker_upgrade
             exit 1
         fi
+    elif [ $Changelog -eq 1 ]; then
+        if [ $KlipperOnly -eq 0 ] && [ $MoonrakerOnly -eq 0 ]; then
+            changelog_klipper
+            changelog_moonraker
+            exit 1
+        elif [ $KlipperOnly -eq 1 ]; then
+            changelog_klipper
+            exit 1
+        elif [ $MoonrakerOnly -eq 1 ]; then
+            changelog_moonraker
+            exit 1
+        fi
     fi
 }
 
@@ -63,10 +83,10 @@ check_moonraker() {
     MoonrakerLatest=`git log --pretty=format:%H -n 1 $(git rev-parse --abbrev-ref --symbolic-full-name @{u})`
     MoonrakerCurrent=`git rev-parse HEAD`
     if [ $MoonrakerCurrent == $MoonrakerLatest ]; then
-        echo "Moonraker up to date"
+        echo_success "Moonraker up to date"
         echo "Commit: $MoonrakerCurrent"
     else
-        echo "Moonraker not up to date"
+        echo_error "Moonraker not up to date"
         echo "Current commit: $MoonrakerCurrent"
         echo "Latest Commit: $MoonrakerLatest"
     fi
@@ -78,14 +98,46 @@ check_klipper() {
     KlipperLatest=`git log --pretty=format:%H -n 1 $(git rev-parse --abbrev-ref --symbolic-full-name @{u})`
     KlipperCurrent=`git rev-parse HEAD`
     if [ $KlipperCurrent == $KlipperLatest ]; then
-        echo "Klipper up to date"
+        echo_success "Klipper up to date"
         echo "Commit: $KlipperCurrent"
     else
-        echo "Klipper not up to date"
+        echo_error "Klipper not up to date"
         echo "Current commit: $KlipperCurrent"
         echo "Latest Commit: $KlipperLatest"
     fi
 }
+
+################################
+# Service Changelog Generation #
+################################
+changelog_klipper() {
+    cd ${KLIPPER_SOURCE_DIR}
+    git fetch -q
+    KlipperLatest=`git log --pretty=format:%h -n 1 $(git rev-parse --abbrev-ref --symbolic-full-name @{u})`
+    KlipperCurrent=`git rev-parse --short HEAD`
+    if [ $KlipperCurrent == $KlipperLatest ]; then
+        echo_success "Klipper already up to date, no changelog will happen"
+    else
+        echo_success "Klipper Changelog"
+        echo -e "##################\n\n"
+        git --no-pager log --oneline --ancestry-path $KlipperCurrent..$KlipperLatest
+    fi
+}
+
+changelog_moonraker() {
+    cd ${MOONRAKER_SOURCE_DIR}
+    git fetch -q
+    MoonrakerLatest=`git log --pretty=format:%h -n 1 $(git rev-parse --abbrev-ref --symbolic-full-name @{u})`
+    MoonrakerCurrent=`git rev-parse --short HEAD`
+    if [ $MoonrakerCurrent == $MoonrakerLatest ]; then
+        echo_success "Moonraker already up to date, no changelog will happen"
+    else
+        echo_success "Moonraker Changelog"
+        echo -e "###################\n\n"
+        git --no-pager log --oneline --ancestry-path $MoonrakerCurrent..$MoonrakerLatest
+    fi
+}
+
 #############################
 # Service Upgrade functions #
 #############################
@@ -94,9 +146,9 @@ check_klipper_upgrade() {
     KlipperLatest=`git log --pretty=format:%H -n 1 $(git rev-parse --abbrev-ref --symbolic-full-name @{u})`
     KlipperCurrent=`git rev-parse HEAD`
     if [ $KlipperCurrent == $KlipperLatest ]; then
-        echo "Kliiper already up to date."
+        echo_success "Kliiper already up to date."
         if [ $ForceUpgrade -eq 1 ]; then
-            echo "Force flag used, forcing upgrade"
+            echo_warn "Force flag used, forcing upgrade"
             upgrade_klipper
         fi
     else
@@ -121,9 +173,9 @@ check_moonraker_upgrade() {
     MoonrakerLatest=`git log --pretty=format:%H -n 1 $(git rev-parse --abbrev-ref --symbolic-full-name @{u})`
     MoonrakerCurrent=`git rev-parse HEAD`
     if [ $MoonrakerCurrent == $MoonrakerLatest ]; then
-        echo "Moonraker up to date"
+        echo_success "Moonraker up to date"
         if [ $ForceUpgrade -eq 1 ]; then
-            echo "Force flag used, forcing upgrade"
+            echo_warn "Force flag used, forcing upgrade"
             upgrade_moonraker
         fi
     else
@@ -273,13 +325,28 @@ RestartMoonraker() {
 ####################
 report_status()
 {
-    echo -e "\n\n###### $1"
+    echo -e "\n\n${CYAN}###### $1${NOCOLOR}"
+}
+
+echo_error()
+{
+    echo -e "${RED}$1${NOCOLOR}"
+}
+
+echo_success()
+{
+    echo -e "${GREEN}$1${NOCOLOR}"
+}
+
+echo_warn()
+{
+    echo -e "${PURP}$1${NOCOLOR}"
 }
 
 verify_ready()
 {
     if [ "$EUID" -eq 0 ]; then
-        echo "This script must not run as root"
+        echo -e "${RED}This script must not run as root${NOCLOR}"
         exit -1
     fi
 }
@@ -288,13 +355,14 @@ verify_ready()
 # Menu functions #
 ##################
 print_help() {
-    echo "Usage: mainsailos-update [SERVICE] [OPTION]"
-    echo "  -c, --check          Check for upgrades on all services"
-    echo "  -u, --upgrade        Upgrade MainsailOS service(s). Defaults to all services"
-    echo "  --klipper            Check or upgrade only klipper"
-    echo "  --moonraker          Check or upgrade only Moonraker"
-    echo "  --force              Force upgrade process. Must also use upgrade flag"
-    echo "  -h, -?, --help       Shows this help menu"
+    echo -e "Usage: mainsailos-update [SERVICE] [OPTION]"
+    echo -e "  -c, --check-upgrade  Check for upgrades on all services"
+    echo -e "  -s, --show-changes   Show changelogs for service(s). ${PURP}Can print pages of changes${NOCOLOR}"
+    echo -e "  -u, --upgrade        Upgrade MainsailOS service(s). ${PURP}Defaults to all services${NOCOLOR}"
+    echo -e "  --klipper            Check or upgrade only klipper"
+    echo -e "  --moonraker          Check or upgrade only Moonraker"
+    echo -e "  --force              Force upgrade process. ${PURP}Must also use upgrade flag${NOCOLOR}"
+    echo -e "  -h, -?, --help       Shows this help menu"
     exit -1
 }
 
@@ -304,7 +372,7 @@ set -e
 verify_ready
 
 if [ $# -eq 0 ]; then
-echo "Run flag not specified"
+echo_error "Run flag not specified"
 print_help
 exit -1
 fi
@@ -314,6 +382,10 @@ do
     case $arg in
         -c|--check-upgrade)
         Check=1
+        shift
+        ;;
+        -s|--show-changes)
+        Changelog=1
         shift
         ;;
         -u|--upgrade)
