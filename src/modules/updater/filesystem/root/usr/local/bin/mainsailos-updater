@@ -11,11 +11,17 @@ KLIPPER_SOURCE_DIR="${HOME}/klipper"
 MOONRAKER_PYTHON_DIR="${HOME}/moonraker-env"
 MOONRAKER_SOURCE_DIR="${HOME}/moonraker"
 
+## Module Variables
+
+UpdaterInstallPath="/usr/local/bin/mainsailos-updater"
+UpdaterSource="https://raw.githubusercontent.com/raymondh2/MainsailOS/master/src/modules/updater/filesystem/root/usr/local/bin/mainsailos-updater"
+
 ## Bash Color
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 PURP='\033[0;35m'
 CYAN='\033[0;36m'
+YELLOW='\033[0;93m'
 NOCOLOR='\033[0m'
 
 ## Arg Variables
@@ -25,6 +31,7 @@ Upgrade=0
 Changelog=0
 KlipperOnly=0
 MoonrakerOnly=0
+ToolsOnly=0
 ForceUpgrade=0
 
 ########################
@@ -36,21 +43,26 @@ arg_parser() {
         exit -1
     fi
     if [ $Check -eq 1 ]; then
-        if [ $KlipperOnly -eq 0 ] && [ $MoonrakerOnly -eq 0 ]; then
+        if [ $KlipperOnly -eq 0 ] && [ $MoonrakerOnly -eq 0 ] && [ $ToolsOnly -eq 0 ]; then
             check_klipper
             check_moonraker
+            check_tools
             exit 1
         elif [ $KlipperOnly -eq 1 ]; then
             check_klipper
             exit 1
         elif [ $MoonrakerOnly -eq 1 ]; then
             check_moonraker
+            exit 1
+        elif [ $ToolsOnly -eq 1 ]; then
+            check_tools
             exit 1
         fi
     elif [ $Upgrade -eq 1 ]; then
-        if [ $KlipperOnly -eq 0 ] && [ $MoonrakerOnly -eq 0 ]; then
+        if [ $KlipperOnly -eq 0 ] && [ $MoonrakerOnly -eq 0 ] && [ $ToolsOnly -eq 0 ]; then
             check_klipper_upgrade
             check_moonraker_upgrade
+            check_tools_upgrade
             exit 1
         elif [ $KlipperOnly -eq 1 ]; then
             check_klipper_upgrade
@@ -58,9 +70,12 @@ arg_parser() {
         elif [ $MoonrakerOnly -eq 1 ]; then
             check_moonraker_upgrade
             exit 1
+        elif [ $ToolsOnly -eq 1 ]; then
+            check_tools_upgrade
+            exit 1
         fi
     elif [ $Changelog -eq 1 ]; then
-        if [ $KlipperOnly -eq 0 ] && [ $MoonrakerOnly -eq 0 ]; then
+        if [ $KlipperOnly -eq 0 ] && [ $MoonrakerOnly -eq 0 ] && [ $ToolsOnly -eq 0 ]; then
             changelog_klipper
             changelog_moonraker
             exit 1
@@ -104,6 +119,18 @@ check_klipper() {
         echo_error "Klipper not up to date"
         echo "Current commit: $KlipperCurrent"
         echo "Latest Commit: $KlipperLatest"
+    fi
+}
+
+check_tools() {
+    updaterCurrent=`sha1sum $UpdaterInstallPath | awk '{print $1}'`
+    updaterLatest=`curl -s $UpdaterSource | sha1sum | awk '{print $1}'`
+    if [ $updaterCurrent == $updaterLatest ]; then
+        echo_success "Tools up to date"
+    else
+        echo_error "Tools not up to date"
+        echo_important "Recommend upgrading tools alone before any further updates"
+        echo_important "Use: mainsailos-updater --upgrade --tools"
     fi
 }
 
@@ -192,6 +219,27 @@ upgrade_moonraker() {
     install_moonraker_script
     install_moonraker_config
     RestartMoonraker
+}
+
+check_tools_upgrade() {
+    updaterCurrent=`sha1sum $UpdaterInstallPath | awk '{print $1}'`
+    updaterLatest=`curl -s $UpdaterSource | sha1sum | awk '{print $1}'`
+    if [ $updaterCurrent == $updaterLatest ]; then
+        echo_success "Updater module up to date"
+        if [ $ForceUpgrade -eq 1 ]; then
+            echo_warn "Force flag used, forcing upgrade"
+            upgrade_tools
+        fi
+    else
+        upgrade_tools
+    fi
+}
+
+upgrade_tools() {
+    report_status "Upgrading tools..."
+    sudo wget $UpdaterSource -O $UpdaterInstallPath
+    sudo chmod +x $UpdaterInstallPath
+    echo_warn "Tool upgrades finished"
 }
 
 ######################################
@@ -343,6 +391,11 @@ echo_warn()
     echo -e "${PURP}$1${NOCOLOR}"
 }
 
+echo_important()
+{
+    echo -e "${YELLOW}$1${NOCOLOR}"
+}
+
 verify_ready()
 {
     if [ "$EUID" -eq 0 ]; then
@@ -361,6 +414,7 @@ print_help() {
     echo -e "  -u, --upgrade        Upgrade MainsailOS service(s). ${PURP}Defaults to all services${NOCOLOR}"
     echo -e "  --klipper            Check or upgrade only klipper"
     echo -e "  --moonraker          Check or upgrade only Moonraker"
+    echo -e "  --tools              Check or Upgrade MainsailOS Tools"
     echo -e "  --force              Force upgrade process. ${PURP}Must also use upgrade flag${NOCOLOR}"
     echo -e "  -h, -?, --help       Shows this help menu"
     exit -1
@@ -398,6 +452,10 @@ do
         ;;
         --moonraker)
         MoonrakerOnly=1
+        shift
+        ;;
+        --tools)
+        ToolsOnly=1
         shift
         ;;
         --force)
