@@ -30,5 +30,7 @@ cd /home/pi
 gitclone KLIPPER_MOONRAKER_KLIPPER_REPO klipper
 gitclone KLIPPER_MOONRAKER_MOONRAKER_REPO moonraker
 sudo -u pi bash /home/pi/./install-custompios.sh
+su -c '/home/pi/moonraker/scripts/sudo_fix.sh' - pi
+
 rm /home/pi/install-custompios.sh
 # Run installation steps defined above
