@@ -6,7 +6,7 @@ KLIPPER_PYTHON_DIR="${HOME}/klippy-env"
 KLIPPER_SOURCE_DIR="${HOME}/klipper"
 MOONRAKER_PYTHON_DIR="${HOME}/moonraker-env"
 MOONRAKER_SOURCE_DIR="${HOME}/moonraker"
-CONFIG_PATH="/home/pi/moonraker.conf"
+CONFIG_PATH="/home/pi/klipper_config/moonraker.conf"
 SYSTEMDDIR="/etc/systemd/system"
 
 
