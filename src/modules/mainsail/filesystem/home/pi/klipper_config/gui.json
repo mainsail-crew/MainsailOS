@@ -1,1 +1,0 @@
-{"state":{"general":{"printername":""},"dashboard":{"boolWebcam":false,"boolTempchart":true,"boolConsole":false,"hiddenMacros":[],"hiddenTempChart":[]},"webcam":{"url":"webcam/?action=stream","rotate":false,"rotateDegrees":90,"flipX":false,"flipY":false,"bool":false},"gcodefiles":{"countPerPage":10},"settings":{"configfiles":{"countPerPage":10}}}}
