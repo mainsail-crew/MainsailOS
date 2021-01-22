@@ -81,6 +81,8 @@ create_moonraker_venv()
     # Create virtualenv if it doesn't already exist
     [ ! -d ${MOONRAKER_PYTHON_DIR} ] && virtualenv -p /usr/bin/python3 ${MOONRAKER_PYTHON_DIR}
 
+    ln -s /usr/lib/python3/dist-packages/gpiod* ${MOONRAKER_PYTHON_DIR}/lib/python*/site-packages
+
     # Install/update dependencies
     ${MOONRAKER_PYTHON_DIR}/bin/pip install -r ${MOONRAKER_SOURCE_DIR}/scripts/moonraker-requirements.txt
 }
