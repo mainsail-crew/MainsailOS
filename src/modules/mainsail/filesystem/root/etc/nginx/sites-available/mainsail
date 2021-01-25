@@ -4,6 +4,16 @@ server {
     access_log /var/log/nginx/mainsail-access.log;
     error_log /var/log/nginx/mainsail-error.log;
 
+    #disable this section on smaller hardware like a pi zero
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_proxied expired no-cache no-store private auth;
+    gzip_comp_level 4;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/json application/xml;
+
     #web_path from mainsail static files
     root /home/pi/mainsail;
 
@@ -15,6 +25,10 @@ server {
 
     location / {
         try_files $uri $uri/ /index.html;
+    }
+
+    location = /index.html {
+        add_header Cache-Control "no-store, no-cache, must-revalidate";
     }
 
     location /websocket {
