@@ -4,41 +4,31 @@ server {
     access_log /var/log/nginx/mainsail-access.log;
     error_log /var/log/nginx/mainsail-error.log;
 
+    #disable this section on smaller hardware like a pi zero
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_proxied expired no-cache no-store private auth;
+    gzip_comp_level 4;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/json application/xml;
+
     #web_path from mainsail static files
     root /home/pi/mainsail;
 
     index index.html;
     server_name _;
 
-    #max upload size for gcodes
-    client_max_body_size 200M;
+    #max upload size for gcodes (0 = no limit)
+    client_max_body_size 0;
 
     location / {
         try_files $uri $uri/ /index.html;
     }
 
-    location /printer {
-        proxy_pass http://apiserver/printer;
-        proxy_set_header Host $http_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Scheme $scheme;
-    }
-
-    location /api {
-        proxy_pass http://apiserver/api;
-        proxy_set_header Host $http_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Scheme $scheme;
-    }
-
-    location /access {
-        proxy_pass http://apiserver/access;
-        proxy_set_header Host $http_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Scheme $scheme;
+    location = /index.html {
+        add_header Cache-Control "no-store, no-cache, must-revalidate";
     }
 
     location /websocket {
@@ -52,16 +42,8 @@ server {
         proxy_read_timeout 86400;
     }
 
-    location /machine {
-        proxy_pass http://apiserver/machine;
-        proxy_set_header Host $http_host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Scheme $scheme;
-    }
-
-    location /server {
-        proxy_pass http://apiserver/server;
+    location ~ ^/(printer|api|access|machine|server)/ {
+        proxy_pass http://apiserver$request_uri;
         proxy_set_header Host $http_host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
