@@ -2,4 +2,4 @@ export DIST_NAME=MainSailOS
 export DIST_VERSION=0.2.0
 export BASE_IMAGE_ENLARGEROOT=2000
 export BASE_IMAGE_RESIZEROOT=500
-export MODULES="base(network,raspicam,klipper_moonraker,canserial,mainsail,mjpgstreamer,password-for-sudo)"
+export MODULES="base(network,raspicam,mjpgstreamer,password-for-sudo)"
