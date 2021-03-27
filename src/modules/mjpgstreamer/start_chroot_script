@@ -19,7 +19,7 @@ unpack /filesystem/boot /boot
 WEBCAM_USER=webcam
 
 apt update
-apt install -y git cmake
+apt install -y --allow-downgrades git cmake=3.13.4-1 cmake-data=3.13.4-1
 cd /home/pi
   #mjpg-streamer
   if [ "$MJPGSTREAMER_INCLUDE_MJPGSTREAMER" == "yes" ]
@@ -31,7 +31,7 @@ cd /home/pi
       apt-get -y --force-yes install libjpeg8-dev
     fi
     
-    apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages --no-install-recommends install imagemagick ffmpeg libv4l-dev cmake=3.13.4-1 cmake-data=3.13.4-1
+    apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages --no-install-recommends install imagemagick ffmpeg libv4l-dev
     gitclone MJPGSTREAMER_MJPGSTREAMER_REPO mjpg-streamer
     pushd mjpg-streamer
       mv mjpg-streamer-experimental/* .
