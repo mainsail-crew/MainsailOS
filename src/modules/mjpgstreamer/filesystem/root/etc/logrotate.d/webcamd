@@ -3,7 +3,7 @@
 {
     rotate 4
     weekly
-    maksize 256M
+    maxsize 64M
     missingok
     notifempty
     compress
