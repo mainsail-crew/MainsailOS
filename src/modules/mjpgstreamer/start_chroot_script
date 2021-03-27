@@ -31,7 +31,7 @@ cd /home/pi
       apt-get -y --force-yes install libjpeg8-dev
     fi
     
-    apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages --no-install-recommends install imagemagick ffmpeg libv4l-dev
+    apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages --no-install-recommends install imagemagick ffmpeg libv4l-dev cmake=3.13.4-1 cmake-data=3.13.4-1
     gitclone MJPGSTREAMER_MJPGSTREAMER_REPO mjpg-streamer
     pushd mjpg-streamer
       mv mjpg-streamer-experimental/* .
