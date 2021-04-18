@@ -1,0 +1,5 @@
+RATRIG_VAR="This is a module variable"
+[ -n "$RATRIG_VCORE_KLIPPER_CONFIG_SHIP" ] || RATRIG_VCORE_KLIPPER_CONFIG_SHIP=https://github.com/Rat-Rig/v-core-3-klipper-config.git
+[ -n "$RATRIG_VCORE_KLIPPER_CONFIG_BRANCH" ] || RATRIG_VCORE_KLIPPER_CONFIG_BRANCH=master
+[ -n "$RATRIG_MAINSAIL_THEME_SHIP" ] || RATRIG_MAINSAIL_THEME_SHIP=https://github.com/Rat-Rig/mainsail-theme.git
+[ -n "$RRATRIG_MAINSAIL_THEME_BRANCH" ] || RRATRIG_MAINSAIL_THEME_BRANCH=master

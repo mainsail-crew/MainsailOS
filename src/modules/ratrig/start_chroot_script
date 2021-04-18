@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Installs Rat Rig V-Core 3 config and mainsail theme
+# GPL V3
+########
+
+
+# Source error handling, leave this in place
+set -x
+set -e
+
+source /common.sh
+install_cleanup_trap
+
+unpack /filesystem/home/pi /home/pi pi
+
+echo "Rat Rig V-Core 3"
+
+cd /home/pi/klipper_config
+
+gitclone RATRIG_VCORE_KLIPPER_CONFIG v-core-3
+gitclone RATRIG_MAINSAIL_THEME .theme
+
+# Run install script
+sudo -u pi bash /home/pi/klipper_config/v-core-3/scripts/vcore-install.sh
+
+# Make sure mcu detection script is executable
+sudo chmod +x /home/pi/klipper_config/v-core-3/scripts/auto-detect-mcu.sh
