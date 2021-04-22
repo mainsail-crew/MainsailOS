@@ -23,5 +23,4 @@ gitclone RATRIG_MAINSAIL_THEME .theme
 # Run install script
 sudo -u pi bash /home/pi/klipper_config/v-core-3/scripts/vcore-install.sh
 
-# Make sure mcu detection script is executable
-sudo chmod +x /home/pi/klipper_config/v-core-3/scripts/auto-detect-mcu.sh
+unpack /filesystem/root /

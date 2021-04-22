@@ -56,4 +56,10 @@ server {
     location /webcam/ {
         proxy_pass http://mjpgstreamer/;
     }
+
+    location = /vcore.log {
+        alias "/var/log/vcore.log";
+    }
+
+    location
 }
