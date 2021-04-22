@@ -60,6 +60,4 @@ server {
     location = /vcore.log {
         alias "/var/log/vcore.log";
     }
-
-    location
 }
