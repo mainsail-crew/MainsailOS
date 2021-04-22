@@ -1,1 +1,1 @@
-SUBSYSTEM=="usb", ATTRS{manufacturer}=="Klipper", ATTRS{product}=="stm32f407xx", ACTION=="add", SYMLINK+="klipper",  RUN+="/home/pi/klipper_config/v-core-3/scripts/klipper-mcu-added.sh"
+SUBSYSTEM=="usb", ATTRS{manufacturer}=="Klipper", ATTRS{product}=="stm32f407xx", ACTION=="add", SYMLINK+="klipper", RUN+="/home/pi/klipper_config/v-core-3/scripts/klipper-mcu-added.sh"
