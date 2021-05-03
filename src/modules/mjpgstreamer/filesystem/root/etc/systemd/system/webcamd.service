@@ -1,6 +1,6 @@
 
 [Unit]
-Description=the OctoPi webcam daemon with the user specified config
+Description=the VCoreOS webcam daemon with the user specified config
 
 [Service]
 WorkingDirectory=/root/bin

@@ -68,7 +68,7 @@
 #
 # Current working directory is the mjpg-streamer base directory.
 #
-#camera_http_webroot="./www-mainsail"
+#camera_http_webroot="./www-vcoreos"
 #camera_http_options="-n"
 
 ### EXPERIMENTAL

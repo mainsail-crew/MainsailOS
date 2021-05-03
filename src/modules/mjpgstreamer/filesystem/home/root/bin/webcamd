@@ -5,7 +5,7 @@
 ### ---------------------------------------------------------------- ###
 ### There is no need to edit this file for changing resolution,      ###
 ### frame rates or any other mjpg-streamer parameters. Please edit   ###
-### /boot/mainsail.txt instead - that's what it's there for! You can   ###
+### /boot/vcoreos.txt instead - that's what it's there for! You can   ###
 ### even do this with your Pi powered down by directly accessing the ###
 ### file when using the SD card as thumb drive in your regular       ###
 ### computer.                                                        ###
@@ -17,13 +17,13 @@ MJPGSTREAMER_INPUT_RASPICAM="input_raspicam.so"
 
 brokenfps_usb_devices=("046d:082b" "1908:2310" "0458:708c" "1e4e:0102" "0471:0311" "038f:6001" "046d:0804" "046d:0825" "046d:0994" "0ac8:3450")
 
-config_dir="/boot/mainsail.conf.d"
+config_dir="/boot/vcoreos.conf.d"
 
 echo "Starting up webcamDaemon..."
 echo ""
 
 cfg_files=()
-cfg_files+=/boot/mainsail.txt
+cfg_files+=/boot/vcoreos.txt
 if [[ -d ${config_dir} ]]; then
   cfg_files+=( `ls ${config_dir}/*.txt` )
 fi
@@ -41,7 +41,7 @@ array_assigned_device=()
 
 echo "--- Configuration: ----------------------------"
 for cfg_file in ${cfg_files[@]}; do
-  # init configuration - DO NOT EDIT, USE /boot/mainsail.conf.d/*.txt INSTEAD!
+  # init configuration - DO NOT EDIT, USE /boot/vcoreos.conf.d/*.txt INSTEAD!
   camera="auto"
   camera_usb_options="-r 640x480 -f 10"
   camera_raspi_options="-fps 10"
@@ -54,7 +54,7 @@ for cfg_file in ${cfg_files[@]}; do
   fi
   usb_options="$camera_usb_options"
 
-  # if webcam device is explicitly given in /boot/mainsail.txt, save the path of the device
+  # if webcam device is explicitly given in /boot/vcoreos.txt, save the path of the device
   # to a variable and remove its parameter from usb_options
   extracted_device=`echo $usb_options | sed 's@.*-d \(/dev/\(video[0-9]\+\|v4l/[^ ]*\)\).*@\1@'`
   if [ "$extracted_device" != "$usb_options" ]

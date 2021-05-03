@@ -1,5 +1,7 @@
 export DIST_NAME=VCoreOS
-export DIST_VERSION=0.5.0
+export DIST_VERSION=0.7.0
 export BASE_IMAGE_ENLARGEROOT=4000
 export BASE_IMAGE_RESIZEROOT=500
-export MODULES="base(network,raspicam,klipper_moonraker,mainsail,mjpgstreamer,ratrig,password-for-sudo)"
+export BASE_RELEASE_IMG_NAME=vcoreos-raspios-lite-latest.img
+export BASE_IMG_NAME=vcoreos-raspios-lite-latest.img
+export MODULES="base(network,raspicam,klipper_moonraker,fluidd,mjpgstreamer,ratrig,password-for-sudo)"

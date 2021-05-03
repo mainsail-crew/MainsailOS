@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Fluidd installation script
+# Installs Fluidd and nginx
+# Written by Craig Bassett
+# Thanks to Raymond Himle
+# GPL V3
+########
+
+
+# Source error handling, leave this in place
+set -x
+set -e
+
+source /common.sh
+install_cleanup_trap
+
+unpack /filesystem/home/pi /home/pi pi
+
+echo "Installing nginx and Fluidd"
+
+apt update
+apt install nginx -y
+rm /etc/nginx/sites-enabled/default
+ln -s /etc/nginx/sites-available/fluidd /etc/nginx/sites-enabled/
+cd /home/pi/
+sudo -u pi mkdir /home/pi/fluidd
+sudo -u pi wget -q -O fluidd.zip https://github.com/cadriel/fluidd/releases/latest/download/fluidd.zip && sudo -u pi unzip fluidd.zip -d /home/pi/fluidd && rm fluidd.zip
+# Run installation steps defined above
+
+# Unpack root at the end, so files are modified before
+unpack /filesystem/root /
