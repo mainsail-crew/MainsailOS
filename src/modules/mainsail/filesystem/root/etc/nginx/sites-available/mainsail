@@ -54,6 +54,18 @@ server {
     }
 	
     location /webcam/ {
-        proxy_pass http://mjpgstreamer/;
+        proxy_pass http://mjpgstreamer1/;
+    }
+
+    location /webcam2/ {
+        proxy_pass http://mjpgstreamer2/;
+    }
+
+    location /webcam3/ {
+        proxy_pass http://mjpgstreamer3/;
+    }
+
+    location /webcam4/ {
+        proxy_pass http://mjpgstreamer4/;
     }
 }
