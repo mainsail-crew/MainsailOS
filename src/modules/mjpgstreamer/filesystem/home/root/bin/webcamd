@@ -213,7 +213,7 @@ vcgencmd version > /dev/null 2>&1
 while true; do
 
   # get list of usb video devices into an array
-  video_devices=($(find /dev -regextype sed -regex '\/dev/video[0-9]\+' | sort 2> /dev/null))
+  video_devices=($(find /dev -regextype sed -regex '\/dev/video[0-9]\+' | sort -nk1.11 2> /dev/null))
 
   # add list of raspi camera into an array
   if [ "`vcgencmd get_camera`" = "supported=1 detected=1" ]; then
