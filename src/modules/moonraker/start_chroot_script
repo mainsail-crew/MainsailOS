@@ -33,6 +33,7 @@ gitclone MOONRAKER_REPO moonraker
 su -c "virtualenv -p /usr/bin/python3 ${MOONRAKER_PYTHON_DIR}" - pi
 su -c "ln -s /usr/lib/python3/dist-packages/gpiod* ${MOONRAKER_PYTHON_DIR}/lib/python*/site-packages" - pi
 su -c "${MOONRAKER_PYTHON_DIR}/bin/pip install -r ${MOONRAKER_SRC_DIR}/scripts/moonraker-requirements.txt" - pi
+su -c "${MOONRAKER_SRC_DIR}/scripts/sudo_fix.sh" - pi
 
 # enable systemd service
 systemctl_if_exists enable moonraker.service
