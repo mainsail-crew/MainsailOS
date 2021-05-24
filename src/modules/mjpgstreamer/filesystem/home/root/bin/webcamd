@@ -5,7 +5,7 @@
 ### ---------------------------------------------------------------- ###
 ### There is no need to edit this file for changing resolution,      ###
 ### frame rates or any other mjpg-streamer parameters. Please edit   ###
-### /home/pi/klipper_config/webcamd.txt instead - that's what it's   ###
+### /home/pi/klipper_config/webcam.txt instead - that's what it's    ###
 ### there for! You can even do this with your Pi powered down by     ###
 ### directly accessing the file when using the SD card as thumb      ###
 ### drive in your regular computer.                                  ###
@@ -25,7 +25,7 @@ echo ""
 cfg_files=()
 #cfg_files+=/boot/mainsail.txt
 if [[ -d ${config_dir} ]]; then
-  cfg_files+=( `ls ${config_dir}/webcamd*.txt` )
+  cfg_files+=( `ls ${config_dir}/webcam*.txt` )
 fi
 
 array_camera_config=()
@@ -41,7 +41,7 @@ array_assigned_device=()
 
 echo "--- Configuration: ----------------------------"
 for cfg_file in ${cfg_files[@]}; do
-  # init configuration - DO NOT EDIT, USE /home/pi/klipper_config/webcamd*.txt INSTEAD!
+  # init configuration - DO NOT EDIT, USE /home/pi/klipper_config/webcam*.txt INSTEAD!
   camera="auto"
   camera_usb_options="-r 640x480 -f 10"
   camera_raspi_options="-fps 10"
