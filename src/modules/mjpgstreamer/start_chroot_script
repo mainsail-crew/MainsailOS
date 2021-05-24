@@ -13,10 +13,7 @@ set -e
 source /common.sh
 install_cleanup_trap
 
-unpack /filesystem/home/root /root root
-unpack /filesystem/boot /boot
-
-WEBCAM_USER=webcam
+unpack /filesystem/home/pi /home/pi pi
 
 apt update
 apt install -y --allow-downgrades git cmake=3.13.4-1 cmake-data=3.13.4-1
