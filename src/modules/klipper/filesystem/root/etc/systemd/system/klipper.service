@@ -11,11 +11,6 @@ WantedBy=multi-user.target
 Type=simple
 User=pi
 RemainAfterExit=yes
-Environment="KLIPPER_PYTHON_DIR=/home/pi/klippy-env"
-Environment="KLIPPER_SRC_DIR=/home/pi/klipper"
-Environment="KLIPPER_CONF_DIR=/home/pi/klipper_config"
-Environment="KLIPPER_LOG_DIR=/home/pi/klipper_logs"
-Environment="KLIPPER_UDS=/tmp/klippy_uds"
-ExecStart=${KLIPPER_PYTHON_DIR}/bin/python ${KLIPPER_SRC_DIR}/klippy/klippy.py ${KLIPPER_CONF_DIR}/printer.cfg -l ${KLIPPER_LOG_DIR}/klippy.log -a ${KLIPPER_UDS}
+ExecStart=/home/pi/klippy-env/bin/python /home/pi/klipper/klippy/klippy.py /home/pi/klipper_config/printer.cfg -l /home/pi/klipper_logs/klippy.log -a /tmp/klippy_uds
 Restart=always
 RestartSec=10

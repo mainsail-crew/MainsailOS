@@ -11,10 +11,6 @@ WantedBy=multi-user.target
 Type=simple
 User=pi
 RemainAfterExit=yes
-Environment="MOONRAKER_PYTHON_DIR=/home/pi/moonraker-env"
-Environment="MOONRAKER_SRC_DIR=/home/pi/klipper"
-Environment="MOONRAKER_CONF_DIR=/home/pi/klipper_config"
-Environment="MOONRAKER_LOG_DIR=/home/pi/klipper_logs"
-ExecStart=${MOONRAKER_PYTHON_DIR}/bin/python ${MOONRAKER_SRC_DIR}/moonraker/moonraker.py -c ${MOONRAKER_CONF_DIR}/moonraker.conf -l ${MOONRAKER_LOG_DIR}/moonraker.log
+ExecStart=/home/pi/moonraker-env/bin/python /home/pi/moonraker/moonraker/moonraker.py -c /home/pi/klipper_config/moonraker.conf -l /home/pi/klipper_logs/moonraker.log
 Restart=always
 RestartSec=10
