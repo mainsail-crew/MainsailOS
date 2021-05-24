@@ -3,12 +3,13 @@
 Description=the MainsailOS webcam daemon (based on OctoPi) with the user specified config
 
 [Service]
-WorkingDirectory=/root/bin
+WorkingDirectory=/usr/local/bin
 StandardOutput=append:/var/log/webcamd.log
 StandardError=append:/var/log/webcamd.log
-ExecStart=/root/bin/webcamd
+ExecStart=/usr/local/bin/webcamd
 Restart=always
 Type=forking
+User=pi
 
 [Install]
 WantedBy=multi-user.target

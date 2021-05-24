@@ -54,7 +54,7 @@ for cfg_file in ${cfg_files[@]}; do
   fi
   usb_options="$camera_usb_options"
 
-  # if webcam device is explicitly given in /boot/mainsail.txt, save the path of the device
+  # if webcam device is explicitly given in /home/pi/klipper_config/webcam*.txt, save the path of the device
   # to a variable and remove its parameter from usb_options
   extracted_device=`echo $usb_options | sed 's@.*-d \(/dev/\(video[0-9]\+\|v4l/[^ ]*\)\).*@\1@'`
   if [ "$extracted_device" != "$usb_options" ]
