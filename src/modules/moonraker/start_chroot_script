@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Moonraker install script
+# Script that installs Moonraker API service
+# Written by Raymond Himle and Stefan Dej
+# Thanks to Arksine
+# GPL V3
+########
+
+
+# Source error handling, leave this in place
+set -x
+set -e
+
+source /common.sh
+install_cleanup_trap
+
+unpack /filesystem/home/pi /home/pi pi
+unpack /filesystem/root /
+
+echo "Installing Moonraker"
+
+apt update
+apt install wget git gpiod -y
+
+# Packages for python and moonraker requirements
+apt install python3-virtualenv python3-dev nginx libopenjp2-7 python3-libgpiod liblmdb0 rsync zlib1g-dev -y
+
+# clone moonraker repo
+cd /home/pi
+gitclone MOONRAKER_REPO moonraker
+
+# create python virtualenv and install moonraker python requirements
+su -c "virtualenv -p /usr/bin/python3 ${MOONRAKER_PYTHON_DIR}" - pi
+su -c "ln -s /usr/lib/python3/dist-packages/gpiod* ${MOONRAKER_PYTHON_DIR}/lib/python*/site-packages" - pi
+su -c "${MOONRAKER_PYTHON_DIR}/bin/pip install -r ${MOONRAKER_SRC_DIR}/scripts/moonraker-requirements.txt" - pi
+
+# enable systemd service
+systemctl_if_exists enable moonraker.service
+# Run installation steps defined above

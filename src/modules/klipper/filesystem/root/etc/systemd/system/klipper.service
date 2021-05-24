@@ -1,0 +1,21 @@
+#Systemd service file for klipper
+
+[Unit]
+Description=Starts klipper on startup
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+User=pi
+RemainAfterExit=yes
+Environment="KLIPPER_PYTHON_DIR=/home/pi/klippy-env"
+Environment="KLIPPER_SRC_DIR=/home/pi/klipper"
+Environment="KLIPPER_CONF_DIR=/home/pi/klipper_config"
+Environment="KLIPPER_LOG_DIR=/home/pi/klipper_logs"
+Environment="KLIPPER_UDS=/tmp/klippy_uds"
+ExecStart=${KLIPPER_PYTHON_DIR}/bin/python ${KLIPPER_SRC_DIR}/klippy/klippy.py ${KLIPPER_CONF_DIR}/printer.cfg -l ${KLIPPER_LOG_DIR}/klippy.log -a ${KLIPPER_UDS}
+Restart=always
+RestartSec=10
