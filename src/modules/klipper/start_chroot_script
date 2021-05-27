@@ -43,8 +43,8 @@ usermod -a -G dialout pi
 cd /home/pi
 gitclone KLIPPER_REPO klipper
 
-[ ! -d /home/pi/klipper_config ] && mkdir /home/pi/klipper_config
-[ ! -d /home/pi/klipper_logs ] && mkdir /home/pi/klipper_logs
+[ ! -d /home/pi/klipper_config ] && su -c "mkdir /home/pi/klipper_config" - pi
+[ ! -d /home/pi/klipper_logs ] && su -c "mkdir /home/pi/klipper_logs" - pi
 
 # create python virtualenv and install klipper requirements
 su -c "virtualenv -p python2 ${KLIPPER_PYTHON_DIR}" - pi
