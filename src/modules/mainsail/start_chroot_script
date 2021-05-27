@@ -23,6 +23,7 @@ apt install nginx -y
 rm /etc/nginx/sites-enabled/default
 ln -s /etc/nginx/sites-available/mainsail /etc/nginx/sites-enabled/
 cd /home/pi/
+[ ! -d /home/pi/gcode_files ] && mkdir /home/pi/gcode_files
 su -c "mkdir /home/pi/mainsail" - pi
 su -c "wget -q -O mainsail.zip https://github.com/meteyou/mainsail/releases/latest/download/mainsail.zip" - pi
 su -c "unzip mainsail.zip -d /home/pi/mainsail" - pi

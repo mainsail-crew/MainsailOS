@@ -14,7 +14,6 @@ set -e
 source /common.sh
 install_cleanup_trap
 
-unpack /filesystem/home/pi /home/pi pi
 unpack /filesystem/root /
 
 echo "Installing Klipper"
@@ -43,6 +42,9 @@ usermod -a -G dialout pi
 # clone klipper repo
 cd /home/pi
 gitclone KLIPPER_REPO klipper
+
+[ ! -d /home/pi/klipper_config ] && mkdir /home/pi/klipper_config
+[ ! -d /home/pi/klipper_logs ] && mkdir /home/pi/klipper_logs
 
 # create python virtualenv and install klipper requirements
 su -c "virtualenv -p python2 ${KLIPPER_PYTHON_DIR}" - pi
