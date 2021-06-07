@@ -82,6 +82,8 @@ fi
 apt-get clean
 apt-get autoremove -y
 
+# link logfiles to klipper_logs
+ln -s /var/log/webcamd.log /home/pi/klipper_logs/
 
 # Run installation steps defined above
 

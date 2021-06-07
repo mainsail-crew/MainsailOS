@@ -1,0 +1,5 @@
+[ -n "$KLIPPER_SRC_DIR" ] || KLIPPER_SRC_DIR=/home/pi/klipper
+[ -n "$KLIPPER_PYTHON_DIR" ] || KLIPPER_PYTHON_DIR=/home/pi/klippy-env
+
+[ -n "$KLIPPER_REPO_SHIP" ] || KLIPPER_REPO_SHIP=https://github.com/KevinOConnor/klipper.git
+[ -n "$KLIPPER_REPO_BRANCH" ] || KLIPPER_REPO_BRANCH=master

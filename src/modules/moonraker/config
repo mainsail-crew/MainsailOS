@@ -1,0 +1,5 @@
+[ -n "$MOONRAKER_SRC_DIR" ] || MOONRAKER_SRC_DIR=/home/pi/moonraker
+[ -n "$MOONRAKER_PYTHON_DIR" ] || MOONRAKER_PYTHON_DIR=/home/pi/moonraker-env
+
+[ -n "$MOONRAKER_REPO_SHIP" ] || MOONRAKER_REPO_SHIP=https://github.com/Arksine/moonraker.git
+[ -n "$MOONRAKER_REPO_BRANCH" ] || MOONRAKER_REPO_BRANCH=master

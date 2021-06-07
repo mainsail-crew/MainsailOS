@@ -16,15 +16,23 @@ install_cleanup_trap
 
 unpack /filesystem/home/pi /home/pi pi
 
-echo "Mainsail"
+echo "Installing Mainsail"
 
 apt update
 apt install nginx -y
 rm /etc/nginx/sites-enabled/default
 ln -s /etc/nginx/sites-available/mainsail /etc/nginx/sites-enabled/
 cd /home/pi/
-sudo -u pi mkdir /home/pi/mainsail
-sudo -u pi wget -q -O mainsail.zip https://github.com/meteyou/mainsail/releases/latest/download/mainsail.zip && sudo -u pi unzip mainsail.zip -d /home/pi/mainsail && rm mainsail.zip
+[ ! -d /home/pi/gcode_files ] && su -c "mkdir /home/pi/gcode_files" - pi
+su -c "mkdir /home/pi/mainsail" - pi
+su -c "wget -q -O mainsail.zip https://github.com/meteyou/mainsail/releases/latest/download/mainsail.zip" - pi
+su -c "unzip mainsail.zip -d /home/pi/mainsail" - pi
+rm /home/pi/mainsail.zip
+
+# link logfiles to klipper_logs
+ln -s /var/log/nginx/mainsail-access.log /home/pi/klipper_logs/
+ln -s /var/log/nginx/mainsail-error.log /home/pi/klipper_logs/
+
 # Run installation steps defined above
 
 # Unpack root at the end, so files are modified before
