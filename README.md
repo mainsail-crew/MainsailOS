@@ -54,7 +54,7 @@ For further support check out the v-coreos and klipper channels on the [Unnoffic
 
 ### (Optional) Input Shaping using an ADXL345
 
-If you want to use an ADXL345 for automatic input shaper calibration, all the software you need is already installed on the pi, you just need to wire and map the pins for your ADXL345, and you're good to go. A default config and wiring diagram will be included in the future for connecting the ADXL directly to the SKR Pro. Read more here: https://www.klipper3d.org/Measuring_Resonances.html.
+If you want to use an ADXL345 for automatic input shaper calibration, all the software you need is already installed on the pi, you just need to wire and map the pins for your ADXL345, and you're good to go. A default config is included, check the ADXL345 dropdown at the bottom of [wiring page](https://v-core.ratrig.com/electronics/#skr-pro-12) for how to connect the ADXL directly to the SKR Pro. Read more here: https://www.klipper3d.org/Measuring_Resonances.html.
 
 ### Software Credits
 
