@@ -1,15 +1,24 @@
-version: '3.6'
+version: "3.6"
 
 services:
-  custompios:
-    image: guysoft/custompios:devel
-    container_name: mainsailos-build
-    tty: true
-    restart: always
-    privileged: true
-    volumes:
-      - ./src:/distro
-    devices:
-      - /dev/loop-control
-    labels:
-      - com.centurylinklabs.watchtower.enable=true
+    custompios:
+        image: guysoft/custompios:devel
+        container_name: mainsailos-build
+        tty: true
+        restart: always
+        privileged: true
+        volumes:
+            - ./src:/distro
+        devices:
+            - /dev/loop-control
+        labels:
+            - com.centurylinklabs.watchtower.enable=true
+
+    watchtower:
+        image: containrrr/watchtower
+        container_name: custompios-watcher
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /root/.docker/config.json:/config.json
+        command: --cleanup --label-enable --interval 30
+        restart: always
