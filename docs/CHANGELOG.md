@@ -7,8 +7,12 @@
 -   Updated Klipper Module
     -   changed config file to be more flexible on changes in Klipper
     -   changed install routine according to config changes
+    -   Updated klipper.service file to be more "robust"
 -   Changed .gitignore to ignore also .sha1 file (since pulled every "make")
--   Updated klipper.service file to be more "robust"
+-   Updated Moonraker Module
+    -   changed config file to be more flexible on changes in Moonraker
+    -   changed install routine according to config changes
+    -   Updated moonraker.service file to be more "robust"
 
 **2021-01-07**
 

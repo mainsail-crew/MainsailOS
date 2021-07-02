@@ -1,5 +1,8 @@
 [ -n "$MOONRAKER_SRC_DIR" ] || MOONRAKER_SRC_DIR=/home/pi/moonraker
 [ -n "$MOONRAKER_PYTHON_DIR" ] || MOONRAKER_PYTHON_DIR=/home/pi/moonraker-env
-
 [ -n "$MOONRAKER_REPO_SHIP" ] || MOONRAKER_REPO_SHIP=https://github.com/Arksine/moonraker.git
 [ -n "$MOONRAKER_REPO_BRANCH" ] || MOONRAKER_REPO_BRANCH=master
+[ -n "$MOONRAKER_DEPS" ] || MOONRAKER_DEPS="wget git gpiod \
+python3-virtualenv python3-dev nginx libopenjp2-7 python3-libgpiod \
+liblmdb0 rsync zlib1g-dev"
+[ -n "$MOONRAKER_PYENV_REQ" ] || MOONRAKER_PYENV_REQ=scripts/moonraker-requirements.txt

@@ -8,33 +8,40 @@
 
 
 # Source error handling, leave this in place
-set -x
-set -e
+set -xe
 
+# Source CustomPIOS common.sh
 source /common.sh
 install_cleanup_trap
 
 unpack /filesystem/home/pi /home/pi pi
 unpack /filesystem/root /
 
-echo "Installing Moonraker"
 
-apt update
-apt install wget git gpiod -y
+echo_green "Installing Moonraker and enable Moonraker Service"
 
-# Packages for python and moonraker requirements
-apt install python3-virtualenv python3-dev nginx libopenjp2-7 python3-libgpiod liblmdb0 rsync zlib1g-dev -y
+### install all deps at once for time consumption reasons.
+## APT: Update Repo Database and install Dependencies
 
-# clone moonraker repo
-cd /home/pi
+apt update && apt install ${MOONRAKER_DEPS} -y
+
+### clone klipper repo
+pushd /home/${BASE_USER}
 gitclone MOONRAKER_REPO moonraker
 
-# create python virtualenv and install moonraker python requirements
-su -c "virtualenv -p /usr/bin/python3 ${MOONRAKER_PYTHON_DIR}" - pi
-su -c "ln -s /usr/lib/python3/dist-packages/gpiod* ${MOONRAKER_PYTHON_DIR}/lib/python*/site-packages" - pi
-su -c "${MOONRAKER_PYTHON_DIR}/bin/pip install -r ${MOONRAKER_SRC_DIR}/scripts/moonraker-requirements.txt" - pi
-su -c "${MOONRAKER_SRC_DIR}/scripts/sudo_fix.sh" - pi
 
-# enable systemd service
+### create python3 virtualenv and install moonraker requirements
+pushd /home/${BASE_USER}
+echo_green "Creating Virtualenv for Moonraker (moonraker-env) ..."
+sudo -u ${BASE_USER} virtualenv -p python3 ${MOONRAKER_PYTHON_DIR}
+echo_green "Linking Python3 gpiod packages ..."
+sudo -u ${BASE_USER} ln -s /usr/lib/python3/dist-packages/gpiod* ${MOONRAKER_PYTHON_DIR}/lib/python*/site-packages
+echo_green "Installing klippy Python Dependencies ..."
+sudo -u ${BASE_USER} ${MOONRAKER_PYTHON_DIR}/bin/pip install -r ${MOONRAKER_SRC_DIR}/${MOONRAKER_PYENV_REQ}
+popd
+
+### Run sudo-fix.sh
+sudo -u ${BASE_USER} "${MOONRAKER_SRC_DIR}/scripts/sudo_fix.sh"
+
+### enable systemd service
 systemctl_if_exists enable moonraker.service
-# Run installation steps defined above
