@@ -13,6 +13,8 @@
     -   changed config file to be more flexible on changes in Moonraker
     -   changed install routine according to config changes
     -   Updated moonraker.service file to be more "robust"
+-   Updated mainsail Module
+    -   Moved folder creation 'gcode_files' to Klipper as Dependency
 
 **2021-01-07**
 

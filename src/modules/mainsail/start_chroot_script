@@ -3,37 +3,43 @@
 # Installs MainSail and nginx
 # Written by Raymond Himle
 # Thanks to meteyou
+# Revamped by KwadFan
 # GPL V3
 ########
 
 
 # Source error handling, leave this in place
-set -x
-set -e
+set -xe
 
+# Source CustomPIOS common.sh
 source /common.sh
 install_cleanup_trap
 
+### Install mainsail.cfg
 unpack /filesystem/home/pi /home/pi pi
 
-echo "Installing Mainsail"
+echo_green "Installing Mainsail Webfrontend ..."
 
-apt update
-apt install nginx -y
+### install all deps at once for time consumption reasons.
+## APT: Update Repo Database and install Dependencies
+
+apt update && apt install ${MAINSAIL_DEPS} -y
+
+### Preparing nginx
 rm /etc/nginx/sites-enabled/default
 ln -s /etc/nginx/sites-available/mainsail /etc/nginx/sites-enabled/
-cd /home/pi/
-[ ! -d /home/pi/gcode_files ] && su -c "mkdir /home/pi/gcode_files" - pi
-su -c "mkdir /home/pi/mainsail" - pi
-su -c "wget -q -O mainsail.zip https://github.com/meteyou/mainsail/releases/latest/download/mainsail.zip" - pi
-su -c "unzip mainsail.zip -d /home/pi/mainsail" - pi
-rm /home/pi/mainsail.zip
 
-# link logfiles to klipper_logs
+### Download and Install Mainsail Web Frontend
+pushd /home/${BASE_USER}
+sudo -u ${BASE_USER} wget -q --show-progress -O mainsail.zip ${MAINSAIL_URL}
+sudo -u ${BASE_USER} unzip mainsail.zip -d /home/pi/mainsail
+## cleanup
+rm /home/pi/mainsail.zip
+popd
+
+### Link logfiles to klipper_logs
 ln -s /var/log/nginx/mainsail-access.log /home/pi/klipper_logs/
 ln -s /var/log/nginx/mainsail-error.log /home/pi/klipper_logs/
-
-# Run installation steps defined above
 
 # Unpack root at the end, so files are modified before
 unpack /filesystem/root /
