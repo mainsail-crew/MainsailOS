@@ -31,7 +31,7 @@ ln -s /etc/nginx/sites-available/mainsail /etc/nginx/sites-enabled/
 
 ### Download and Install Mainsail Web Frontend
 pushd /home/${BASE_USER}
-sudo -u ${BASE_USER} wget -q --show-progress -O mainsail.zip ${MAINSAIL_URL}
+sudo -u ${BASE_USER} wget -q --show-progress -O mainsail.zip "${MAINSAIL_URL}"
 sudo -u ${BASE_USER} unzip mainsail.zip -d /home/pi/mainsail
 ## cleanup
 rm /home/pi/mainsail.zip
