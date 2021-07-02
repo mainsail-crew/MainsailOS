@@ -4,6 +4,10 @@
 
 -   Updated config to deliver zip compressed image
 -   Added docs/CHANGELOG.md
+-   Updated Klipper Module
+    -   changed config file to be more flexible on changes in Klipper
+    -   changed install routine according to config changes
+-   Changed .gitignore to ignore also .sha1 file (since pulled every "make")
 
 **2021-01-07**
 
