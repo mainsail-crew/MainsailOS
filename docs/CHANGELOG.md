@@ -8,6 +8,7 @@
     -   changed config file to be more flexible on changes in Klipper
     -   changed install routine according to config changes
 -   Changed .gitignore to ignore also .sha1 file (since pulled every "make")
+-   Updated klipper.service file to be more "robust"
 
 **2021-01-07**
 
