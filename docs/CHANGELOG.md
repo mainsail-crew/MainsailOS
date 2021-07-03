@@ -1,5 +1,11 @@
 # CHANGELOG
 
+**2021-03-07**
+
+-   Fixed Typo in .service files
+-   Added udev as Wants= in klipper.service
+    -   should bring up klipper, when Devices initialized, to prevent connection errors to mcu.
+
 **2021-02-07**
 
 -   Updated config to deliver zip compressed image

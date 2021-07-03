@@ -3,8 +3,8 @@
 [Unit]
 Description=Moonraker provides Web API for klipper
 Documentation=https://moonraker.readthedocs.io/en/latest/
-After=network.target,klipper.service
-Requires=nginx
+After=network.target klipper.service
+Requires=nginx.service
 
 [Install]
 WantedBy=multi-user.target
