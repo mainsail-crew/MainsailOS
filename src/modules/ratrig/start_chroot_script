@@ -13,16 +13,15 @@ install_cleanup_trap
 
 unpack /filesystem/home/pi /home/pi pi
 
-echo "Rat Rig V-Core 3"
+echo "V-CoreOS"
 
 cd /home/pi/klipper_config
 
-gitclone RATRIG_VCORE_KLIPPER_CONFIG v-core-3
-# gitclone RATRIG_MAINSAIL_THEME .theme
+gitclone RATRIG_OS_CONFIG config
 
 # Run install script
-sudo -u pi bash /home/pi/klipper_config/v-core-3/scripts/vcore-install.sh
+sudo -u pi bash /home/pi/klipper_config/config/scripts/ratos-install.sh
 
 unpack /filesystem/root /
 
-sudo update-rc.d vcore3 defaults
+sudo update-rc.d v-coreos defaults

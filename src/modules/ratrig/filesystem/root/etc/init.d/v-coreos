@@ -1,13 +1,13 @@
 #!/bin/sh
-# System startup script vcore3
+# System startup script v-coreos
 
 ### BEGIN INIT INFO
-# Provides:          vcore3
+# Provides:          v-coreos
 # Required-Start:    $local_fs
 # Required-Stop:
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: vcore3 dummy service
+# Short-Description: v-coreos dummy service
 # Description:       Does nothing at this point.
 ### END INIT INFO
 
@@ -16,14 +16,16 @@ logfile="/var/log/vcore.log"
 
 case "$1" in
 start)
-	echo "$(date +"%Y-%m-%d %T"): Updating vcore3" >> "$logfile"
-	echo "RESTART" > /tmp/klipper 
+	echo "$(date +"%Y-%m-%d %T"): Updating v-coreos" >> "$logfile"
+	if [ -e /tmp/printer ]; then
+		echo "RESTART" > /tmp/printer
+	fi
 	;;
 stop)
-	echo "$(date +"%Y-%m-%d %T"): Stopping vcore3" >> "$logfile"
+	echo "$(date +"%Y-%m-%d %T"): Stopping v-coreos" >> "$logfile"
 	;;
 restart)
-	echo "$(date +"%Y-%m-%d %T"): Updating vcore3" >> "$logfile"
+	echo "$(date +"%Y-%m-%d %T"): Updating v-coreos" >> "$logfile"
 	;;
 *)
 	exit 2
