@@ -1,5 +1,9 @@
 # CHANGELOG
 
+**2021-17-07**
+
+-   Improved Scripts, Replaced 'pi' with '${BASE_USER}' according to CustomPIOS Variables   
+
 **2021-03-07**
 
 -   Fixed Typo in .service files
