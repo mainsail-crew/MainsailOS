@@ -13,11 +13,11 @@ set -e
 source /common.sh
 install_cleanup_trap
 
-unpack /filesystem/home/pi /home/pi pi
+unpack /filesystem/home/${BASE_USER} /home/${BASE_USER} ${BASE_USER}
 
 apt update
 apt install -y --allow-downgrades git cmake=3.13.4-1 cmake-data=3.13.4-1
-cd /home/pi
+cd /home/${BASE_USER}
   #mjpg-streamer
   if [ "$MJPGSTREAMER_INCLUDE_MJPGSTREAMER" == "yes" ]
   then
@@ -37,17 +37,17 @@ cd /home/pi
       # To apply -j option, we have to unwrap it.
       MJPG_STREAMER_BUILD_DIR=_build
       [ -d ${MJPG_STREAMER_BUILD_DIR} ] || (mkdir ${MJPG_STREAMER_BUILD_DIR} && \
-        chown pi:pi ${MJPG_STREAMER_BUILD_DIR})
+        chown ${BASE_USER}:${BASE_USER} ${MJPG_STREAMER_BUILD_DIR})
       [ -f ${MJPG_STREAMER_BUILD_DIR}/Makefile ] || (cd ${MJPG_STREAMER_BUILD_DIR} && \
-        sudo -u pi cmake -DCMAKE${MJPG_STREAMER_BUILD_DIR}_TYPE=Release ..)
+        sudo -u ${BASE_USER} cmake -DCMAKE${MJPG_STREAMER_BUILD_DIR}_TYPE=Release ..)
 
-      sudo -u pi make -j $(nproc) -C ${MJPG_STREAMER_BUILD_DIR}
+      sudo -u ${BASE_USER} make -j $(nproc) -C ${MJPG_STREAMER_BUILD_DIR}
 
-      sudo -u pi cp ${MJPG_STREAMER_BUILD_DIR}/mjpg_streamer .
-      sudo -u pi find ${MJPG_STREAMER_BUILD_DIR} -name "*.so" -type f -exec cp {} . \;
+      sudo -u ${BASE_USER} cp ${MJPG_STREAMER_BUILD_DIR}/mjpg_streamer .
+      sudo -u ${BASE_USER} find ${MJPG_STREAMER_BUILD_DIR} -name "*.so" -type f -exec cp {} . \;
 
       # create our custom web folder and add a minimal index.html to it
-      sudo -u pi mkdir www-mjpgstreamer
+      sudo -u ${BASE_USER} mkdir www-mjpgstreamer
       pushd www-mjpgstreamer
         cat <<EOT >> index.html
 <html>
@@ -83,7 +83,7 @@ apt-get clean
 apt-get autoremove -y
 
 # link logfiles to klipper_logs
-ln -s /var/log/webcamd.log /home/pi/klipper_logs/
+ln -s /var/log/webcamd.log /home/${BASE_USER}/klipper_logs/
 
 # Run installation steps defined above
 
