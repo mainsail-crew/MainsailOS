@@ -2,6 +2,7 @@
   - [Quick start](quickstart.md)
   - [Configuration](configuration.md)
   - [Manual Firmware Compilation](manual-firmware.compilation.md)
+  - [Troubleshooting](troubleshooting.md)
 
 - Boards
   - Big Tree Tech 
