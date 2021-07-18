@@ -5,7 +5,7 @@
 
 ## Firmware installation
 
-Move the firmware.bin file from the release page to the SD card that goes into your control board, and insert the SD card in to the control board.
+Move the `firmware-octopus-11.bin` file from the release page to the SD card that goes into your control board and call it `firmware.bin`, then insert the SD card in to the control board.
 
 ### Firmware installation without an SD-Card
 Another option is to jump the boot0 pins on the board, and click the reset button. Then SSH into the pi using something like PuTTy or `ssh pi@v-coreos.local` via the commandline on OS X and Linux machines. Execute `~/klipper_config/config/boards/btt-octopus-11/make-and-flash-mcu.sh` and the Pi will compile the klipper firmware and flash the board for you. When done, power off the board and remove the boot0 jumper.

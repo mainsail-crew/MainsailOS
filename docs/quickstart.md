@@ -21,13 +21,15 @@ When that is done reinsert the SD card into the Raspberry Pi, but don't turn on 
 
 See the documentation for your specific board.
 
-[BTT Octopus v1.1](boards/btt/octopus.md)
-[BTT SKR Pro v1.2](boards/btt/skr-pro-12.md)
+[Big Tree Tech Octopus v1.1](boards/btt/octopus.md)
+
+[Big Tree Tech SKR Pro v1.2](boards/btt/skr-pro-12.md)
 
 ## Setup
 
 With the control board connected via USB to your Raspberry Pi, turn on your printer. After a couple of minutes, open your browser and navigate to [http://v-coreos.local/](http://v-coreos.local)
 
-## Configuration
 
-In the settings page in Fluidd, there's a list of files, among them should be a `printer.cfg`. Right click that and choose "Edit". This is where your klipper configuration lives. As you can see, it's prepopulated with some included files which are meant to get you up and running quick and easy. Follow the instructions in the file to make sure the configuration matches your setup.
+## Updating
+
+In the settings page in Fluidd, scroll to the bottom (or click "Software Updates") and you'll see a sheet with the title "Software Updates", if you're familiar with Fluidd or Mainsail, you'll notice a new entry called `v-coreos`. This `v-cores` package will update all the config files in the config folder, improvements, support for hotends, macros, extruders, new boards etc, will be coming to your printer this way in the future. Be sure to keep this up to date, especially if you update klipper.

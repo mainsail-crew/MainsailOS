@@ -1,10 +1,12 @@
 - Getting started
   - [Quick start](quickstart.md)
   - [Configuration](configuration.md)
+  - [Manual Firmware Compilation](manual-firmware.compilation.md)
 
 - Boards
   - Big Tree Tech 
-    - [Octopus v1.1](boards/btt/octopus.md)
+    - [Octopus v1.1](boards/btt/octopus-11.md)
+    - [SKR Pro v1.2](boards/btt/skr-pro-12.md)
 
 - Printers
   - Rat Rig
