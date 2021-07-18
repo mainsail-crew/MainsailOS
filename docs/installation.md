@@ -21,7 +21,7 @@ When that is done reinsert the SD card into the Raspberry Pi, but don't turn on 
 
 See the documentation for your specific board.
 
-[Big Tree Tech Octopus v1.1](boards/btt/octopus.md)
+[Big Tree Tech Octopus v1.1](boards/btt/octopus-11.md)
 
 [Big Tree Tech SKR Pro v1.2](boards/btt/skr-pro-12.md)
 
