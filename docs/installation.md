@@ -1,4 +1,4 @@
-# Quickstart
+# Installation
 
 ## Raspberry Pi Installation
 

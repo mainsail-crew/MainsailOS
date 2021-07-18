@@ -9,4 +9,4 @@
 - Based on Klipper, Moonraker and Fluidd
 
 [Download](https://github.com/Rat-Rig/V-CoreOS/releases)
-[Get Started](#introduction)
+[Documentation](#introduction)

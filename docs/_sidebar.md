@@ -1,5 +1,5 @@
 - Getting started
-  - [Quick start](quickstart.md)
+  - [Installation](installation.md)
   - [Configuration](configuration.md)
   - [Manual Firmware Compilation](manual-firmware.compilation.md)
   - [Troubleshooting](troubleshooting.md)
