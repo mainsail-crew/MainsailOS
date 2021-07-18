@@ -10,6 +10,8 @@ Once you have completed the initial [setup](quickstart.md) and opened [http://v-
 In the configuration page in Fluidd (the webinterface you just opened in your browser), there's a list of files, among them is `printer.cfg`. Right click it and choose "Edit". This is where your klipper configuration lives. As you can see, it's prepopulated with some included files which are meant to get you up and running quick and easy. **Follow the instructions in the file to make sure the configuration matches your setup.**
 ## Overrides
 
+!> Do **NOT** edit the files inside the `config/` folder. These files are controlled by v-coreos and will be updated when the v-coreos package is updated. 
+
 You can override any setting in V-CoreOS, to do so you just copy the section and the parameter you need to change, and paste it in your printer.cfg after the related config file has been loaded. Let's say we wanted to change the current the extruder motor. If we navigate to `config/printers/v-core-3/steppers.cfg` we'll see this section:
 ```properties
 [tmc2209 extruder]

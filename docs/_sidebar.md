@@ -1,9 +1,9 @@
 - Getting started
   - [Installation](installation.md)
   - [Configuration](configuration.md)
-  - [Manual Firmware Compilation](manual-firmware.compilation.md)
   - [Slicer Configuration](slicers.md)
   - [Troubleshooting](troubleshooting.md)
+  - [Manual Firmware Compilation](manual-firmware-compilation.md)
 
 - Boards
   - Big Tree Tech 

@@ -5,12 +5,16 @@
 
 ## Firmware installation
 
+!> Make sure your board is connected to the pi.
+
 Move the `firmware-octopus-11.bin` file from the release page to the SD card that goes into your control board and call it `firmware.bin`, then insert the SD card in to the control board.
 
 ?> 
 You can verify if the board flashed correctly by checking if the firmware.bin file has been changed to firmware.CUR on the SD card. If you have trouble flashing the motherboard, start unplugging your wires beginning with the endstops, sometimes faulty wiring can cause the board to not boot properly.
 
 ?> Once you have verifed the board has been succesfully flashed, you don't have to reinsert the SD card.
+
+If you're going through initial setup please continue in the [installation guide](installation.md#setup)
 ## Firmware upgrade
 
 Sometimes klipper makes changes to the microcontroller code and thus your MCU need to be reflashed with new firmware. You can do that in 2 ways.
