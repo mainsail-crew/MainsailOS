@@ -2,7 +2,7 @@
 
 # V-CoreOS <small>1.0</small>
 
-> A easy to use, preconfigured raspberry pi image for your printer.
+> The easy way to run klipper on your 3D printer.
 
 - Supports multiple printers out of the box
 - Supports multiple controller boards
