@@ -8,3 +8,7 @@ The Rat [Rig V-Minion](https://www.youtube.com/watch?v=QXFAqerE9ws) is a yet upc
 
 - [Big Tree Tech Octopus v1.1](boards/btt/octopus.md)
 - [Big Tree Tech SKR Pro v1.2](boards/btt/octopus.md)
+
+## Post installation steps
+
+Replace your printer.cfg with `config/tempaltes/v-minion-printer.template.cfg`
