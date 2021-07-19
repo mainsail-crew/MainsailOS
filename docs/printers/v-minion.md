@@ -11,4 +11,4 @@ The Rat [Rig V-Minion](https://www.youtube.com/watch?v=QXFAqerE9ws) is a yet upc
 
 ## Post installation steps
 
-Replace your printer.cfg with `config/tempaltes/v-minion-printer.template.cfg`
+Replace your `printer.cfg` with `config/templates/v-minion-printer.template.cfg`
