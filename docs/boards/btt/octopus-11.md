@@ -5,7 +5,7 @@
 
 ## Firmware installation
 
-!> Make sure your board is connected to the pi.
+!> Make sure your board is connected to the Pi **via the provided USB-C cable** (USB-C on the Octopus, USB-A on the Pi).
 
 Move the `firmware-octopus-11.bin` file from the release page to the SD card that goes into your control board and call it `firmware.bin`, then insert the SD card in to the control board.
 
