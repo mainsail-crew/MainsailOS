@@ -12,3 +12,10 @@ Join the discussion on discord!
 # Software Credits
 
 V-CoreOS is based on [Klipper](https://www.klipper3d.org/), [Fluidd](https://docs.fluidd.xyz/), [MainsailOS](https://github.com/raymondh2/MainsailOS) and [FluiddPi](https://github.com/cadriel/FluiddPI), without these and the amazing people behind them, V-CoreOS would not have been possible.
+
+# Github links
+[V-CoreOS](https://github.com/rat-rig/v-coreos/)
+
+[Configuration Repository](https://github.com/rat-os/ratos-configuration)
+
+[Old Configuration Repository (<= RC1)](https://github.com/Rat-Rig/v-core-3-klipper-config)
