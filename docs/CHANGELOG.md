@@ -1,5 +1,12 @@
 # CHANGELOG
 
+**2021-05-07**
+
+- Added new Module named "serialcomm".
+    - This enables the GPIO Headers by default for Serial Communication with Boards like
+    the BTT SKR Mini E3 V2.0 for example.
+    - In Printer.cfg's MCU Section serial: /dev/ttyAMA0 should work for most cases.
+
 **2021-17-07**
 
 -   Improved Scripts, Replaced 'pi' with '${BASE_USER}' according to CustomPIOS Variables   

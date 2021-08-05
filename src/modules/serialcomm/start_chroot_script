@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Enable Serial Communication by default
+# Written by Stephan Wendel <me@stephanwe.de> aka KwadFan
+# This file may distributed under GPLv3
+# Copyright 2021
+########
+
+
+# Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+source /common.sh
+install_cleanup_trap
+
+
+echo_green "Setup dt-overlay=disable-bt in config.txt"
+echo -e "dt-overlay=disable-bt" >> /boot/config.txt
+
+echo_green "Disable Serial Linux console ..."
+sed -i 's/console=serial0,115200 //' /boot/cmdline.txt
+
+
+### disable bluetooth and related services
+echo_green "Disabling Bluetooth related services..."
+systemctl_if_exists disable hciuart.service
+systemctl_if_exists disable bluetooth.service
