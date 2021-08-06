@@ -14,14 +14,28 @@ source /common.sh
 install_cleanup_trap
 
 
-echo_green "Setup dt-overlay=disable-bt in config.txt"
-echo -e "dt-overlay=disable-bt" >> /boot/config.txt
+echo_green "Setup /boot/config.txt to enable UART Communication..."
+
+cat << EOF >> ${SERIALCOMM_CONFIG_TXT_FILE}
+
+#MainsailOS Specific
+#Enables UART Communication by default
+enable_uart=1
+dt-overlay=disable-bt 
+
+[pi0w]
+#pi0(w) Specific
+enable_uart=1
+dt-overlay=pi3-disable-bt
+EOF
+
 
 echo_green "Disable Serial Linux console ..."
-sed -i 's/console=serial0,115200 //' /boot/cmdline.txt
+sed -i 's/console=serial0,115200 //' "${SERIALCOMM_CMDLINE_TXT_FILE}"
 
 
 ### disable bluetooth and related services
 echo_green "Disabling Bluetooth related services..."
 systemctl_if_exists disable hciuart.service
 systemctl_if_exists disable bluetooth.service
+systemctl_if_exists disable bluealsa.service

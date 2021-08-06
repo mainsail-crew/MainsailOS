@@ -1,1 +1,2 @@
-SERIALCOMM_VAR="This is a module variable"
+[ -n "$SERIALCOMM_CONFIG_TXT_FILE" ] || SERIALCOMM_CONFIG_TXT_FILE="/boot/config.txt"
+[ -n "$SERIALCOMM_CMDLINE_TXT_FILE" ] || SERIALCOMM_CMDLINE_TXT_FILE="/boot/cmdline.txt"
