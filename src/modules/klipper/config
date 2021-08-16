@@ -4,7 +4,7 @@
 [ -n "$KLIPPER_REPO_SHIP" ] || KLIPPER_REPO_SHIP=https://github.com/KevinOConnor/klipper.git
 [ -n "$KLIPPER_REPO_BRANCH" ] || KLIPPER_REPO_BRANCH=master
 [ -n "$KLIPPER_DEPS" ] || KLIPPER_DEPS="wget git gpiod \
-python-virtualenv virtualenv python-dev \
+virtualenv python-dev \
 libffi-dev build-essential \
 libncurses-dev libusb-dev \
 avrdude gcc-avr binutils-avr avr-libc \
