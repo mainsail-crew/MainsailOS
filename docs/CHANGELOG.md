@@ -1,5 +1,12 @@
 # CHANGELOG
 
+**2021-17-08**
+
+- Added is_req_preinstall Module
+    - This installs python-numpy and python-matplotlib to the Image
+    - Also numpy will be preinstalled in klipper-env.
+
+
 **2021-17-07**
 
 -   Improved Scripts, Replaced 'pi' with '${BASE_USER}' according to CustomPIOS Variables   
