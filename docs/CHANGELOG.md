@@ -1,5 +1,11 @@
 # CHANGELOG
 
+**2021-17-08**
+
+- Added is_req_preinstall Module
+    - This installs python-numpy and python-matplotlib to the Image
+    - Also numpy will be preinstalled in klipper-env.
+
 **2021-06-07**
 - Serialcomm Module improvements.
 
@@ -9,6 +15,7 @@
     - This enables the GPIO Headers by default for Serial Communication with Boards like
     the BTT SKR Mini E3 V2.0 for example.
     - In Printer.cfg's MCU Section **serial: /dev/serial0** should work for most cases.
+
 
 **2021-17-07**
 
