@@ -3,6 +3,7 @@
 **2021-22-08**
 
 - Date Order corrected in CHANGELOG.md
+- Enable spi interface by default
 
 **2021-17-08**
 

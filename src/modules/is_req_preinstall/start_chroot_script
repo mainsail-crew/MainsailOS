@@ -34,6 +34,10 @@ fi
 
 ## Cleanup
 sudo -u ${BASE_USER} rm -rf /home/${BASE_USER}/.cache
-
 popd
+
+## Enable spi interface by default
+echo_green "Enabling SPI Interface..."
+sed -i 's/#dtparam=spi=on/dtparam=spi=on/' ${IS_REQ_PREINSTALL_CFG_FILE} 
+
 ### EOF
