@@ -1,8 +1,3 @@
-# **ATTENTION! This is Beta Software**
-**Use it on your own risk! Errors may occure!**
-I am / we are not responsible for _any_ kind of damage!
-
-
 # Developing
 
 ## Requirements
