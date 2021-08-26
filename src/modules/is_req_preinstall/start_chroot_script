@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# 
+# Copyright 2021 by Stephan Wendel aka KwadFan
+# <me@stephanwe.de>
+# This file may distributed under GPLv3
+########
+
+### For easier maintainability look to klipper/config.
+
+## Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+source /common.sh
+install_cleanup_trap
+
+echo_green "Input Shaper Requirements preinstall"
+
+### install all deps at once for time consumption reasons.
+## APT: Update Repo Database and install Dependencies
+
+echo_green "Installing Input Shaper Dependencies ..."
+apt update && apt install ${IS_REQ_PREINSTALL_DEPS} -y
+
+### Check for Klipper Venv installed.
+pushd /home/${BASE_USER}
+if [ -d "${IS_REQ_PREINSTALL_VENV_DIR}" ] && [ -x "${IS_REQ_PREINSTALL_VENV_DIR}/bin/pip" ]; then
+    echo_green "Installing numpy..."
+    sudo -u ${BASE_USER} ${IS_REQ_PREINSTALL_VENV_DIR}/bin/pip install -v "${IS_REQ_PREINSTALL_PIP}"
+else
+    echo_red "Klipper Venv not found!"
+    return 1
+fi
+
+## Cleanup
+sudo -u ${BASE_USER} rm -rf /home/${BASE_USER}/.cache
+popd
+
+## Enable spi interface by default
+echo_green "Enabling SPI Interface..."
+sed -i 's/#dtparam=spi=on/dtparam=spi=on/' ${IS_REQ_PREINSTALL_CFG_FILE} 
+
+### EOF

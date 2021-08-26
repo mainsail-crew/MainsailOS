@@ -1,1 +1,2 @@
-MAINSAIL_VAR="This is a module variable"
+[ -n "$MAINSAIL_DEPS" ] || MAINSAIL_DEPS="nginx"
+[ -n "$MAINSAIL_URL" ] || MAINSAIL_URL=https://github.com/meteyou/mainsail/releases/latest/download/mainsail.zip

@@ -1,16 +1,20 @@
-#Systemd service file for moonraker
+#Systemd moonraker Service
 
 [Unit]
-Description=Starts Moonraker on startup
-After=network.target
+Description=Moonraker provides Web API for klipper
+Documentation=https://moonraker.readthedocs.io/en/latest/
+After=network.target klipper.service
+Requires=nginx.service
 
 [Install]
 WantedBy=multi-user.target
 
 [Service]
+Environment=MOONRAKER_CONFIG=/home/pi/klipper_config/moonraker.conf
+Environment=MOONRAKER_LOG=/home/pi/klipper_logs/moonraker.log
 Type=simple
 User=pi
 RemainAfterExit=yes
-ExecStart=/home/pi/moonraker-env/bin/python /home/pi/moonraker/moonraker/moonraker.py -c /home/pi/klipper_config/moonraker.conf -l /home/pi/klipper_logs/moonraker.log
+ExecStart=/home/pi/moonraker-env/bin/python /home/pi/moonraker/moonraker/moonraker.py -c ${MOONRAKER_CONFIG} -l ${MOONRAKER_LOG}
 Restart=always
 RestartSec=10

@@ -2,55 +2,59 @@
 # Klipper install script
 # Script that installs Klipper
 # Written by Raymond Himle and Stefan Dej
+# Revamped by KwadFan
 # Thanks to KevinOConnor
 # GPL V3
 ########
 
+### For easier maintainability look to klipper/config.
 
-# Source error handling, leave this in place
-set -x
-set -e
+## Source error handling, leave this in place
+set -xe
 
+# Source CustomPIOS common.sh
 source /common.sh
 install_cleanup_trap
 
 unpack /filesystem/root /
 
-echo "Installing Klipper"
+echo_green "Installing Klipper and enable klippy Service"
 
-apt update
-apt install wget git gpiod -y
+### install all deps at once for time consumption reasons.
+## APT: Update Repo Database and install Dependencies
 
-# Packages for python cffi
-apt install python-virtualenv virtualenv python-dev libffi-dev build-essential -y
+apt update && apt install ${KLIPPER_DEPS} -y
 
-# kconfig requirements
-apt install libncurses-dev -y
+### Make sure user pi has access to serial ports
+## NOTE: BASE_USER is defined by CustomPIOS Variable
+## there for if you plan to set something else than "pi"
+## Currently CustomPIOS uses "pi"
 
-# hub-ctrl
-apt install libusb-dev -y
+usermod -a -G ${KLIPPER_USER_GROUPS} ${BASE_USER}
 
-# AVR chip installation and building
-apt install avrdude gcc-avr binutils-avr avr-libc -y
-apt install stm32flash dfu-util libnewlib-arm-none-eabi -y
-apt install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 -y
-
-#Make sure user pi has access to serial ports
-usermod -a -G tty pi
-usermod -a -G dialout pi
-
-# clone klipper repo
-cd /home/pi
+### clone klipper repo
+pushd /home/${BASE_USER}
 gitclone KLIPPER_REPO klipper
 
-[ ! -d /home/pi/klipper_config ] && su -c "mkdir /home/pi/klipper_config" - pi
-[ ! -d /home/pi/klipper_logs ] && su -c "mkdir /home/pi/klipper_logs" - pi
+### Create needed dirs
+for dirs in ${KLIPPER_USER_DIRS}; do
+    if [ -d /home/$BASE_USER/$dirs ]; then
+        echo_green "$dirs already exists!"
+    else
+        echo_green "Creating $dirs"
+        sudo -u $BASE_USER mkdir -p $dirs
+    fi
+done
+popd
 
 # create python virtualenv and install klipper requirements
-su -c "virtualenv -p python2 ${KLIPPER_PYTHON_DIR}" - pi
-su -c "${KLIPPER_PYTHON_DIR}/bin/pip install -r ${KLIPPER_SRC_DIR}/scripts/klippy-requirements.txt" - pi
+pushd /home/${BASE_USER}
+echo_green "Creating Virtualenv for Klipper (klipper-env) ..."
+sudo -u ${BASE_USER} virtualenv -p python2 ${KLIPPER_PYTHON_DIR}
+echo_green "Installing klippy Python Dependencies ..."
+sudo -u ${BASE_USER} ${KLIPPER_PYTHON_DIR}/bin/pip install -r ${KLIPPER_SRC_DIR}/${KLIPPER_PYENV_REQ}
+popd
+
 
 # enable systemd service
 systemctl_if_exists enable klipper.service
-
-# Run installation steps defined above
