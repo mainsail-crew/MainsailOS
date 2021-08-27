@@ -1,5 +1,9 @@
 # CHANGELOG
 
+**2021-27-08**
+- BUGFIX:
+    - Typo in start_chroot_script of serialcomm Module
+
 **2021-22-08**
 
 - Date Order corrected in CHANGELOG.md
