@@ -21,12 +21,12 @@ cat << EOF >> ${SERIALCOMM_CONFIG_TXT_FILE}
 #MainsailOS Specific
 #Enables UART Communication by default
 enable_uart=1
-dt-overlay=disable-bt 
+dtoverlay=disable-bt 
 
 [pi0w]
 #pi0(w) Specific
 enable_uart=1
-dt-overlay=pi3-disable-bt
+dtoverlay=pi3-disable-bt
 EOF
 
 
