@@ -19,7 +19,7 @@ https://docs.mainsail.xyz/setup/mainsail-os
 For additional help, join us in the [Mainsail Discord](https://discord.gg/skWTwTD).
 
 ## Screenshots
-![screenshot-dashboard](https://github.com/meteyou/mainsail/raw/master/docs/assets/img/screenshot.png?raw=true)
+![screenshot-dashboard](https://github.com/meteyou/mainsail/raw/develop/docs/assets/img/screenshot.png?raw=true)
 
 # Build your own / Developing
 
