@@ -18,6 +18,16 @@ https://docs.mainsail.xyz/setup/mainsail-os
 
 For additional help, join us in the [Mainsail Discord](https://discord.gg/skWTwTD).
 
+## What is included?
+
+Here a list of included and preinstalled Software:
+* [Klipper (3D Printer Firmware)](https://github.com/KevinOConnor/klipper) 
+* [Moonraker (API Web Server for Klipper)](https://github.com/Arksine/moonraker)
+* [Mainsail (Web interface for Klipper/Moonraker)](https://github.com/meteyou/mainsail)
+* [Mjpeg-streamer (Webcam streaming)](https://github.com/jacksonliam/mjpg-streamer)
+* [Nginx (Webserver & Proxy)](https://nginx.org/en/)
+* [FFMPEG (upcoming features)](https://www.ffmpeg.org/)
+
 ## Screenshots
 ![screenshot-dashboard](https://github.com/meteyou/mainsail/raw/develop/docs/assets/img/screenshot.png?raw=true)
 
