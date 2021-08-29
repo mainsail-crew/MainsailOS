@@ -5,7 +5,7 @@ V-CoreOS only needs minimal configuration to work, but comes with a lot of optio
 ## Introduction
 ?> V-CoreOS comes preconfigured for the V-Core 3, to use other printers, copy the contents of the printer template from `config/templates/` to your printer.cfg
 
-Once you have completed the initial [setup](quickstart.md) and opened [http://v-coreos.local/](v-coreos.local) in your browser, you are almost ready to print. There's a just a few things to go over to make sure the configuration matches your particular setup.
+Once you have completed the initial [setup](installation.md) and opened [http://v-coreos.local/](v-coreos.local) in your browser, you are almost ready to print. There's a just a few things to go over to make sure the configuration matches your particular setup.
 ## Fluidd
 In the configuration page in Fluidd (the webinterface you just opened in your browser), there's a list of files, among them is `printer.cfg`. Right click it and choose "Edit". This is where your klipper configuration lives. As you can see, it's prepopulated with some included files which are meant to get you up and running quick and easy. **Follow the instructions in the file to make sure the configuration matches your setup.**
 ## Overrides
