@@ -9,9 +9,6 @@ Klipper Firmware: https://www.klipper3d.org/
 Moonraker: https://moonraker.readthedocs.io/en/latest/   
 Mainsail: https://docs.mainsail.xyz/   
 
-## Screenshots
-![screenshot-dashboard](https://github.com/meteyou/mainsail/raw/master/docs/assets/img/screenshot.png?raw=true)
-
 ## Installing
 
 See the installation instructions on the Mainsail documentation page:   
@@ -20,6 +17,9 @@ https://docs.mainsail.xyz/setup/mainsail-os
 ## Community
 
 For additional help, join us in the [Mainsail Discord](https://discord.gg/skWTwTD).
+
+## Screenshots
+![screenshot-dashboard](https://github.com/meteyou/mainsail/raw/master/docs/assets/img/screenshot.png?raw=true)
 
 # Build your own / Developing
 
