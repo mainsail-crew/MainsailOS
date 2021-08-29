@@ -22,6 +22,22 @@ echo_green "Input Shaper Requirements preinstall"
 echo_green "Installing Input Shaper Dependencies ..."
 apt update && apt install ${IS_REQ_PREINSTALL_DEPS} -y
 
+### numpy Parallelizing
+function max_cores() {
+    local core_count
+    core_count="$(nproc)"
+    if [ "${core_count}" -lt 3 ]; then
+        echo "$core_count"
+    else
+        echo "$(("${core_count}" -1))"
+    fi
+}
+
+echo_green "System has $(nproc) Cores available."
+echo_green "Using $(max_cores)..."
+export NPY_NUM_BUILD_JOBS="$(max_cores)"
+
+
 ### Check for Klipper Venv installed.
 pushd /home/${BASE_USER}
 if [ -d "${IS_REQ_PREINSTALL_VENV_DIR}" ] && [ -x "${IS_REQ_PREINSTALL_VENV_DIR}/bin/pip" ]; then
