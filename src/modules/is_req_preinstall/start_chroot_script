@@ -24,26 +24,18 @@ apt update && apt install ${IS_REQ_PREINSTALL_DEPS} -y
 
 ### numpy Parallelizing
 function max_cores() {
-    if [ "$(nproc)" -lt 2 ]; then
-        echo "1" # Single Core
-    elif [ "$(nproc)" -lt 3 ]; then
-        echo "2" # Dual Core
-    elif [ "$(nproc)" -lt 5 ]; then
-        echo "4" # Quad Core   
-    elif [ "$(nproc)" -lt 7 ]; then
-        echo "6" # Hexa Core
-    elif [ "$(nproc)" -lt 9 ]; then
-        echo "8" # Octa Core
-    elif [ "$(nproc)" -lt 13 ]; then
-        echo "12" 
-    elif [ "$(nproc)" -lt 33 ]; then
-        echo "32"
+    local core_count
+    core_count="$(nproc)"
+    if [ "${core_count}" -lt 3 ]; then
+        echo "$core_count"
+    else
+        echo "$(("${core_count}" -1))"
     fi
 }
 
 echo_green "System has $(nproc) Cores available."
+echo_green "Using $(max_cores)..."
 export NPY_NUM_BUILD_JOBS="$(max_cores)"
-
 
 
 ### Check for Klipper Venv installed.
