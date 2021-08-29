@@ -1,3 +1,6 @@
+![downloads](https://img.shields.io/github/downloads/raymondh2/MainsailOS/total)
+[![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/skWTwTD) 
+
 # MainsailOS
 
 ![Mainsail Logo](https://github.com/meteyou/mainsail/raw/master/docs/assets/img/logo.png?raw=true)
@@ -16,7 +19,9 @@ https://docs.mainsail.xyz/setup/mainsail-os
 
 ## Community
 
-For additional help, join us in the [Mainsail Discord](https://discord.gg/skWTwTD).
+For additional help, join us in the [Mainsail Discord](https://discord.gg/skWTwTD).   
+
+[![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/skWTwTD) 
 
 ## What is included?
 
