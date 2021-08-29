@@ -1,4 +1,27 @@
-# Developing
+# MainsailOS
+
+![Mainsail Logo](https://github.com/meteyou/mainsail/raw/master/docs/assets/img/logo.png?raw=true)
+
+A [Raspberry Pi](https://www.raspberrypi.org/) distribution for 3d Printers. It includes everything to get started with Klipper Fimware and Mainsail.
+
+Learn More about...   
+Klipper Firmware: https://www.klipper3d.org/   
+Moonraker: https://moonraker.readthedocs.io/en/latest/   
+Mainsail: https://docs.mainsail.xyz/   
+
+## Screenshots
+![screenshot-dashboard](https://github.com/meteyou/mainsail/raw/master/docs/assets/img/screenshot.png?raw=true)
+
+## Installing
+
+See the installation instructions on the Mainsail documentation page:   
+https://docs.mainsail.xyz/setup/mainsail-os
+
+## Community
+
+For additional help, join us in the [Mainsail Discord](https://discord.gg/skWTwTD).
+
+# Build your own / Developing
 
 ## Requirements
 - [qemu-arm-static](http://packages.debian.org/sid/qemu-user-static)
