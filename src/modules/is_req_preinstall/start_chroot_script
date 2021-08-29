@@ -24,7 +24,6 @@ apt update && apt install ${IS_REQ_PREINSTALL_DEPS} -y
 
 ### numpy Parallelizing
 function max_cores() {
-    echo_green "System has $(nproc) Cores available."
     if [ "$(nproc)" -lt 2 ]; then
         echo "1" # Single Core
     elif [ "$(nproc)" -lt 3 ]; then
@@ -42,7 +41,10 @@ function max_cores() {
     fi
 }
 
+echo_green "System has $(nproc) Cores available."
 export NPY_NUM_BUILD_JOBS="$(max_cores)"
+
+
 
 ### Check for Klipper Venv installed.
 pushd /home/${BASE_USER}

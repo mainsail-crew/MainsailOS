@@ -4,7 +4,6 @@
 export DIST_NAME=MainSailOS
 export DIST_VERSION=0.4.0
 export BASE_IMAGE_ENLARGEROOT=2500
-export MODULES="base(network,raspicam,klipper,is_req_preinstall,moonraker,mainsail,mjpgstreamer,serialcomm,password-for-sudo)"
-# Make Zip according to mainsail PR #303 
+export MODULES="base(network,raspicam,klipper,is_req_preinstall,moonraker,mainsail,mjpgstreamer,serialcomm,password-for-sudo)" 
 export BASE_RELEASE_COMPRESS=yes
 export BASE_IMAGE_RESIZEROOT=600
