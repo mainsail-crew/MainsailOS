@@ -1,4 +1,42 @@
-# Developing
+![downloads](https://img.shields.io/github/downloads/raymondh2/MainsailOS/total)
+[![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/skWTwTD) 
+
+# MainsailOS
+
+![Mainsail Logo](https://github.com/meteyou/mainsail/raw/master/docs/assets/img/logo.png?raw=true)
+
+A [Raspberry Pi](https://www.raspberrypi.org/) distribution for 3d Printers. It includes everything to get started with Klipper Fimware and Mainsail.
+
+Learn More about...   
+Klipper Firmware: https://www.klipper3d.org/   
+Moonraker: https://moonraker.readthedocs.io/en/latest/   
+Mainsail: https://docs.mainsail.xyz/   
+
+## Installing
+
+See the installation instructions on the Mainsail documentation page:   
+https://docs.mainsail.xyz/setup/mainsail-os
+
+## Community
+
+For additional help, join us in the [Mainsail Discord](https://discord.gg/skWTwTD).   
+
+[![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/skWTwTD) 
+
+## What is included?
+
+Here a list of included and preinstalled Software:
+* [Klipper (3D Printer Firmware)](https://github.com/KevinOConnor/klipper) 
+* [Moonraker (API Web Server for Klipper)](https://github.com/Arksine/moonraker)
+* [Mainsail (Web interface for Klipper/Moonraker)](https://github.com/meteyou/mainsail)
+* [Mjpeg-streamer (Webcam streaming)](https://github.com/jacksonliam/mjpg-streamer)
+* [Nginx (Webserver & Proxy)](https://nginx.org/en/)
+* [FFMPEG (upcoming features)](https://www.ffmpeg.org/)
+
+## Screenshots
+![screenshot-dashboard](https://github.com/meteyou/mainsail/raw/develop/docs/assets/img/screenshot.png?raw=true)
+
+# Build your own / Developing
 
 ## Requirements
 - [qemu-arm-static](http://packages.debian.org/sid/qemu-user-static)
