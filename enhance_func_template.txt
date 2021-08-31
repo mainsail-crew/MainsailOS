@@ -1,0 +1,38 @@
+# Written by Stephan Wendel aka KwadFan
+# GPL V3
+########
+
+### This file Contains reusable functions.
+
+### Functions
+### Skip update, if last apt update was within an hour
+function skip_apt_update() {
+    if [ -f "/var/cache/apt/pkgcache.bin" ] && \
+    [ "$(($(date +%s)-$(stat -c %Y /var/cache/apt/pkgcache.bin)))" -lt "3600" ];
+    then
+        echo_green "APT Database needs no update!"
+    else
+        # force update
+        echo_red "APT Database needs to be updated!"
+        apt update
+    fi
+}
+
+### Only install Dependencies if not installed.
+function check_installed_dep() {
+    ## Build Array from Var
+    local missing_deps
+    for i in "$@"; do
+        dpkg -l $i > /dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            missing_deps+=" $i"
+        fi 
+    done &> /dev/null
+    if [ "$(echo ${missing_deps} | wc -w)" -ne 0 ]; then
+        echo_red "$(echo $missing_deps | wc -w) missing Packages..."
+        echo_green "Installing..."
+        apt install --yes "$(echo ${missing_deps} | tr -d '[[:space:]]')"
+    else
+        echo_green "No Dependencies missing... [SKIPPED]"
+    fi
+}

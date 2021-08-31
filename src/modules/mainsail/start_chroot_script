@@ -9,11 +9,42 @@
 
 
 # Source error handling, leave this in place
-set -xe
+set -e
 
 # Source CustomPIOS common.sh
 source /common.sh
 install_cleanup_trap
+
+function skip_apt_update() {
+    if [ -f "/var/cache/apt/pkgcache.bin" ] && \
+    [ "$(($(date +%s)-$(stat -c %Y /var/cache/apt/pkgcache.bin)))" -lt "3600" ];
+    then
+        echo_green "APT Database needs no update!"
+    else
+        # force update
+        echo_red "APT Database needs to be updated!"
+        apt update
+    fi
+}
+
+### Only install Dependencies if not installed.
+function check_installed_dep() {
+    ## Build Array from Var
+    local missing_deps
+    for i in "$@"; do
+        dpkg -l $i > /dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            missing_deps+=" $i"
+        fi 
+    done &> /dev/null
+    if [ "$(echo ${missing_deps} | wc -w)" -ne 0 ]; then
+        echo_red "$(echo $missing_deps | wc -w) missing Packages..."
+        echo_green "Installing..."
+        apt install --yes "$(echo ${missing_deps} | tr -d '[[:space:]]')"
+    else
+        echo_green "No Dependencies missing... [SKIPPED]"
+    fi
+}
 
 ### Install mainsail.cfg
 unpack /filesystem/home/${BASE_USER} /home/${BASE_USER} ${BASE_USER}
@@ -22,8 +53,8 @@ echo_green "Installing Mainsail Webfrontend ..."
 
 ### install all deps at once for time consumption reasons.
 ## APT: Update Repo Database and install Dependencies
-
-apt update && apt install ${MAINSAIL_DEPS} -y
+skip_apt_update
+check_installed_dep ${MAINSAIL_DEPS}
 
 ### Preparing nginx
 rm /etc/nginx/sites-enabled/default
@@ -31,13 +62,19 @@ ln -s /etc/nginx/sites-available/mainsail /etc/nginx/sites-enabled/
 
 ### Download and Install Mainsail Web Frontend
 pushd /home/${BASE_USER}
-sudo -u ${BASE_USER} wget -q --show-progress -O mainsail.zip "${MAINSAIL_URL}"
+sudo -u ${BASE_USER} wget -q -O mainsail.zip "${MAINSAIL_URL}"
 sudo -u ${BASE_USER} unzip mainsail.zip -d /home/${BASE_USER}/mainsail
 ## cleanup
 rm /home/${BASE_USER}/mainsail.zip
 popd
 
 ### Link logfiles to klipper_logs
+## Trap in case klipper_logs Dir is missing
+if [ ! -d "/home/${BASE_USER}/klipper_logs" ]; then
+    sudo -u ${BASE_USER} mkdir -p /home/${BASE_USER}/klipper_logs
+fi
+
+
 ln -s /var/log/nginx/mainsail-access.log /home/${BASE_USER}/klipper_logs/
 ln -s /var/log/nginx/mainsail-error.log /home/${BASE_USER}/klipper_logs/
 

@@ -8,19 +8,49 @@
 ### For easier maintainability look to klipper/config.
 
 ## Source error handling, leave this in place
-set -xe
+set -e
 
 # Source CustomPIOS common.sh
 source /common.sh
 install_cleanup_trap
 
+function skip_apt_update() {
+    if [ -f "/var/cache/apt/pkgcache.bin" ] && \
+    [ "$(($(date +%s)-$(stat -c %Y /var/cache/apt/pkgcache.bin)))" -lt "3600" ];
+    then
+        echo_green "APT Database needs no update!"
+    else
+        # force update
+        echo_red "APT Database needs to be updated!"
+        apt update
+    fi
+}
+
+### Only install Dependencies if not installed.
+function check_installed_dep() {
+    ## Build Array from Var
+    local missing_deps
+    for i in "$@"; do
+        dpkg -l $i > /dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            missing_deps+=" $i"
+        fi 
+    done &> /dev/null
+    if [ "$(echo ${missing_deps} | wc -w)" -ne 0 ]; then
+        echo_red "$(echo $missing_deps | wc -w) missing Packages..."
+        echo_green "Installing..."
+        apt install --yes "$(echo ${missing_deps} | tr -d '[[:space:]]')"
+    else
+        echo_green "No Dependencies missing... [SKIPPED]"
+    fi
+}
+
 echo_green "Input Shaper Requirements preinstall"
 
 ### install all deps at once for time consumption reasons.
 ## APT: Update Repo Database and install Dependencies
-
-echo_green "Installing Input Shaper Dependencies ..."
-apt update && apt install ${IS_REQ_PREINSTALL_DEPS} -y
+skip_apt_update
+check_installed_dep ${IS_REQ_PREINSTALL_DEPS}
 
 ### numpy Parallelizing
 function max_cores() {

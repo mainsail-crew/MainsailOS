@@ -1,0 +1,11 @@
+[ -n "$PREUPDATER_CONFIG" ] || PREUPDATER_CONFIG="This is a Module Variable"
+[ -n "$PREUPDATER_PRE_INSTALL_PKGS" ] || PREUPDATER_PRE_INSTALL_PKGS="python-numpy python-matplotlib \
+wget git gpiod \
+virtualenv python-dev \
+libffi-dev build-essential \
+libncurses-dev libusb-dev \
+avrdude gcc-avr binutils-avr avr-libc \
+stm32flash dfu-util libnewlib-arm-none-eabi \
+gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 \
+nginx python3-virtualenv python3-dev libopenjp2-7 python3-libgpiod \
+liblmdb0 rsync zlib1g-dev cmake cmake-data"

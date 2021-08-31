@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# 
+# Copyright 2021 by Stephan Wendel aka KwadFan
+# <me@stephanwe.de>
+# This file may distributed under GPLv3
+########
+
+### Cleanup
+
+apt clean -y
+apt autoclean -y
+apt autoremove --purge -y

@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# 
+# Copyright 2021 by Stephan Wendel aka KwadFan
+# <me@stephanwe.de>
+# This file may distributed under GPLv3
+########
+
+## Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+source /common.sh
+install_cleanup_trap
+
+function skip_apt_update() {
+    if [ -f "/var/cache/apt/pkgcache.bin" ] && \
+    [ "$(($(date +%s)-$(stat -c %Y /var/cache/apt/pkgcache.bin)))" -lt "3600" ];
+    then
+        echo_green "APT Database needs no update!"
+    else
+        # force update
+        echo_red "APT Database needs to be updated!"
+        apt update
+    fi
+}
+
+### noninteractive Check
+if [ -z "${DEBIAN_FRONTEND}" ]; then
+    export DEBIAN_FRONTEND=noninteractive
+fi
+
+### Pre Update Section
+apt update && apt full-upgrade -y
+
+### Pre Installer Section
+skip_apt_update
+apt install --no-install-recommends ${PREUPDATER_PRE_INSTALL_PKGS} -y
