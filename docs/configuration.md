@@ -3,12 +3,32 @@
 V-CoreOS only needs minimal configuration to work, but comes with a lot of optional functionality that you can enable manually.
 
 ## Introduction
-?> V-CoreOS comes preconfigured for the V-Core 3, to use other printers, copy the contents of the printer template from `config/templates/` to your printer.cfg
-
 Once you have completed the initial [setup](installation.md) and opened [http://v-coreos.local/](v-coreos.local) in your browser, you are almost ready to print. There's a just a few things to go over to make sure the configuration matches your particular setup.
 ## Fluidd
+Fluidd is the control interface for your printer. Fluidd is web application that talks to Klipper through Moonraker (the Klipper API). Fluidd is what you'll be using to start prints, monitor progress, configure your klipper and much more. Fluidd is what you see when you open [http://v-coreos.local/](http://v-coreos.local/);
+
+![Fluidd](_media/fluidd.png)
+
+?> To learn more about fluidd, [read the fluidd documentation](https://docs.fluidd.xyz/).
+
+## Initial Configuration
+
 In the configuration page in Fluidd (the webinterface you just opened in your browser), there's a list of files, among them is `printer.cfg`. Right click it and choose "Edit". This is where your klipper configuration lives. As you can see, it's prepopulated with some included files which are meant to get you up and running quick and easy. **Follow the instructions in the file to make sure the configuration matches your setup.**
-## Overrides
+
+## Verify Stepper Directions
+Make sure your steppers are running in the correct direction. To do this, center all your axes by moving the carriage and bed manually, then type `SET_CENTER_KINEMATIC_POSITION` in the console. You can now use the fluidd controls to move the axes. Check that your bed moves down when Z is **increased**. By default, the Z controls in the fluidd interface will increase Z when you click the up arrow. This will lower the bed on a CoreXY machine with a moving bed such as the V-Core 3. If you want to invert this behavior, click the cog (settings) in the left part of the interface, then tool, and then enable "Invert Z Control".
+
+!> V-CoreOS comes preconfigured for the V-Core 3, to use other printers, copy the contents of the printer template from `config/templates/` to your printer.cfg
+
+## Verify Endstops and Z-Probe
+Navigate to the tuning tab. In here you can see your bed mesh (once calibrated), and your endstop state. Refresh the endstop state and verify that all endstops are open, and that the state changes to triggered when you manually trigger the endstops or z-probe and refresh the endstop state.
+
+?> To test, debug and/or verify a BLTouch, refer to the [BLTouch klipper documentation](https://www.klipper3d.org/BLTouch.html)
+
+## Z-Offset
+An easy way to do probe z-offset calibration is to home the printer, then put a piece of paper underneath the nozzle. Now babystep Z through the Fluidd interface (or by issuing G0 commands through the console) until the nozzle touches the paper and there's a bit of resistance when you pull on it. Then write "GET_POSITION" in the console and find the line that says `// kinematic: ...` And use the Z coordinate from that line, multiplied by -1. So if it says `// kinematic: X:0.000000 Y:0.000000 Z:-0.400000` Your probe's z_offset will be 0.4.
+## Includes & Overrides
+V-CoreOS uses a modular configuration that heavily takes advantage of the config file include and merge logic in Klipper. For this reason, the order of includes and overrides are very important, do **not** change the order of the configuration unless you know what you're doing.
 
 !> Do **NOT** edit the files inside the `config/` folder. These files are controlled by v-coreos and will be updated when the v-coreos package is updated. 
 
@@ -32,10 +52,10 @@ run_current: 0.35
 hold_current: 0.200
 ```
 
-This works for any section (including gcode macros) and any parameter. You only need to override the parts you're interested in. You can have the same section defined multiple times, they will all get merged by klipper when it reads the config, with the last parameters taking precedence. This makes for a super powerful way to build your config! Refer to the [klipper config reference](https://www.klipper3d.org/Config_Reference.html) for all the cool things you can do.
+This works for any section (including gcode macros) and any parameter. You only need to override the parts you're interested in. Imagine that each `[include]` section is simply replaced by the contents of the included file. You can have the same section defined multiple times, they will all get merged by klipper when it reads the config, with the last parameters taking precedence. This makes for a super powerful way to build your config! Refer to the [klipper config reference](https://www.klipper3d.org/Config_Reference.html) for all the cool things you can do.
 
 ## Finalizing
-You'll need to adjust your endstop and probe z-offset before printing and be sure to run PID tuning for your extruder and your bed. After that it's advisable to run [Pressure Advance tuning](https://www.klipper3d.org/Pressure_Advance.html), [Input Shaper calibration](https://www.klipper3d.org/Resonance_Compensation.html) and [Skew Correction](https://www.klipper3d.org/skew_correction.html).
+You'll need to adjust your endstop and probe z-offset before printing and be sure to run 
 
-?> **Quick z-offset adjustment method**<br/>
-An easy way to do probe z-offset calibration is to home the printer, then put a piece of paper underneath the nozzle. Now babystep Z through the Fluidd interface (or by issuing G0 commands through the console) until the nozzle touches the paper and there's a bit of resistance when you pull on it. Then write "GET_POSITION" in the console and find the line that says `// kinematic: ...` And use the Z coordinate from that line, multiplied by -1. So if it says `// kinematic: X:0.000000 Y:0.000000 Z:-0.400000` Your probe's z_offset will be 0.4.
+## Tuning
+When you've verified that everything works, and you have your [slicer configured](slicers.md) to use the `START_PRINT` and `END_PRINT` macros, you can now start tuning. Refer to the klipper documentation for [PID Tuning](https://www.klipper3d.org/Config_checks.html#calibrate-pid-settings), [Pressure Advance tuning](https://www.klipper3d.org/Pressure_Advance.html), [Input Shaper calibration](https://www.klipper3d.org/Resonance_Compensation.html) and [Skew Correction](https://www.klipper3d.org/skew_correction.html) respectively.
