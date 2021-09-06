@@ -32,4 +32,4 @@ With the control board connected via USB to your Raspberry Pi, turn on your prin
 
 ## Updating
 
-In the settings page in Fluidd, scroll to the bottom (or click "Software Updates") and you'll see a sheet with the title "Software Updates", if you're familiar with Fluidd or Mainsail, you'll notice a new entry called `v-coreos`. This `v-coreos` package will update all the config files in the config folder, improvements, support for hotends, macros, extruders, new boards etc, will be coming to your printer this way in the future. Be sure to keep this up to date, especially if you update klipper.
+In the settings page in Fluidd, scroll to the bottom (or click "Software Updates") and you'll see a sheet with the title "Software Updates", if you're familiar with Fluidd or Mainsail, you'll notice a new entry called `v-coreos`. This `v-coreos` package will update all the config files in the config folder, improvements, support for hotends, macros, extruders, new boards etc, will be coming to your printer this way in the future. **Be sure to keep this up to date, especially if you update klipper**.
