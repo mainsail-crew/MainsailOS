@@ -15,10 +15,10 @@ Fluidd is the control interface for your printer. Fluidd is web application that
 
 In the configuration page in Fluidd (the webinterface you just opened in your browser), there's a list of files, among them is `printer.cfg`. Right click it and choose "Edit". This is where your klipper configuration lives. As you can see, it's prepopulated with some included files which are meant to get you up and running quick and easy. **Follow the instructions in the file to make sure the configuration matches your setup.**
 
+!> V-CoreOS comes preconfigured for the V-Core 3, to use other printers, copy the contents of the printer template from `config/templates/` to your printer.cfg
 ## Verify Stepper Directions
 Make sure your steppers are running in the correct direction. To do this, center all your axes by moving the carriage and bed manually, then type `SET_CENTER_KINEMATIC_POSITION` in the console. You can now use the fluidd controls to move the axes. Check that your bed moves down when Z is **increased**. By default, the Z controls in the fluidd interface will increase Z when you click the up arrow. This will lower the bed on a CoreXY machine with a moving bed such as the V-Core 3. If you want to invert this behavior, click the cog (settings) in the left part of the interface, then tool, and then enable "Invert Z Control".
 
-!> V-CoreOS comes preconfigured for the V-Core 3, to use other printers, copy the contents of the printer template from `config/templates/` to your printer.cfg
 
 ## Verify Endstops and Z-Probe
 Navigate to the tuning tab. In here you can see your bed mesh (once calibrated), and your endstop state. Refresh the endstop state and verify that all endstops are open, and that the state changes to triggered when you manually trigger the endstops or z-probe and refresh the endstop state.
