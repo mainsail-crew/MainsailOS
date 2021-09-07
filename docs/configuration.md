@@ -58,4 +58,6 @@ This works for any section (including gcode macros) and any parameter. You only 
 You'll need to adjust your endstop and probe z-offset before printing and be sure to run 
 
 ## Tuning
-When you've verified that everything works, and you have your [slicer configured](slicers.md) to use the `START_PRINT` and `END_PRINT` macros, you can now start tuning. Refer to the klipper documentation for [PID Tuning](https://www.klipper3d.org/Config_checks.html#calibrate-pid-settings), [Pressure Advance tuning](https://www.klipper3d.org/Pressure_Advance.html), [Input Shaper calibration](https://www.klipper3d.org/Resonance_Compensation.html) and [Skew Correction](https://www.klipper3d.org/skew_correction.html) respectively.
+When you've verified that everything works, and you have your [slicer configured](slicers.md) to use the `START_PRINT` and `END_PRINT` macros, you can now start tuning. Refer to the klipper documentation for [PID Tuning](https://www.klipper3d.org/Config_checks.html#calibrate-pid-settings), [Pressure Advance tuning](https://www.klipper3d.org/Pressure_Advance.html), [manual Input Shaper calibration](https://www.klipper3d.org/Resonance_Compensation.html) or [automatic Input Shaper calibration via an ADXL345](https://www.klipper3d.org/Measuring_Resonances.html), and [Skew Correction](https://www.klipper3d.org/skew_correction.html) respectively.
+
+?> See the wiring diagram for you board on how to connect your ADXL345, V-CoreOS uses an SPI connection on the MCU itself instead of the RPi, for ease of use.
