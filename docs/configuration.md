@@ -5,7 +5,7 @@ V-CoreOS only needs minimal configuration to work, but comes with a lot of optio
 ## Introduction
 Once you have completed the initial [setup](installation.md) and opened [http://v-coreos.local/](v-coreos.local) in your browser, you are almost ready to print. There's a just a few things to go over to make sure the configuration matches your particular setup.
 ## Fluidd
-Fluidd is the control interface for your printer. Fluidd is web application that talks to Klipper through Moonraker (the Klipper API). Fluidd is what you'll be using to start prints, monitor progress, configure your klipper and much more. Fluidd is what you see when you open [http://v-coreos.local/](http://v-coreos.local/);
+Fluidd is the control interface for your printer. Fluidd is a web application that talks to Klipper through Moonraker (the Klipper API). Fluidd is what you'll be using to start prints, monitor progress, configure klipper and much more. Fluidd is what you see when you open [http://v-coreos.local/](http://v-coreos.local/);
 
 ![Fluidd](_media/fluidd.png)
 
