@@ -17,7 +17,9 @@ In the configuration page in Fluidd (the webinterface you just opened in your br
 
 !> V-CoreOS comes preconfigured for the V-Core 3, to use other printers, copy the contents of the printer template from `config/templates/` to your printer.cfg
 ## Verify Stepper Directions
-Make sure your steppers are running in the correct direction. To do this, center all your axes by moving the carriage and bed manually, then type `SET_CENTER_KINEMATIC_POSITION` in the console. You can now use the fluidd controls to move the axes. Check that your bed moves down when Z is **increased**. By default, the Z controls in the fluidd interface will increase Z when you click the up arrow. This will lower the bed on a CoreXY machine with a moving bed such as the V-Core 3. If you want to invert this behavior, click the cog (settings) in the left part of the interface, then tool, and then enable "Invert Z Control".
+Make sure your steppers are running in the correct direction. To do this, center all your axes by moving the carriage and bed manually, then type `SET_CENTER_KINEMATIC_POSITION` in the console. You can now use the fluidd controls to move the axes. Check that your bed moves down when Z is **increased**. By default, the Z controls in the fluidd interface will increase Z when you click the up arrow. This will lower the bed on a CoreXY machine with a moving bed such as the V-Core 3. If your bed does not move down when you click the up arrow, change the direction of your Z steppers in printer.cfg. There's instructions on how to do that at the top of printer.cfg.
+
+?> If you want to invert the Z behavior in the fluidd interface (ie. making the bed move down when you click the down arrow), click the cog (settings) in the left part of the interface, then tool, and then enable "Invert Z Control". This will **NOT** change your stepper directions, it will only change what gcode the buttons execute.
 
 
 ## Verify Endstops and Z-Probe
