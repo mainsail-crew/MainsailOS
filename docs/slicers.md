@@ -9,7 +9,7 @@ The g-code for these macros are found in `config/printers/[PRINTER_NAME]/macros.
 
 Machine start gcode
 ```properties
-START_PRINT EXTRUDER_TEMP={material_print_temperature} BED_TEMP={material_bed_temperature}
+START_PRINT EXTRUDER_TEMP={material_print_temperature_layer_0} BED_TEMP={material_bed_temperature_layer_0}
 ```
 
 machine end gcode
