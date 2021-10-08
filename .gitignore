@@ -14,3 +14,5 @@ src/vagrant/.vagrant
 .idea
 build.log
 .DS_Store
+*~
+.*.swp

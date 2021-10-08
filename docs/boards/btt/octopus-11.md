@@ -3,6 +3,8 @@
 ## Wiring
 ![BTT Octopus V1.1 Wiring Diagram](_media/octopus-11-wiring.png)
 
+!> If you use the Ratrig endstop switches and cables, do **not** blindly plug them in to your Octopus as doing this will short the board's 3.3V supply rail.  You will probably have to swap the outer two wires (red and white) on the board end of the cable but double check this.
+
 ## Firmware installation
 
 !> Make sure your board is connected to the Pi **via the provided USB-C cable** (USB-C on the Octopus, USB-A on the Pi).
