@@ -9,6 +9,8 @@
   - Big Tree Tech 
     - [Octopus v1.1](boards/btt/octopus-11.md)
     - [SKR Pro v1.2](boards/btt/skr-pro-12.md)
+  - Fysetc
+    - [Spider v1.1](boards/fysetc/spider-11.md) 
 
 - Printers
   - Rat Rig
