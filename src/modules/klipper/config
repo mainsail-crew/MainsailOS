@@ -1,7 +1,7 @@
 [ -n "$KLIPPER_SRC_DIR" ] || KLIPPER_SRC_DIR=/home/${BASE_USER}/klipper
 [ -n "$KLIPPER_PYTHON_DIR" ] || KLIPPER_PYTHON_DIR=/home/${BASE_USER}/klippy-env
 
-[ -n "$KLIPPER_REPO_SHIP" ] || KLIPPER_REPO_SHIP=https://github.com/KevinOConnor/klipper.git
+[ -n "$KLIPPER_REPO_SHIP" ] || KLIPPER_REPO_SHIP=https://github.com/Klipper3d/klipper.git
 [ -n "$KLIPPER_REPO_BRANCH" ] || KLIPPER_REPO_BRANCH=master
 [ -n "$KLIPPER_DEPS" ] || KLIPPER_DEPS="wget git gpiod \
 virtualenv python-dev \
