@@ -14,12 +14,19 @@ IMG_FILE=               #if blank, will be detected
 
 
 ## QEMU Parameters
+#
+# for Kernel Version 4.19.50-buster use
+# QEMU_KERNEL='emulation/kernel-qemu-4.19.50-buster'
+# QEMU_DTB='emulation/versatile-pb.dtb'
+#
+# you have also to modify run_image() function!
+
 QEMU_BIN='qemu-system-arm'
 QEMU_CPU='arm1176' #CPU Type
 QEMU_RAM='256' # in Megabyte
-QEMU_KERNEL='emulation/kernel-qemu-4.19.50-buster' #kernel image, do not modify except you what you doing.
+QEMU_KERNEL='emulation/kernel-qemu-5.4.51-buster' #kernel image, do not modify except you what you doing.
 QEMU_MACHINE='versatilepb'
-QEMU_DTB='emulation/versatile-pb.dtb'
+QEMU_DTB='emulation/versatile-pb-buster-5.4.51.dtb'
 QEMU_OPTIONS='-no-reboot -nographic'
 QEMU_NET='-net user,ipv4=on,ipv6=on,hostfwd=tcp::22222-:22,hostfwd=tcp::8888-:80 -net nic'
 
@@ -96,9 +103,20 @@ run_img() {
   qemu-system-arm -cpu $QEMU_CPU -m $QEMU_RAM \
   -kernel $QEMU_KERNEL -M $QEMU_MACHINE -dtb \
   $QEMU_DTB $QEMU_OPTIONS \
-  -append 'dwc_otg.lpm_enable=0 root=/dev/sda2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait' \
-  -drive file=$WORKSPACE/$IMG_FILE,index=0,media=disk,format=raw $QEMU_NET
+  -append 'dwc_otg.lpm_enable=0 root=/dev/vda2 panic=1 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait' \
+  -drive file=$WORKSPACE/$IMG_FILE,if=none,index=0,media=disk,format=raw,id=disk0 $QEMU_NET \
+  -device "virtio-blk-pci,drive=disk0,disable-modern=on,disable-legacy=off"
 }
+
+## run image for Kernel Version 4.19.50-buster
+#run_img() {
+#  qemu-system-arm -cpu $QEMU_CPU -m $QEMU_RAM \
+#  -kernel $QEMU_KERNEL -M $QEMU_MACHINE -dtb \
+#  $QEMU_DTB $QEMU_OPTIONS \
+#  -append 'dwc_otg.lpm_enable=0 root=/dev/sda2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait' \
+#  -drive file=$WORKSPACE/$IMG_FILE,index=0,media=disk,format=raw $QEMU_NET \ 
+#}
+
 
 ### Main
 start_hint

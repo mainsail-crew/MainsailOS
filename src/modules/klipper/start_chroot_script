@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Klipper install script
+# Script that installs Klipper
+# Written by Raymond Himle and Stefan Dej
+# Revamped by KwadFan
+# Thanks to KevinOConnor
+# GPL V3
+########
+
+### For easier maintainability look to klipper/config.
+
+## Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+source /common.sh
+install_cleanup_trap
+
+unpack /filesystem/root /
+
+echo_green "Installing Klipper and enable klippy Service"
+
+### install all deps at once for time consumption reasons.
+## APT: Update Repo Database and install Dependencies
+
+apt update && apt install ${KLIPPER_DEPS} -y
+
+### Make sure user pi has access to serial ports
+## NOTE: BASE_USER is defined by CustomPIOS Variable
+## there for if you plan to set something else than "pi"
+## Currently CustomPIOS uses "pi"
+
+usermod -a -G ${KLIPPER_USER_GROUPS} ${BASE_USER}
+
+### clone klipper repo
+pushd /home/${BASE_USER}
+gitclone KLIPPER_REPO klipper
+
+### Create needed dirs
+for dirs in ${KLIPPER_USER_DIRS}; do
+    if [ -d /home/$BASE_USER/$dirs ]; then
+        echo_green "$dirs already exists!"
+    else
+        echo_green "Creating $dirs"
+        sudo -u $BASE_USER mkdir -p $dirs
+    fi
+done
+popd
+
+# create python virtualenv and install klipper requirements
+pushd /home/${BASE_USER}
+echo_green "Creating Virtualenv for Klipper (klipper-env) ..."
+sudo -u ${BASE_USER} virtualenv -p python2 ${KLIPPER_PYTHON_DIR}
+echo_green "Installing klippy Python Dependencies ..."
+sudo -u ${BASE_USER} ${KLIPPER_PYTHON_DIR}/bin/pip install -r ${KLIPPER_SRC_DIR}/${KLIPPER_PYENV_REQ}
+popd
+
+
+# enable systemd service
+systemctl_if_exists enable klipper.service

@@ -1,0 +1,15 @@
+[ -n "$KLIPPER_SRC_DIR" ] || KLIPPER_SRC_DIR=/home/${BASE_USER}/klipper
+[ -n "$KLIPPER_PYTHON_DIR" ] || KLIPPER_PYTHON_DIR=/home/${BASE_USER}/klippy-env
+
+[ -n "$KLIPPER_REPO_SHIP" ] || KLIPPER_REPO_SHIP=https://github.com/KevinOConnor/klipper.git
+[ -n "$KLIPPER_REPO_BRANCH" ] || KLIPPER_REPO_BRANCH=master
+[ -n "$KLIPPER_DEPS" ] || KLIPPER_DEPS="wget git gpiod \
+virtualenv python-dev \
+libffi-dev build-essential \
+libncurses-dev libusb-dev \
+avrdude gcc-avr binutils-avr avr-libc \
+stm32flash dfu-util libnewlib-arm-none-eabi \
+gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0"
+[ -n "$KLIPPER_USER_GROUPS" ] || KLIPPER_USER_GROUPS=tty,dialout
+[ -n "$KLIPPER_USER_DIRS" ] || KLIPPER_USER_DIRS="klipper_config klipper_logs gcode_files"
+[ -n "$KLIPPER_PYENV_REQ" ] || KLIPPER_PYENV_REQ=scripts/klippy-requirements.txt

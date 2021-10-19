@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Moonraker install script
+# Script that installs Moonraker API service
+# Written by Raymond Himle and Stefan Dej
+# Thanks to Arksine
+# GPL V3
+########
+
+
+# Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+source /common.sh
+install_cleanup_trap
+
+unpack /filesystem/home/${BASE_USER} /home/${BASE_USER} ${BASE_USER}
+unpack /filesystem/root /
+
+
+echo_green "Installing Moonraker and enable Moonraker Service"
+
+### install all deps at once for time consumption reasons.
+## APT: Update Repo Database and install Dependencies
+
+apt update && apt install ${MOONRAKER_DEPS} -y
+
+### clone klipper repo
+pushd /home/${BASE_USER}
+gitclone MOONRAKER_REPO moonraker
+
+
+### create python3 virtualenv and install moonraker requirements
+pushd /home/${BASE_USER}
+echo_green "Creating Virtualenv for Moonraker (moonraker-env) ..."
+sudo -u ${BASE_USER} virtualenv -p python3 ${MOONRAKER_PYTHON_DIR}
+echo_green "Linking Python3 gpiod packages ..."
+sudo -u ${BASE_USER} ln -s /usr/lib/python3/dist-packages/gpiod* ${MOONRAKER_PYTHON_DIR}/lib/python*/site-packages
+echo_green "Installing klippy Python Dependencies ..."
+sudo -u ${BASE_USER} ${MOONRAKER_PYTHON_DIR}/bin/pip install -r ${MOONRAKER_SRC_DIR}/${MOONRAKER_PYENV_REQ}
+popd
+
+### Run sudo-fix.sh
+sudo -u ${BASE_USER} "${MOONRAKER_SRC_DIR}/scripts/sudo_fix.sh"
+
+### enable systemd service
+systemctl_if_exists enable moonraker.service
