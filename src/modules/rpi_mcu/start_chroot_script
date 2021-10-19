@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+source /common.sh
+install_cleanup_trap
+
+echo_green "Installing RPI MCU service"
+
+pushd /home/${BASE_USER}/klipper
+sudo cp "./scripts/klipper-mcu-start.sh" /etc/init.d/klipper_mcu
+sudo update-rc.d klipper_mcu defaults
+popd
