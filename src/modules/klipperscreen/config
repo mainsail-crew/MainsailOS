@@ -1,0 +1,2 @@
+[ -n "$KLIPPERSCREEN_SHIP" ] || KLIPPERSCREEN_SHIP=https://github.com/jordanruthe/KlipperScreen.git
+[ -n "$KLIPPERSCREEN_BRANCH" ] || KLIPPERSCREEN_BRANCH=master

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Installs RatOS
+# GPL V3
+########
+
+
+# Source error handling, leave this in place
+set -x
+set -e
+
+source /common.sh
+install_cleanup_trap
+
+echo_green "Installing KlipperScreen"
+
+cd /home/pi
+gitclone KLIPPERSCREEN KlipperScreen
+cd /home/pi/KlipperScreen
+./scripts/KlipperScreen-install.sh
+
+# Need to create the virtual environment for KlipperScreen-env for some unknown reason
+if [ ! -d /home/pi/.KlipperScreen-env ]
+then
+    echo_green "KlipperScreen virtual env was not created during installation. Creating..."
+    virtualenv -p /usr/bin/python3 /home/pi/.KlipperScreen-env/
+else
+    echo_green "KlipperScreen virtual env exists."
+fi
