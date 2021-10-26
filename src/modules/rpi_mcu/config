@@ -1,1 +1,0 @@
-[ -n "$RPI_MCU_CONFIG_TXT_FILE" ] || RPI_MCU_CONFIG_TXT_FILE="/boot/config.txt"
