@@ -18,7 +18,7 @@ case "$1" in
 start)
 	echo "$(date +"%Y-%m-%d %T"): Updating RatOS" >> "$logfile"
 	if [ -e /tmp/printer ]; then
-		echo "RESTART" > /tmp/printer
+		curl http://localhost:7125/printer/restart -X POST
 	fi
 	;;
 stop)
