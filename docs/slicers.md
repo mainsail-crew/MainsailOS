@@ -84,4 +84,4 @@ END_PRINT
 
 # Slicer thumbnails
 
-See the fluidd documentation: [G-Code Thumbnails in Fluidd](https://docs.fluidd.xyz/features/thumbnails)
+See the Mainsail documentation: [G-Code Thumbnails in Mainsail](https://docs.mainsail.xyz/quicktips/thumbnails)

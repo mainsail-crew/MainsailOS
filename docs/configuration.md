@@ -16,7 +16,7 @@ Mainsail is the control interface for your printer. Mainsail is a web applicatio
 
 ## Initial Configuration
 
-In the configuration page in Fluidd (the webinterface you just opened in your browser), there's a list of files, among them is `printer.cfg`. Right click it and choose "Edit". This is where your klipper configuration lives. As you can see, it's prepopulated with some included files which are meant to get you up and running quick and easy. **Follow the instructions in the file to make sure the configuration matches your setup.**
+In the configuration page in Mainsail (the webinterface you just opened in your browser), there's a list of files, among them is `printer.cfg`. Right click it and choose "Edit". This is where your klipper configuration lives. As you can see, it's prepopulated with some included files which are meant to get you up and running quick and easy. **Follow the instructions in the file to make sure the configuration matches your setup.**
 
 !> RatOS comes preconfigured for the V-Core 3, to use other printers, copy the contents of the printer template from `config/templates/` to your printer.cfg
 
@@ -24,9 +24,9 @@ In the configuration page in Fluidd (the webinterface you just opened in your br
 
 !> Do NOT use RatOS with other than stock steppers. If you are using different steppers please make sure to check their rating, and configure their currents accordingly ([see Includes & Overrides](#includes-amp-overrides)).
 
-Make sure your steppers are running in the correct direction. To do this, center all your axes by moving the carriage and bed manually, then type `SET_CENTER_KINEMATIC_POSITION` in the console. You can now use the fluidd controls to move the axes. Check that your bed moves down when Z is **increased**. By default, the Z controls in the fluidd interface will increase Z when you click the up arrow. This will lower the bed on a CoreXY machine with a moving bed such as the V-Core 3. If your bed does not move down when you click the up arrow, change the direction of your Z steppers in printer.cfg. There's instructions on how to do that at the top of printer.cfg.
+Make sure your steppers are running in the correct direction. To do this, center all your axes by moving the carriage and bed manually, then type `SET_CENTER_KINEMATIC_POSITION` in the console. You can now use the Mainsail controls to move the axes. Check that your bed moves down when Z is **increased**. By default, the Z controls in the Mainsail interface will increase Z when you click the up arrow. This will lower the bed on a CoreXY machine with a moving bed such as the V-Core 3. If your bed does not move down when you click the up arrow, change the direction of your Z steppers in printer.cfg. There's instructions on how to do that at the top of printer.cfg.
 
-?> If you want to invert the Z behavior in the fluidd interface (ie. making the bed move down when you click the down arrow), click the cog (settings) in the left part of the interface, then tool, and then enable "Invert Z Control". This will **NOT** change your stepper directions, it will only change what gcode the buttons execute.
+?> If you want to invert the Z behavior in the Mainsail interface (ie. making the bed move down when you click the down arrow), click the cog (settings) in the left part of the interface, then tool, and then enable "Invert Z Control". This will **NOT** change your stepper directions, it will only change what gcode the buttons execute.
 
 ## Verify Endstops and Z-Probe
 
@@ -36,7 +36,7 @@ Navigate to the tuning tab. In here you can see your bed mesh (once calibrated),
 
 ## Z-Offset
 
-An easy way to do probe z-offset calibration is to home the printer, then put a piece of paper underneath the nozzle. Now babystep Z through the Fluidd interface (or by issuing G0 commands through the console) until the nozzle touches the paper and there's a bit of resistance when you pull on it. Then write "GET_POSITION" in the console and find the line that says `// kinematic: ...` And use the Z coordinate from that line, multiplied by -1. So if it says `// kinematic: X:0.000000 Y:0.000000 Z:-0.400000` you need to add 0.4 to your probe's z_offset in printer.cfg.
+An easy way to do probe z-offset calibration is to home the printer, then put a piece of paper underneath the nozzle. Now babystep Z through the Mainsail interface (or by issuing G0 commands through the console) until the nozzle touches the paper and there's a bit of resistance when you pull on it. Then write "GET_POSITION" in the console and find the line that says `// kinematic: ...` And use the Z coordinate from that line, multiplied by -1. So if it says `// kinematic: X:0.000000 Y:0.000000 Z:-0.400000` you need to add 0.4 to your probe's z_offset in printer.cfg.
 
 Alternatively you can use the `PROBE_CALIBRATE` command, read more in the [klipper probe calibration documentation](https://www.klipper3d.org/Probe_Calibrate.html#calibrating-probe-z-offset)
 
