@@ -1,12 +1,15 @@
 # Manual klipper firmware compilation
-?> If you don't know what SSH is or how to use the commandline, consider following the instructions for your specific boards instead. There are easier ways to do this.
+
+?> RatOS automatically compiles firmware for your board when klipper is updated. You shouldn't have to do this unless something is broken.
 
 If you need to compile the firmware for your board yourself, here's how you do it.
 
 ## SSH into the Raspberry Pi
+
 You're need to log into the Pi via SSH. The default username is `pi` and the password is `raspberry` (sidenote: it's a good idea to change this via `sudo raspi-config`). If you're on linux or Mac OS, you can do this by opening a terminal and type:
+
 ```bash
-ssh pi@v-coreos.local
+ssh pi@ratos.local
 ```
 
 Now navigate to the klipper directory:
@@ -36,10 +39,11 @@ make
 ```
 
 ## Download the firmware from the Pi
+
 Now klipper has compiled it's firmware to `~/klipper/out/klipper.bin`. We can download that to our machine via `scp` or [WinSCP](https://winscp.net/eng/download.php) (for windows users).
 
-Linux and Mac OS users can use scp from their local machines like this: 
+Linux and Mac OS users can use scp from their local machines like this:
 
 ```bash
-scp pi@v-coreos.local:klipper/out/klipper.bin firmware.bin
+scp pi@ratos.local:klipper/out/klipper.bin firmware.bin
 ```

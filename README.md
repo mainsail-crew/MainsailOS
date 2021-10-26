@@ -1,12 +1,12 @@
-![V-Core OS](v-core-os-black.png)
+![RatOS](docs/_media/logos/Logo-v2-black.png)
 
-# What is V-CoreOS
+# What is RatOS
 
-V-CoreOS is a preconfigured software package for the Rat Rig V-Core 3, that aims to make it as painless as possible to get Klipper, Mainsail and Moonraker up and running on your printer. It is developed and maintained by Mikkel Schmidt (miklschmidt#2036 on the Rat Rig Unofficial Discord).
+RatOS is a preconfigured software package for the Rat Rig V-Core 3, Rat Rig V-Minion and Prusa MK3 that aims to make it as painless as possible to get Klipper, Mainsail and Moonraker up and running on your printer. It is developed and maintained by Mikkel Schmidt (miklschmidt#2036 on the Rat Rig Unofficial Discord).
 
-# How to use V-CoreOS
+# How to use RatOS
 
-Start by reading the [Documentation](https://rat-rig.github.io/V-CoreOS)
+Start by reading the [Documentation](https://os.ratrig.com)
 
 # Build your own / Developing
 
@@ -36,8 +36,8 @@ git p7zip-full python3 curl
 ## Compiling source
 
 ```bash
-git clone https://github.com/Rat-Rig/V-CoreOS.git
-cd V-CoreOS/
+git clone https://github.com/Rat-Rig/RatOS.git
+cd RatOS/
 make build
 ```
 
@@ -50,6 +50,6 @@ make distclean - Clean up the source image and trigger a new download
 
 ### Build layout
 
-V-CoreOS/emulation - Contains dependencies for emulation testing  
-V-CoreOS/src/image - Contains our base raspbian image  
-V-CoreOS/src/workspace - Created during build, and output for compiled images
+RatOS/emulation - Contains dependencies for emulation testing  
+RatOS/src/image - Contains our base raspbian image  
+RatOS/src/workspace - Created during build, and output for compiled images

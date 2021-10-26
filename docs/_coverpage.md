@@ -1,12 +1,15 @@
-![logo](_media/v-core-os.svg)
+![logo](_media/logos/Logo-v2-white.svg)
 
-# V-CoreOS <small>1.0</small>
+# <small>Formerly known as **V-CoreOS**</small>
+
+<br />
 
 > The easy way to run klipper on your 3D printer.
 
-- Supports multiple printers out of the box
-- Supports multiple controller boards
-- Based on Klipper, Moonraker and Fluidd
+- · Modular configuration with support for multiple printers
+- · Supports multiple controller boards, extruders and hotends
+- · Automatic firmware compilation and MCU flashing
+- · Based on Klipper, Moonraker and Mainsail
 
-[Download](https://github.com/Rat-Rig/V-CoreOS/releases)
+[Download](https://github.com/Rat-OS/RatOS/releases)
 [Documentation](#introduction)
