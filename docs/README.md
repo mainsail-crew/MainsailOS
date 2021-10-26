@@ -1,6 +1,6 @@
 # Introduction
 
-RatOS is a preconfigured software package for the Rat Rig V-Core 3, that aims to make it as painless as possible to get [Klipper](https://www.klipper3d.org/), [Moonraker](https://github.com/Arksine/moonraker) and [Mainsail](https://docs.mainsail.xyz/) up and running on your printer. It is developed and maintained by Mikkel Schmidt (miklschmidt#2036 on the Rat Rig Unofficial Discord).
+RatOS is a preconfigured software package for the Rat Rig V-Core 3, that aims to make it as painless as possible to get [Klipper](https://www.klipper3d.org/), [Moonraker](https://moonraker.readthedocs.io/en/latest/), [Mainsail](https://docs.mainsail.xyz/) and [KlipperScreen](https://klipperscreen.readthedocs.io/) up and running on your printer. It is developed and maintained by Mikkel Schmidt (miklschmidt#2036 on the Rat Rig Unofficial Discord).
 
 To run RatOS on your printer you need a supported control board and a Raspberry Pi.
 
@@ -19,7 +19,7 @@ Join the discussion on discord!
 
 # Software Credits
 
-RatOS is based on [Klipper](https://www.klipper3d.org/), [Moonraker](https://github.com/Arksine/moonraker), [Mainsail](https://docs.mainsail.xyz/), [MainsailOS](https://github.com/raymondh2/MainsailOS) without these and the amazing people behind them, RatOS would not have been possible.
+RatOS is based on [Klipper](https://www.klipper3d.org/), [Moonraker](https://moonraker.readthedocs.io/en/latest/), [Mainsail](https://docs.mainsail.xyz/), [MainsailOS](https://github.com/raymondh2/MainsailOS) and [KlipperScreen](https://klipperscreen.readthedocs.io/) without these and the amazing people behind them, RatOS would not have been possible.
 
 # Github links
 

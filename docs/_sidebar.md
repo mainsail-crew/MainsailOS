@@ -20,3 +20,9 @@
     - [V-Minion](printers/v-minion.md)
 - [Changelog](CHANGELOG.md)
 <!-- - [Changelog](changelog.md) -->
+
+- Other Documentation
+  - [Klipper](https://www.klipper3d.org/)
+  - [Mainsail](https://docs.mainsail.xyz/)
+  - [Moonraker](https://moonraker.readthedocs.io/en/latest/)
+  - [KlipperScreen](https://klipperscreen.readthedocs.io/)
