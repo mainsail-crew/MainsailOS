@@ -1,3 +1,0 @@
-RATRIG_VAR="This is a module variable"
-[ -n "$RATRIG_OS_CONFIG_SHIP" ] || RATRIG_OS_CONFIG_SHIP=https://github.com/Rat-OS/ratos-configuration.git
-[ -n "$RATRIG_OS_CONFIG_BRANCH" ] || RATRIG_OS_CONFIG_BRANCH=master

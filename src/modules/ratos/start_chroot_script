@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Installs RatOS
+# GPL V3
+########
+
+
+# Source error handling, leave this in place
+set -x
+set -e
+
+source /common.sh
+install_cleanup_trap
+
+echo_green "Installing RatOS"
+
+cd /home/pi/klipper_config
+
+gitclone RATOS_CONFIG config
+gitclone RATOS_THEME .theme
+
+# Run install script
+sudo -u pi bash /home/pi/klipper_config/config/scripts/ratos-install.sh
+
+unpack /filesystem/root /
+
+touch /tmp/030-ratos-githooks
+cat << '#EOF' > /tmp/030-ratos-githooks
+pi  ALL=(ALL) NOPASSWD: /home/pi/klipper_config/config/scripts/ratos-update.sh
+pi  ALL=(ALL) NOPASSWD: /home/pi/klipper_config/config/scripts/klipper-mcu-update.sh
+#EOF
+
+sudo chown root:root /tmp/030-ratos-githooks
+sudo chmod 440 /tmp/030-ratos-githooks
+sudo cp --preserve=mode /tmp/030-ratos-githooks /etc/sudoers.d/030-ratos-githooks
+
+sudo update-rc.d ratos defaults
