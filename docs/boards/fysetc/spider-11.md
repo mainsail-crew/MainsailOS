@@ -80,10 +80,10 @@ the firmware uploaded.
 
 Build the firmware which is covered here: https://rat-rig.github.io/V-CoreOS/#/manual-firmware-compilation
 
-Once the firmware is built on the Pi run:
+Once the firmware is built on the Pi run (assumes a 32kb bootloader, the default on Spider v1.1):
 
 	sudo service klipper stop
-	dfu-util -a 0 -s 0x08000000:leave -D ~/klipper/out/klipper.bin
+	dfu-util -a 0 -s 0x08008000:leave -D ~/klipper/out/klipper.bin
 
 You should see the firmware being written to your Spider.
 
