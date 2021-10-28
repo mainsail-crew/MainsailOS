@@ -4,7 +4,7 @@ The Rat [Rig V-Minion](https://www.youtube.com/watch?v=QXFAqerE9ws) is a yet upc
 
 ## Supported Boards
 
-?> Since the v-minion only has 1 z stepper, you only need to connect the `Left Z` stepper and stepper driver.
+?> Since the v-minion only has 1 z stepper, you only need to connect the `Left Z` stepper and stepper driver when using >5 stepper boards.
 
 - [Big Tree Tech Octopus v1.1](boards/btt/octopus-11.md)
 - [Big Tree Tech Octopus Pro 446](boards/btt/octopus-pro-446.md)

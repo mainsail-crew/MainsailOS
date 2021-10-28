@@ -4,7 +4,7 @@
 
 ### Updating from V-CoreOS-RC2
 
-Updating to RatOS v1.0 RC3 requires you to flash the SD Card in your Raspberry Pi, as well as your control board following the usual steps found in the [Installation Section](installation.md). That also means that any changes you've made to your Raspberry Pi setup will be lost unless you make a backup first. If you want to be absolutely sure you don't loose something, you can use a new SD card for RatOS v1.0 RC3. These are common things you'll probably want to backup:
+Updating to RatOS v1.0 RC3 requires you to flash the SD Card in your Raspberry Pi, as well as your control board following the usual steps found in the (has to be done manually via SD card transfer) [Installation Section](installation.md). That also means that any changes you've made to your Raspberry Pi setup will be lost unless you make a backup first. If you want to be absolutely sure you don't loose something, you can use a new SD card for RatOS v1.0 RC3. These are common things you'll probably want to backup:
 
 - printer.cfg (you can download this from Fluidd)
 - .moonraker_database (located in /home/pi/.moonraker_database on your Raspberry Pi. Download this with SCP/WinSCP)
@@ -35,6 +35,9 @@ variable_nozzle_priming: "primeline"
 variable_start_print_park_in: "back"
 # Height to park it when waiting for extruder to heat.
 variable_start_print_park_z_height: 50
+# Skew profile to load before starting the print
+# uncomment this to use your calibrated skew correction profile.
+#variable_skew_profile: "my_skew_profile"
 # Park in the back after the print has ended or was cancelled.
 # set to "front" to park in the front, or "center" to park in the center.
 variable_end_print_park_in: "back"
@@ -43,8 +46,6 @@ variable_end_print_park_in: "back"
 variable_pause_print_park_in: "back"
 # Set the speed for travel moves in RatOS Macros in mm/s.
 variable_macro_travel_speed: 150
-gcode:
-  {action_respond_error("This macro is for variables only")}
 ```
 
 ### General

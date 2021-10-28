@@ -2,7 +2,7 @@
 
 ## Raspberry Pi Installation
 
-Download the newest release (includes a firmware.bin and a ratos-\*.zip file under the assets dropdown) of [RatOS on github](https://github.com/Rat-Os/RatOS/releases).
+Download the newest release (download the RatOS-\*.zip file under the assets dropdown) of [RatOS on github](https://github.com/Rat-Os/RatOS/releases).
 Then follow [The offical raspberry pi guide](https://www.raspberrypi.org/documentation/installation/installing-images/) to write that image to the SD card that goes into your raspberry pi (8GB or larger)
 
 Note: this will destroy all data on the card!
