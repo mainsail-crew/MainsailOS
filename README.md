@@ -1,8 +1,11 @@
-![RatOS](docs/_media/logos/Logo-v2-black.png)
+![RatOS](docs/_media/logos/Logo-black.svg)
+
+![Downloads](https://img.shields.io/github/downloads/Rat-OS/RatOS/total?color=%2368da0b)
+[![discord](https://img.shields.io/discord/582187371529764864?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](http://discord.gg/ratrig)
 
 # What is RatOS
 
-RatOS is a preconfigured software package for the Rat Rig V-Core 3, Rat Rig V-Minion and Prusa MK3 that aims to make it as painless as possible to get Klipper, Mainsail and Moonraker up and running on your printer. It is developed and maintained by Mikkel Schmidt (miklschmidt#2036 on the Rat Rig Unofficial Discord).
+RatOS is a preconfigured Raspberry Pi image that aims to make it as painless as possible to get Klipper, Mainsail and Moonraker up and running on your printer. It is developed and maintained by Mikkel Schmidt (miklschmidt#2036 on the Rat Rig Unofficial Discord) with help from the community.
 
 # How to use RatOS
 
