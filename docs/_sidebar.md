@@ -17,6 +17,7 @@
 - Printers
   - Rat Rig
     - [V-Core 3](printers/v-core-3.md)
+    - [V-Core Pro 1.3](printers/v-core-pro.md)
     - [V-Minion](printers/v-minion.md)
 - [Changelog](CHANGELOG.md)
 <!-- - [Changelog](changelog.md) -->

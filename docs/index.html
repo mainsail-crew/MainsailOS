@@ -31,6 +31,7 @@
       /* --sidebar-nav-link-before-content: '😀'; */
       --base-font-family: 'Roboto';
       --heading-font-family : 'Oswald';
+      --cover-button-primary-color: #000;
 
       --sidebar-nav-link-before-content-l3: '';
       --cover-blockquote-color: White;
@@ -45,6 +46,16 @@
       --mono-tint1: hsl(var(--mono-hue), var(--mono-saturation), 25%);
       --mono-tint2: hsl(var(--mono-hue), var(--mono-saturation), 35%);
       --mono-tint3: hsl(var(--mono-hue), var(--mono-saturation), 43%);
+    }
+    .cover .cover-main>p:last-child a:first-child {
+      font-family: var(--heading-font-family);
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    .cover .cover-main>p:last-child a:last-child {
+      font-family: var(--heading-font-family);
+      font-weight: 500;
+      text-transform: uppercase;
     }
     .cover:before {
       background-image: none;

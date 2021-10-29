@@ -53,6 +53,10 @@ variable_macro_travel_speed: 150
 - Since the future of Fluidd is uncertain, RatOS has migrated to Mainsail!
 - KlipperScreen now comes preinstalled.
 
+### Printers
+
+- Add V-Core Pro 1.3 support
+
 ### Boards
 
 - Fysetc Spider v1.1 support added
