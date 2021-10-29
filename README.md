@@ -1,7 +1,9 @@
 ![RatOS](docs/_media/logos/Logo-black.svg)
 
-![Downloads](https://img.shields.io/github/downloads/Rat-OS/RatOS/total?color=%2368da0b)
-[![discord](https://img.shields.io/discord/582187371529764864?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](http://discord.gg/ratrig)
+<p align="center">
+<a href="https://github.com/Rat-OS/RatOS/releases"><img src="https://img.shields.io/github/downloads/Rat-OS/RatOS/total?color=%2368da0b" /></a>
+<a href="http://discord.gg/ratrig"><img src="https://img.shields.io/discord/582187371529764864?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat" /></a>
+</p>
 
 # What is RatOS
 
