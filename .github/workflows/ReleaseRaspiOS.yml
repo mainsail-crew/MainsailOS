@@ -25,7 +25,7 @@ jobs:
           submodules: true
 
       - name: Download Raspbian Source Image
-        run: aria2c -d repository/src/image/ --seed-time=0 https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent
+        run: aria2c -d repository/src/image/ --seed-time=0 https://downloads.raspberrypi.org/raspios_lite_armhf/images/2021-03-04-raspios-buster-armhf-lite.zip.torrent
       
       - name: Update CustomPiOS Paths
         run: cd repository/src && ../../CustomPiOS/src/update-custompios-paths
