@@ -41,7 +41,7 @@ Here a list of included and preinstalled Software:
 ## Requirements
 - [qemu-arm-static](http://packages.debian.org/sid/qemu-user-static)
 - [CustomPiOS](https://github.com/guysoft/CustomPiOS)
-- [Downloaded Raspbian Image](http://www.raspbian.org/)
+- [Downloaded Raspberry Pi OS Image](https://www.raspberrypi.com/software/operating-systems/)
 - Bash
 - Git
 - [Docker](https://docs.docker.com/engine/install/ubuntu/)
@@ -72,5 +72,5 @@ make distclean - Clean up the source image and trigger a new download
 
 ### Build layout
 MainsailOS/emulation - Contains dependencies for emulation testing  
-MainsailOS/src/image - Contains our base raspbian image  
+MainsailOS/src/image - Contains our base Raspberry Pi OS image  
 MainsailOS/src/workspace - Created during build, and output for compiled images

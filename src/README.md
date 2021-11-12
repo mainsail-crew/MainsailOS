@@ -1,4 +1,4 @@
-Build MainsailOS From within MainsailOS / OctoPi / Raspbian / Debian / Ubuntu
+Build MainsailOS From within MainsailOS / OctoPi / Raspberry Pi OS / Debian / Ubuntu
 MainsailOS can be built from Debian, Ubuntu, Raspbian, OctoPi, or even MainsailOS. Build requires about 5 GB of free space available. You can build it by issuing the following commands:
 
 sudo apt-get install gawk util-linux qemu-user-static git p7zip-full python3
