@@ -5,7 +5,7 @@
 
 ![Mainsail Logo](https://github.com/meteyou/mainsail/raw/master/docs/assets/img/logo.png?raw=true)
 
-A [Raspberry Pi](https://www.raspberrypi.org/) distribution for 3d Printers. It includes everything to get started with Klipper Fimware and Mainsail.
+A [Raspberry Pi OS](https://www.raspberrypi.org/software/) based distribution for 3d Printers. It includes everything to get started with Klipper Fimware and Mainsail.
 
 Learn More about...   
 Klipper Firmware: https://www.klipper3d.org/   
@@ -40,8 +40,6 @@ Here a list of included and preinstalled Software:
 
 ## Requirements
 - [qemu-arm-static](http://packages.debian.org/sid/qemu-user-static)
-- [CustomPiOS](https://github.com/guysoft/CustomPiOS)
-- [Downloaded Raspbian Image](http://www.raspbian.org/)
 - Bash
 - Git
 - [Docker](https://docs.docker.com/engine/install/ubuntu/)
@@ -57,20 +55,30 @@ qemu-user-static qemu-system-arm \
 git p7zip-full python3 curl
 ```
 
-## Compiling source
+## Build your own Image of MainsailOS
 ```bash
 git clone https://github.com/raymondh2/MainsailOS.git
 cd MainsailOS/
-make build
+make
 ```
 
 ### Other make options
 ```bash
 make clean - Clean all previous build items except the source raspian image
 make distclean - Clean up the source image and trigger a new download
+make cleanfix - If your build fails you, sometimes, have no Permission to clean. This will chmod to 0777 to grant full access.
 ```
 
 ### Build layout
 MainsailOS/emulation - Contains dependencies for emulation testing  
-MainsailOS/src/image - Contains our base raspbian image  
-MainsailOS/src/workspace - Created during build, and output for compiled images
+MainsailOS/src/image - Will contain an Raspberry Pi OS Image and according sha1 checksum file
+MainsailOS/src/workspace - Created during build, and output for compiled Images
+
+
+---
+
+## Credits
+We want to give a shoutout to [jottr](https://github.com/jottr) for mentioning a naming convention problem.\
+In the past we used 'raspbian' at some points for names.\
+But this isn't technicaly true.\
+MainsailOS is based of Raspberry Pi OS, not raspbian.
