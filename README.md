@@ -1,4 +1,4 @@
-![downloads](https://img.shields.io/github/downloads/raymondh2/MainsailOS/total)
+![downloads](https://img.shields.io/github/downloads/mainsail-crew/MainsailOS/total)
 [![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/skWTwTD) 
 
 # MainsailOS
@@ -57,7 +57,7 @@ git p7zip-full python3 curl
 
 ## Build your own Image of MainsailOS
 ```bash
-git clone https://github.com/raymondh2/MainsailOS.git
+git clone https://github.com/mainsail-crew/MainsailOS.git
 cd MainsailOS/
 make
 ```
