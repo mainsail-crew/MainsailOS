@@ -26,7 +26,7 @@ Start by reading the [Documentation](https://os.ratrig.com)
 - [Docker-Compose](https://docs.docker.com/compose/install/)
 - QEMU for emulation
 - About 5GB of free diskspace for the build
-- Yarn & Docsify for docs
+- Yarn & Docusaurus for docs
 
 ### Packages for Ubuntu 18.04/20.04
 

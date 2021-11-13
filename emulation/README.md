@@ -4,7 +4,7 @@ These images are provided by [dhruvvyas90](https://github.com/dhruvvyas90/qemu-r
 
 Thanks for your effort to bring newer and especcialy patched for qemu Kernels!
 
-**To match used Kernel in latest raspbian Image the**
+**To match used Kernel in latest Raspberry Pi OS Image the**
 
     make test
 
