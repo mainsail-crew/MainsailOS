@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Klipper install script
+# Script that installs Klipper
+# Written by KwadFan
+# GPL V3
+########
+
+### Buster Patch
+## Should prevent build error due name change of Release Info of raspios buster
+
+## Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+source /common.sh
+install_cleanup_trap
+
+apt update --allow-releaseinfo-change
+apt full-upgrade --yes

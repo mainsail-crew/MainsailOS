@@ -23,7 +23,7 @@ echo_green "Installing Klipper and enable klippy Service"
 ### install all deps at once for time consumption reasons.
 ## APT: Update Repo Database and install Dependencies
 
-apt update && apt install ${KLIPPER_DEPS} -y
+apt update && apt install ${KLIPPER_DEPS} -y 
 
 ### Make sure user pi has access to serial ports
 ## NOTE: BASE_USER is defined by CustomPIOS Variable
