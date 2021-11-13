@@ -27,8 +27,10 @@ See the documentation for your specific board.
 
 ## Setup
 
-With the control board connected via USB to your Raspberry Pi, turn on your printer. After a couple of minutes, open your browser and navigate to [http://RatOS.local/](http://RatOS.local)
+With the control board connected via USB to your Raspberry Pi, turn on your printer. After a couple of minutes, open your browser and navigate to [http://RatOS.local/](http://RatOS.local) and proceed to the [configuration guide](configuration.md).
 
 ## Updating
 
-In the settings page in Mainsail, scroll to the bottom (or click "Software Updates") and you'll see a sheet with the title "Software Updates", if you're familiar with Fluidd or Mainsail, you'll notice a new entry called `ratos`. This `ratos` package will update all the config files in the config folder, improvements, support for hotends, macros, extruders, new boards etc, will be coming to your printer this way in the future. **Be sure to keep this up to date, especially if you update klipper**. In general, it's advisable to keep all your packages up to date. Now we've got that out of the way, please go ahead and update everything to the latest version.
+!> It is important that you don't update the klipper package _before_ your board connects correctly, because firmware updates will not compile or flash automatically before your board is properly flashed and connected.
+
+After you've configured your printer.cfg and everything is working, go to the `MACHINE` tab in Mainsail. You'll see a sheet with the title "Update Manager", if you're familiar with Fluidd or Mainsail, you'll notice a new entry called `ratos`. This `ratos` package will update all the config files in the config folder, improvements, support for hotends, macros, extruders, new boards etc, will be coming to your printer this way in the future. **Be sure to keep this up to date, especially if you update klipper**. In general, it's advisable to keep all your packages up to date, but if you're happy with how your printer works and there's nothing interesting to you in the updates, it's OK to delay updating until a later time. Klipper is a continually evolving product, that also means that bugs _do happen_, they're usually fixed very quickly, but if you have a bunch of important prints coming up, maybe delay the updates till afterwards. Now we've got that out of the way, please go ahead and update everything to the latest version.

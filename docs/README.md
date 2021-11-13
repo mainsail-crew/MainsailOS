@@ -1,6 +1,6 @@
 # Introduction
 
-RatOS is a preconfigured Raspberry Pi image that aims to make it as painless as possible to get [Klipper](https://www.klipper3d.org/), [Moonraker](https://moonraker.readthedocs.io/en/latest/), [Mainsail](https://docs.mainsail.xyz/) and [KlipperScreen](https://klipperscreen.readthedocs.io/) up and running on your printer. It is developed and maintained by Mikkel Schmidt (miklschmidt#2036 on the Rat Rig Unofficial Discord).
+RatOS is a preconfigured Raspberry Pi image that aims to make it as painless as possible to get [Klipper](https://www.klipper3d.org/), [Moonraker](https://moonraker.readthedocs.io/en/latest/), [Mainsail](https://docs.mainsail.xyz/) and [KlipperScreen](https://klipperscreen.readthedocs.io/) up and running on your printer, via an easy to use, modular configuration. It is developed and maintained by Mikkel Schmidt (miklschmidt#2036 on the Rat Rig Unofficial Discord).
 
 To run RatOS on your printer you need a supported control board and a Raspberry Pi.
 

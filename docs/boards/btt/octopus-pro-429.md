@@ -1,5 +1,7 @@
 # Big Tree Tech Octopus Pro STM32F429
 
+!> This board is **NOT** recommended, as it cannot be flashed automatically through USB, that means all firmware updates have to be done by manually moving an SD card back and forth. The Octopus Pro 446 is recommended instead.
+
 ## Wiring
 
 ![BTT Octopus Pro STM32F429 Wiring Diagram](_media/octopus-11-wiring.png)
@@ -10,7 +12,7 @@
 
 !> Make sure your board is connected to the Pi **via the provided USB-C cable** (USB-C on the Octopus Pro 429, USB-A on the Pi).
 
-Move the `firmware-octopus-pro-429.bin` file from the release page to the SD card that goes into your control board and call it `firmware.bin`, then insert the SD card in to the control board.
+Move the `firmware-octopus-pro-429.bin` file from the release page (or from the `firmware_binaries` folder in mainsail) to the SD card that goes into your control board and call it `firmware.bin`, then insert the SD card in to the control board and power it on.
 
 ?>
 You can verify if the board flashed correctly by checking if the firmware.bin file has been changed to firmware.CUR on the SD card. If you have trouble flashing the motherboard, start unplugging your wires beginning with the endstops, sometimes faulty wiring can cause the board to not boot properly.
@@ -21,23 +23,23 @@ If you're going through initial setup please continue in the [installation guide
 
 ## Manual firmware upgrade
 
-Sometimes klipper makes changes to the microcontroller code and thus your MCU need to be reflashed with new firmware. You can do that in 2 ways.
+Sometimes klipper makes changes to the microcontroller code and thus your MCU need to be reflashed with new firmware.
 
-!> RatOS V1.0-RC3 automatically flashes the newest firmware to your
-Octopus Pro 429 when klipper is updated (if the klipper firmware has previously been flashed).
-You shouldn't need any of the steps below unless that fails.
+!> RatOS V1.0-RC3 automatically compiles new firmware for your board when klipper is updated and places it in the firmware_binaries folder, you can download the binary from here and flash via SD card manually.
 
 ### SD Card
 
-If you're not used to the command line or haven't used SSH before, the easiest way is to download the firmware file from Mainsail and put that onto an SD card (renaming it to firmware.bin). Everytime klipper is updated, the firmware for the connected board is compiled and put into the `firmware-binaries` folder which you can find under the "Machine" tab. The process for this is the same as in the [Firmware Installation](#firmware-installation) step.
+Everytime klipper is updated, the firmware for the connected board is compiled and put into the `firmware-binaries` folder which you can find under the "Machine" tab. The process for this is the same as in the [Firmware Installation](#firmware-installation) step. Download the firmware file from Mainsail and put that onto an SD card (renaming it to firmware.bin) and insert it into your board, then power it on.
 
 ?>
 You can verify if the board flashed correctly by checking if the firmware.bin file has been changed to firmware.CUR on the SD card. If you have trouble flashing the motherboard, start unplugging your wires beginning with the endstops, sometimes faulty wiring can cause the board to not boot properly.
 
 ?> Once you have verifed the board has been succesfully flashed, you don't have to reinsert the SD card.
 
-### Flashing via USB
+## I updated klipper and now i get an error!
 
-Another option is to SSH into the pi using something like PuTTy or `ssh pi@RatOS.local` via the commandline on OS X and Linux machines. Execute `~/klipper_config/config/boards/btt-octopus-pro-429/make-and-flash-mcu.sh` and the Pi will compile the klipper firmware and flash the board for you.
+When you update klipper you might see an error that looks like this:
 
-!> Be sure to remove the SD card from the board before attempting to flash, if one is in there.
+![Firmware version mismatch between host and guest](_media/firmware_version_mismatch.png)
+
+This is because klipper made changes to a part of the MCU firmware that we use. Klipper is telling us that the version of klipper running on the Pi is newer than the version running on the MCU. To fix this, we have to flash the board with a new version of the firmware. For convenience, and ease of use, the newest firmware is compiled and put in the firmware_binaries folder which you can find in the `MACHINE` tab in Mainsail. You can use this to flash your MCU the same way you did initially, via SD Card.
