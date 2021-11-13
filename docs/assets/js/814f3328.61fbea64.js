@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunksite=self.webpackChunksite||[]).push([[535],{5641:function(e){e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"RatOS V1.0 Released!","permalink":"/blog/ratos-v1-0-released"}]}')}}]);

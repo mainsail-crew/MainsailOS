@@ -1,0 +1,99 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap");
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #5aff00;
+  --ifm-color-primary-dark: #51e600;
+  --ifm-color-primary-darker: #4dd900;
+  --ifm-color-primary-darkest: #3fb300;
+  --ifm-color-primary-light: #6bff1a;
+  --ifm-color-primary-lighter: #73ff26;
+  --ifm-color-primary-lightest: #8cff4d;
+  --ifm-code-font-size: 95%;
+
+  --ifm-color-success: #c2e78c;
+  --ifm-color-success-dark: #b2e16d;
+  --ifm-color-success-darker: #aadd5e;
+  --ifm-color-success-darkest: #91d430;
+  --ifm-color-success-light: #d2edab;
+  --ifm-color-success-lighter: #daf1ba;
+  --ifm-color-success-lightest: #f3fae8;
+
+  --ifm-color-secondary: #ebf0ed;
+  --ifm-color-secondary-dark: #d0dcd5;
+  --ifm-color-secondary-darker: #c2d1c8;
+  --ifm-color-secondary-darkest: #9ab3a4;
+  --ifm-color-secondary-light: #ffffff;
+  --ifm-color-secondary-lighter: #ffffff;
+  --ifm-color-secondary-lightest: #ffffff;
+
+  --ifm-color-info: #0b87da;
+  --ifm-color-info-dark: #0a79c4;
+  --ifm-color-info-darker: #0973b9;
+  --ifm-color-info-darkest: #085e99;
+  --ifm-color-info-light: #0c94f0;
+  --ifm-color-info-lighter: #149af3;
+  --ifm-color-info-lightest: #35a8f5;
+
+  --ifm-color-warning: #ffcb6b;
+  --ifm-color-warning-dark: #ffbe47;
+  --ifm-color-warning-darker: #ffb835;
+  --ifm-color-warning-darkest: #fda400;
+  --ifm-color-warning-light: #ffd88f;
+  --ifm-color-warning-lighter: #ffdea1;
+  --ifm-color-warning-lightest: #fff1d8;
+
+  --ifm-color-danger: #da0b50;
+  --ifm-color-danger-dark: #c40a48;
+  --ifm-color-danger-darker: #b90944;
+  --ifm-color-danger-darkest: #990838;
+  --ifm-color-danger-light: #f00c58;
+  --ifm-color-danger-lighter: #f3145f;
+  --ifm-color-danger-lightest: #f53575;
+
+  /* FONTS */
+  --ifm-heading-font-family: "Oswald", sans-serif;
+  --ifm-heading-font-weight: 500;
+}
+
+:root h1,
+h2 {
+  text-transform: uppercase;
+}
+
+:root .alert--success {
+  --ifm-alert-background-color: #333 !important;
+}
+
+:root .alert--danger {
+  --ifm-alert-background-color: #5c001f !important;
+}
+
+:root .alert--warning {
+  --ifm-alert-background-color: #50432a !important;
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.1);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+html[data-theme="dark"] .docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+small.byline {
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
