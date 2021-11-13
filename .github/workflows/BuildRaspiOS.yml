@@ -1,4 +1,4 @@
-name: Build MainsailOS - RapsiOS
+name: Build MainsailOS - Raspberry Pi OS buster
 on:
   push:
     branches:
