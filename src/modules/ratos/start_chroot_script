@@ -33,4 +33,6 @@ sudo chown root:root /tmp/030-ratos-githooks
 sudo chmod 440 /tmp/030-ratos-githooks
 sudo cp --preserve=mode /tmp/030-ratos-githooks /etc/sudoers.d/030-ratos-githooks
 
+unpack /filesystem/home/${BASE_USER} /home/${BASE_USER} ${BASE_USER}
+
 sudo update-rc.d ratos defaults
