@@ -4,6 +4,6 @@
 export DIST_NAME=RatOS
 export DIST_VERSION=1.0.0
 export BASE_IMAGE_ENLARGEROOT=2500
-export MODULES="base,busterpatch(network,raspicam,klipper,is_req_preinstall,moonraker,mainsail,mjpgstreamer,serialcomm,rpi_mcu,ratos,klipperscreen,password-for-sudo)"
+export MODULES="base,busterpatch(network,raspicam,klipper,is_req_preinstall,moonraker,mainsail,mjpgstreamer,serialcomm,ratos,rpi_mcu,klipperscreen,password-for-sudo)"
 export BASE_IMAGE_RESIZEROOT=600
 export BASE_RELEASE_COMPRESS=yes
