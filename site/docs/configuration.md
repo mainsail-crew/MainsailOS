@@ -1,5 +1,5 @@
 ---
-sidebar_label: Configuration
+sidebar_label: Initial Configuration
 sidebar_position: 2
 ---
 
@@ -23,11 +23,17 @@ To learn more about mainsail, [read the mainsail documentation](https://docs.mai
 
 ## Initial Configuration
 
-In the configuration page in Mainsail (the webinterface you just opened in your browser), there's a list of files, among them is `printer.cfg`. Right click it and choose "Edit". This is where your klipper configuration lives. As you can see, it's prepopulated with some included files which are meant to get you up and running quick and easy. **Follow the instructions in the file to make sure the configuration matches your setup.**
+On the dashboard of Mainsail you'll see 3 macros in the Macros section.
 
-:::info
-RatOS comes preconfigured for the V-Core 3, to use other printers, copy the contents of the printer template from `config/templates/` to your printer.cfg
+![Initial Config Macros](/img/initial-macros.png)
+
+Click on the button that corresponds to your printer to install the configuration.
+
+:::tip
+If you accidentally clicked the wrong button you can install another printer config by copying the contents of the template found in `config/templates/` and pasting it into printer.cfg.
 :::
+
+Now navigate to the `Machine` page in Mainsail (the webinterface you just opened in your browser), there's a list of files, among them is `printer.cfg`. Right click it and choose "Edit". This is where your klipper configuration lives. As you can see, it's prepopulated with all you need to get your printer up and running quick and easy. **Follow the instructions in the file to make sure the configuration matches your setup.**
 
 ## Verify Stepper Directions
 
@@ -56,37 +62,6 @@ Alternatively you can use the `PROBE_CALIBRATE` command, read more in the [klipp
 :::info
 The z-offset is the distance in Z between your probe's trigger point and your nozzle in gcode space. This is typically within 0-4mm, if you get a larger value or a negative value, something is wrong, and you should investigate further.
 :::
-
-## Includes & Overrides
-
-RatOS uses a modular configuration that heavily takes advantage of the config file include and merge logic in Klipper. For this reason, the order of includes and overrides are very important, do **not** change the order of the configuration unless you know what you're doing.
-
-:::danger
-Do **NOT** edit the files inside the `config/` folder. These files are controlled by RatOS and will be updated when the RatOS package is updated.
-:::
-
-You can override any setting in RatOS, to do so you just copy the section and the parameter you need to change, and paste it in your printer.cfg after the related config file has been loaded. Let's say we wanted to change the current the extruder motor. If we navigate to `config/printers/v-core-3/steppers.cfg` we'll see this section:
-
-```properties
-[tmc2209 extruder]
-uart_pin: e_uart_pin
-run_current: 0.5
-hold_current: 0.400
-stealthchop_threshold: 900
-```
-
-We're only interested in the `run_current` and `hold_current` settings, so all we need to do is go back to printer.cfg, scroll down to the `USER OVERRIDES` comment section and put in the following:
-
-```properties
-### USER OVERRIDES
-# Place all your overrides here
-
-[tmc2209 extruder]
-run_current: 0.35
-hold_current: 0.200
-```
-
-This works for any section (including gcode macros) and any parameter. You only need to override the parts you're interested in. Imagine that each `[include]` section is simply replaced by the contents of the included file. You can have the same section defined multiple times, they will all get merged by klipper when it reads the config, with the last parameters taking precedence. This makes for a super powerful way to build your config! Refer to the [klipper config reference](https://www.klipper3d.org/Config_Reference.html) for all the cool things you can do.
 
 ## Updating
 

@@ -11,6 +11,7 @@ You're not supposed to change _any_ files inside the config/ folder. You should 
 ## Klipper says the MCU is unable to connect
 
 Double check your USB connection, try another cable (the one that comes with the board usually works), and check that your firmware was flashed correctly (refer to the guide for your board).
+If you need to flash new firmware (for example autoflashing will not work if you upgrade klipper before flashing your board and it's properly connected), use the `COMPILE_BINARIES` macro to generate new firmware binaries for all supported boards. Then download the binary for your board from the `firmware_binaries` folder in the Machine tab, and flash it via SD card.
 
 ## I updated klipper and now i get an error!
 
@@ -18,11 +19,10 @@ When you update klipper you might see an error that looks like this:
 
 ![Firmware version mismatch between host and guest](/img/firmware_version_mismatch.png)
 
-This is because klipper made changes to a part of the MCU firmware that we use. Klipper is telling us that the version of klipper running on the Pi is newer than the version running on the MCU. To fix this, we have to flash the board with a new version of the firmware. For convenience, and ease of use, the newest firmware is compiled and put in the `firmware_binaries` folder which you can find in the `MACHINE` tab in Mainsail. You can use this to flash your MCU the same way you did initially, via SD Card. RatOS attempts to flash supported boards automatically when klipper is updated. If you're getting this error you're probably using a board which does not support automatic flashing via USB. If you're not, please reach out on [discord](https://discord.gg/ratrig).
+This is because klipper made changes to a part of the MCU firmware that we use. Klipper is telling us that the version of klipper running on the Pi is newer than the version running on the MCU. To fix this, we have to flash the board with a new version of the firmware. For convenience, and ease of use, the newest firmware is compiled and put in the `firmware_binaries` folder which you can find in the `MACHINE` tab in Mainsail. You can use this to flash your MCU the same way you did initially, via SD Card. RatOS attempts to flash supported boards automatically when klipper is updated. If you're getting this error you're probably using a board which does not support automatic flashing via USB. It's also possible that you updated klipper without having your board flashed and connected. In that case, use the `COMPILE_BINARIES` macro to generate new firmware binaries for all supported boards. Then download the binary for your board from the `firmware_binaries` folder in the Machine tab, and flash that via SD card.
 
 ## Get help
 
 For further support check out the RatOS-support and klipper channels on Discord. Use the invite link below to join.
 
-<a href="https://discord.gg/ratrig" class="button">Join the Unnofficial RatRig Discord Community</a>
-This is because klipper made changes to a part of the MCU firmware that we use. Klipper is telling us that the version of klipper running on the Pi is newer than the version running on the MCU. To fix this, we have to flash the board with a new version of the firmware.
+<a href="https://discord.gg/ratrig" class="button button--primary">Join the Unnofficial RatRig Discord Community</a>

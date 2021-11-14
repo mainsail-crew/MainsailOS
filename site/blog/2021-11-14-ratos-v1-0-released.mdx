@@ -10,6 +10,10 @@ tags: [RatOS, Releases]
 RatOS V1.0 is finally released, it's been a long road to get here, thank you everyone who has been testing and supporting me get this release completed.
 There's a lot of new exciting features that i'm dying to share with you all.
 
+### Mainsail is here!
+
+RatOS now ships with Mainsail as the default UI. The Mainsail team has been teasing a lot of awesome features lately and now RatOS users get them too.
+
 ### Automated firmware updates
 
 That's right. RatOS will now flash your board for you everytime klipper is updated.
@@ -25,13 +29,13 @@ Read more about that in the [Octopus Pro 429 Board Documentation](/docs/boards/b
 Automated firmware updates made it possible to add the RPi as an additional mcu, it's now preconfigured and automatically updated, so you can use
 it for additional GPIO's, ADXL345 or other sensors if you need to. This also opens up for using dual ADXL345's on bed slingers.
 
-### More powerful macro configuration
+### More powerful macros
+
+RatOS now ships with the gcode_shell_command.py klipper extension, this allows for macros to compile binaries, pick your printer configuration, generate input shaper graphs and more without you ever having to SSH into your pi. It's been the primary design principle of RatOS from the start that running klipper on your printer should not require knowledge of SSH or Linux, so this is another step in the right direction!
+
+### More flexible macros
 
 We've added a bunch of parameters you can configure for changing the behavior of the built-in RatOS macro's, what your START_PRINT to skip the bed mesh calibration? No problem. Want the carriage to park in the front during pauses? Easy! How about starting your print with a primeline? You've got it! Read more in the [Update Guide](/changelog#updating-from-v-coreos-rc2)
-
-### Mainsail is here!
-
-RatOS now ships with Mainsail as the default UI. The Mainsail team has been teasing a lot of awesome features lately and now RatOS users get them too.
 
 ### THANK YOU for your support
 

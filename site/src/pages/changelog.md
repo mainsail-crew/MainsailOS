@@ -4,13 +4,13 @@
 
 ### Updating from V-CoreOS-RC2
 
-Updating to RatOS v1.0 requires you to flash the SD Card in your Raspberry Pi, as well as your control board following the usual steps found in the (has to be done manually via SD card transfer) [Installation Section](docs/installation). That also means that any changes you've made to your Raspberry Pi setup will be lost unless you make a backup first. If you want to be absolutely sure you don't loose something, you can use a new SD card for RatOS v1.0. These are common things you'll probably want to backup:
+Updating to RatOS v1.0 requires you to flash the SD Card in your Raspberry Pi, as well as your control board following the usual steps (has to be done manually via SD card transfer) found in the [Installation Section](docs/installation). That also means that any changes you've made to your Raspberry Pi setup will be lost unless you make a backup first. If you want to be absolutely sure you don't loose something, you can use a new SD card for RatOS v1.0. These are common things you'll probably want to backup:
 
 - printer.cfg (you can download this from Fluidd)
 - .moonraker_database (located in /home/pi/.moonraker_database on your Raspberry Pi. Download this with SCP/WinSCP)
 - Any custom setup you've done.
 
-If you're reuploading your printer.cfg from V-CoreOS-RC2 you'll need to add this to the bottom of printer.cfg (right above the ### USER OVERRIDES section):
+If you're reuploading your printer.cfg from V-CoreOS-RC2 you can (optionally) add this to the bottom of printer.cfg (right above the ### USER OVERRIDES section):
 
 ```properties
 ### MACRO CONFIGURATION
@@ -48,10 +48,13 @@ variable_pause_print_park_in: "back"
 variable_macro_travel_speed: 150
 ```
 
+If the section is not present in your printer.cfg the default values will be used. See [Macro Configuration](docs/configuration/macros.md) for information on how to use the variables.
+
 ### General
 
 - Since the future of Fluidd is uncertain, RatOS has migrated to Mainsail.
 - KlipperScreen now comes preinstalled.
+- Picking your printer is now done via Macros on first startup.
 
 ### Printers
 
@@ -68,6 +71,10 @@ variable_macro_travel_speed: 150
 
 ### Macros
 
+- gcode_shell_command.py has been added.
+- Added `INSTALL_VCORE_THREE_CONFIG`, `INSTALL_VCORE_PRO_CONFIG`, `INSTALL_VMINION_CONFIG` macro's for initial setup.
+- Added COMPILE_BINARIES macro to compile binaries for all supported boards in case the user got himself into a bad situation and needs the newest firmware.
+- Added GENERATE_SHAPER_GRAPHS which runs resonance test and generates graphs which are placed in the `input_shaper` folder.
 - Macro's now have configurable behavior, the following variables are available: `relative_extrusion`, `preheat_extruder`, `calibrate_bed_mesh`, `nozzle_priming`, `start_print_park_in`, `start_print_park_z_height`, `end_print_park_in`, `pause_print_park_in` and `macro_travel_speed`.
 - `START_PRINT` now has 4 hooks: `_START_PRINT_AFTER_HEATING_BED`, `_START_PRINT_BED_MESH`, `_START_PRINT_PARK` and `_START_PRINT_AFTER_HEATING_EXTRUDER`. You can override these in your printer.cfg to further customize the way your `START_PRINT` macro behaves.
 - `END_PRINT` now has 2 hooks: `_END_PRINT_AFTER_HEATERS_OFF` and `_END_PRINT_PARK`. You can override these in your printer.cfg to further customize the way your END_PRINT macro behaves.
