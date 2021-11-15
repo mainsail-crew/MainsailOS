@@ -48,6 +48,10 @@ const config = {
         background: '#000',
         margin: 60,
       },
+      gtag: {
+        trackingID: 'G-NQB0MHKGLP',
+        anonymizeIP: true,
+      },
       colorMode: {
         defaultMode: 'dark',
         disableSwitch: true,
