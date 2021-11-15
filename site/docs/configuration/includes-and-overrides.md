@@ -4,6 +4,7 @@ RatOS uses a modular configuration that heavily takes advantage of the config fi
 
 :::danger
 Do **NOT** edit the files inside the `config/` folder. These files are controlled by RatOS and will be updated when the RatOS package is updated.
+![Hands off the RatOS Managed Config Folder!](/img/config-folder.png)
 :::
 
 You can override any setting in RatOS, to do so you just copy the section and the parameter you need to change, and paste it in your printer.cfg after the related config file has been loaded. Let's say we wanted to change the current the extruder motor. If we navigate to `config/printers/v-core-3/steppers.cfg` we'll see this section:

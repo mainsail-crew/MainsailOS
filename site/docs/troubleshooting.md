@@ -6,7 +6,8 @@ Refer to the stepper section at the top of printer.cfg, you can add or remove `!
 
 ## Everytime i update my changes are gone.
 
-You're not supposed to change _any_ files inside the config/ folder. You should _only_ change your printer.cfg, if you need to change settings refer to the [Inlcudes & Overrides Documentation](/docs/configuration/includes-and-overrides) section.
+You're not supposed to change _any_ files inside the managed RatOS config/ folder. You should _only_ change your printer.cfg, if you need to change settings refer to the [Inlcudes & Overrides Documentation](/docs/configuration/includes-and-overrides) section.
+![Hands off the RatOS Managed Config Folder!](/img/config-folder.png)
 
 ## Klipper says the MCU is unable to connect
 
