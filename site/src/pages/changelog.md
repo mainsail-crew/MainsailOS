@@ -7,8 +7,8 @@
 Updating to RatOS v1.0 requires you to flash the SD Card in your Raspberry Pi, as well as your control board following the usual steps (has to be done manually via SD card transfer) found in the [Installation Section](docs/installation). That also means that any changes you've made to your Raspberry Pi setup will be lost unless you make a backup first. If you want to be absolutely sure you don't loose something, you can use a new SD card for RatOS v1.0. These are common things you'll probably want to backup:
 
 - printer.cfg (you can download this from Fluidd)
-- .moonraker_database (located in /home/pi/.moonraker_database on your Raspberry Pi. Download this with SCP/WinSCP)
-- Any custom setup you've done.
+- .moonraker_database/\* (located in /home/pi/.moonraker_database on your Raspberry Pi. Download data.mdb and lock.mdb with SCP/WinSCP then upload them to that same location after installation of RatOS v1.0)
+- Any custom setup you've done, that isn't replaced with native RatOS functionality.
 
 If you're reuploading your printer.cfg from V-CoreOS-RC2 you can (optionally) add this to the bottom of printer.cfg (right above the ### USER OVERRIDES section):
 
@@ -48,7 +48,7 @@ variable_pause_print_park_in: "back"
 variable_macro_travel_speed: 150
 ```
 
-If the section is not present in your printer.cfg the default values will be used. See [Macro Configuration](docs/configuration/macros.md) for information on how to use the variables.
+If the section is not present in your printer.cfg the default values will be used. See [Macro Configuration](/docs/configuration/macros) for information on how to use the variables.
 
 ### General
 
