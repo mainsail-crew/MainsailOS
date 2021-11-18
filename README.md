@@ -70,3 +70,7 @@ make distclean - Clean up the source image and trigger a new download
 RatOS/emulation - Contains dependencies for emulation testing  
 RatOS/src/image - Contains our base raspbian image  
 RatOS/src/workspace - Created during build, and output for compiled images
+
+## HUGE THANK YOU to the Sponsors
+
+- Dnoell

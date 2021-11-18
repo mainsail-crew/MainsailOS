@@ -71,7 +71,7 @@ const config = {
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {to: '/changelog', label: 'Changelog', position: 'left'},
-          {href: 'https://paypal.me/miklschmidt', label: 'Donate', position: 'left'},
+          {href: 'https://github.com/sponsors/miklschmidt', label: 'Donate/Sponsor', position: 'left'},
           {
             href: 'https://discord.gg/ratrig',
             label: 'Discord',
