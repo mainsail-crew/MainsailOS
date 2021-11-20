@@ -44,6 +44,20 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      algolia: {
+        // If Algolia did not provide you any appId, use 'BH4D9OD16A'
+        appId: 'BH4D9OD16A',
+  
+        // Public API key: it is safe to commit it
+        apiKey: 'ad8f23a9185eed2471ddcb819c4f30c5',
+  
+        indexName: 'ratrig',
+  
+        // Optional: see doc section below
+        contextualSearch: true,
+  
+        //... other Algolia params
+      },
       zoomOptions: {
         background: '#000',
         margin: 60,
