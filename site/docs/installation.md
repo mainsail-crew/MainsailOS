@@ -32,9 +32,15 @@ When that is done insert the SD card into the Raspberry Pi, but don't turn on yo
 
 See the documentation for your specific board.
 
-[BIGTREETECH Octopus v1.1](boards/btt/octopus-11)
+[BIGTREETECH Octopus v1.1](/docs/boards/btt/octopus-11)
 
-[BIGTREETECH SKR Pro v1.2](boards/btt/skr-pro-12)
+[BIGTREETECH Octopus Pro 446](/docs/boards/btt/octopus-pro-446)
+
+[BIGTREETECH Octopus Pro 429](/docs/boards/btt/octopus-pro-429)
+
+[BIGTREETECH SKR Pro v1.2](/docs/boards/btt/skr-pro-12)
+
+[Fysetc Spider v1.1](/docs/boards/fysetc/spider-11)
 
 ## Setup
 
