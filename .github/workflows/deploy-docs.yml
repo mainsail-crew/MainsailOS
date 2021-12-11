@@ -16,7 +16,7 @@ jobs:
           node-version: 14.x
           cache: yarn
       - name: Build website
-        working-directory: website
+        working-directory: site
         run: |
           yarn install --frozen-lockfile
           yarn build
