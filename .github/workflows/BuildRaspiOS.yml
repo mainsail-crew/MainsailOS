@@ -1,12 +1,12 @@
-name: Build MainsailOS - Raspberry Pi OS buster
+name: Build RatOS - Raspberry Pi OS buster
 on:
   push:
     branches:
-      - '**'
-    tags-ignore: 
-      - '**'
+      - "**"
+    tags-ignore:
+      - "**"
   pull_request:
-    types: [ opened, edited ]
+    types: [opened, edited]
 
 jobs:
   raspiosbuild:
@@ -14,15 +14,15 @@ jobs:
 
     steps:
       - name: Install Dependencies
-        run: sudo apt update; sudo apt install coreutils p7zip-full qemu-user-static zip 
+        run: sudo apt update; sudo apt install coreutils p7zip-full qemu-user-static zip
 
       - name: Checkout CustomPiOS
         uses: actions/checkout@v2
         with:
-          repository: 'guysoft/CustomPiOS'
+          repository: "guysoft/CustomPiOS"
           path: CustomPiOS
-      
-      - name: Checkout MainsailOS Project
+
+      - name: Checkout RatOS Project
         uses: actions/checkout@v2
         with:
           repository: ${{ github.repository }}
@@ -31,7 +31,7 @@ jobs:
 
       - name: Download Raspberry Pi OS Source Image
         run: aria2c -d repository/src/image/ --seed-time=0 https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2021-03-25/2021-03-04-raspios-buster-armhf-lite.zip.torrent
-      
+
       - name: Update CustomPiOS Paths
         run: cd repository/src && ../../CustomPiOS/src/update-custompios-paths
 
@@ -39,12 +39,12 @@ jobs:
         run: sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
 
       - name: Copy output image
-        run: cp ${{ github.workspace }}/repository/src/workspace/*-raspios-*-lite.img mainsailos-raspios-lite-latest.img
-      
+        run: cp ${{ github.workspace }}/repository/src/workspace/*-raspios-*-lite.img ratos-raspios-lite-latest.img
+
       - name: Compress the image
-        run: zip mainsailos-raspios-lite-latest.zip mainsailos-raspios-lite-latest.img
+        run: zip ratos-raspios-lite-latest.zip ratos-raspios-lite-latest.img
 
       - uses: actions/upload-artifact@v1
         with:
-          name: mainsailos-raspios-lite-latest.zip
-          path: mainsailos-raspios-lite-latest.zip
+          name: ratos-raspios-lite-latest.zip
+          path: ratos-raspios-lite-latest.zip
