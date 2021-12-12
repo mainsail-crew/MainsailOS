@@ -54,7 +54,7 @@ Once you have verifed the board has been succesfully flashed, **do not** reinser
 
 ### Flashing via USB
 
-Another option is to SSH into the pi using something like PuTTy or `ssh pi@RatOS.local` via the commandline on OS X and Linux machines. Execute `~/klipper_config/config/boards/btt-octopus-11/make-and-flash-mcu.sh` and the Pi will compile the klipper firmware and flash the board for you.
+Another option is to SSH into the pi using something like PuTTy or `ssh pi@RatOS.local` via the commandline on OS X and Linux machines. Execute `sudo ~/klipper_config/config/boards/btt-octopus-11/make-and-flash-mcu.sh` and the Pi will compile the klipper firmware and flash the board for you.
 
 :::caution
 Be sure to remove the SD card from the board before attempting to flash, if one is in there.
