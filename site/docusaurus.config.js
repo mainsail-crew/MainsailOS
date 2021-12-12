@@ -24,13 +24,13 @@ const config = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://github.com/Rat-OS/RatOS/edit/master/site/docs/',
+          editUrl: 'https://github.com/Rat-OS/RatOS/edit/master/site/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
-            'https://github.com/Rat-OS/RatOS/edit/master/site/blog/',
+            'https://github.com/Rat-OS/RatOS/edit/master/site/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
