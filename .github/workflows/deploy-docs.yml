@@ -6,6 +6,7 @@ on:
     paths: [site/**]
   workflow_dispatch:
 
+jobs:
   deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
