@@ -19,7 +19,7 @@ To use physical endstops on the SKR Pro you need to cut the diag pins from your 
 ## Wiring
 
 ![SKR Pro 1.2 Wiring Diagram](_media/skr-pro-12-wiring.png)
-:::danger if you use the Ratrig endstop switches and cables, do **not** blindly plug them in to your Octopus as doing this will short the board's 3.3V power rail.
+:::danger if you use the Ratrig endstop switches and cables, do **not** blindly plug them in to your SKR Pro 1.2 as doing this will short the board's 3.3V power rail.
 You will probably have to swap the outer two wires (red and white) on the board end of the cable but double check to make sure.
 :::
 
