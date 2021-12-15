@@ -34,22 +34,35 @@ jobs:
         run: sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
 
       - name: Copy output image
-        run: cp ${{ github.workspace }}/repository/src/workspace/*-raspios-*-lite.img mainsailos-raspios-lite-latest.img
+        run: cp ${{ github.workspace }}/repository/src/workspace/*-raspios-*-lite.img MainsailOS-buster-lite-${{ github.event.release.tag_name }}.img
       
       - name: Compress the image
-        run: zip mainsailos-raspios-lite-latest.zip mainsailos-raspios-lite-latest.img
+        run: zip MainsailOS-buster-lite-${{ github.event.release.tag_name }}.zip MainsailOS-buster-lite-${{ github.event.release.tag_name }}.img
 
-      - uses: actions/upload-artifact@v1
+      - name: Generate sha256 Checksum
+        run: sha256sum MainsailOS-buster-lite-${{ github.event.release.tag_name }}.zip > MainsailOS-buster-lite-${{ github.event.release.tag_name }}.zip.sha256
+      
+      - uses: actions/upload-artifact@v2
         with:
-          name: mainsailos-raspios-lite-latest.zip
-          path: mainsailos-raspios-lite-latest.zip
+          name: MainsailOS-buster-lite-${{ github.event.release.tag_name }}.zip
+          path: MainsailOS-buster-lite-${{ github.event.release.tag_name }}.zip
 
-      - name: Upload RaspiOS Asset
+      - name: Upload MainsailOS (Raspios buster based) Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: mainsailos-raspios-lite-latest.zip
-          asset_name: mainsailos-rpi-lite-${{ github.event.release.tag_name }}.zip
+          asset_path: MainsailOS-buster-lite-${{ github.event.release.tag_name }}.zip
+          asset_name: MainsailOS-buster-lite-${{ github.event.release.tag_name }}.zip
           asset_content_type: application/zip
+
+      - name: Upload MainsailOS sha256 Checksum Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: MainsailOS-buster-lite-${{ github.event.release.tag_name }}.zip.sha256
+          asset_name: MainsailOS-buster-lite-${{ github.event.release.tag_name }}.zip.sha256
+          asset_content_type: text/plain
