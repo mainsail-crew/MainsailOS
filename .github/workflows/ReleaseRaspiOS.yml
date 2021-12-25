@@ -16,7 +16,7 @@ jobs:
         with:
           repository: 'guysoft/CustomPiOS'
           path: CustomPiOS
-      
+
       - name: Checkout MainsailOS Project
         uses: actions/checkout@v2
         with:
@@ -25,8 +25,8 @@ jobs:
           submodules: true
 
       - name: Download Raspberry Pi OS Source Image
-        run: aria2c -d repository/src/image/ --seed-time=0 https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2021-03-25/2021-03-04-raspios-buster-armhf-lite.zip.torrent
-      
+        run: aria2c -d repository/src/image/ --seed-time=0 https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2021-12-02/2021-12-02-raspios-buster-armhf-lite.zip.torrent
+
       - name: Update CustomPiOS Paths
         run: cd repository/src && ../../CustomPiOS/src/update-custompios-paths
 
@@ -35,13 +35,13 @@ jobs:
 
       - name: Copy output image
         run: cp ${{ github.workspace }}/repository/src/workspace/*-raspios-*-lite.img MainsailOS-buster-lite-${{ github.event.release.tag_name }}.img
-      
+
       - name: Compress the image
         run: zip MainsailOS-buster-lite-${{ github.event.release.tag_name }}.zip MainsailOS-buster-lite-${{ github.event.release.tag_name }}.img
 
       - name: Generate sha256 Checksum
         run: sha256sum MainsailOS-buster-lite-${{ github.event.release.tag_name }}.zip > MainsailOS-buster-lite-${{ github.event.release.tag_name }}.zip.sha256
-      
+
       - uses: actions/upload-artifact@v2
         with:
           name: MainsailOS-buster-lite-${{ github.event.release.tag_name }}.zip

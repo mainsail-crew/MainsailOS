@@ -12,17 +12,17 @@ build: verifyimage
 	docker-compose down
 
 verifyimage:
-	@if [ ! -f "src/image/2021-03-04-raspios-buster-armhf-lite.zip" ]; \
+	@if [ ! -f "src/image/2021-12-02-raspios-buster-armhf-lite.zip" ]; \
 	then echo "Raspberry Pi OS image does not exist. Starting Download..."; \
-	curl -J -L  https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2021-03-25/2021-03-04-raspios-buster-armhf-lite.zip > src/image/2021-03-04-raspios-buster-armhf-lite.zip; else \
+	curl -J -L  https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2021-12-02/2021-12-02-raspios-buster-armhf-lite.zip > src/image/2021-12-02-raspios-buster-armhf-lite.zip; else \
 	echo "Raspberry Pi OS image found. Starting checksum verification"; \
-	curl -J -L https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2021-03-25/2021-03-04-raspios-buster-armhf-lite.zip.sha1 > src/image/2021-03-04-raspios-buster-armhf-lite.zip.sha1; \
-	IMAGE_SHA1=`sha1sum src/image/2021-03-04-raspios-buster-armhf-lite.zip | awk '{print $$1}'`; \
-	DL_SHA1=`awk '{print $$1}' src/image/2021-03-04-raspios-buster-armhf-lite.zip.sha1`; \
-	if [ "$$IMAGE_SHA1" != "$$DL_SHA1" ]; then echo "SHAs do not match."; \
-	echo "Got $$IMAGE_SHA1"; echo "Expected $$DL_SHA1"; \
-	echo "Starting Raspberry Pi OS Image download"; \
-	curl -J -L  https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2021-03-25/2021-03-04-raspios-buster-armhf-lite.zip > src/image/2021-03-04-raspios-buster-armhf-lite.zip; else echo "SHAs Matched"; fi; fi
+	curl -J -L https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2021-12-02/2021-12-02-raspios-buster-armhf-lite.zip.sha256 > src/image/2021-12-02-raspios-buster-armhf-lite.zip.sha256; \
+	IMAGE_SHA1=`sha256sum src/image/2021-12-02-raspios-buster-armhf-lite.zip | awk '{print $$1}'`; \
+	DL_SHA1=`awk '{print $$1}' src/image/2021-12-02-raspios-buster-armhf-lite.zip.sha256`; \
+	if [ "$$IMAGE_SHA256" != "$$DL_SHA256" ]; then echo "SHAs do not match."; \
+	echo "Got $$IMAGE_SHA256"; echo "Expected $$DL_SHA256"; \
+	echo "SHA256 Sums dont match! Aborting"; \
+	exit 1; else echo "SHA256 Sums matched! Continue..."; fi; fi
 
 clean:
 	rm -rf src/workspace
