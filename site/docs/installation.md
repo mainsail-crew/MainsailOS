@@ -24,7 +24,7 @@ Do **NOT** use a textprocessor such as Wordpad, it will mangle the file and your
 
 :::
 
-When the process is complete, find the `/boot` volume / folder on the sd card. If you're having trouble finding the boot volume, try reinserting the SD card into your PC. Edit the `vcoreos-wpa-supplicant.txt` file found on the boot volume in a text editor and fill out your wifi information. **Remember to change the country code at the bottom of the file.**
+When the process is complete, find the `/boot` volume / folder on the sd card. If you're having trouble finding the boot volume, try reinserting the SD card into your PC. Edit the `ratos-wpa-supplicant.txt` file found on the boot volume in a text editor and fill out your wifi information. **Remember to change the country code at the bottom of the file.**
 
 When that is done insert the SD card into the Raspberry Pi, but don't turn on your printer / Raspberry Pi just yet.
 
