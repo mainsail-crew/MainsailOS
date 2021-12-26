@@ -3,10 +3,16 @@ on:
   push:
     branches:
       - '**'
+    #paths:
+    #- 'src/**'
+    #- 'emulation/**'
     tags-ignore:
       - '**'
   pull_request:
     types: [ opened, edited ]
+    #paths:
+    #- 'src/**'
+    #- 'emulation/**'
 
 jobs:
   raspiosbuild:
@@ -30,7 +36,7 @@ jobs:
           submodules: true
 
       - name: Download Raspberry Pi OS Source Image
-        run: aria2c -d repository/src/image/ --seed-time=0 https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2021-12-02/2021-12-02-raspios-buster-armhf-lite.zip.torrent
+        run: aria2c -d repository/src/image/ --seed-time=0 https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf_latest.torrent
 
       - name: Update CustomPiOS Paths
         run: cd repository/src && ../../CustomPiOS/src/update-custompios-paths
