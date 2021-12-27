@@ -3,16 +3,18 @@ on:
   push:
     branches:
       - '**'
-    #paths:
-    #- 'src/**'
-    #- 'emulation/**'
+    paths:
+    - 'src/**'
+    - 'emulation/**'
+    - '.github/workflows/BuildRaspiOS.yml'
     tags-ignore:
       - '**'
   pull_request:
     types: [ opened, edited ]
-    #paths:
-    #- 'src/**'
-    #- 'emulation/**'
+    paths:
+    - 'src/**'
+    - 'emulation/**'
+    - '.github/workflows/BuildRaspiOS.yml'
 
 jobs:
   raspiosbuild:
@@ -55,7 +57,7 @@ jobs:
       - name: Compress the image
         run: zip mainsailos-raspios-lite-latest.zip mainsailos-raspios-lite-latest.img
 
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v2
         with:
           name: mainsailos-raspios-lite-latest.zip
           path: mainsailos-raspios-lite-latest.zip
