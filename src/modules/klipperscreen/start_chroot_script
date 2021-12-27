@@ -16,16 +16,7 @@ echo_green "Installing KlipperScreen"
 cd /home/pi
 gitclone KLIPPERSCREEN KlipperScreen
 cd /home/pi/KlipperScreen
-./scripts/KlipperScreen-install.sh
+sudo -u ${BASE_USER} ./scripts/KlipperScreen-install.sh
 
 # Mute output from klipperscreen service
 sudo sed -i 's/\[Service\]/\[Service\]\n\StandardOutput=null\nStandardError=null/g' /etc/systemd/system/KlipperScreen.service
-
-# Need to create the virtual environment for KlipperScreen-env for some unknown reason
-if [ ! -d /home/pi/.KlipperScreen-env ]
-then
-    echo_green "KlipperScreen virtual env was not created during installation. Creating..."
-    virtualenv -p /usr/bin/python3 /home/pi/.KlipperScreen-env/
-else
-    echo_green "KlipperScreen virtual env exists."
-fi
