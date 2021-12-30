@@ -28,7 +28,7 @@ RatOS V1.1 has modularized stepper and driver configuration, in your printer.cfg
 #[include config/printers/v-core-3/tmc2209-stealth.cfg]
 ```
 
-You can uncomment the section entirely to use your own combination of steppers and drivers. For example, let's say we're using an Octopus Pro with 50V 5160's powering the LDO-42STH48-2504AC on X and Y, and 2209's for the Z's. We could do the following in our user overrides section after commenting out the entire stepper motors, drivers and speed limits section:
+You can comment out the section entirely to use your own combination of steppers and drivers. For example, let's say we're using an Octopus Pro with 50V 5160's powering the LDO-42STH48-2504AC on X and Y, and 2209's for the Z's. We could do the following in our user overrides section after commenting out the entire stepper motors, drivers and speed limits section:
 
 ```properties
 #############################################################################################################
