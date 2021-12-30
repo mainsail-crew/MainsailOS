@@ -8,6 +8,8 @@ RatOS comes with a bunch of flexible predefined macro's that can be customized v
 ....
 ```
 
+This is a macro that serves as a place to store variables that all the RatOS macro's refer to when they're executed. Here's a list of the available variables and what they do.
+
 ### Relative Extrusion
 
 | Name                        | Possible Values | Default |
@@ -41,7 +43,7 @@ If you want to implement additional mesh handling logic you can override the `_S
 
 | Name                    | Possible Values     | Default |
 | ----------------------- | ------------------- | ------- |
-| variable_nozzle_priming | "primeline" / False | True    |
+| variable_nozzle_priming | "primeline" / False | "primeline"    |
 
 Whether or not to prime the nozzle during the START_PRINT macro. "primeline" will make START_PRINT draw a short line to prime the nozzle. If you want a more agressive priming procedure you can override the `PRIME_LINE` macro.
 
@@ -52,9 +54,9 @@ Whether or not to prime the nozzle during the START_PRINT macro. "primeline" wil
 | variable_start_print_park_in       | "back" / "center" / "front" | "back"    | Where to park the toolhead during final nozzle heating.                     |
 | variable_start_print_park_x        | number / undefined          | undefined | Custom X coordinate to park the toolhead during final nozzle heating.       |
 | variable_start_print_park_z_height | number                      | 50        | The z height at which to park the toolhead during final nozzle heating.     |
-| variable_end_print_park_in         | "back" / "center" / "front" | "back     | Where to park the toolhead after ending or canceling a print.               |
+| variable_end_print_park_in         | "back" / "center" / "front" | "back"     | Where to park the toolhead after ending or canceling a print.               |
 | variable_end_print_park_x          | number / undefined          | undefined | Custom X coordinate to park the toolhead after ending or canceling a print. |
-| variable_pause_print_park_in       | "back" / "center" / "front" | "back     | Where to park the toolhead when pausing a print.                            |
+| variable_pause_print_park_in       | "back" / "center" / "front" | "back"     | Where to park the toolhead when pausing a print.                            |
 | variable_pause_print_park_x        | number / undefined          | undefined | Custom X coordinate to park the toolhead when pausing a print.              |
 
 ### Speed
@@ -64,3 +66,11 @@ Whether or not to prime the nozzle during the START_PRINT macro. "primeline" wil
 | variable_macro_travel_speed | number          | 150     |
 
 Travel speed to use for gcode moves in RatOS Macro's in mm/s.
+
+### Skew profile
+
+| Name                        | Possible Values     | Default |
+| --------------------------- | ------------------- | ------- |
+| variable_skew_profile       | string or undefined | 150     |
+
+Use this if you have calibrated and saved a skew profile that you want to load in the START_PRINT macro. To activate it, set the variable to the name of your saved skew profile.
