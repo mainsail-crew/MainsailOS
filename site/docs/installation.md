@@ -10,7 +10,7 @@ sidebar_position: 1
 ## Raspberry Pi Installation
 
 Download the newest release (download the RatOS-\*.zip file under the assets dropdown) of [RatOS on github](https://github.com/Rat-Os/RatOS/releases).
-Then follow [The offical raspberry pi guide](https://www.raspberrypi.org/documentation/installation/installing-images/) to write that image to the SD card that goes into your raspberry pi (8GB or larger)
+Then use [Balena Etcher](https://www.balena.io/etcher/) to write that image to the SD card that goes into your raspberry pi (8GB or larger). 
 
 Note: this will destroy all data on the card!
 
@@ -26,9 +26,9 @@ Do **NOT** use a textprocessor such as Wordpad, it will mangle the file and your
 
 When the process is complete, find the `/boot` volume / folder on the sd card. If you're having trouble finding the boot volume, try reinserting the SD card into your PC. Edit the `ratos-wpa-supplicant.txt` file found on the boot volume in a text editor and fill out your wifi information. **Remember to change the country code at the bottom of the file.**
 
-When that is done insert the SD card into the Raspberry Pi, but don't turn on your printer / Raspberry Pi just yet.
-
 ## Preparing your control board
+
+When the RatOS image has been written to the SD card and you've configured your wifi settings, insert the SD card into the Raspberry Pi and turn on the Pi. Wait a couple of minutes, then open [http://RatOS.local/](http://ratos.local/) in your browser. This will present you with the mainsail interface. On the left there's a menu option named "Machine", click on that, and you'll see a list of files and folders. There's a folder here called "firmware_binaries", open that folder. You can download the firmware binary for your board from here. Let's move on to the preparation of the control board.
 
 See the documentation for your specific board.
 
@@ -44,7 +44,7 @@ See the documentation for your specific board.
 
 ## Setup
 
-With the control board connected via USB to your Raspberry Pi, turn on your printer. After a couple of minutes, open your browser and navigate to [http://RatOS.local/](http://RatOS.local) and proceed to the [configuration guide](configuration).
+With the control board connected via USB to your Raspberry Pi and the printer turned on, open your browser and navigate to [http://RatOS.local/](http://RatOS.local) and proceed to the [configuration guide](configuration).
 
 ## Updating
 
