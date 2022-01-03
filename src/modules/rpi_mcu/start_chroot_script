@@ -14,14 +14,5 @@ sudo cp "./scripts/klipper-mcu-start.sh" /etc/init.d/klipper_mcu
 sudo update-rc.d klipper_mcu defaults
 popd
 
-
-pushd /home/pi/klipper
-echo "flashing rpi-mcu"
-cp -f /home/pi/klipper_config/config/boards/rpi/firmware.config /home/pi/klipper/.config
-make olddefconfig
-make clean
-make flash
-
 # Reset ownership
 chown pi:pi -R /home/pi/klipper
-popd

@@ -5,18 +5,19 @@
 
 
 # Source error handling, leave this in place
-set -x
-set -e
+set -xe
 
 source /common.sh
 install_cleanup_trap
 
 echo_green "Installing RatOS"
 
-cd /home/pi/klipper_config
+pushd /home/pi/klipper_config
 
 gitclone RATOS_CONFIG config
 gitclone RATOS_THEME .theme
+
+popd
 
 # Run install script
 sudo -u pi bash /home/pi/klipper_config/config/scripts/ratos-install.sh

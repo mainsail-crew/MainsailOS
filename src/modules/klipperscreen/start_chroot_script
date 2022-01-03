@@ -21,4 +21,4 @@ sudo -u ${BASE_USER} ./scripts/KlipperScreen-install.sh
 # Mute output from klipperscreen service
 sudo sed -i 's/\[Service\]/\[Service\]\n\StandardOutput=null\nStandardError=null/g' /etc/systemd/system/KlipperScreen.service
 
-sudo service KlipperScreen stop
+sudo systemctl stop KlipperScreen
