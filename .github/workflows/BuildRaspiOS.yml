@@ -42,12 +42,12 @@ jobs:
         run: sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
 
       - name: Copy output image
-        run: cp ${{ github.workspace }}/repository/src/workspace/*-raspios-*-lite.img mainsailos-raspios-lite-latest.img
+        run: cp ${{ github.workspace }}/repository/src/workspace/*-raspios-*-lite.img RatOS-latest.img
 
       - name: Compress the image
-        run: zip ratos-raspios-lite-latest.zip ratos-raspios-lite-latest.img
+        run: zip RatOS-latest.zip RatOS-latest.img
 
       - uses: actions/upload-artifact@v1
         with:
-          name: ratos-raspios-lite-latest.zip
-          path: ratos-raspios-lite-latest.zip
+          name: RatOS-latest.zip
+          path: RatOS-latest.zip
