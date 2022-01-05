@@ -1,4 +1,4 @@
 [ -n "$RATOS_CONFIG_SHIP" ] || RATOS_CONFIG_SHIP=https://github.com/Rat-OS/RatOS-configuration.git
-[ -n "$RATOS_CONFIG_BRANCH" ] || RATOS_CONFIG_BRANCH=development
+[ -n "$RATOS_CONFIG_BRANCH" ] || RATOS_CONFIG_BRANCH=master
 [ -n "$RATOS_THEME_SHIP" ] || RATOS_THEME_SHIP=https://github.com/Rat-OS/RatOS-theme.git
 [ -n "$RATOS_THEME_BRANCH" ] || RATOS_THEME_BRANCH=master
