@@ -10,7 +10,7 @@ sidebar_position: 1
 ## Raspberry Pi Installation
 
 Download the newest release (download the RatOS-\*.zip file under the assets dropdown) of [RatOS on github](https://github.com/Rat-Os/RatOS/releases).
-Then use [Balena Etcher](https://www.balena.io/etcher/) to write that image to the SD card that goes into your raspberry pi (8GB or larger). 
+Then use [Balena Etcher](https://www.balena.io/etcher/) to write that image to the SD card that goes into your raspberry pi (8GB or larger).
 
 Note: this will destroy all data on the card!
 
@@ -32,15 +32,17 @@ When the RatOS image has been written to the SD card and you've configured your 
 
 See the documentation for your specific board.
 
-[BIGTREETECH Octopus v1.1](/docs/boards/btt/octopus-11)
+[BIGTREETECH Octopus v1.1](boards/btt/octopus-11.md)
 
-[BIGTREETECH Octopus Pro 446](/docs/boards/btt/octopus-pro-446)
+[BIGTREETECH Octopus Pro 446](boards/btt/octopus-pro-446.md)
 
-[BIGTREETECH Octopus Pro 429](/docs/boards/btt/octopus-pro-429)
+[BIGTREETECH Octopus Pro 429](boards/btt/octopus-pro-429.md)
 
-[BIGTREETECH SKR Pro v1.2](/docs/boards/btt/skr-pro-12)
+[BIGTREETECH SKR Pro v1.2](boards/btt/skr-pro-12.md)
 
-[Fysetc Spider v1.1](/docs/boards/fysetc/spider-11)
+[BIGTREETECH SKR 2](boards/btt/skr-2-429.md)
+
+[Fysetc Spider v1.1](boards/fysetc/spider-11.md)
 
 ## Setup
 
