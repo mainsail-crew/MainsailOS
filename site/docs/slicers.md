@@ -51,8 +51,14 @@ You should be using "Klipper" as the gcode flavor
 This is the ONLY gcode you need, delete everything else. Copy paste the following **as is**.
 :::
 
+Start GCode
 ```properties
 START_PRINT EXTRUDER_TEMP=[first_layer_temperature] BED_TEMP=[first_layer_bed_temperature]
+```
+
+End GCode
+```properties
+END_PRINT
 ```
 
 ## Simplify 3D
