@@ -1,0 +1,25 @@
+---
+slug: ratos-v1-1-released
+title: RatOS V1.1 Released!
+authors: [miklschmidt]
+tags: [RatOS, Releases]
+---
+
+## RatOS V1.1 is now released!
+
+As some of you may have noticed, RatOS v1.1 has been released this week, bringing new templates, new modular driver and stepper definitions and
+support for new extruders and hotends. This release also contains an updated V-Minion template that will run out of the box with the just released [V-Minion full kits](https://www.ratrig.com/v-minion.html) that will start shipping soon.
+
+### Changes to stepper motors and driver settings.
+
+This release mainly revolves around the new stepper/stepper driver setting recommendations from Klipper. `Hold_current` has been removed, stealthchop is now entirely disabled by default, interpolation has been disabled and microsteps have been increased to 64 to counteract the additional noise. This increases precision and you may see an increase in print quality.
+This change comes with the side effect of increased "R2D2 noise", tuned driver settings for the most used steppers have been included to combat this, but they will never be as silent in standstill as with stealthchop_threshold: 1. If you want a quieter printer refer to the "stealth mode" includes in the new printer templates, this will turn on stealthchop and limit print velocity at the cost of significantly reduced torque and precision.
+A nice consequence of this change is that it made it easier to make drivers and steppers more modular, it's now much easier to run high voltage steppers on some stepper slots, read more in the [Advanced Stepper Configuration](/docs/configuration/advanced-stepper-configuration) guide.
+
+### Updating from RatOS v1.0
+
+V1.1 is backwards compatible, but there are still a couple of things you might want to do, read more in the [Update Guide](/changelog#updating-from-ratos-v10).
+
+### THANK YOU for your support
+
+Thank you to everyone who donated, helped me test and suggest changes and improvements, it is much appreciated!

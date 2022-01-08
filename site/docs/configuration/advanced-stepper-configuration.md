@@ -1,6 +1,6 @@
 # Advanced Stepper Configuration
 
-RatOS V1.1 has modularized stepper and driver configuration, in your printer.cfg you'll see a section like this:
+RatOS V1.1 introduced modularized stepper and driver configuration, this can be used for more fine grained control of your steppers. In your printer.cfg you might have noticed a section like this:
 
 ```properties
 #############################################################################################################
@@ -14,8 +14,8 @@ RatOS V1.1 has modularized stepper and driver configuration, in your printer.cfg
 [include config/printers/v-core-3/tmc2209.cfg]
 [include config/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-*.cfg]
 
-# COOLED TMC 2209 + LDO-42STH48-2504AC 
-# This increases motor torque, positional accuracy and speed limits. 
+# COOLED TMC 2209 + LDO-42STH48-2504AC
+# This increases motor torque, positional accuracy and speed limits.
 # don't enable this before your printer is fully configured and you have a fan blowing on your stepper drivers.
 #[include config/printers/v-core-3/speed-limits-performance.cfg]
 #[include config/printers/v-core-3/tmc2209-performance.cfg]
@@ -91,4 +91,4 @@ max_z_accel: 1000
 square_corner_velocity: 5
 ```
 
-We have now configured our printer for running 50V drivers on X/Y at blazing fast speeds! To explore what stepper motor, driver, voltage and current combination comes pre-tuned with V-CoreOS, check the config/steppers folder. Enjoy!
+We have now configured our printer for running 50V drivers on X/Y at blazing fast speeds! To explore what stepper motor, driver, voltage and current combination comes pre-tuned with RatOS, check the config/steppers folder. Enjoy!

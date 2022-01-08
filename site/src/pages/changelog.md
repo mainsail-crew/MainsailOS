@@ -1,5 +1,50 @@
 # Changelog
 
+## RatOS V1.1
+
+This release mainly revolves around the new stepper/stepper driver setting recommendations from Klipper. `hold_current` has been removed, stealthchop is now entirely disabled by default, interpolation has been disabled and microsteps have been increased to 64 to counteract the additional noise. V-Minion template has now been optimized for the final hardware in the release kit. Keep reading to see the complete list of changes.
+
+### KlipperScreen
+
+- KlipperScreen now correctly installed as Pi user. This makes KlipperScreen.conf (next to your printer.cfg) work again.
+
+### General
+
+- Stepper motors, drivers and speed limits have now been made more modular, allowing for easier configuration of, for example, 48V steppers. See [Advanced Stepper Configuration](/docs/configuration/advanced-stepper-configuration) for more information.
+- Driver / Stepper settings now adopt the new recommended klipper defaults. This also means that your steppers might make a bit more noise than they did before, since the stealthchop_threshold has been set to 0. You can manually set stealthchop_threshold back to 1 if that's unacceptable to you, just be aware that it will reduce the stepper's positional accuracy.
+- Rapido and Dragonfly configs added.
+- LGX Lite config added.
+- Printer templates have been improved for better organization and now includes the new stepper configurations.
+- SKR2 Documentation added
+- V-Minion printer template optimized for the release of V-Minion full kit.
+
+### Updating from RatOS V1.0
+
+Generally you don't have to do anything to use RatOS v1.1, unless you use sensorless homing.
+
+#### Sensorless homing
+
+If you are using sensorless homing, you'll now need to remove the HOLDCURRENT parameters from you SET_TMC_CURRENT commands. This has no effect on functionality, it didn't do anything useful before. However, if you include the new stepper configs you may have to retune your currents and sensitivity settings.
+
+#### Stepper Motors
+
+On V-Core 3 and V-Core Pro printers using the stock 48mm steppers on all axes add `[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-*.cfg]` (cooled drivers) or `[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-*.cfg]` (uncooled drivers) to your USER OVERRIDES section. You can skip this step if you're migrating your printer.cfg (see below).
+If you only use the stock steppers on some axes, or want different currents, voltages etc you can include the stepper config for specific steppers like this:
+
+```properties
+[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-x.cfg]
+[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-y.cfg]
+[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-z.cfg]
+[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-z1.cfg]
+[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-z2.cfg]
+```
+
+These stepper specific configs have their DRIVER\_\* settings tuned for the given driver, voltage and amperage. Take a look in the config/steppers folders to see which options are available.
+
+#### New Templates (Optional)
+
+RatOS v1.1 comes with new improved and reorganized templates. Make a backup of your printer.cfg (download it, and put it somewhere safe), then replace printer.cfg with the contents of config/templates/\[your-printer\]-printer.template.cfg. Go through your new printer.cfg and use your old config as a reference for the values you need. You can copy / paste the klipper config block at the bottom to your new printer.cfg to retain all the settings you've saved via `SAVE_CONFIG`.
+
 ## RatOS V1.0
 
 ### Updating from V-CoreOS-RC2
