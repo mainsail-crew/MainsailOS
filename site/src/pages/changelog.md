@@ -41,6 +41,36 @@ If you only use the stock steppers on some axes, or want different currents, vol
 
 These stepper specific configs have their DRIVER\_\* settings tuned for the given driver, voltage and amperage. Take a look in the config/steppers folders to see which options are available.
 
+If you want to go back to the way it was in v1.0 (stealthchop_threshold: 1) simply add this to your user overrides section:
+
+```properties
+[tmc2209 stepper_x]
+stealthchop_threshold: 1
+interpolate: True
+
+[tmc2209 stepper_y]
+stealthchop_threshold: 1
+interpolate: True
+
+[tmc2209 extruder]
+interpolate: True
+stealthchop_threshold: 1
+
+[tmc2209 stepper_z]
+interpolate: True
+stealthchop_threshold: 1
+
+[tmc2209 stepper_z1]
+interpolate: True
+stealthchop_threshold: 1
+
+[tmc2209 stepper_z2]
+interpolate: True
+stealthchop_threshold: 1
+```
+
+Be aware that this comes with disadvantage of less precise motion, and it will not work at all with Fysetc and Mellow drivers.
+
 #### New Templates (Optional)
 
 RatOS v1.1 comes with new improved and reorganized templates. Make a backup of your printer.cfg (download it, and put it somewhere safe), then replace printer.cfg with the contents of config/templates/\[your-printer\]-printer.template.cfg. Go through your new printer.cfg and use your old config as a reference for the values you need. You can copy / paste the klipper config block at the bottom to your new printer.cfg to retain all the settings you've saved via `SAVE_CONFIG`.
