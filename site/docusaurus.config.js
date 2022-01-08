@@ -44,7 +44,7 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      metadata: [{name: 'og:image', content: 'https://os.ratrig.com/img/site-banner.png'}],
+      image: 'img/site-banner.png',
       algolia: {
         // If Algolia did not provide you any appId, use 'BH4D9OD16A'
         appId: 'BH4D9OD16A',
