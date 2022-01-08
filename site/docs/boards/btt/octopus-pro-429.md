@@ -22,20 +22,19 @@ You will probably have to swap the outer two wires (red and white) on the board 
 Make sure your board is connected to the Pi **via the provided USB-C cable** (USB-C on the Octopus Pro 429, USB-A on the Pi).
 :::
 
-
 Download the `firmware-btt-octopus-pro-429.bin` from the `firmware_binaries` folder found on the Machine page of [Mainsail](http://RatOS.local/), copy it onto the SD card that goes into your control board and call it `firmware.bin`, then insert the SD card in to the control board. Here are the steps in chronological order:
 
- 1. Navigate to [http://RatOS.local/](http://RatOS.local/)
- 2. Open Machine page
- 3. Open `firmware_binaries` folder
- 4. Download `firmware-btt-octopus-pro-429.bin`
- 5. Format the sd card for your board to FAT16 (sometimes just called FAT).
- 6. Copy `firmware-btt-octopus-pro-429.bin` onto the sd card for your board
- 7. Rename `firmware-btt-octopus-pro-429.bin` to `firmware.bin`
- 8. Safely eject the SD card through your operating system.
- 9. Physically take out the sd card and insert it into your control board.
- 10. Power cycle your printer or control board. Remember to shut the pi down properly before you cut power to your Pi (you can do that through Mainsail using the dropdown menu in the top right corner).
- 11. Verify that the firmware has been flashed
+1.  Navigate to [http://RatOS.local/](http://RatOS.local/)
+2.  Open Machine page
+3.  Open `firmware_binaries` folder
+4.  Download `firmware-btt-octopus-pro-429.bin`
+5.  Format the sd card for your board to FAT16 (sometimes just called FAT), or FAT32 with a clustersize of 8kb or 4kb.
+6.  Copy `firmware-btt-octopus-pro-429.bin` onto the sd card for your board
+7.  Rename `firmware-btt-octopus-pro-429.bin` to `firmware.bin`
+8.  Safely eject the SD card through your operating system.
+9.  Physically take out the sd card and insert it into your control board.
+10. Power cycle your printer or control board. Remember to shut the pi down properly before you cut power to your Pi (you can do that through Mainsail using the dropdown menu in the top right corner).
+11. Verify that the firmware has been flashed
 
 :::tip
 You can verify if the board flashed correctly by checking if the firmware.bin file has been changed to firmware.CUR on the SD card. If you have trouble flashing the motherboard, start unplugging your wires beginning with the endstops, sometimes faulty wiring can cause the board to not boot properly.

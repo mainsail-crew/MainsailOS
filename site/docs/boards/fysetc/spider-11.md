@@ -44,20 +44,19 @@ easiest.
 
 ### Flash via SD Card (recommended)
 
-
 Download the `firmware-fysetc-spider.bin` from the `firmware_binaries` folder found on the Machine page of [Mainsail](http://RatOS.local/), copy it onto the SD card that goes into your control board and call it `firmware.bin`, then insert the SD card in to the control board. Here are the steps in chronological order:
 
- 1. Navigate to [http://RatOS.local/](http://RatOS.local/)
- 2. Open Machine page
- 3. Open `firmware_binaries` folder
- 4. Download `firmware-fysetc-spider.bin`
- 5. Format the sd card for your board to FAT16 (sometimes just called FAT).
- 6. Copy `firmware-fysetc-spider.bin` onto the sd card for your board
- 7. Rename `firmware-fysetc-spider.bin` to `firmware.bin`
- 8. Safely eject the SD card through your operating system.
- 9. Physically take out the sd card and insert it into your control board.
- 10. Power cycle your printer or control board. Remember to shut the pi down properly before you cut power to your Pi (you can do that through Mainsail using the dropdown menu in the top right corner). The upload should take a few seconds and a LED by the SDCard slot should flash while this is happening.
- 11. Verify that the firmware has been flashed and **Do not put the sd card back in the board after successful flashing**.
+1.  Navigate to [http://RatOS.local/](http://RatOS.local/)
+2.  Open Machine page
+3.  Open `firmware_binaries` folder
+4.  Download `firmware-fysetc-spider.bin`
+5.  Format the sd card for your board to FAT16 (sometimes just called FAT), or FAT32 with a clustersize of 8kb or 4kb.
+6.  Copy `firmware-fysetc-spider.bin` onto the sd card for your board
+7.  Rename `firmware-fysetc-spider.bin` to `firmware.bin`
+8.  Safely eject the SD card through your operating system.
+9.  Physically take out the sd card and insert it into your control board.
+10. Power cycle your printer or control board. Remember to shut the pi down properly before you cut power to your Pi (you can do that through Mainsail using the dropdown menu in the top right corner). The upload should take a few seconds and a LED by the SDCard slot should flash while this is happening.
+11. Verify that the firmware has been flashed and **Do not put the sd card back in the board after successful flashing**.
 
 For more information; this is documented on the Fysetc pages:
 https://github.com/FYSETC/FYSETC-SPIDER#42-Klipper
@@ -163,12 +162,14 @@ You might have to disconnect the ADSL345 from your Spider while you are uploadin
 If you are using the Fysetc TMC2209 step-sticks and you're getting Undervoltage errors from the stepper drivers make sure to either fully disable or enable stealthchop.
 
 To completely disable stealthchop add this to the "### USER OVERRIDES" section of printer.cfg for each driver on your printer:
+
 ```properties
     [tmc2209 stepper_x]
     stealthchop_threshold: 0
 ```
 
 You can also enable stealthchop instead, like so:
+
 ```properties
     [tmc2209 stepper_x]
     stealthchop_threshold: 9999999
