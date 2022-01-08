@@ -44,7 +44,7 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      image: 'img/site-banner.png',
+      image: 'img/site-banner.png?bust=1',
       algolia: {
         // If Algolia did not provide you any appId, use 'BH4D9OD16A'
         appId: 'BH4D9OD16A',
