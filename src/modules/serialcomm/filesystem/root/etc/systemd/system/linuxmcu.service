@@ -1,0 +1,21 @@
+#Systemd moonraker Service
+
+[Unit]
+Description=Provides linuxmcu for Klipper
+Documentation=https://www.klipper3d.org/RPi_microcontroller.html
+Before=klipper.service
+ConditionFileIsExecutable=/usr/local/bin/klipper_mcu
+# Sounds good but may not! Have to test..
+# PartOf=klipper.service
+# BindsTo=klipper.service # Starts and stops with klipper
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Environment=KLIPPER_HOST_MCU=/usr/local/bin/klipper_mcu
+Type=simple
+RemainAfterExit=yes
+ExecStart=${KLIPPER_HOST_MCU} -r
+Restart=always
+RestartSec=5
