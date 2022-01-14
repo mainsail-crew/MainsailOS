@@ -52,20 +52,52 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Scheme $scheme;
     }
-	
+
     location /webcam/ {
+        # disable logging for webcam endpoints to reduce log size
+        access_log off;
+        error_log off;
+        # ustreamer proxy fix
+        postpone_output 0;
+        proxy_buffering off;
+        proxy_ignore_headers X-Accel-Buffering;
         proxy_pass http://mjpgstreamer1/;
     }
 
     location /webcam2/ {
+        access_log off;
+        error_log off;
+        postpone_output 0;
+        proxy_buffering off;
+        proxy_ignore_headers X-Accel-Buffering;
         proxy_pass http://mjpgstreamer2/;
     }
 
     location /webcam3/ {
+        access_log off;
+        error_log off;
+        postpone_output 0;
+        proxy_buffering off;
+        proxy_ignore_headers X-Accel-Buffering;
         proxy_pass http://mjpgstreamer3/;
     }
 
     location /webcam4/ {
+        access_log off;
+        error_log off;
+        postpone_output 0;
+        proxy_buffering off;
+        proxy_ignore_headers X-Accel-Buffering;
         proxy_pass http://mjpgstreamer4/;
+    }
+
+    # Preparation for crowsnest webrtc
+    location /webrtc/ {
+        access_log off;
+        error_log off;
+        postpone_output 0;
+        proxy_buffering off;
+        proxy_ignore_headers X-Accel-Buffering;
+        proxy_pass http://webrtc/;
     }
 }
