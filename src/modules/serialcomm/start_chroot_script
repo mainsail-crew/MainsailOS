@@ -13,6 +13,7 @@ set -xe
 source /common.sh
 install_cleanup_trap
 
+unpack /filesystem/root /
 
 echo_green "Setup /boot/config.txt to enable UART Communication..."
 
