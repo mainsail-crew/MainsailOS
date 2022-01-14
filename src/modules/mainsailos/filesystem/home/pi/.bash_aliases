@@ -17,7 +17,12 @@ alias lh='ls -hAl'
 # cd shortcut
 alias ..='cd ..'
 alias ...='cd ../..'
-alias mkcd='mkdir -p ${@} && cd ${@}'
+function mkcd {
+    if [ ! -d "$@" ]; then
+        mkdir -p $@
+    fi
+    cd $_
+}
 
 
 # make menuconfig LC_ALL BUG
