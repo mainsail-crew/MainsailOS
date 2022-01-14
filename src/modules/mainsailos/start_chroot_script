@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# MainsailOS Specific Tweaks
+# written by Stephan Wendel aka KwadFan
+# <me@stephanwe.de>
+# GPL V3
+########
+
+
+# Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+source /common.sh
+install_cleanup_trap
+
+unpack /filesystem/home/${BASE_USER} /home/${BASE_USER} ${BASE_USER}
+
+# Install easy to use wlan monitor
+apt update && apt install nload -y
+
+
+# Create mainsailos release file
+if [ -f "/etc/mainsailos_version" ]; then
+    sudo rm -f /etc/mainsailos_version
+fi
+function get_parent {
+cat /etc/os-release | grep VERSION_CODENAME | cut -d '=' -f2
+}
+echo "${DIST_NAME} release ${DIST_VERSION} ($(get_parent))" > /etc/${DIST_NAME,,}-release
