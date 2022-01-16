@@ -12,19 +12,19 @@ build: verifyimage
 	docker-compose down
 
 verifyimage:
-	@if [ ! -f "src/image/raspios-oldstable-lite.zip" ]; then \
+	@if [ ! -f "src/image/legacy-raspios-lite-latest.zip" ]; then \
 	echo -e "\nRaspberry Pi OS image does not exist. Starting Download...\n"; \
 	curl https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf_latest \
-	-JLo src/image/raspios-oldstable-lite.zip; fi;
+	-JLo src/image/legacy-raspios-lite-latest.zip; fi;
 
-	@if [ ! -f "src/image/raspios-oldstable-lite.zip.sha256" ]; then \
+	@if [ ! -f "src/image/legacy-raspios-lite-latest.zip.sha256" ]; then \
 	echo -e "Get sha256 Checksum file\n"; \
 	curl https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf_latest.sha256 \
-	-JLo src/image/raspios-oldstable-lite.zip.sha256; fi; \
+	-JLo src/image/legacy-raspios-lite-latest.zip.sha256; fi; \
 
 	@echo -e "Starting checksum verification\n"
-	@IMAGE_SHA256=`sha256sum src/image/raspios-oldstable-lite.zip | awk '{print $$1}'` ; \
-	DL_SHA256=`awk '{print $$1}' ./src/image/raspios-oldstable-lite.zip.sha256` ; \
+	@IMAGE_SHA256=`sha256sum src/image/legacy-raspios-lite-latest.zip | awk '{print $$1}'` ; \
+	DL_SHA256=`awk '{print $$1}' ./src/image/legacy-raspios-lite-latest.zip.sha256` ; \
 	if [ $$IMAGE_SHA256 != $$DL_SHA256 ]; then echo -e "SHAs do not match.\n"; \
 	echo -e "Image has checksum:\t $$IMAGE_SHA256"; \
 	echo -e "Expected checksum:\t $$DL_SHA256"; \
