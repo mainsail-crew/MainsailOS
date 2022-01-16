@@ -1,4 +1,4 @@
 [ -n "$IS_REQ_PREINSTALL_VENV_DIR" ] || IS_REQ_PREINSTALL_VENV_DIR=/home/${BASE_USER}/klippy-env
-[ -n "$IS_REQ_PREINSTALL_DEPS" ] || IS_REQ_PREINSTALL_DEPS="python-numpy python-matplotlib"
+[ -n "$IS_REQ_PREINSTALL_DEPS" ] || IS_REQ_PREINSTALL_DEPS="python3-numpy python3-matplotlib"
 [ -n "$IS_REQ_PREINSTALL_PIP" ] || IS_REQ_PREINSTALL_PIP="numpy"
 [ -n "$IS_REQ_PREINSTALL_CFG_FILE" ] || IS_REQ_PREINSTALL_CFG_FILE="/boot/config.txt"
