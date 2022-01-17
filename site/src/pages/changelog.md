@@ -6,7 +6,7 @@ This release mainly revolves around the new stepper/stepper driver setting recom
 
 ### KlipperScreen
 
-- KlipperScreen now correctly installed as Pi user. This makes KlipperScreen.conf (next to your printer.cfg) work again.
+- KlipperScreen now correctly installed as Pi user. This makes KlipperScreen.conf (next to your printer.cfg) work again. **This change requires flashing RatOS V1.1 to your Pi.**
 
 ### General
 
@@ -73,7 +73,7 @@ Be aware that this comes with disadvantage of less precise motion, and it will n
 
 #### New Templates (Optional)
 
-RatOS v1.1 comes with new improved and reorganized templates. Make a backup of your printer.cfg (download it, and put it somewhere safe), then replace printer.cfg with the contents of config/templates/\[your-printer\]-printer.template.cfg. Go through your new printer.cfg and use your old config as a reference for the values you need. You can copy / paste the klipper config block at the bottom to your new printer.cfg to retain all the settings you've saved via `SAVE_CONFIG`.
+RatOS v1.1 comes with new improved and reorganized templates. If you want the new templates but don't want to reflash your Pi, you can migrate manually. To do so, start by making a backup of your printer.cfg (download it, and put it somewhere safe), then replace printer.cfg with the contents of config/templates/\[your-printer\]-printer.template.cfg. Go through your new printer.cfg and use your old config as a reference for the values you need. You can copy / paste the klipper config block at the bottom to your new printer.cfg to retain all the settings you've saved via `SAVE_CONFIG`.
 
 ## RatOS V1.0
 
