@@ -16,6 +16,10 @@ This board is currently not recommended, as it cannot be flashed automatically t
 You will probably have to swap the outer two wires (red and white) on the board end of the cable but double check to make sure your cables match the wiring diagram.
 :::
 
+:::info Jumpers
+A green square with triangles inside is where you would place a jumper, remove all jumpers on the board that are not marked by this symbol.
+:::
+
 ## Firmware installation
 
 :::caution Use a proper cable
