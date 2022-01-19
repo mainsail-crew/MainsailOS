@@ -58,17 +58,25 @@ server {
 
     location /webcam/ {
         proxy_pass http://mjpgstreamer1/;
+        access_log off;
+        error_log off;
     }
 
     location /webcam2/ {
         proxy_pass http://mjpgstreamer2/;
+        access_log off;
+        error_log off;
     }
 
     location /webcam3/ {
+        access_log off;
+        error_log off;
         proxy_pass http://mjpgstreamer3/;
     }
 
     location /webcam4/ {
+        access_log off;
+        error_log off;
         proxy_pass http://mjpgstreamer4/;
     }
 
