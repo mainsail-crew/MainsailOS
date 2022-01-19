@@ -1,8 +1,8 @@
 /var/log/syslog
 {
-        rotate 4
+        rotate 2
         daily
-        maxsize 256M
+        maxsize 128M
         missingok
         notifempty
         delaycompress
@@ -25,9 +25,9 @@
 /var/log/debug
 /var/log/messages
 {
-        rotate 4
-        weekly
-        maxsize 256M
+        rotate 2
+        daily
+        maxsize 128M
         missingok
         notifempty
         compress
