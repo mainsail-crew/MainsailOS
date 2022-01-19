@@ -13,7 +13,8 @@ You will probably have to swap the outer two wires (red and white) on the board 
 :::
 
 :::info Jumpers
-A green square with triangles inside is where you would place a jumper, remove all jumpers on the board that are not marked by this symbol.
+![Jumper Symbol](_media/jumper-symbol.svg) A green square with triangles inside is where you would place a jumper,
+remove all jumpers on the board that are not marked by this symbol.
 :::
 
 ## Firmware installation
