@@ -1,22 +1,16 @@
 #!/bin/bash
 
 #####  run.sh - test new image
-<<COMMENT
-    Original by "prg3" ( https://github.com/prg3 ) and "Noms" ( https://github.com/Nomsplease )
-
-    Modified by "KwadFan" ( https://github.com/KwadFan )
-
-COMMENT
+#  Original by "prg3" ( https://github.com/prg3 ) and "Noms" ( https://github.com/Nomsplease )
+#  Modified by Stephan Wendel aka KwadFan <me@stephanwe.de>
 
 ### Configuration
 WORKSPACE=src/workspace
 IMG_FILE=               #if blank, will be detected
 
-
 ## QEMU Parameters
 #
 # for Kernel Version 4.19.50-buster use
-# QEMU_KERNEL='emulation/kernel-qemu-4.19.50-buster'
 # QEMU_DTB='emulation/versatile-pb.dtb'
 #
 # you have also to modify run_image() function!
@@ -30,9 +24,7 @@ QEMU_DTB='emulation/versatile-pb-buster-5.4.51.dtb'
 QEMU_OPTIONS='-no-reboot -nographic'
 QEMU_NET='-net user,ipv4=on,ipv6=on,hostfwd=tcp::22222-:22,hostfwd=tcp::8888-:80 -net nic'
 
-
 ### Functions
-
 ## Hint
 start_hint() {
     echo -e "\e[1;30m\n------------------------------------\e[0m"
@@ -44,7 +36,7 @@ start_hint() {
 search_for_qemu() {
     for BIN_PATH in $(awk -F':' '{ for(i=1;i<=NF;i++) print $i}' <<< ${PATH})
         do
-            [[ -x $BIN_PATH/$QEMU_BIN ]] && { QEMU_CMD=$BIN_PATH/$QEMU_BIN ; break; } 
+            [[ -x $BIN_PATH/$QEMU_BIN ]] && { QEMU_CMD=$BIN_PATH/$QEMU_BIN ; break; }
         done
 }
 
@@ -63,14 +55,14 @@ check_env() {
         then
             echo -e "\n\e[1;32m${QEMU_KERNEL}\e[0m missing, exiting..."
             exit 2
-        else 
+        else
             echo -e "\n\e[1;32m${QEMU_KERNEL}\e[0m found..."
     fi
     if [ ! -e $QEMU_DTB ];
         then
             echo -e "\n\e[1;32m${QEMU_DTB}\e[0m missing, exiting..."
             exit 2
-        else                         
+        else
             echo -e "\n\e[1;32m${QEMU_DTB}\e[0m found..."
     fi
 }
@@ -98,7 +90,7 @@ img_file_handling() {
     fi
 }
 
-## run image 
+## run image
 run_img() {
   qemu-system-arm -cpu $QEMU_CPU -m $QEMU_RAM \
   -kernel $QEMU_KERNEL -M $QEMU_MACHINE -dtb \
@@ -107,16 +99,6 @@ run_img() {
   -drive file=$WORKSPACE/$IMG_FILE,if=none,index=0,media=disk,format=raw,id=disk0 $QEMU_NET \
   -device "virtio-blk-pci,drive=disk0,disable-modern=on,disable-legacy=off"
 }
-
-## run image for Kernel Version 4.19.50-buster
-#run_img() {
-#  qemu-system-arm -cpu $QEMU_CPU -m $QEMU_RAM \
-#  -kernel $QEMU_KERNEL -M $QEMU_MACHINE -dtb \
-#  $QEMU_DTB $QEMU_OPTIONS \
-#  -append 'dwc_otg.lpm_enable=0 root=/dev/sda2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait' \
-#  -drive file=$WORKSPACE/$IMG_FILE,index=0,media=disk,format=raw $QEMU_NET \ 
-#}
-
 
 ### Main
 start_hint
