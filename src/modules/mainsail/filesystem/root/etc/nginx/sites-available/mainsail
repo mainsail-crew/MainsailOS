@@ -57,24 +57,36 @@ server {
     }
 
     location /webcam/ {
-        proxy_pass http://mjpgstreamer1/;
+        postpone_output 0;
+        proxy_buffering off;
+        proxy_ignore_headers X-Accel-Buffering;
         access_log off;
         error_log off;
+        proxy_pass http://mjpgstreamer1/;
     }
 
     location /webcam2/ {
-        proxy_pass http://mjpgstreamer2/;
+        postpone_output 0;
+        proxy_buffering off;
+        proxy_ignore_headers X-Accel-Buffering;
         access_log off;
         error_log off;
+        proxy_pass http://mjpgstreamer2/;
     }
 
     location /webcam3/ {
+        postpone_output 0;
+        proxy_buffering off;
+        proxy_ignore_headers X-Accel-Buffering;
         access_log off;
         error_log off;
         proxy_pass http://mjpgstreamer3/;
     }
 
     location /webcam4/ {
+        postpone_output 0;
+        proxy_buffering off;
+        proxy_ignore_headers X-Accel-Buffering;
         access_log off;
         error_log off;
         proxy_pass http://mjpgstreamer4/;
