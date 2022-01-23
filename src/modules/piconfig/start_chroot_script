@@ -14,7 +14,7 @@ install_cleanup_trap
 
 echo_green "Backup original config.txt and cmdline.txt ..."
 mv "${PICONFIG_CONFIG_TXT_FILE}" "${PICONFIG_CONFIG_BAK_FILE}"
-mv "${PICONFIG_CMDLINE_TXT_FILE}" "${PICONFIG_CMDLINE_BAK_FILE}"
+cp "${PICONFIG_CMDLINE_TXT_FILE}" "${PICONFIG_CMDLINE_BAK_FILE}"
 
 echo_green "Copying files to root filesystem ..."
 unpack /filesystem/root /
