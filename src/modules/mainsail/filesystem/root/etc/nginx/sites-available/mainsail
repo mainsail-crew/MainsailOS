@@ -1,5 +1,6 @@
 server {
     listen 80 default_server;
+    listen [::]:80 default_server;
 
     access_log /var/log/nginx/mainsail-access.log;
     error_log /var/log/nginx/mainsail-error.log;
@@ -47,25 +48,47 @@ server {
 
     location ~ ^/(printer|api|access|machine|server)/ {
         proxy_pass http://apiserver$request_uri;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Host $http_host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Scheme $scheme;
     }
-	
+
     location /webcam/ {
+        postpone_output 0;
+        proxy_buffering off;
+        proxy_ignore_headers X-Accel-Buffering;
+        access_log off;
+        error_log off;
         proxy_pass http://mjpgstreamer1/;
     }
 
     location /webcam2/ {
+        postpone_output 0;
+        proxy_buffering off;
+        proxy_ignore_headers X-Accel-Buffering;
+        access_log off;
+        error_log off;
         proxy_pass http://mjpgstreamer2/;
     }
 
     location /webcam3/ {
+        postpone_output 0;
+        proxy_buffering off;
+        proxy_ignore_headers X-Accel-Buffering;
+        access_log off;
+        error_log off;
         proxy_pass http://mjpgstreamer3/;
     }
 
     location /webcam4/ {
+        postpone_output 0;
+        proxy_buffering off;
+        proxy_ignore_headers X-Accel-Buffering;
+        access_log off;
+        error_log off;
         proxy_pass http://mjpgstreamer4/;
     }
 }

@@ -3,10 +3,18 @@ on:
   push:
     branches:
       - '**'
+    paths:
+    - 'src/**'
+    - 'emulation/**'
+    - '.github/workflows/BuildRaspiOS.yml'
     tags-ignore:
       - '**'
   pull_request:
     types: [ opened, edited ]
+    paths:
+    - 'src/**'
+    - 'emulation/**'
+    - '.github/workflows/BuildRaspiOS.yml'
 
 jobs:
   raspiosbuild:
@@ -14,7 +22,7 @@ jobs:
 
     steps:
       - name: Install Dependencies
-        run: sudo apt update; sudo apt install coreutils p7zip-full qemu-user-static zip
+        run: sudo apt update; sudo apt install --yes coreutils p7zip-full qemu-user-static zip
 
       - name: Checkout CustomPiOS
         uses: actions/checkout@v2
@@ -30,7 +38,12 @@ jobs:
           submodules: true
 
       - name: Download Raspberry Pi OS Source Image
-        run: aria2c -d repository/src/image/ --seed-time=0 https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2021-12-02/2021-12-02-raspios-buster-armhf-lite.zip.torrent
+        run: aria2c -d repository/src/image/ --seed-time=0 https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent
+
+      - name: Comparing Checksums
+        run: |
+          cd repository/src/image
+          curl -JL https://downloads.raspberrypi.org/raspios_lite_armhf_latest.sha256 | awk '{print $1"  "$2}' | sha256sum -c
 
       - name: Update CustomPiOS Paths
         run: cd repository/src && ../../CustomPiOS/src/update-custompios-paths
@@ -44,7 +57,7 @@ jobs:
       - name: Compress the image
         run: zip mainsailos-raspios-lite-latest.zip mainsailos-raspios-lite-latest.img
 
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v2
         with:
           name: mainsailos-raspios-lite-latest.zip
           path: mainsailos-raspios-lite-latest.zip

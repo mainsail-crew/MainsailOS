@@ -29,6 +29,9 @@ apt update && apt install ${MAINSAIL_DEPS} -y
 rm /etc/nginx/sites-enabled/default
 ln -s /etc/nginx/sites-available/mainsail /etc/nginx/sites-enabled/
 
+# lower nginx rotate cycle to 2 instead 14
+sudo sed -i 's/rotate 14/rotate 2/' /etc/logrotate.d/nginx
+
 ### Download and Install Mainsail Web Frontend
 pushd /home/${BASE_USER}
 sudo -u ${BASE_USER} wget -q --show-progress -O mainsail.zip "${MAINSAIL_URL}"
