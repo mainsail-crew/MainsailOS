@@ -14,6 +14,10 @@ set -xe
 source /common.sh
 install_cleanup_trap
 
+# make sure that this module can be used standalone
+apt_update_skip
+check_install_pkgs "git virtualenv"
+
 echo_green "Installing Moonraker and enable Moonraker Service"
 # install MainsailOS premade moonraker.conf
 echo_green "Copying MainsailOS premade moonraker.conf"
@@ -30,6 +34,6 @@ bash -c \
 -l ${HOME}/klipper_logs/moonraker.log'
 # install Polkit Rules
 echo_green "Install PolicyKit Rules"
-sudo -u ${BASE_USER} bash -c '${HOME}/moonraker/scripts/set-policykit-rules.sh'
+sudo sh -c './moonraker/scripts/set-policykit-rules.sh --root'
 # finished
 popd
