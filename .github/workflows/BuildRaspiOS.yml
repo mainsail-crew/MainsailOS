@@ -10,7 +10,7 @@ on:
     tags-ignore:
       - "**"
   pull_request:
-    types: [ opened, edited ]
+    types: [ opened, edited, reopened, synchronize ]
     paths:
     - 'src/**'
     - 'emulation/**'
