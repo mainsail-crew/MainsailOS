@@ -35,6 +35,10 @@ const config = {
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
+        gtag: {
+          trackingID: 'G-NQB0MHKGLP',
+          anonymizeIP: true,
+        },
       }),
     ],
   ],
@@ -62,10 +66,6 @@ const config = {
       zoomOptions: {
         background: '#000',
         margin: 60,
-      },
-      gtag: {
-        trackingID: 'G-NQB0MHKGLP',
-        anonymizeIP: true,
       },
       colorMode: {
         defaultMode: 'dark',
@@ -99,43 +99,6 @@ const config = {
           },
         ],
       },
-      // footer: {
-      //   style: 'dark',
-      //   links: [
-      //     {
-      //       title: 'Docs',
-      //       items: [
-      //         {
-      //           label: 'Getting Started',
-      //           to: '/docs/introduction',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       title: 'Community',
-      //       items: [
-      //         {
-      //           label: 'Discord',
-      //           href: 'https://discord.gg/ratrig',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       title: 'More',
-      //       items: [
-      //         {
-      //           label: 'Blog',
-      //           to: '/blog',
-      //         },
-      //         {
-      //           label: 'GitHub',
-      //           href: 'https://github.com/Rat-OS/RatOS',
-      //         },
-      //       ],
-      //     },
-      //   ],
-      //   copyright: `Copyright © ${new Date().getFullYear()} Mikkel Schmidt.`,
-      // },
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
