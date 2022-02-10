@@ -34,7 +34,7 @@ Here a list of included and preinstalled Software:
 * [FFMPEG (upcoming features)](https://www.ffmpeg.org/)
 
 ## Screenshots
-![screenshot-dashboard](https://github.com/meteyou/mainsail/raw/develop/docs/assets/img/screenshot.png?raw=true)
+![screenshot-dashboard](https://raw.githubusercontent.com/mainsail-crew/docs/master/assets/img/screenshot.png)
 
 # Build your own / Developing
 
