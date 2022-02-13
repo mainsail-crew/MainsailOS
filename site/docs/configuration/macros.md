@@ -43,9 +43,9 @@ If you want to implement additional mesh handling logic you can override the `_S
 
 | Name                    | Possible Values     | Default |
 | ----------------------- | ------------------- | ------- |
-| variable_nozzle_priming | "primeline" / False | "primeline"    |
+| variable_nozzle_priming | "primeline" / "primeblob" / False | "primeline"    |
 
-Whether or not to prime the nozzle during the START_PRINT macro. "primeline" will make START_PRINT draw a short line to prime the nozzle. If you want a more agressive priming procedure you can override the `PRIME_LINE` macro.
+Whether or not to prime the nozzle during the START_PRINT macro. "primeline" will make START_PRINT draw a short line to prime the nozzle. "primeblob" will put a small blob at the edge of the bed that is intended to wrap around the nozzle, then lifts the toolhead out of it while extruding a small line, effective for cleaning the nozzle and it's easy to clean up.
 
 ### Parking
 
