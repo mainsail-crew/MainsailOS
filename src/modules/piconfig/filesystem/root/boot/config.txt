@@ -76,7 +76,6 @@ gpu_mem=256
 
 ## Zero Models need special handling
 [pi0w]
-dtoverlay=pi3-disable-bt
 gpu_mem=128
 
 [pi02]
