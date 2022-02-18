@@ -63,14 +63,14 @@ Whether or not to prime the nozzle during the START_PRINT macro. "primeline" wil
 
 | Name                        | Possible Values | Default |
 | --------------------------- | --------------- | ------- |
-| variable_macro_travel_speed | number          | 150     |
+| variable_macro_travel_speed | number          | 300     |
 
 Travel speed to use for gcode moves in RatOS Macro's in mm/s.
 
 ### Skew profile
 
-| Name                        | Possible Values     | Default |
-| --------------------------- | ------------------- | ------- |
-| variable_skew_profile       | string or undefined | 150     |
+| Name                        | Possible Values     | Default           |
+| --------------------------- | ------------------- | ----------------- |
+| variable_skew_profile       | string or undefined | "my_skew_Profile" |
 
 Use this if you have calibrated and saved a skew profile that you want to load in the START_PRINT macro. To activate it, set the variable to the name of your saved skew profile.
