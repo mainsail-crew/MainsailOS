@@ -52,7 +52,7 @@ Download the `firmware-fysetc-spider.bin` from the `firmware_binaries` folder fo
 4.  Download `firmware-fysetc-spider.bin`
 5.  Format the sd card for your board to FAT16 (sometimes just called FAT), or FAT32 with a clustersize of 8kb or 4kb.
 6.  Copy `firmware-fysetc-spider.bin` onto the sd card for your board
-7.  Rename `firmware-fysetc-spider.bin` to `firmware.bin`
+7.  Rename `firmware-fysetc-spider.bin` to `firmware.bin`. Please be wary of file extensions! If the file doesn't already show .bin, don't add it!
 8.  Safely eject the SD card through your operating system.
 9.  Physically take out the sd card and insert it into your control board.
 10. Power cycle your printer or control board. Remember to shut the pi down properly before you cut power to your Pi (you can do that through Mainsail using the dropdown menu in the top right corner). The upload should take a few seconds and a LED by the SDCard slot should flash while this is happening.
@@ -60,6 +60,10 @@ Download the `firmware-fysetc-spider.bin` from the `firmware_binaries` folder fo
 
 For more information; this is documented on the Fysetc pages:
 https://github.com/FYSETC/FYSETC-SPIDER#42-Klipper
+
+:::tip
+If you don't know how to make Windows Explorer show file extensions, see [this article on HowToGeek](https://www.howtogeek.com/205086/beginner-how-to-make-windows-show-file-extensions/)
+:::
 
 :::caution
 If you have an ADXL345 connected to your Spider as shown below, you may need to disconnect it from your Spider to avoid conflicts with the SD Card while loading the firmware.

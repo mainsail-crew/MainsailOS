@@ -36,11 +36,15 @@ Download the `firmware-btt-octopus-pro-429.bin` from the `firmware_binaries` fol
 4.  Download `firmware-btt-octopus-pro-429.bin`
 5.  Format the sd card for your board to FAT16 (sometimes just called FAT), or FAT32 with a clustersize of 8kb or 4kb.
 6.  Copy `firmware-btt-octopus-pro-429.bin` onto the sd card for your board
-7.  Rename `firmware-btt-octopus-pro-429.bin` to `firmware.bin`
+7.  Rename `firmware-btt-octopus-pro-429.bin` to `firmware.bin`. Please be wary of file extensions! If the file doesn't already show .bin, don't add it!
 8.  Safely eject the SD card through your operating system.
 9.  Physically take out the sd card and insert it into your control board.
 10. Power cycle your printer or control board. Remember to shut the pi down properly before you cut power to your Pi (you can do that through Mainsail using the dropdown menu in the top right corner).
 11. Verify that the firmware has been flashed
+
+:::tip
+If you don't know how to make Windows Explorer show file extensions, see [this article on HowToGeek](https://www.howtogeek.com/205086/beginner-how-to-make-windows-show-file-extensions/)
+:::
 
 :::tip
 You can verify if the board flashed correctly by checking if the firmware.bin file has been changed to firmware.CUR on the SD card. If you have trouble flashing the motherboard, start unplugging your wires beginning with the endstops, sometimes faulty wiring can cause the board to not boot properly.
