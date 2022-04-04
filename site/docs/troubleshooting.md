@@ -22,6 +22,23 @@ When you update klipper you might see an error that looks like this:
 
 This is because klipper made changes to a part of the MCU firmware that we use. Klipper is telling us that the version of klipper running on the Pi is newer than the version running on the MCU. To fix this, we have to flash the board with a new version of the firmware. For convenience, and ease of use, the newest firmware is compiled and put in the `firmware_binaries` folder which you can find in the `MACHINE` tab in Mainsail. You can use this to flash your MCU the same way you did initially, via SD Card. RatOS attempts to flash supported boards automatically when klipper is updated. If you're getting this error you're probably using a board which does not support automatic flashing via USB. It's also possible that you updated klipper without having your board flashed and connected. In that case, use the `COMPILE_BINARIES` macro to generate new firmware binaries for all supported boards. Then download the binary for your board from the `firmware_binaries` folder in the Machine tab, and flash that via SD card.
 
+## Unparsed config option 'config_path: ~/klipper_config' detected in section \[server\]
+![Unparsed config option](/img/moonraker_unparsed_config.png)
+This happens because moonraker has moved `config_path` and `log_path` from the `[server]` section to the `[file_manager]` section. You can fix this by moving those to options into the `[file_manager]` (create it if it doesn't already exist) in moonraker.conf. You may have to ssh into your raspberry pi and edit the file with nano:
+
+```
+ssh pi@ratos.local
+nano ~/klipper_config/moonraker.conf
+```
+
+Use ctrl+o to write your changes to moonraker.conf and then ctrl+x to exit nano. Then run:
+
+```
+sudo systemctl restart moonraker
+```
+
+And you should be back in action.
+
 ## Get help
 
 For further support check out the RatOS-support and klipper channels on Discord. Use the invite link below to join.
