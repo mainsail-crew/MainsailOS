@@ -24,7 +24,31 @@ This is because klipper made changes to a part of the MCU firmware that we use. 
 
 ## Unparsed config option 'config_path: ~/klipper_config' detected in section \[server\]
 ![Unparsed config option](/img/moonraker_unparsed_config.png)
-This happens because moonraker has moved `config_path` and `log_path` from the `[server]` section to the `[file_manager]` section. You can fix this by moving those to options into the `[file_manager]` (create it if it doesn't already exist) in moonraker.conf. You may have to ssh into your raspberry pi and edit the file with nano:
+This happens because moonraker has moved `config_path` and `log_path` from the `[server]` section to the `[file_manager]` section. You can fix this by moving those to options into the `[file_manager]` (create it if it doesn't already exist) in moonraker.conf.
+
+Example:
+```properties
+[server]
+host = 0.0.0.0
+port = 7125
+enable_debug_logging = False
+config_path = ~/klipper_config
+log_path = ~/klipper_logs
+```
+
+becomes
+```properties
+[server]
+host = 0.0.0.0
+port = 7125
+enable_debug_logging = False
+
+[file_manager]
+config_path = ~/klipper_config
+log_path = ~/klipper_logs
+```
+
+You may have to ssh into your raspberry pi and edit the file with nano:
 
 ```
 ssh pi@ratos.local
@@ -38,6 +62,7 @@ sudo systemctl restart moonraker
 ```
 
 And you should be back in action.
+
 
 ## Get help
 
