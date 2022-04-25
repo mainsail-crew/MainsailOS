@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+wifidev=$1
+
+if ! iw wlan0 info  | grep type  | grep -q AP; then
+    echo "Access point missing, adding 📶"
+    systemctl restart hostapd.service
+fi

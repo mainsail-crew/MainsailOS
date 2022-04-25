@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+ethdev=$1
+
+if ! iptables-save | grep MASQUERADE | grep eth0 | grep -q MASQUERADE; then
+    echo "Masquerade missing, adding 🎭"
+    iptables -t nat -A POSTROUTING -o "${ethdev}" -j MASQUERADE
+fi

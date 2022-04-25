@@ -1,0 +1,9 @@
+[Unit]
+Description=Automatically generates an internet Hotspot when a valid ssid is not in range
+After=network-online.target
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/autohotspotN
+[Install]
+WantedBy=multi-user.target

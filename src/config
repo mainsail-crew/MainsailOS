@@ -2,8 +2,17 @@
 # Shebang for better detection of file type
 
 export DIST_NAME=RatOS
-export DIST_VERSION=1.1.0
-export BASE_IMAGE_ENLARGEROOT=4600
-export MODULES="base,pkgupgrade(network,piconfig,raspicam,klipper,is_req_preinstall,moonraker,mainsail,mjpgstreamer,serialcomm,ratos,rpi_mcu,klipperscreen,password-for-sudo)"
-export BASE_IMAGE_RESIZEROOT=600
+export DIST_VERSION=1.1.1
+export BASE_IMAGE_ENLARGEROOT=6500
+export MODULES="base,pkgupgrade(network,piconfig,klipper,node,is_req_preinstall,moonraker,mainsail,mjpgstreamer,serialcomm,ratos,rpi_mcu,klipperscreen,password-for-sudo,disable-services(hotspot))"
+export BASE_IMAGE_RESIZEROOT=200
 export BASE_RELEASE_COMPRESS=yes
+
+export BASE_RELEASE_IMG_NAME=`${DIST_NAME}-v${DIST_VERSION}`
+export BASE_IGNORE_VARIANT_NAME=yes
+export BASE_USER=pi
+export BASE_USER_PASSWORD=raspberry
+
+export RPI_IMAGER_NAME="${DIST_NAME}"
+export RPI_IMAGER_DESCRIPTION="Modular klipper configuration for supported 3d printers"
+export RPI_IMAGER_ICON="https://raw.githubusercontent.com/Rat-OS/RatOS/master/site/static/img/logos/rpi-imager.png"

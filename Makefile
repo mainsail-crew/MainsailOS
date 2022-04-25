@@ -8,7 +8,7 @@ all: build
 
 build: verifyimage
 	docker-compose up -d
-	docker exec -it mainsailos-build build
+	docker exec -it ratos-build build --rpi_imager
 	docker-compose down
 
 verifyimage:

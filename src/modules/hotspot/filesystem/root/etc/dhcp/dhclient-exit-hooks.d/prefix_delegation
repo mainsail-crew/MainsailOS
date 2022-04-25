@@ -1,0 +1,132 @@
+# This script assigns a delegated IPv6 prefix obtained via DHCPv6 to another interface
+#
+# Usage: This scrips is designed to be called from dhclient-script (isc-dhcp-client).
+#
+# LOCATION: /etc/dhcp/dhclient-exit-hooks.d/prefix_delegation
+# RECOMMENDED PACKAGES: ipv6calc
+
+# CONFIGURATION OPTIONS
+
+# Define the interface to which a delegated prefix will be assigned
+# This must not be the same interface on which the prefix is learned!
+IA_PD_IFACE="wlan0"
+
+# Provide a space separated list of services that need to be restarted or reloaded after a prefix change
+# Services must be controllable via systemd's systemctl, the default action is restart
+# Service names may be followed by a colon and action name, to override the default action
+# Supported actions are: restart and reload
+# Example: IA_PD_SERVICES="shorewall6:reload dnsmasq"
+IA_PD_SERVICES=""
+
+# Define the location of the ipv6calc executable, if installed
+# If this is empty or no executable file, no EUI-64 based IPv6 address will be calculated for the interface set in IA_PD_IFACE; instead, a static interface identifier (::1) will be appended to the prefix
+# Example: IA_PD_IPV6CALC="/usr/bin/ipv6calc"
+IA_PD_IPV6CALC=""
+
+# Set to yes to make logging more verbose
+IA_PD_DEBUG="yes"
+
+# END OF CONFIGURATION OPTIONS
+
+fn_calc_ip6addr() {
+        [ -z "$1" ] && return
+        local ia_pd_mac
+        local ia_pd_addr
+        [ -e "/sys/class/net/${IA_PD_IFACE}/address" ] && ia_pd_mac="$(cat /sys/class/net/${IA_PD_IFACE}/address)"
+        if [ -n "$ia_pd_mac" ] && [ -n "$IA_PD_IPV6CALC" ] && [ -x "$IA_PD_IPV6CALC" ]; then
+                [ "$IA_PD_DEBUG" = "yes" ] && logger -t "dhcpv6-pd" -p daemon.debug "Debug: Determined MAC address $ia_pd_mac for interface $IA_PD_IFACE."
+                ia_pd_addr="$("$IA_PD_IPV6CALC" -I prefix+mac -A prefixmac2ipv6 -O ipv6addr "$1" "$ia_pd_mac")"
+        fi
+        if [ -z "$ia_pd_addr" ]; then
+                [ "$IA_PD_DEBUG" = "yes" ] && logger -t "dhcpv6-pd" -p daemon.debug "Debug: Failed to calculate EUI-64 based IPv6 address, using static client suffix ::1 instead."
+                echo "$1" | sed 's#::/#::1/#'
+        else
+                echo "$ia_pd_addr"
+        fi
+}
+
+fn_restart_services() {
+        if [ -n "$IA_PD_SERVICES" ]; then
+                local pair
+                local action
+                local daemon
+                for pair in $IA_PD_SERVICES ; do
+                        action="$(echo "$pair" | cut -d':' -f2)"
+                        daemon="$(echo "$pair" | cut -d':' -f1)"
+                        # Check if a valid action was provided or default to 'restart'
+                        case $action in
+                                reload) action="reload";;
+                                *)      action="restart";;
+                        esac
+                        # Check if daemon is active before trying to restart or reload it (avoids non-zero exit code)
+                        if ! systemctl -q is-active "${daemon}.service" > /dev/null ; then
+                                logger -t "dhcpv6-pd" -p daemon.info "Info: $daemon is inactive. No $action required."
+                                continue
+                        fi
+                        if systemctl -q "$action" "${daemon}.service" > /dev/null ; then
+                                logger -t "dhcpv6-pd" -p daemon.info "Info: Performed $action of $daemon due to change of IPv6 prefix."
+                        else
+                                logger -t "dhcpv6-pd" -p daemon.err "Error: Failed to perform $action of $daemon after change of IPv6 prefix."
+                        fi
+                done
+        elif [ "$IA_PD_DEBUG" = "yes" ]; then
+                logger -t "dhcpv6-pd" -p daemon.debug "Debug: No list of services to restart or reload defined."
+        fi
+}
+
+fn_remove_prefix() {
+        [ -z "$1" ] && return
+        [ "$IA_PD_DEBUG" = "yes" ] && logger -t "dhcpv6-pd" -p daemon.debug "Debug: Old prefix $1 expired."
+        if [ "$(ip -6 addr show dev "$IA_PD_IFACE" scope global | wc -l)" -gt 0 ]; then
+                logger -t "dhcpv6-pd" -p daemon.info "Info: Flushing global IPv6 addresses from interface $IA_PD_IFACE."
+                if ! ip -6 addr flush dev "$IA_PD_IFACE" scope global ; then
+                        logger -t "dhcpv6-pd" -p daemon.err "Error: Failed to flush global IPv6 addresses from interface $IA_PD_IFACE."
+                        return
+                fi
+                # Restart services in case there is no new prefix to assign
+                [ -z "$new_ip6_prefix" ] && fn_restart_services
+        elif [ "$IA_PD_DEBUG" = "yes" ]; then
+                logger -t "dhcpv6-pd" -p daemon.debug "Debug: No global IPv6 addresses assigned to interface $IA_PD_IFACE."
+        fi 
+}
+
+fn_assign_prefix() {
+        [ -z "$1" ] && return
+        local new_ia_pd_addr
+        new_ia_pd_addr="$(fn_calc_ip6addr "$1")"
+        if [ -z "$new_ia_pd_addr" ]; then
+                logger -t "dhcpv6-pd" -p daemon.err "Error: Failed to calculate address for interface $IA_PD_IFACE and prefix $1"
+                return
+        fi
+        [ "$IA_PD_DEBUG" = "yes" ] && logger -t "dhcpv6-pd" -p daemon.debug "Debug: Received new prefix $1."
+        # dhclient may return an old_ip6_prefix even after a reboot, so manually check if the address is already assigned to the interface
+        if [ "$(ip -6 addr show dev "$IA_PD_IFACE" | grep -c "$new_ia_pd_addr")" -lt 1 ]; then
+                logger -t "dhcpv6-pd" -p daemon.info "Info: Adding new address $new_ia_pd_addr to interface $IA_PD_IFACE."
+                if ! ip -6 addr add "$new_ia_pd_addr" dev "$IA_PD_IFACE" ; then
+                        logger -t "dhcpv6-pd" -p daemon.err "Error: Failed to add new address $new_ia_pd_addr to interface $IA_PD_IFACE."
+                        return
+                fi
+                fn_restart_services
+        elif [ "$IA_PD_DEBUG" = "yes" ]; then
+                logger -t "dhcpv6-pd" -p daemon.debug "Debug: Address $new_ia_pd_addr already assigned to interface $IA_PD_IFACE."
+        fi 
+}
+
+# Only execute on specific occasions
+case $reason in
+        BOUND6|EXPIRE6|REBIND6|REBOOT6|RENEW6)
+                # Only execute if either an old or a new prefix is defined
+                if [ -n "$old_ip6_prefix" ] || [ -n "$new_ip6_prefix" ]; then
+                        # Check if interface is defined and exits
+                        if [ -z "$IA_PD_IFACE" ] || [ ! -e "/sys/class/net/${IA_PD_IFACE}" ]; then
+                                logger -t "dhcpv6-pd" -p daemon.err "Error: Interface ${IA_PD_IFACE:-<undefined>} not found. Cannot assign delegated prefix!"
+                        else
+                                # Remove old prefix if it differs from new prefix
+                                [ -n "$old_ip6_prefix" ] && [ "$old_ip6_prefix" != "$new_ip6_prefix" ] && fn_remove_prefix "$old_ip6_prefix"
+                                # Assign new prefix
+                                [ -n "$new_ip6_prefix" ] && fn_assign_prefix "$new_ip6_prefix"
+                        fi
+                fi
+                ;;
+esac
+

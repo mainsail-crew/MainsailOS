@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -x
+set -e
+# CustomPiOS auto-hotspot module
+# Script sets up an automatic hotspot if no wifi is found
+# Based on http://www.raspberryconnect.com/network/item/330-raspberry-pi-auto-wifi-hotspot-switch-internet
+# Written by Guy Sheffer <guysoft at gmail dot com>
+# GPL V3
+########
+
+source /common.sh
+
+apt-get update
+apt-get -y purge dns-root-data
+apt-get -y install iw
+
+apt-get purge dns-root-data
+apt-get install -y hostapd dnsmasq iptables
+
+systemctl disable hostapd
+systemctl disable dnsmasq
+
+# Unpack after hostapd dnsmasq so we can overwrite their config if needed
+unpack /filesystem/root /
+
+# Set hotspot name and password
+sed -i s"/HOTSPOT_NAME/$HOTSPOT_NAME/g" /etc/hostapd/hostapd.conf
+sed -i s"/HOTSPOT_PASSWORD/$HOTSPOT_PASSWORD/g" /etc/hostapd/hostapd.conf
+sed -i s"/HOTSPOT_CHANNEL/$HOTSPOT_CHANNEL/g" /etc/hostapd/hostapd.conf
+
+if grep -Fxq "DAEMON_CONF" /etc/default/hostapd
+then
+    sed -i "s@#DAEMON_CONF=\"\"@DAEMON_CONF=\"/etc/hostapd/hostapd.conf\"@g" /etc/default/hostapd
+else
+    echo DAEMON_CONF=\"/etc/hostapd/hostapd.conf\" >> /etc/default/hostapd
+fi
+
+sed -i "s@^DAEMON_OPTS=\"\"@^#DAEMON_OPTS=\"\"@g" /etc/default/hostapd
+
+echo "
+# IPv6
+duid
+interface eth0
+        ipv6rs
+        iaid 1
+        ia_pd 2 wlan0/1/64 # request prefixes for VLANs
+" >> /etc/dhcpcd.conf
+
+sed -i 's/clientid/# clientid/g' /etc/dhcpcd.conf
+
+echo "
+# Auto-hotspot Config
+# Interface to use
+interface=wlan0
+bind-interfaces
+dhcp-range=192.168.50.150,192.168.50.200,255.255.255.0,12h
+
+# IPv6
+except-interface=eth0
+enable-ra
+dhcp-range=tag:wlan0,::1,constructor:wlan0, ra-names, 12h
+" >> /etc/dnsmasq.conf
+
+sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
+
+cp /etc/network/interfaces /etc/network/interfaces-backup
+echo "" > /etc/network/interfaces
+
+# Add cronjob
+# echo "* * * * * /usr/bin/autohotspotN" | crontab -
+
+systemctl enable autohotspot.service
+
+
