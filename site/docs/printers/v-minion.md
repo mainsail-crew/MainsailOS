@@ -16,4 +16,4 @@ Since the v-minion only has 1 z stepper, you only need to connect the `Left Z` s
 - [Fysetc Spider v1.1](boards/fysetc/spider-11.md)
 
 ## Post installation steps
-Click the "INSTALL VCORE THREE CONFIG" button in the Macros panel, or manually replace your `printer.cfg` with `config/templates/v-minion-printer.template.cfg`
+Click the "INSTALL VMINION CONFIG" button in the Macros panel, or manually replace your `printer.cfg` with `config/templates/v-minion-printer.template.cfg`
