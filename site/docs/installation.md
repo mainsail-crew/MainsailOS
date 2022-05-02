@@ -16,19 +16,15 @@ Note: this will destroy all data on the card!
 
 <a class="button button--primary" href="https://github.com/Rat-Os/RatOS/releases">Download RatOS</a>
 
-### WIFI (Optional)
+### WIFI or Ethernet
 
-:::danger Important
+When the RatOS image has been written to the SD card and you've configured your wifi settings, insert the SD card into the Raspberry Pi and turn on the Pi. After a few minutes the raspberry pi will host a hotspot called "RatOS", join this hotspot on your phone or a PC/Laptop with wifi, the password is "raspberry". When connected, open [http://RatOS.local/configure](http://RatOS.local/configure) or [http://192.168.50.1/configure](http://192.168.50.1/configure) and follow the steps presented there to setup wifi and your printers hostname.
 
-Do **NOT** use a textprocessor such as Wordpad, it will mangle the file and your pi won't boot. Notepad, Notepad++, VSCode are all fine.
-
-:::
-
-When the process is complete, find the `/boot` volume / folder on the sd card. If you're having trouble finding the boot volume, try reinserting the SD card into your PC. Edit the `ratos-wpa-supplicant.txt` file found on the boot volume in a text editor and fill out your wifi information. **Remember to change the country code at the bottom of the file.**
+Alternatively, if you're using a pi with Ethernet, you can use an ethernet cable instead.
 
 ## Preparing your control board
 
-When the RatOS image has been written to the SD card and you've configured your wifi settings, insert the SD card into the Raspberry Pi and turn on the Pi. Wait a couple of minutes, then open [http://RatOS.local/](http://ratos.local/) in your browser. This will present you with the mainsail interface. On the left there's a menu option named "Machine", click on that, and you'll see a list of files and folders. There's a folder here called "firmware_binaries", open that folder. You can download the firmware binary for your board from here. Let's move on to the preparation of the control board.
+After completing the setup wizard, wait a couple of minutes, then open [http://RatOS.local/](http://RatOS.local/) in your browser (or whatever hostname you chose during setup). This will present you with the mainsail interface. On the left there's a menu option named "Machine", click on that, and you'll see a list of files and folders. There's a folder here called "firmware_binaries", open that folder. You can download the firmware binary for your board from here. Let's move on to the preparation of the control board.
 
 See the documentation for your specific board.
 
@@ -46,7 +42,7 @@ See the documentation for your specific board.
 
 ## Setup
 
-With the control board connected via USB to your Raspberry Pi and the printer turned on, open your browser and navigate to [http://RatOS.local/](http://RatOS.local) and proceed to the [configuration guide](configuration).
+With the control board connected via USB to your Raspberry Pi and the printer turned on, open your browser and navigate to [http://RatOS.local/](http://RatOS.local) or your chosen hostname and proceed to the [configuration guide](configuration).
 
 ## Updating
 
