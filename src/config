@@ -2,7 +2,7 @@
 # Shebang for better detection of file type
 
 export DIST_NAME=RatOS
-export DIST_VERSION=1.1.1
+export DIST_VERSION=1.2.0
 export BASE_IMAGE_ENLARGEROOT=6500
 export MODULES="base,pkgupgrade(network,piconfig,klipper,node,is_req_preinstall,moonraker,mainsail,mjpgstreamer,serialcomm,ratos,rpi_mcu,klipperscreen,password-for-sudo,disable-services(hotspot))"
 export BASE_IMAGE_RESIZEROOT=200
