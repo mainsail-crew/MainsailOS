@@ -23,7 +23,7 @@ echo_green "Installing Klipper and enable klippy Service"
 ### install all deps at once for time consumption reasons.
 ## APT: Update Repo Database and install Dependencies
 
-apt update && apt install ${KLIPPER_DEPS} -y 
+apt update && apt install ${KLIPPER_DEPS} -y
 
 ### Make sure user pi has access to serial ports
 ## NOTE: BASE_USER is defined by CustomPIOS Variable
@@ -50,7 +50,7 @@ popd
 # create python virtualenv and install klipper requirements
 pushd /home/${BASE_USER}
 echo_green "Creating Virtualenv for Klipper (klipper-env) ..."
-sudo -u ${BASE_USER} virtualenv -p python2 ${KLIPPER_PYTHON_DIR}
+sudo -u ${BASE_USER} virtualenv -p python3 ${KLIPPER_PYTHON_DIR}
 echo_green "Installing klippy Python Dependencies ..."
 sudo -u ${BASE_USER} ${KLIPPER_PYTHON_DIR}/bin/pip install -r ${KLIPPER_SRC_DIR}/${KLIPPER_PYENV_REQ}
 popd
