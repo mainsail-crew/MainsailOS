@@ -5,11 +5,12 @@
 
 ![Mainsail Logo](https://github.com/meteyou/mainsail/raw/master/docs/assets/img/logo.png?raw=true)
 
-A [Raspberry Pi OS](https://www.raspberrypi.org/software/) based distribution for 3d Printers. It includes everything to get started with Klipper Firmware and Mainsail.
+A [Raspberry Pi OS](https://www.raspberrypi.org/software/) based distribution for 3d Printers. \
+It includes everything to get started with Klipper Firmware and Mainsail.
 
-Learn More about...
-Klipper Firmware: https://www.klipper3d.org/
-Moonraker: https://moonraker.readthedocs.io/en/latest/
+Learn More about... \
+Klipper Firmware: https://www.klipper3d.org/ \
+Moonraker: https://moonraker.readthedocs.io/en/latest/ \
 Mainsail: https://docs.mainsail.xyz/
 
 ## Installing
@@ -30,9 +31,9 @@ Here a list of included and preinstalled Software:
 -   [Klipper (3D Printer Firmware)](https://github.com/KevinOConnor/klipper)
 -   [Moonraker (API Web Server for Klipper)](https://github.com/Arksine/moonraker)
 -   [Mainsail (Web interface for Klipper/Moonraker)](https://github.com/meteyou/mainsail)
--   [Mjpeg-streamer (Webcam streaming)](https://github.com/jacksonliam/mjpg-streamer)
+-   [Crowsnest (Webcam streaming)](https://github.com/mainsail-crew/crowsnest)
+-   [Sonar (Keepalive daemon)](https://github.com/mainsail-crew/sonar)
 -   [Nginx (Webserver & Proxy)](https://nginx.org/en/)
--   [FFMPEG (upcoming features)](https://www.ffmpeg.org/)
 
 ## Screenshots
 
@@ -43,10 +44,10 @@ Here a list of included and preinstalled Software:
 To prevent you have to deal with an entire build chain setup, \
 simply fork this repository.
 
-Enable the workflows in your fork and you are good to go.
+Enable the workflows in your fork and you are good to go. \
 On every push you make, it will build an Image and upload it as artifact.
 
-If you want or need to build locally please visit [CustomPiOS](https://github.com/guysoft/CustomPiOS)
+If you want or need to build locally please visit [CustomPiOS](https://github.com/guysoft/CustomPiOS). \
 Especcially ["Build a Distro From within Raspbian / Debian / Ubuntu / CustomPiOS Distros"](https://github.com/guysoft/CustomPiOS#build-a-distro-from-within-raspbian--debian--ubuntu--custompios-distros)
 
 ---
