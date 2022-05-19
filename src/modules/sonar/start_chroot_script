@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+#### Sonar - A WiFi Keepalive daemon
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2022
+#### https://github.com/mainsail-crew/sonar
+####
+#### This File is distributed under GPLv3
+####
+
+# # shellcheck enable=require-variable-braces
+
+# Error handling
+set -ex
+
+source /common.sh
+install_cleanup_trap
+
+echo_green "Installing sonar and enable sonar Service ..."
+# install dependencies
+# force apt update
+apt update
+check_install_pkgs "${SONAR_SONAR_DEPS}"
+# Move to $HOME dir
+pushd /home/"${BASE_USER}" &> /dev/null || exit 1
+    # clone Repo
+    echo_green "Clone sonar repository ..."
+    gitclone SONAR_SONAR_REPO sonar
+    # install sonar
+    pushd /home/"${BASE_USER}"/sonar &> /dev/null || exit 1
+    echo_green "Running sonar installer ..."
+    if [ "${SONAR_SONAR_ADD_MOONRAKER}" == "1" ]; then
+        sudo -u "${BASE_USER}" \
+        make unattended
+    else
+        sudo -u "${BASE_USER}" \
+        make install
+    fi
+    if [ ! -d "/home/${BASE_USER}/klipper_config" ]; then
+        mkdir -p "/home/${BASE_USER}/klipper_config"
+    fi
+    echo_green "Copying default config file ..."
+    sudo -u "${BASE_USER}" \
+    cp "${PWD}/sample_config/${SONAR_SONAR_DEFAULT_CONF}" \
+    "/home/${BASE_USER}/klipper_config/sonar.conf"
+    popd &> /dev/null || exit 1
+
+# enable systemd service
+systemctl_if_exists enable sonar.service
+
+popd &> /dev/null || exit 1
