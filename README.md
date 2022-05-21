@@ -20,7 +20,7 @@ https://docs.mainsail.xyz/setup/mainsail-os
 
 ## Community
 
-For additional help, join us in the [Mainsail Discord](https://discord.gg/skWTwTD).
+For additional help, join us on [Discord](https://discord.gg/skWTwTD).
 
 [![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/skWTwTD)
 
@@ -48,13 +48,4 @@ Enable the workflows in your fork and you are good to go. \
 On every push you make, it will build an Image and upload it as artifact.
 
 If you want or need to build locally please visit [CustomPiOS](https://github.com/guysoft/CustomPiOS). \
-Especcially ["Build a Distro From within Raspbian / Debian / Ubuntu / CustomPiOS Distros"](https://github.com/guysoft/CustomPiOS#build-a-distro-from-within-raspbian--debian--ubuntu--custompios-distros)
-
----
-
-## Credits
-
-We want to give a shoutout to [jottr](https://github.com/jottr) for mentioning a naming convention problem.\
-In the past we used 'raspbian' at some points for names.\
-But this isn't technicaly true.\
-MainsailOS is based of Raspberry Pi OS, not raspbian.
+Especially ["Build a Distro From within Raspbian / Debian / Ubuntu / CustomPiOS Distros"](https://github.com/guysoft/CustomPiOS#build-a-distro-from-within-raspbian--debian--ubuntu--custompios-distros)
