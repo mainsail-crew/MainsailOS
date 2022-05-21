@@ -45,7 +45,7 @@ To prevent you have to deal with an entire build chain setup, \
 simply fork this repository.
 
 Enable the workflows in your fork and you are good to go. \
-On every push you make, it will build an Image and upload it as artifact.
+On each push you make, an image is build and uploaded as an artifact.
 
 If you want or need to build locally please visit [CustomPiOS](https://github.com/guysoft/CustomPiOS). \
 Especially ["Build a Distro From within Raspbian / Debian / Ubuntu / CustomPiOS Distros"](https://github.com/guysoft/CustomPiOS#build-a-distro-from-within-raspbian--debian--ubuntu--custompios-distros)
