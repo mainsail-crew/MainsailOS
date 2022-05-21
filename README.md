@@ -8,7 +8,7 @@
 A [Raspberry Pi OS](https://www.raspberrypi.org/software/) based distribution for 3D Printers. \
 It includes everything to get started with Klipper Firmware and Mainsail.
 
-Learn More about... \
+Learn more about: \
 Klipper Firmware: https://www.klipper3d.org/ \
 Moonraker: https://moonraker.readthedocs.io/en/latest/ \
 Mainsail: https://docs.mainsail.xyz/
