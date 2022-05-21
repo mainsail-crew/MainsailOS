@@ -20,7 +20,7 @@ https://docs.mainsail.xyz/setup/mainsail-os
 
 ## Community
 
-For additional help, join us on [Discord](https://discord.gg/skWTwTD).
+For additional help, join us on [Discord](https://discord.gg/mainsail).
 
 [![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/skWTwTD)
 
