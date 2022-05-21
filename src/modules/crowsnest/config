@@ -15,11 +15,14 @@
 [ -n "$CROWSNEST_CROWSNEST_DEPS" ] || CROWSNEST_CROWSNEST_DEPS="git crudini bsdutils findutils v4l-utils ffmpeg"
 [ -n "$CROWSNEST_DEFAULT_CONF" ] || CROWSNEST_DEFAULT_CONF="mainsail_default.conf"
 [ -n "$CROWSNEST_DEFAULT_CONF_DIR" ] || CROWSNEST_DEFAULT_CONF_DIR="/home/${BASE_USER}/klipper_config"
-[ -n "$CROWSNEST_MOONRAKER_SUPPORT" ] || CROWSNEST_MOONRAKER_SUPPORT="y"
-[ -n "$CROWSNEST_FORCE_RASPICAMFIX" ] || CROWSNEST_FORCE_RASPICAMFIX="y"
+# Force Raspicam fix bool (1:yes / 0:no)
+[ -n "$CROWSNEST_FORCE_RASPICAMFIX" ] || CROWSNEST_FORCE_RASPICAMFIX=1
+# Add Crowsnest to moonraker.conf (update manager) bool (1:yes / 0:no)
+[ -n "$CROWSNEST_ADD_CROWSNEST_MOONRAKER" ] || CROWSNEST_ADD_CROWSNEST_MOONRAKER=1
+
 
 # ustreamer
-[ -n "$CROWSNEST_USTREAMER_DEPS" ] || CROWSNEST_USTREAMER_DEPS="git build-essential libevent-dev libjpeg62-turbo-dev \
+[ -n "$CROWSNEST_USTREAMER_DEPS" ] || CROWSNEST_USTREAMER_DEPS="git build-essential libevent-dev libjpeg8-dev \
 libbsd-dev libraspberrypi-dev libgpiod-dev"
 [ -n "$CROWSNEST_USTREAMER_WITH_OMX" ] || CROWSNEST_USTREAMER_WITH_OMX="y"
 [ -n "$CROWSNEST_USTREAMER_WITH_GPIO" ] || CROWSNEST_USTREAMER_WITH_GPIO="n"
