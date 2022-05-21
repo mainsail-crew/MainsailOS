@@ -1,3 +1,5 @@
+#!/bin/bash
+# shellcheck disable=all
 [ -n "$KLIPPER_SRC_DIR" ] || KLIPPER_SRC_DIR=/home/${BASE_USER}/klipper
 [ -n "$KLIPPER_PYTHON_DIR" ] || KLIPPER_PYTHON_DIR=/home/${BASE_USER}/klippy-env
 
