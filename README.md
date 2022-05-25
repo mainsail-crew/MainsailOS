@@ -1,15 +1,16 @@
 ![downloads](https://img.shields.io/github/downloads/mainsail-crew/MainsailOS/total)
-[![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/skWTwTD)
+[![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/mainsail)
 
 # MainsailOS
 
 ![Mainsail Logo](https://github.com/meteyou/mainsail/raw/master/docs/assets/img/logo.png?raw=true)
 
-A [Raspberry Pi OS](https://www.raspberrypi.org/software/) based distribution for 3d Printers. It includes everything to get started with Klipper Firmware and Mainsail.
+A [Raspberry Pi OS](https://www.raspberrypi.org/software/) based distribution for 3D Printers. \
+It includes everything to get started with Klipper Firmware and Mainsail.
 
-Learn More about...
-Klipper Firmware: https://www.klipper3d.org/
-Moonraker: https://moonraker.readthedocs.io/en/latest/
+Learn more about: \
+Klipper Firmware: https://www.klipper3d.org/ \
+Moonraker: https://moonraker.readthedocs.io/en/latest/ \
 Mainsail: https://docs.mainsail.xyz/
 
 ## Installing
@@ -19,7 +20,7 @@ https://docs.mainsail.xyz/setup/mainsail-os
 
 ## Community
 
-For additional help, join us in the [Mainsail Discord](https://discord.gg/skWTwTD).
+For additional help, join us on [Discord](https://discord.gg/mainsail).
 
 [![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/skWTwTD)
 
@@ -30,9 +31,9 @@ Here a list of included and preinstalled Software:
 -   [Klipper (3D Printer Firmware)](https://github.com/KevinOConnor/klipper)
 -   [Moonraker (API Web Server for Klipper)](https://github.com/Arksine/moonraker)
 -   [Mainsail (Web interface for Klipper/Moonraker)](https://github.com/meteyou/mainsail)
--   [Mjpeg-streamer (Webcam streaming)](https://github.com/jacksonliam/mjpg-streamer)
+-   [Crowsnest (Webcam streaming)](https://github.com/mainsail-crew/crowsnest)
+-   [Sonar (Keepalive daemon)](https://github.com/mainsail-crew/sonar)
 -   [Nginx (Webserver & Proxy)](https://nginx.org/en/)
--   [FFMPEG (upcoming features)](https://www.ffmpeg.org/)
 
 ## Screenshots
 
@@ -43,17 +44,8 @@ Here a list of included and preinstalled Software:
 To prevent you have to deal with an entire build chain setup, \
 simply fork this repository.
 
-Enable the workflows in your fork and you are good to go.
-On every push you make, it will build an Image and upload it as artifact.
+Enable the workflows in your fork and you are good to go. \
+On each push you make, an image is build and uploaded as an artifact.
 
-If you want or need to build locally please visit [CustomPiOS](https://github.com/guysoft/CustomPiOS)
-Especcially ["Build a Distro From within Raspbian / Debian / Ubuntu / CustomPiOS Distros"](https://github.com/guysoft/CustomPiOS#build-a-distro-from-within-raspbian--debian--ubuntu--custompios-distros)
-
----
-
-## Credits
-
-We want to give a shoutout to [jottr](https://github.com/jottr) for mentioning a naming convention problem.\
-In the past we used 'raspbian' at some points for names.\
-But this isn't technicaly true.\
-MainsailOS is based of Raspberry Pi OS, not raspbian.
+If you want or need to build locally please visit [CustomPiOS](https://github.com/guysoft/CustomPiOS). \
+Especially ["Build a Distro From within Raspbian / Debian / Ubuntu / CustomPiOS Distros"](https://github.com/guysoft/CustomPiOS#build-a-distro-from-within-raspbian--debian--ubuntu--custompios-distros)
