@@ -24,7 +24,7 @@ Alternatively, if you're using a pi with Ethernet, you can use an ethernet cable
 
 ## Preparing your control board
 
-After completing the setup wizard, wait a couple of minutes, then open [http://RatOS.local/](http://RatOS.local/) in your browser (or whatever hostname you chose during setup). This will present you with the mainsail interface. On the left there's a menu option named "Machine", click on that, and you'll see a list of files and folders. There's a folder here called "firmware_binaries", open that folder. You can download the firmware binary for your board from here. Use the links below to move on to the preparation of the control board.
+After completing the setup wizard, wait a couple of minutes, then open [http://RatOS.local/](http://RatOS.local/) in your browser (or whatever hostname you chose during setup). This will present you with the mainsail interface. On the dashboard you'll see a box with the heading "Scripts", in that box there'll be a button called "COMPILE FIRMWARE", click that. This will compile fresh firmware for the supported RatOS boards, it'll take a couple of minutes, **don't shut down your pi during this process**. When the process is complete you'll see "Firmware binaries compiled successfully!" in the console. At this point you're ready to download the firmware for your board. On the left there's a menu option named "Machine", click on that, and you'll see a list of files and folders. There's a folder here called "firmware_binaries", open that folder. You can download the firmware binary for your board from here. Use the links below to move on to the preparation of the control board.
 
 [BIGTREETECH Octopus v1.1](boards/btt/octopus-11.md)
 
