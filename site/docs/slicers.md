@@ -45,7 +45,7 @@ END_PRINT
 ## SuperSlicer
 
 :::info
-You should be using "Klipper" as the gcode flavor
+You should be using "Klipper" as the gcode flavor and have the "Only custom Start G-Code" box checked in Printer Settings -> Custom G-Code
 :::
 :::info
 This is the ONLY gcode you need, delete everything else. Copy paste the following **as is**.
