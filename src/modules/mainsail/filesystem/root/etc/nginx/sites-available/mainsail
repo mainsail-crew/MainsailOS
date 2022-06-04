@@ -28,12 +28,37 @@ server {
     proxy_request_buffering off;
 
     location / {
+        # Hard check to ensure /home/pi is present. If not, use 418 as unique error code
+        if (!-d /home/pi) {
+            return 418;
+        }
+
         try_files $uri $uri/ /index.html;
     }
 
     location = /index.html {
+        # Hard check to ensure /home/pi is present. If not, use 418 as unique error code
+        if (!-d /home/pi) {
+            return 418;
+        }
+
         add_header Cache-Control "no-store, no-cache, must-revalidate";
     }
+
+    # Custom 418 error page to let the user know about the invalid username
+    # Remove this once the username "pi" is no longer required
+    error_page 418 /418.html;
+
+    location = /418.html {
+        root /usr/share/nginx/html;
+        internal;
+    }
+
+    location = /rpi-setup-username.png {
+        root /usr/share/nginx/html;
+    }
+    # End of custom 418 error page
+
 
     location /websocket {
         proxy_pass http://apiserver/websocket;
