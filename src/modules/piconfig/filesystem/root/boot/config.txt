@@ -53,6 +53,9 @@ dtparam=spi=on
 
 # Additional overlays and parameters are documented /boot/overlays/README
 
+# Enable audio (loads snd_bcm2835)
+dtparam=audio=on
+
 
 ####################################################
 ####     MainsailOS specific configurations     ####
@@ -90,9 +93,6 @@ max_framebuffers=2
 gpu_mem=256
 
 [all]
-
-# Enable audio (loads snd_bcm2835)
-dtparam=audio=on
 
 ## SPI Interface is enabled by default for Input Shaper
 ## To revert that comment out line #48
