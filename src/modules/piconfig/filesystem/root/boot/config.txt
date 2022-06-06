@@ -56,29 +56,40 @@ dtparam=spi=on
 # Enable audio (loads snd_bcm2835)
 dtparam=audio=on
 
+
+
+[pi0]
+## This affects Pi Zero(W) and Pi Zero2
+## Due lag of RAM, limit GPU RAM
+gpu_mem=128
+
 [pi4]
-# Enable DRM VC4 V3D driver on top of the dispmanx display stack
+## Enable DRM VC4 V3D driver on top of the dispmanx display stack
 dtoverlay=vc4-fkms-v3d
 max_framebuffers=2
 # Do not use more than 256Mb on Pi Model 4, it uses its own Management.
 gpu_mem=256
 
 [all]
-#dtoverlay=vc4-fkms-v3d
+####################################################
+####     MainsailOS specific configurations     ####
+####################################################
+####      DO NOT CHANGE SECTION BELOW !!!       ####
+####   UNLESS YOU KNOW WHAT YOU ARE DOING !!!   ####
+####################################################
 
-# Enable Hardware UART for Serial Communication
+## SPI Interface is enabled by default for Input Shaper
+## To revert that comment out line #48
+## This colides with Hyperpixel Display!
+## Hyperpixel Scrren uses the same Pin for Backlight.
+
+## Enable Hardware UART for Serial Communication
 enable_uart=1
 dtoverlay=disable-bt
 
-# Enable Raspicam devices at boot
+## Enable Raspicam devices at boot
+## This also enables the X Server for KlipperScreen
 start_x=1
 gpu_mem=256
 
-## Zero Models need special handling
-[pi0w]
-dtoverlay=pi3-disable-bt
-gpu_mem=128
-
-[pi02]
-gpu_mem=128
-
+####################################################
