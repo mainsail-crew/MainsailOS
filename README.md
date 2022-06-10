@@ -45,7 +45,7 @@ Here a list of included and preinstalled Software:
 
 ## Screenshots
 
-![screenshot-dashboard](https://github.com/mainsail-crew/docs/blob/master/assets/img/screenshot.png)
+![screenshot-dashboard](https://github.com/mainsail-crew/docs/raw/master/assets/img/screenshot.png)
 
 # Build your own / Developing
 
