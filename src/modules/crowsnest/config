@@ -22,7 +22,7 @@
 
 
 # ustreamer
-[ -n "$CROWSNEST_USTREAMER_DEPS" ] || CROWSNEST_USTREAMER_DEPS="git build-essential libevent-dev libjpeg8-dev \
+[ -n "$CROWSNEST_USTREAMER_DEPS" ] || CROWSNEST_USTREAMER_DEPS="git build-essential libevent-dev libjpeg-dev \
 libbsd-dev libraspberrypi-dev libgpiod-dev"
 [ -n "$CROWSNEST_USTREAMER_WITH_OMX" ] || CROWSNEST_USTREAMER_WITH_OMX="y"
 [ -n "$CROWSNEST_USTREAMER_WITH_GPIO" ] || CROWSNEST_USTREAMER_WITH_GPIO="n"

@@ -22,7 +22,8 @@ echo_green "Installing crowsnest and enable webcam Service ..."
 # force apt update
 apt update
 # It could use inbuilt dependencie check, but should speed up if preinstalled.
-check_install_pkgs "${CROWSNEST_CROWSNEST_DEPS}"
+# shellcheck disable=SC2086
+check_install_pkgs ${CROWSNEST_CROWSNEST_DEPS} ${CROWSNEST_USTREAMER_DEPS}
 # Move to $HOME dir
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
     # make sure config folder exist
