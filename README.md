@@ -22,7 +22,7 @@ https://docs.mainsail.xyz/setup/mainsail-os
 
 For additional help, join us on [Discord](https://discord.gg/mainsail).
 
-[![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/skWTwTD)
+[![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/mainsail)
 
 ## What is included?
 
@@ -35,9 +35,17 @@ Here a list of included and preinstalled Software:
 -   [Sonar (Keepalive daemon)](https://github.com/mainsail-crew/sonar)
 -   [Nginx (Webserver & Proxy)](https://nginx.org/en/)
 
+## also includes
+
+-   Enabled Serial Connection by default. \
+    Using Hardware UART (PL011) for Boards like BTT SKR Mini E3 V3
+-   Preinstalled Dependencies for Klipper's Input Shaper. \
+    You only need to build the [klipper_mcu](https://www.klipper3d.org/RPi_microcontroller.html) and installing the service. \
+    See [Klipper documentation](https://www.klipper3d.org/Measuring_Resonances.html) for more information.
+
 ## Screenshots
 
-![screenshot-dashboard](https://raw.githubusercontent.com/mainsail-crew/docs/master/assets/img/screenshot.png)
+![screenshot-dashboard](https://github.com/mainsail-crew/docs/raw/master/assets/img/screenshot.png)
 
 # Build your own / Developing
 
