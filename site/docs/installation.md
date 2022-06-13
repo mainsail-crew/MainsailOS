@@ -10,7 +10,7 @@ sidebar_position: 1
 ## Raspberry Pi Installation
 
 Download the newest release (download the RatOS-\*.zip file under the assets dropdown) of [RatOS on github](https://github.com/Rat-Os/RatOS/releases).
-Then use [Balena Etcher](https://www.balena.io/etcher/) to write that image to the SD card that goes into your raspberry pi (8GB or larger).
+Then use [Balena Etcher](https://www.balena.io/etcher/) to write that image to the SD card that goes into your raspberry pi (16GB or larger).
 
 Note: this will destroy all data on the card!
 
