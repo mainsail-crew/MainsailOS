@@ -2,9 +2,11 @@
 # Shebang for better detection of file type
 
 export DIST_NAME=MainsailOS
-export DIST_VERSION=0.5.0
+export DIST_VERSION=0.6.1
 export BASE_IMAGE_ENLARGEROOT=2500
-#export MODULES="base,pkgupgrade,mainsailos(network,raspicam,klipper,is_req_preinstall,moonraker,mainsail,mjpgstreamer,serialcomm,password-for-sudo)"
-export MODULES="base,pkgupgrade,mainsailos(network,raspicam,klipper,password-for-sudo)"
-export BASE_RELEASE_COMPRESS=yes
+export MODULES="base,pkgupgrade,mainsailos(network,piconfig,klipper,is_req_preinstall,moonraker,mainsail,crowsnest,sonar,password-for-sudo)"
+export BASE_USER=pi
+export BASE_USER_PASSWORD=raspberry
+export BASE_USER_ADD=yes
+export BASE_RELEASE_COMPRESS=no
 export BASE_IMAGE_RESIZEROOT=600

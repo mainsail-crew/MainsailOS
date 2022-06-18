@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Preinstall customized config.txt
+# Written by Stephan Wendel <me@stephanwe.de> aka KwadFan
+# This file may distributed under GPLv3
+# Copyright 2021
+########
+
+# Source error handling, leave this in place
+set -e
+
+# Source CustomPIOS common.sh
+source /common.sh
+install_cleanup_trap
+
+echo_green "Backup original config.txt and cmdline.txt ..."
+mv "${PICONFIG_CONFIG_TXT_FILE}" "${PICONFIG_CONFIG_BAK_FILE}"
+cp "${PICONFIG_CMDLINE_TXT_FILE}" "${PICONFIG_CMDLINE_BAK_FILE}"
+
+echo_green "Copying files to root filesystem ..."
+unpack /filesystem/root /
+
+### Disable Console and services to enable Hardware Serial.
+echo_green "Disable Serial Linux console ..."
+sed -i 's/console=serial0,115200 //' "${PICONFIG_CMDLINE_TXT_FILE}"
+
+### disable bluetooth and related services
+echo_green "Disabling Bluetooth related services..."
+systemctl_if_exists disable hciuart.service
+systemctl_if_exists disable bluetooth.service
+systemctl_if_exists disable bluealsa.service

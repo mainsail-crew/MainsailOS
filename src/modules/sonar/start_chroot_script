@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+#### Sonar - A WiFi Keepalive daemon
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2022
+#### https://github.com/mainsail-crew/sonar
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck enable=require-variable-braces
+
+## Source error handling, leave this in place
+set -Eex
+
+## Set LC_ALL to prevent errors
+export LC_ALL=C
+
+# Set DEBIAN_FRONTEND to noninteractive
+if [ "${DEBIAN_FRONTEND}" != "noninteractive" ]; then
+    export DEBIAN_FRONTEND=noninteractive
+fi
+
+## Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+# Setup template file
+MOONRAKER_TEMPLATE="/home/${BASE_USER}/sonar/file_templates/moonraker_update.txt"
+
+## helper func moonraker update_manager
+function add_update_entry {
+    if [ -f "${SONAR_MOONRAKER_CONF}" ]; then
+        if [ -f "/tmp/moonraker.conf" ]; then
+            rm -rf /tmp/moonraker.conf
+        fi
+        sudo -u "${BASE_USER}" \
+        cat "${SONAR_MOONRAKER_CONF}" "${MOONRAKER_TEMPLATE}" | \
+        tee /tmp/moonraker.conf > /dev/null &&
+        cp -rf /tmp/moonraker.conf "${SONAR_MOONRAKER_CONF}"
+    fi
+}
+
+echo_green "Installing sonar and enable sonar Service ..."
+
+## Install all deps at once for time consumption reasons.
+## APT: Update Repo Database and install Dependencies
+# Force apt update
+apt update
+echo_green "Installing Sonar Dependencies ..."
+# shellcheck disable=SC2086
+## Disabling shellcheck SC2086, because we want "wordsplitting"
+check_install_pkgs ${SONAR_DEPS}
+## Move to $HOME dir
+pushd "/home/${BASE_USER}" &> /dev/null || exit 1
+    ## clone Repo
+    echo_green "Clone sonar repository ..."
+    gitclone SONAR_REPO sonar
+    ## Install sonar, using builtin installer
+    pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
+    echo_green "Running sonar installer ..."
+        sudo -u "${BASE_USER}" make unattended
+    ## Make sure config dir exits
+    if [ ! -d "${SONAR_DEFAULT_CONF_DIR}" ]; then
+        sudo -u "${BASE_USER}" mkdir -p "${SONAR_DEFAULT_CONF_DIR}"
+    fi
+    ## Copy default config
+    echo_green "Copying default config file ..."
+    sudo -u "${BASE_USER}" \
+    cp "${PWD}/sample_config/${SONAR_DEFAULT_CONF}" \
+    "${SONAR_DEFAULT_CONF_DIR}/sonar.conf"
+
+    ## Add moonraker update_manager
+    if [ "${SONAR_ADD_SONAR_MOONRAKER}" == "1" ]; then
+        echo -en "Adding Sonar Update Manager entry to moonraker.conf ...\r"
+        add_update_entry
+        echo -e "Adding Sonar Update Manager entry to moonraker.conf ... [OK]"
+    fi
+    popd &> /dev/null || exit 1
+popd &> /dev/null || exit 1
+
+## Done message
+echo_green "Installing sonar and enable sonar Service ... done!"

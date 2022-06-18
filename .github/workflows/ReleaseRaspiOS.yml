@@ -1,7 +1,7 @@
 name: Build and Release MainsailOS - Raspberry Pi OS buster
 on:
   release:
-    types: [ published ]
+    types: [published]
 
 jobs:
   raspiosbuild:
@@ -14,7 +14,7 @@ jobs:
       - name: Checkout CustomPiOS
         uses: actions/checkout@v2
         with:
-          repository: 'guysoft/CustomPiOS'
+          repository: "guysoft/CustomPiOS"
           path: CustomPiOS
 
       - name: Checkout MainsailOS Project
@@ -25,7 +25,17 @@ jobs:
           submodules: true
 
       - name: Download Raspberry Pi OS Source Image
-        run: aria2c -d repository/src/image/ --seed-time=0 https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2021-12-02/2021-12-02-raspios-buster-armhf-lite.zip.torrent
+        run: aria2c -d repository/src/image/ --seed-time=0 https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent
+
+      - name: Comparing Checksums
+        run: |
+          cd repository/src/image
+          curl -JL https://downloads.raspberrypi.org/raspios_lite_armhf_latest.sha256 | awk '{print $1"  "$2}' | sha256sum -c
+
+      - name: Comparing Checksums
+        run: |
+          cd repository/src/image
+          curl -JL https://downloads.raspberrypi.org/raspios_lite_armhf_latest.sha256 | awk '{print $1"  "$2}' | sha256sum -c
 
       - name: Comparing Checksums
         run: |
