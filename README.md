@@ -1,22 +1,26 @@
 ![downloads](https://img.shields.io/github/downloads/mainsail-crew/MainsailOS/total)
 [![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/mainsail)
 
-# MainsailOS
+<p align="center">
+<img src=".github/sdcard-logo.png" style="width:40%" >
+</p>
 
-![Mainsail Logo](https://github.com/meteyou/mainsail/raw/master/docs/assets/img/logo.png?raw=true)
+# MainsailOS
 
 A [Raspberry Pi OS](https://www.raspberrypi.org/software/) based distribution for 3D Printers. \
 It includes everything to get started with Klipper Firmware and Mainsail.
 
-Learn more about: \
-Klipper Firmware: https://www.klipper3d.org/ \
-Moonraker: https://moonraker.readthedocs.io/en/latest/ \
-Mainsail: https://docs.mainsail.xyz/
+Learn more about:
 
-## Installing
+-   [Klipper Firmware](https://www.klipper3d.org/)
+-   [Moonraker](https://moonraker.readthedocs.io/en/latest/)
+-   [Mainsail](https://docs.mainsail.xyz/)
 
-See the installation instructions on the Mainsail documentation page:
-https://docs.mainsail.xyz/setup/mainsail-os
+## How to install MainsailOS ?
+
+You can find detailed instructions in our [documentation](https://docs.mainsail.xyz/setup/mainsail-os).
+
+We recommend the installation via [Raspberry Pi Imager](https://docs.mainsail.xyz/setup/mainsailos/pi-imager).
 
 ## Community
 
