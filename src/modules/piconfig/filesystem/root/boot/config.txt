@@ -103,8 +103,7 @@ gpu_mem=256
 enable_uart=1
 dtoverlay=disable-bt
 
-## Enable Raspicam devices at boot
-## This also enables the X Server for KlipperScreen
+## Enable VideoCore at boot, needed for Raspicams and DSI devices.
 start_x=1
 
 ### EXPERIMENTAL - Enable 64bit Kernel
