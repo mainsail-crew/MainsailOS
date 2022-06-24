@@ -56,29 +56,60 @@ dtparam=spi=on
 # Enable audio (loads snd_bcm2835)
 dtparam=audio=on
 
+
+####################################################
+####     MainsailOS specific configurations     ####
+####################################################
+####      DO NOT CHANGE SECTION BELOW !!!       ####
+####   UNLESS YOU KNOW WHAT YOU ARE DOING !!!   ####
+####################################################
+
+## For more options and information see
+## https://www.raspberrypi.com/documentation/computers/config_txt.html
+## Some settings may impact device functionality. See link above for details
+
+## For additional information about device filters see
+## https://www.raspberrypi.com/documentation/computers/config_txt.html#model-filters
+
+
+[pi0]
+## This affects Pi Zero(W) and Pi Zero2
+## Due lag of RAM, limit GPU RAM
+gpu_mem=128
+
+[pi2]
+gpu_mem=256
+
+[pi3]
+## Use 256 if 1Gb Ram Model!
+gpu_mem=128
+# gpu_mem=256
+
 [pi4]
-# Enable DRM VC4 V3D driver on top of the dispmanx display stack
+## Enable DRM VC4 V3D driver on top of the dispmanx display stack
 dtoverlay=vc4-fkms-v3d
 max_framebuffers=2
-# Do not use more than 256Mb on Pi Model 4, it uses its own Management.
+## Do not use more than 256Mb on Pi Model 4, it uses its own Management.
 gpu_mem=256
 
 [all]
-#dtoverlay=vc4-fkms-v3d
 
-# Enable Hardware UART for Serial Communication
+## SPI Interface is enabled by default for Input Shaper
+## To revert that comment out line #48
+## This colides with Hyperpixel Display!
+## Hyperpixel Screen uses the same Pin for Backlight.
+
+## Enable Hardware UART for Serial Communication
 enable_uart=1
 dtoverlay=disable-bt
 
-# Enable Raspicam devices at boot
+## Enable VideoCore at boot, needed for Raspicams and DSI devices.
 start_x=1
-gpu_mem=256
 
-## Zero Models need special handling
-[pi0w]
-dtoverlay=pi3-disable-bt
-gpu_mem=128
+### EXPERIMENTAL - Enable 64bit Kernel
+### The 64-bit kernel will only work on:
+### Raspberry Pi 3, 3+, 4, 400, Zero 2 W and 2B rev 1.2
+### and Raspberry Pi Compute Modules 3, 3+ and 4.
+# arm_64bit=1
 
-[pi02]
-gpu_mem=128
-
+####################################################
