@@ -36,7 +36,7 @@ Enables or disables preheating of the nozzle to 150 degrees during the START_PRI
 | --------------------------- | --------------- | ------- |
 | variable_calibrate_bed_mesh | True / False    | True    |
 
-Whether or not to calibrate a bed mesh before each print. If you prefer calibrating your bed mesh manually instead of on each print, you can disable it by setting this to False.
+Whether or not to calibrate a bed mesh before each print. If you prefer calibrating your bed mesh manually instead of on each print, you can disable it by setting this to False. With bed meshing disabled you must have a mesh saved under the "ratos" profile, use BED_MESH_CALIBRATE PROFILE=ratos and SAVE_CONFIG to calibrate and save a mesh.
 If you want to implement additional mesh handling logic you can override the `_START_PRINT_BED_MESH` macro in your printer.cfg `USER OVERRIDES` section.
 
 ### Nozzle Priming
