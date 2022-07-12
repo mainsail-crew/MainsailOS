@@ -63,6 +63,35 @@ sudo systemctl restart moonraker
 
 And you should be back in action.
 
+## Section 'gcode_shell_command generate_shaper_graph_x' is not a valid config section
+This happens if you've somehow hard reset klipper through the update manager. To restore the gcode_shell_command extension, you'll need to put [the gcode_shell_extension klipper plugin](https://raw.githubusercontent.com/Rat-OS/RatOS/master/src/modules/ratos/filesystem/home/pi/klipper/klippy/extras/gcode_shell_command.py) into `~/klipper/klippy/extras` on your pi. You can do that via either SSH or SCP.
+
+**SSH**
+
+Open the command prompt or terminal on your machine, and log in to your pi (default user is pi, default password is raspberry). If you don't have SSH on your Windows machine, download PuTTy.
+```
+ssh ratos.local
+touch ~/klipper/klippy/extras/gcode_shell_command.py
+nano ~/klipper/klippy/extras/gcode_shell_command.py
+```
+Then paste in the contents of the gcode_shell_extension plugin, and save the file. The restart klipper by running.
+```
+sudo service klipper restart
+```
+
+**SCP**
+
+Go download WinSCP or similar, and connect to ratos.local (or your IP). Then you can navigate to /home/pi/klipper/klippy/extras and then just upload the file there.
+
+## Connection to moonraker failed
+If you see the mainsail interface but you get an error about the connecting to moonraker, the connection to the pi is fine, but you're using a non standard IPv4 or IPv6 range that is not whitelisted in moonraker (only standard local ip ranges are whitelisted for security reasons). Try using the ip address of your pi (look it up in your routers admin interface) instead of ratos.local, or fix it by adding your IP range in CIDR notation to the `[authorization]` section in ~/klipper_config/moonraker.conf on the pi. You can do that through SSH, by running: 
+```
+ssh ratos.local
+nano ~/klipper_config/moonraker.conf
+sudo systemctl restart moonraker
+```
+
+Alternatively you can delete the entire `[authorization]` section, which will allow anyone to connect to moonraker (this is insecure, so do not do this if your network is open to - our your pi is reachable by - the outside world)
 
 ## Get help
 
