@@ -1,5 +1,8 @@
 # Changelog
 
+## RatOS V1.2
+This release adds a wifi connection configurator and hotspot functionality so users no longer have to edit the wpa-supplicant files, the syntax of which has been challenging for many. The hotspot also enables printing in areas with no wifi or ethernet connectivity.
+
 ## RatOS V1.1
 
 This release mainly revolves around the new stepper/stepper driver setting recommendations from Klipper. `hold_current` has been removed, stealthchop is now entirely disabled by default, interpolation has been disabled and microsteps have been increased to 64 to counteract the additional noise. V-Minion template has now been optimized for the final hardware in the release kit. Keep reading to see the complete list of changes.
