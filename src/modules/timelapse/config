@@ -1,0 +1,16 @@
+#!/bin/bash
+# moonraker-timelapse custompios module
+# https://github.com/mainsail-crew/moonraker-timelapse
+# written by Stephan Wendel aka KwadFan
+# <me@stephanwe.de>
+# GPL V3
+########
+# shellcheck disable=all
+[ -n "$TIMELAPSE_SRC_DIR" ] || TIMELAPSE_SRC_DIR="/home/${BASE_USER}/moonraker-timelapse"
+[ -n "$TIMELAPSE_PYTHON_DIR" ] || TIMELAPSE_TARGET_DIR="/home/${BASE_USER}/moonraker/moonraker/components"
+[ -n "$TIMELAPSE_CONFIG_DIR" ] || TIMELAPSE_CONFIG_DIR="/home/${BASE_USER}/klipper_config"
+[ -n "$TIMELAPSE_TEMPLATE" ] || TIMELAPSE_TEMPLATE="/home/${BASE_USER}/klipper_config/timelapse_template.txt"
+
+[ -n "$TIMELAPSE_REPO_SHIP" ] || TIMELAPSE_REPO_SHIP=https://github.com/mainsail-crew/moonraker-timelapse.git
+[ -n "$TIMELAPSE_REPO_BRANCH" ] || TIMELAPSE_REPO_BRANCH=main
+[ -n "$TIMELAPSE_DEPS" ] || TIMELAPSE_DEPS="ffmpeg"
