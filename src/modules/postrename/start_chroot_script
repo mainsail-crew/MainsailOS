@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#!/bin/bash
+#### Post Rename
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2021
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+# shellcheck disable=all
+
+# Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+source /common.sh
+install_cleanup_trap
+
+## unpack postrename
+unpack filesystem/root / root
+## set executable
+sudo chmod 0755 /postrename
+
+## run postrename via rc.local
+sed -i 's@exit 0@@' /etc/rc.local
+echo -e "/postrename\nexit 0\n" | tee -a /etc/rc.local

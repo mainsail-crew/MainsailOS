@@ -3,7 +3,7 @@
 [Unit]
 Description=Starts Klipper and provides klippy Unix Domain Socket API
 Documentation=https://www.klipper3d.org/
-After=network.target
+After=network-online.target
 Before=moonraker.service
 Wants=udev.target
 

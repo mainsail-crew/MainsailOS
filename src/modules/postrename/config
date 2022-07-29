@@ -1,0 +1,12 @@
+#!/bin/bash
+#### Post Rename
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2021
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+# shellcheck disable=all
+
+# Intentionaly left blank
