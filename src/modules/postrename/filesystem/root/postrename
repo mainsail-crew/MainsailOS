@@ -118,6 +118,17 @@ function fix_broken_links {
     done
 }
 
+function fix_timelapse_links {
+    local config_dir src_dir target_dir
+    config_dir="/home/${DEFAULT_USER}/klipper_config"
+    src_dir="/home/${DEFAULT_USER}/moonraker-timelapse"
+    target_dir="/home/${DEFAULT_USER}/moonraker/moonraker/components"
+    sudo -u "${DEFAULT_USER}" \
+    ln -sf "${src_dir}/component/timelapse.py" "${target_dir}/timelapse.py"
+    sudo -u "${DEFAULT_USER}" \
+    ln -sf "${src_dir}/klipper_macro/timelapse.cfg" "${config_dir}/timelapse.cfg"
+}
+
 function main {
 local cmdltxt
 cmdltxt="/boot/cmdline.txt"
@@ -166,6 +177,7 @@ echo -e "${WHITE}Patching crowsnest logrotate ...${NOC}[${GRE}OK${NOC}]"
 ## fix broken links
 echo -en "${WHITE}Fix broken symlinks ...${NOC}\r"
 fix_broken_links
+fix_timelapse_links
 echo -e "${WHITE}Fix broken symlinks ...${NOC}[${GRE}OK${NOC}]"
 ## do a short break
 sleep 2
