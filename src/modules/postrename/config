@@ -9,4 +9,4 @@
 ####
 # shellcheck disable=all
 
-# Intentionaly left blank
+[ -n "$POSTRENAME_DEPS" ] || POSTRENAME_DEPS="python3-pip"
