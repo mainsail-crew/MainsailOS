@@ -18,6 +18,17 @@ on:
 
   workflow_dispatch:
 
+
+# Allow to stop obsolete workflows
+concurrency:
+  group: ci-buildraspios-${{ github.ref }}-1
+  cancel-in-progress: true
+
+env:
+  DOWNLOAD_URL_CHECKSUM: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.sha256"
+  DOWNLOAD_URL_IMAGE: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent"
+  FILENAME_CHECKSUM: "raspios_lite_armhf_latest.sha256"
+
 jobs:
   raspiosbuild:
     runs-on: ubuntu-latest
@@ -39,13 +50,30 @@ jobs:
           path: repository
           submodules: true
 
+      - name: Raspberry Pi OS Checksum
+        id: raspios-checksum
+        run: |
+          cd repository/src/image
+          wget -O $FILENAME_CHECKSUM $DOWNLOAD_URL_CHECKSUM
+          FILE_CONTENT=$(head -n 1 $FILENAME_CHECKSUM)
+          CHECKSUM=$(echo $FILE_CONTENT | cut -d' ' -f1)
+          echo "::set-output name=CHECKSUM::$CHECKSUM"
+
+      - name: Cache Raspberry Pi OS Source Image
+        id: cache-source-image
+        uses: actions/cache@v3
+        with:
+          path: repository/src/image/*.img.xz
+          key: ${{ runner.os }}-${{ steps.raspios-checksum.outputs.CHECKSUM }}
+
       - name: Download Raspberry Pi OS Source Image
-        run: aria2c -d repository/src/image/ --seed-time=0 https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf_latest.torrent
+        if: steps.cache-source-image.outputs.cache-hit != 'true'
+        run: aria2c -d repository/src/image --seed-time=0 $DOWNLOAD_URL_IMAGE
 
       - name: Comparing Checksums
         run: |
           cd repository/src/image
-          curl -JL https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf_latest.sha256 | awk '{print $1"  "$2}' | sha256sum -c
+          cat $FILENAME_CHECKSUM | awk '{print $1"  "$2}' | sha256sum -c
 
       - name: Update CustomPiOS Paths
         run: cd repository/src && ../../CustomPiOS/src/update-custompios-paths
@@ -53,13 +81,40 @@ jobs:
       - name: Build Image
         run: sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
 
-      - name: Copy output image
-        run: cp ${{ github.workspace }}/repository/src/workspace/*-raspios-*-lite.img mainsailos-raspios-lite-latest.img
+      - name: Copy output
+        id: copy-image
+        run: |
+          source repository/src/config
+          NOW=$(date +"%Y-%m-%d")
+          IMAGE=$NOW-mainsailos-$DIST_VERSION
 
-      - name: Compress the image
-        run: zip mainsailos-raspios-lite-latest.zip mainsailos-raspios-lite-latest.img
+          cp repository/src/workspace/*.img $IMAGE.img
 
-      - uses: actions/upload-artifact@v2
+          echo "::set-output name=image::$IMAGE"
+
+      - name: Compressing Image
+        run: xz -efkvz ${{ steps.copy-image.outputs.image }}.img
+
+      - name: Calculating checksums
+        run: |
+          sha256sum ${{ steps.copy-image.outputs.image }}.img > ${{ steps.copy-image.outputs.image }}.img.sha256
+          sha256sum ${{ steps.copy-image.outputs.image }}.img.xz > ${{ steps.copy-image.outputs.image }}.img.xz.sha256
+
+      - name: Upload Compressed Image
+        uses: actions/upload-artifact@v3
         with:
-          name: mainsailos-raspios-lite-latest.zip
-          path: mainsailos-raspios-lite-latest.zip
+          name: ${{ steps.copy-image.outputs.image }}.img.xz
+          path: ${{ steps.copy-image.outputs.image }}.img.xz
+
+      - name: Upload Compressed Image Checksum
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.copy-image.outputs.image }}.img.xz.sha256
+          path: ${{ steps.copy-image.outputs.image }}.img.xz.sha256
+
+      - name: Upload Image Checksum
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.copy-image.outputs.image }}.img.sha256
+          path: ${{ steps.copy-image.outputs.image }}.img.sha256
+
