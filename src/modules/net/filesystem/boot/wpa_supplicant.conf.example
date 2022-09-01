@@ -1,0 +1,15 @@
+# Simple configuration for a typical WPA2 network
+
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US # US Country code
+
+network={
+        scan_ssid=1
+        ssid="<Name of your wireless LAN>"
+        psk="<Password for your wireless LAN>"
+        proto=RSN
+        key_mgmt=WPA-PSK
+        pairwise=CCMP
+        auth_alg=OPEN
+}
