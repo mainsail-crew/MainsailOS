@@ -2,7 +2,7 @@ Wifi-README.txt
 ###############
 
 
-Due to changes in Raspberry Pi OS, which is OS_NAME is based on,
+Due to changes in Raspberry Pi OS, which OS_NAME is based on,
 there is no longer a OS_NAME-wpa-supplicant.txt available.
 
 How do I setup a (new) network on my Pi ?
@@ -26,10 +26,10 @@ Quote:
     so make sure you use an editor that accounts for this.
     Linux expects the line feed (LF) newline character.
 
-What does that all mean? What have I todo now?
+What does that all mean? What do I have to do now?
 ----------------------------------------------
 
-For short, get a proper text editor of your choice.
+First, ensure you have a proper text editor of your choice.
 Recommendations are Notepad++, VSCode, Atom or SublimeText.
 
 ################################################################################
@@ -42,7 +42,7 @@ Recommendations are Notepad++, VSCode, Atom or SublimeText.
 Do not use Wordpad for editing this file, it will mangle it and your
 configuration won't work. Use a proper text editor instead.
 
-!!!!! HEADS-UP MACOSX USERS !!!!!
+!!!!! HEADS-UP MacOS X USERS !!!!!
 ---------------------------------
 
 If you use Textedit to edit this file make sure to use "plain text format"
@@ -50,11 +50,11 @@ and "disable smart quotes" in "Textedit > Preferences", otherwise Textedit
 will use none-compatible characters and your network configuration won't work!
 
 
-1.) Open your choosen Texteditor and create a new file called
+1.) Open your chosen text editor and create a new file called
 
     wpa_supplicant.conf
 
-2.) Create a some basic configuration. This has to be in place!
+2.) Create a basic configuration. This has to be in place!
 
     ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
     country=<Insert 2 letter ISO 3166-1 country code here>
@@ -149,8 +149,8 @@ Assuming you created the file in your users "home" directory use
 
 NOTE:
 
-Attach a screen and watch the console output to get its IP or
-consult your Router setup page to grab that information.
+Attach a screen and watch the console output to get its IP address or
+consult your router setup page to grab that information.
 
 You could also try to reach it by its hostname.
 
