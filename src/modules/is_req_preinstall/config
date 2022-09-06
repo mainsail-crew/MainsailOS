@@ -3,5 +3,5 @@
 [ -n "$IS_REQ_PREINSTALL_VENV_DIR" ] || IS_REQ_PREINSTALL_VENV_DIR=/home/${BASE_USER}/klippy-env
 [ -n "$IS_REQ_PREINSTALL_DEPS" ] || IS_REQ_PREINSTALL_DEPS="python3-numpy python3-matplotlib \
 libatlas3-base libatlas-base-dev"
-[ -n "$IS_REQ_PREINSTALL_PIP" ] || IS_REQ_PREINSTALL_PIP="numpy<=1.21.4"
+[ -n "$IS_REQ_PREINSTALL_PIP" ] || IS_REQ_PREINSTALL_PIP="numpy<=1.23.2"
 [ -n "$IS_REQ_PREINSTALL_CFG_FILE" ] || IS_REQ_PREINSTALL_CFG_FILE="/boot/config.txt"
