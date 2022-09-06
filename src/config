@@ -2,7 +2,7 @@
 # Shebang for better detection of file type
 
 export DIST_NAME=MainsailOS
-export DIST_VERSION=0.7.0
+export DIST_VERSION=0.7.1
 export BASE_IMAGE_ENLARGEROOT=2500
 export MODULES="base,pkgupgrade,mainsailos(net,piconfig,klipper,is_req_preinstall,moonraker,timelapse,mainsail,crowsnest,sonar,password-for-sudo),postrename"
 export BASE_RELEASE_COMPRESS=yes
