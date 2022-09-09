@@ -76,9 +76,6 @@ function relocate_venv {
 
     for venv in "${venvs[@]}"; do
         # Move venv
-        sudo -u "${DEFAULT_USER}" \
-        virtualenv --relocatable -p /usr/bin/python3 "/home/${DEFAULT_USER}/${venv}"
-
         # delete pycache (*.pyc files)
         find "/home/${DEFAULT_USER}/${venv}" -name "__pycache__" -type d -exec rm -rf {} +
 
