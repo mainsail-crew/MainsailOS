@@ -69,7 +69,7 @@ jobs:
         shell: bash
         run: |
           CPU_COUNT="$(nproc)"
-          echo "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
+          echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
           xz -efkvz9T"${CPU_COUNT}" ${{ steps.copy-image.outputs.image }}.img
 
       - name: Calculating checksums
