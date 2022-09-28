@@ -6,6 +6,7 @@ on:
       - "develop"
     paths:
       - "src/**"
+      - "config/**"
       - ".github/workflows/BuildImages.yml"
     tags-ignore:
       - "**"
@@ -13,6 +14,7 @@ on:
     types: [opened, edited, reopened, synchronize]
     paths:
       - "src/**"
+      - "config/**"
       - ".github/workflows/BuildImages.yml"
 
   workflow_dispatch:
