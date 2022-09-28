@@ -1,0 +1,95 @@
+name: Build MainsailOS
+on:
+  push:
+    branches:
+      - "master"
+      - "develop"
+    paths:
+      - "src/**"
+      - "emulation/**"
+      - ".github/workflows/BuildImages.yml"
+    tags-ignore:
+      - "**"
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+    paths:
+      - "src/**"
+      - "emulation/**"
+      - ".github/workflows/BuildImages.yml"
+
+  workflow_dispatch:
+
+
+# Allow to stop obsolete workflows
+concurrency:
+  group: ci-buildtrain-${{ github.ref }}-1
+  cancel-in-progress: true
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create Matrix
+        id: set-matrix
+        run: |
+          ARRAY=$(find ${{ github.workspace }}/config -type f -printf '%P\n' | sed '/default/d' | sort | jq -R -s -c 'split("\n")[:-1]')
+          echo "::set-output name=matrix::${ARRAY}"
+
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config: ${{ fromJson(needs.setup.outputs.matrix) }}
+    steps:
+      - name: Build image
+        uses: mainsail-crew/MainsailOS-actions/build-image@master
+        with:
+          config: ${{ matrix.config }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Copy output
+        id: copy-image
+        shell: bash
+        run: |
+          source repository/src/config
+          NOW="$(date +"%Y-%m-%d")"
+          IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.config.outputs.TYPE }}-${{ steps.config.outputs.SBC }}"
+
+          cp repository/src/workspace/*.img $IMAGE.img
+
+          echo "::set-output name=image::$IMAGE"
+
+      - name: Compressing Image
+        shell: bash
+        run: xz -efkvz ${{ steps.copy-image.outputs.image }}.img
+
+      - name: Calculating checksums
+        shell: bash
+        run: |
+          sha256sum ${{ steps.copy-image.outputs.image }}.img > ${{ steps.copy-image.outputs.image }}.img.sha256
+          sha256sum ${{ steps.copy-image.outputs.image }}.img.xz > ${{ steps.copy-image.outputs.image }}.img.xz.sha256
+
+      - name: Upload Compressed Image
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.copy-image.outputs.image }}.img.xz
+          path: ${{ steps.copy-image.outputs.image }}.img.xz
+
+      - name: Upload Compressed Image Checksum
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.copy-image.outputs.image }}.img.xz.sha256
+          path: ${{ steps.copy-image.outputs.image }}.img.xz.sha256
+
+      - name: Upload Image Checksum
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.copy-image.outputs.image }}.img.sha256
+          path: ${{ steps.copy-image.outputs.image }}.img.sha256

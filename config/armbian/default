@@ -1,0 +1,10 @@
+export BASE_APT_CACHE=no
+export OCTOPI_INCLUDE_WIRINGPI=no
+export BASE_DISTRO=armbian
+export BASE_ROOT_PARTITION=2
+export BASE_IMAGE_RESIZEROOT=500
+export BASE_IMAGE_RASPBIAN=no
+export BASE_IMAGE_ENLARGEROOT=1000
+export BASE_ARCH=arm64
+
+export MODULES="base,pkgupgrade"
