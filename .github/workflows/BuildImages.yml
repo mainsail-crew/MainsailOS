@@ -6,7 +6,7 @@ on:
       - "develop"
     paths:
       - "src/**"
-      - "emulation/**"
+      - "config/**"
       - ".github/workflows/BuildImages.yml"
     tags-ignore:
       - "**"
@@ -14,11 +14,10 @@ on:
     types: [opened, edited, reopened, synchronize]
     paths:
       - "src/**"
-      - "emulation/**"
+      - "config/**"
       - ".github/workflows/BuildImages.yml"
 
   workflow_dispatch:
-
 
 # Allow to stop obsolete workflows
 concurrency:
@@ -69,7 +68,10 @@ jobs:
 
       - name: Compressing Image
         shell: bash
-        run: xz -efkvz ${{ steps.copy-image.outputs.image }}.img
+        run: |
+          CPU_COUNT="$(nproc)"
+          echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
+          xz -efkvz9T"${CPU_COUNT}" ${{ steps.copy-image.outputs.image }}.img
 
       - name: Calculating checksums
         shell: bash
