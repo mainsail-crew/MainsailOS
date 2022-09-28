@@ -19,7 +19,6 @@ on:
 
   workflow_dispatch:
 
-
 # Allow to stop obsolete workflows
 concurrency:
   group: ci-buildtrain-${{ github.ref }}-1
@@ -68,7 +67,10 @@ jobs:
 
       - name: Compressing Image
         shell: bash
-        run: xz -efkvz ${{ steps.copy-image.outputs.image }}.img
+        run: |
+          CPU_COUNT="$(nproc)"
+          echo "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
+          xz -efkvz9T"${CPU_COUNT}" ${{ steps.copy-image.outputs.image }}.img
 
       - name: Calculating checksums
         shell: bash
