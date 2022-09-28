@@ -49,6 +49,7 @@ jobs:
         config: ${{ fromJson(needs.setup.outputs.matrix) }}
     steps:
       - name: Build image
+        id: build
         uses: mainsail-crew/MainsailOS-actions/build-image@master
         with:
           config: ${{ matrix.config }}
@@ -60,7 +61,7 @@ jobs:
         run: |
           source repository/src/config
           NOW="$(date +"%Y-%m-%d")"
-          IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.config.outputs.TYPE }}-${{ steps.config.outputs.SBC }}"
+          IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
 
           cp repository/src/workspace/*.img $IMAGE.img
 
