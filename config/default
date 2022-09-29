@@ -3,9 +3,9 @@
 # shellcheck enable=require-variable-braces
 
 get_tag() {
-    local url
-    url="https://api.github.com/repos/mainsail-crew/MainsailOS/releases/latest"
-    curl "${url}" -s | jq .tag_name -r
+    local ver
+    ver="$(realpath "$( dirname -- "${BASH_SOURCE[0]}")"/version)"
+    cat "${ver}"
 }
 
 get_img_name() {
