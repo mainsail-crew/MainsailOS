@@ -5,7 +5,7 @@
 # See https://www.shellcheck.net/wiki/SC2155
 
 # Download Base Url
-DOWNLOAD_BASE_URL="https://github.com/meteyou/armbian-builds/releases/latest/downloads"
+DOWNLOAD_BASE_URL="https://github.com/meteyou/armbian-builds/releases/latest/download"
 
 # Needed while building for non rpi sbc
 BASE_DISTRO="armbian"
