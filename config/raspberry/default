@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 # Shebang for better file detection
 
-export BASE_IMAGE_ENLARGEROOT=2500
-export BASE_IMAGE_RESIZEROOT=600
+# Declare Variables before exporting.
+# See https://www.shellcheck.net/wiki/SC2155
+
+BASE_IMAGE_ENLARGEROOT=2500
+BASE_IMAGE_RESIZEROOT=600
 # Compress not needed due compression done in workflow
-export BASE_RELEASE_COMPRESS=no
+BASE_RELEASE_COMPRESS=no
 # Modules are valid for 32bit and 64bit images
-export MODULES="base,pkgupgrade,mainsailos(net,piconfig,klipper,is_req_preinstall,moonraker,timelapse,mainsail,crowsnest,sonar,password-for-sudo),postrename"
+MODULES="base,pkgupgrade,mainsailos(net,piconfig,klipper,is_req_preinstall,moonraker,timelapse,mainsail,crowsnest,sonar,password-for-sudo),postrename"
+
+# export Variables
+export BASE_IMAGE_ENLARGEROOT
+export BASE_IMAGE_RESIZEROOT
+export BASE_RELEASE_COMPRESS
+export MODULES

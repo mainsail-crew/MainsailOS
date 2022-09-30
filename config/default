@@ -1,3 +1,32 @@
-export DIST_NAME=MainsailOS
-export DIST_VERSION=0.7.1
-export BASE_ZIP_IMG=`ls -t ${DIST_PATH}/image/*.{zip,7z,xz} | head -n 1`
+#!/usr/bin/env bash
+# Shebang for better file detection
+# shellcheck enable=require-variable-braces
+
+get_version() {
+    local ver
+    ver="$(realpath "$( dirname -- "${BASH_SOURCE[0]}")"/version)"
+    cat "${ver}"
+}
+
+get_img_name() {
+    local -a types
+    types=(zip 7z xz)
+    if [ -n "${DIST_PATH}" ]; then
+        for i in "${types[@]}"; do
+            find "${DIST_PATH}/image/" -type f -name "*.${i}" -printf "%p\n"
+        done
+    fi
+
+    if [ -z "${DIST_PATH}" ]; then
+        echo ""
+    fi
+}
+
+DIST_VERSION="$(get_version)"
+BASE_ZIP_IMG="$(get_img_name)"
+DIST_NAME="MainsailOS"
+
+# export Variables
+export DIST_NAME
+export DIST_VERSION
+export BASE_ZIP_IMG
