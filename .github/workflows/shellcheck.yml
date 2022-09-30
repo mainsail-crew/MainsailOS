@@ -6,8 +6,7 @@ on:
     paths:
       - "config/**"
       - "src/**"
-    paths-ignore:
-      - "src/version"
+      - "!src/version"
 
   pull_request:
     types: [opened, edited, reopened, synchronize]
@@ -16,8 +15,7 @@ on:
     paths:
       - "config/**"
       - "src/**"
-    paths-ignore:
-      - "src/version"
+      - "!src/version"
 
   workflow_dispatch:
 
