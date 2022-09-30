@@ -1,0 +1,42 @@
+name: "Linter: shellcheck"
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - "config/**"
+      - "src/**"
+    paths-ignore:
+      - "src/version"
+
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+    branches:
+      - "**"
+    paths:
+      - "config/**"
+      - "src/**"
+    paths-ignore:
+      - "src/version"
+
+  workflow_dispatch:
+
+jobs:
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        scripts: ["./config", "./src"]
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v3
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@1.1.0
+        env:
+          SHELLCHECK_OPTS: -ax -s bash
+        with:
+          scandir: ${{ matrix.scripts }}
+          ignore_paths: src/version src/image/
+          format: gcc
