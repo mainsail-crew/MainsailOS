@@ -2,7 +2,7 @@
 # Shebang for better file detection
 # shellcheck enable=require-variable-braces
 
-get_tag() {
+get_version() {
     local ver
     ver="$(realpath "$( dirname -- "${BASH_SOURCE[0]}")"/version)"
     cat "${ver}"
@@ -22,7 +22,7 @@ get_img_name() {
     fi
 }
 
-DIST_VERSION="$(get_tag)"
+DIST_VERSION="$(get_version)"
 BASE_ZIP_IMG="$(get_img_name)"
 DIST_NAME="MainsailOS"
 
