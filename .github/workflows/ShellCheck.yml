@@ -17,8 +17,6 @@ on:
       - "src/**"
       - "!src/version"
 
-  workflow_dispatch:
-
 jobs:
   shellcheck:
     name: Shellcheck
