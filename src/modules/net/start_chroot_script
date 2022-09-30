@@ -14,16 +14,19 @@ set -e
 
 export LC_ALL=C
 
+# shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
 
 unpack /filesystem/boot /"${BASE_BOOT_MOUNT_PATH}"
 
 if [ "${BASE_DISTRO}" == "ubuntu" ] || [ "${BASE_DISTRO}" == "armbian" ]; then
-    echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" > /etc/wpa_supplicant/wpa_supplicant.conf
-    echo "update_config=1" >> /etc/wpa_supplicant/wpa_supplicant.conf
-    echo "ap_scan=1" >> /etc/wpa_supplicant/wpa_supplicant.conf
-    echo "country=US" >> /etc/wpa_supplicant/wpa_supplicant.conf
+    {
+        echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev";
+        echo "update_config=1";
+        echo "ap_scan=1";
+        echo "country=US";
+    } >> /etc/wpa_supplicant/wpa_supplicant.conf
 fi
 
 if [ "${BASE_DISTRO}" == "raspbian" ]; then
