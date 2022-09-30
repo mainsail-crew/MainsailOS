@@ -1,10 +1,31 @@
-export BASE_APT_CACHE=no
-export OCTOPI_INCLUDE_WIRINGPI=no
-export BASE_DISTRO=armbian
-export BASE_ROOT_PARTITION=2
-export BASE_IMAGE_RESIZEROOT=500
-export BASE_IMAGE_RASPBIAN=no
-export BASE_IMAGE_ENLARGEROOT=1000
-export BASE_ARCH=arm64
+#!/usr/bin/env bash
+# Shebang for better file detection
 
-export MODULES="base,pkgupgrade"
+# Declare Variables before exporting.
+# See https://www.shellcheck.net/wiki/SC2155
+
+# Download Base Url
+DOWNLOAD_BASE_URL="https://github.com/meteyou/armbian-builds/releases/latest/downloads"
+
+# Needed while building for non rpi sbc
+BASE_DISTRO="armbian"
+BASE_IMAGE_RASPBIAN="no"
+
+# partition resizing
+BASE_ROOT_PARTITION="2"
+BASE_IMAGE_ENLARGEROOT=2500
+BASE_IMAGE_RESIZEROOT=600
+# Compress not needed due compression done in workflow
+BASE_RELEASE_COMPRESS=no
+# Modules are valid for 32bit and 64bit images
+MODULES="base,pkgupgrade,network"
+
+# export Variables
+export DOWNLOAD_BASE_URL
+export BASE_DISTRO
+export BASE_IMAGE_RASPBIAN
+export BASE_ROOT_PARTITION
+export BASE_IMAGE_ENLARGEROOT
+export BASE_IMAGE_RESIZEROOT
+export BASE_RELEASE_COMPRESS
+export MODULES
