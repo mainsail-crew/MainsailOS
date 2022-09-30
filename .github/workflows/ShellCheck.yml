@@ -29,10 +29,10 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@1.1.0
+        uses: ludeeus/action-shellcheck@master
         env:
           SHELLCHECK_OPTS: -ax -s bash
         with:
           scandir: ${{ matrix.scripts }}
-          ignore_paths: src/version src/image/
+          ignore_paths: ./version ./image/
           format: gcc
