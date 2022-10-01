@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# MainsailOS Specific Tweaks for armbian images
+# written by Stephan Wendel aka KwadFan
+# <me@stephanwe.de>
+# GPL V3
+########
+
+# Clean up
+
+# Remove passwdless sudo
+sed -i '|'"${BASE_USER}"' ALL=(ALL:ALL) NOPASSWD:ALL|d' /etc/sudoers

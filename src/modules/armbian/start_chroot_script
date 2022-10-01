@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-# MainsailOS Specific Tweaks
+# MainsailOS Specific Tweaks for armbian images
 # written by Stephan Wendel aka KwadFan
 # <me@stephanwe.de>
 # GPL V3
 ########
-
 
 # Source error handling, leave this in place
 set -xe
@@ -19,35 +18,8 @@ apt update
 # shellcheck disable=SC2086
 check_install_pkgs ${ARMBIAN_DEPS}
 
-# unpack and create needed dir's
-unpack /filesystem/root /
-mkdir -p /var/run/wpa_supplicant
-
-# Disable First Run and remove depending files
-# https://github.com/armbian/build/blob/master/packages/bsp/common/usr/lib/armbian/armbian-firstrun-config
-
-# Disable service
-systemctl disable armbian-firstrun-config
-
-# remove template
-if [[ -f "/boot/armbian_first_run.txt.template" ]]; then
-    rm -f /boot/armbian_first_run.txt.template
-fi
-
-# Remove first-login script
-if [[ -f "/etc/profile.d/armbian-check-first-login.sh" ]]; then
-    rm -f /etc/profile.d/armbian-check-first-login.sh
-fi
-
-# Purge network-manager
-apt purge --yes network-manager
-
-# Do not remove root account yet!
-# Must be removed later on!!!
-yes 1234 | passwd
-
-
 # passwordless sudo during install
+# Will be removed in cleanup
 echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # # Create base user
@@ -65,3 +37,16 @@ if_group_exists_run() {
 # useradd -m -p "${password}" -s /bin/bash "${BASE_USER}"
 if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
 usermod -aG video,audio,plugdev,games,netdev,sudo "${BASE_USER}"
+
+# Patch armbian_first_run.txt.template
+if [[ -f /boot/armbian_first_run.txt.template ]]; then
+    tee -a /boot/armbian_first_run.txt.template << EOF
+    #################################################
+    #####      DO NOT EDIT BELOW THIS LINE      #####
+    #################################################
+    if [ -f "/root/.not_logged_in_yet" ]; then
+        rm -f /root/.not_logged_in_yet
+    fi
+EOF
+
+fi
