@@ -46,6 +46,10 @@ apt purge --yes network-manager
 # Must be removed later on!!!
 yes 1234 | passwd
 
+
+# passwordless sudo during install
+echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
+
 # # Create base user
 # # Shameless "stolen" from
 # # https://github.com/guysoft/CustomPiOS/blob/devel/src/variants/armbian/pre_chroot_script
