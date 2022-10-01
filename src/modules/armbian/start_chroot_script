@@ -46,11 +46,11 @@ apt purge --yes network-manager
 # Must be removed later on!!!
 yes 1234 | passwd
 
-# Create base user
-# Shameless "stolen" from
-# https://github.com/guysoft/CustomPiOS/blob/devel/src/variants/armbian/pre_chroot_script
+# # Create base user
+# # Shameless "stolen" from
+# # https://github.com/guysoft/CustomPiOS/blob/devel/src/variants/armbian/pre_chroot_script
 
-password="$(openssl passwd -6 -stdin <<< "${BASE_USER_PASSWORD}")"
-useradd -m -p "${password}" -s /bin/bash "${BASE_USER}"
+# password="$(openssl passwd -6 -stdin <<< "${BASE_USER_PASSWORD}")"
+# useradd -m -p "${password}" -s /bin/bash "${BASE_USER}"
 if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
 usermod -aG video,audio,plugdev,games,netdev,sudo "${BASE_USER}"

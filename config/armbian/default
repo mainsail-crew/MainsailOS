@@ -8,6 +8,7 @@
 DOWNLOAD_BASE_URL="https://github.com/meteyou/armbian-builds/releases/latest/download"
 
 # Base User
+BASE_ADD_USER="yes"
 BASE_USER="pi"
 BASE_USER_PASSWORD="orangepi"
 
@@ -26,6 +27,7 @@ MODULES="base,pkgupgrade,mainsailos(network,armbian,mainsail,moonraker,timelapse
 
 # export Variables
 export DOWNLOAD_BASE_URL
+export BASE_ADD_USER
 export BASE_USER
 export BASE_USER_PASSWORD
 export BASE_DISTRO
