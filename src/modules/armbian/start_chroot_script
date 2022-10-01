@@ -50,6 +50,13 @@ yes 1234 | passwd
 # # Shameless "stolen" from
 # # https://github.com/guysoft/CustomPiOS/blob/devel/src/variants/armbian/pre_chroot_script
 
+if_group_exists_run() {
+    group=$1
+    if grep -q $group /etc/group; then
+        "${@:2}"
+    fi
+}
+
 # password="$(openssl passwd -6 -stdin <<< "${BASE_USER_PASSWORD}")"
 # useradd -m -p "${password}" -s /bin/bash "${BASE_USER}"
 if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
