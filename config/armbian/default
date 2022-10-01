@@ -23,7 +23,7 @@ BASE_IMAGE_RESIZEROOT=600
 # Compress not needed due compression done in workflow
 BASE_RELEASE_COMPRESS=no
 # Modules are valid for 32bit and 64bit images
-MODULES="base,pkgupgrade,mainsailos(network,armbian,klipper,mainsail,moonraker,timelapse,mainsail,crowsnest,sonar)"
+MODULES="base,pkgupgrade,mainsailos(network,armbian,klipper,moonraker,mainsail,timelapse,crowsnest,sonar)"
 
 # export Variables
 export DOWNLOAD_BASE_URL
