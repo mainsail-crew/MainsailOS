@@ -7,6 +7,10 @@
 # Download Base Url
 DOWNLOAD_BASE_URL="https://github.com/meteyou/armbian-builds/releases/latest/download"
 
+# Base User
+BASE_USER="pi"
+BASE_USER_PASSWORD="orangepi"
+
 # Needed while building for non rpi sbc
 BASE_DISTRO="armbian"
 BASE_IMAGE_RASPBIAN="no"
@@ -18,10 +22,12 @@ BASE_IMAGE_RESIZEROOT=600
 # Compress not needed due compression done in workflow
 BASE_RELEASE_COMPRESS=no
 # Modules are valid for 32bit and 64bit images
-MODULES="base,pkgupgrade,network"
+MODULES="base,pkgupgrade,mainsailos(network,armbian,mainsail,moonraker,timelapse,mainsail,crowsnest,sonar)"
 
 # export Variables
 export DOWNLOAD_BASE_URL
+export BASE_USER
+export BASE_USER_PASSWORD
 export BASE_DISTRO
 export BASE_IMAGE_RASPBIAN
 export BASE_ROOT_PARTITION
