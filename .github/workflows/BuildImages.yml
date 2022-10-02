@@ -72,7 +72,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: failed-${{ steps.copy-image.outputs.image }}.log
-          path: repository/src/workspace/build.log
+          path: repository/src/build.log
 
       - name: Compressing Image
         shell: bash
