@@ -20,6 +20,6 @@ if [ -f "/etc/systemd/system/getty@.service.d/override.conf" ]; then
     rm -f /etc/systemd/system/getty@.service.d/override.conf
 fi
 
-echo "$(gen_root_pw)" | passwd --stdin root
+gen_root_pw | passwd --stdin root
 
 sudo -u "${BASE_USER}" passwd -l root
