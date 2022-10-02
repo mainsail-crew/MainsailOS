@@ -8,4 +8,4 @@
 # Clean up
 
 # Remove passwdless sudo
-sed -i '|'"${BASE_USER}"' ALL=(ALL:ALL) NOPASSWD:ALL|d' /etc/sudoers
+sed -i '/'"${BASE_USER}"' ALL=(ALL:ALL) NOPASSWD:ALL/d' /etc/sudoers
