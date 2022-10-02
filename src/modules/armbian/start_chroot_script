@@ -41,12 +41,11 @@ usermod -aG video,audio,plugdev,games,netdev,sudo "${BASE_USER}"
 # Patch armbian_first_run.txt.template
 if [[ -f /boot/armbian_first_run.txt.template ]]; then
     tee -a /boot/armbian_first_run.txt.template << EOF
-    #################################################
-    #####      DO NOT EDIT BELOW THIS LINE      #####
-    #################################################
-    if [ -f "/root/.not_logged_in_yet" ]; then
-        rm -f /root/.not_logged_in_yet
-    fi
+#################################################
+#####      DO NOT EDIT BELOW THIS LINE      #####
+#################################################
+if [ -f "/root/.not_logged_in_yet" ]; then
+    rm -f /root/.not_logged_in_yet
+fi
 EOF
-
 fi
