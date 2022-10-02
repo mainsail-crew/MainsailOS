@@ -5,7 +5,21 @@
 # GPL V3
 ########
 
+## functions
+gen_root_pw() {
+    tr -dc "[:alnum:]" < /dev/urandom | head -c 50
+}
+
 # Clean up
 
 # Remove passwdless sudo
 sed -i '/'"${BASE_USER}"' ALL=(ALL:ALL) NOPASSWD:ALL/d' /etc/sudoers
+
+# Remove autologin and lock root account
+if [ -f "/etc/systemd/system/getty@.service.d/override.conf" ]; then
+    rm -f /etc/systemd/system/getty@.service.d/override.conf
+fi
+
+yes "$(gen_root_pw)" | passwd
+
+sudo -u "${BASE_USER}" passwd -l root
