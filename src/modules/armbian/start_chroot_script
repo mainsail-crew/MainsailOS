@@ -38,6 +38,10 @@ if_group_exists_run() {
 if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
 usermod -aG video,audio,plugdev,games,netdev,sudo "${BASE_USER}"
 
+# Patch sshd_config
+sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+sed -i 's/^X11Forwarding/#X11Forwarding/' /etc/ssh/sshd_config
+
 # Patch armbian_first_run.txt.template
 if [[ -f /boot/armbian_first_run.txt.template ]]; then
     tee -a /boot/armbian_first_run.txt.template << EOF
