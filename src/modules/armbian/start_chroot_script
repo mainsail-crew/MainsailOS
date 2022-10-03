@@ -43,15 +43,20 @@ sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
 sed -i 's/^X11Forwarding/#X11Forwarding/' /etc/ssh/sshd_config
 sed -i 's/^#MaxAuthTries 6/MaxAuthTries 3/' /etc/ssh/sshd_config
 
-
-# Patch armbian_first_run.txt.template
-if [[ -f /boot/armbian_first_run.txt.template ]]; then
-    tee -a /boot/armbian_first_run.txt.template << EOF
-#################################################
-#####      DO NOT EDIT BELOW THIS LINE      #####
-#################################################
+# Try patching first login in build stage
 if [ -f "/root/.not_logged_in_yet" ]; then
     rm -f /root/.not_logged_in_yet
 fi
-EOF
-fi
+
+
+# # Patch armbian_first_run.txt.template
+# if [[ -f /boot/armbian_first_run.txt.template ]]; then
+#     tee -a /boot/armbian_first_run.txt.template << EOF
+# #################################################
+# #####      DO NOT EDIT BELOW THIS LINE      #####
+# #################################################
+# if [ -f "/root/.not_logged_in_yet" ]; then
+#     rm -f /root/.not_logged_in_yet
+# fi
+# EOF
+# fi
