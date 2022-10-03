@@ -60,3 +60,6 @@ fi
 # fi
 # EOF
 # fi
+
+# Move armbian-release to display mainsailos-release
+mv /etc/armbian-release /etc/armbian-release-info.txt
