@@ -22,9 +22,9 @@ check_install_pkgs ${ARMBIAN_DEPS}
 # Will be removed in cleanup
 echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# # Create base user
-# # Shameless "stolen" from
-# # https://github.com/guysoft/CustomPiOS/blob/devel/src/variants/armbian/pre_chroot_script
+# Base User groups
+# Shameless "stolen" from
+# https://github.com/guysoft/CustomPiOS/blob/devel/src/variants/armbian/pre_chroot_script
 
 if_group_exists_run() {
     group=$1
@@ -33,8 +33,7 @@ if_group_exists_run() {
     fi
 }
 
-# password="$(openssl passwd -6 -stdin <<< "${BASE_USER_PASSWORD}")"
-# useradd -m -p "${password}" -s /bin/bash "${BASE_USER}"
+# set groups
 if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
 usermod -aG video,audio,plugdev,games,netdev,sudo "${BASE_USER}"
 
@@ -47,19 +46,6 @@ sed -i 's/^#MaxAuthTries 6/MaxAuthTries 3/' /etc/ssh/sshd_config
 if [ -f "/root/.not_logged_in_yet" ]; then
     rm -f /root/.not_logged_in_yet
 fi
-
-
-# # Patch armbian_first_run.txt.template
-# if [[ -f /boot/armbian_first_run.txt.template ]]; then
-#     tee -a /boot/armbian_first_run.txt.template << EOF
-# #################################################
-# #####      DO NOT EDIT BELOW THIS LINE      #####
-# #################################################
-# if [ -f "/root/.not_logged_in_yet" ]; then
-#     rm -f /root/.not_logged_in_yet
-# fi
-# EOF
-# fi
 
 # Move armbian-release to display mainsailos-release
 mv /etc/armbian-release /etc/armbian-release-info.txt
