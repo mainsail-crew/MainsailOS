@@ -49,3 +49,10 @@ fi
 
 # Move armbian-release to display mainsailos-release
 mv /etc/armbian-release /etc/armbian-release-info.txt
+
+# update motd
+unpack /filesystem/root /
+chmod +x /etc/update-motd.d/*
+if [ -f "/etc/default/armbian-motd" ]; then
+    sed -i 's/MOTD_DISABLE=""/MOTD_DISABLE="header"/' /etc/default/armbian-motd
+fi
