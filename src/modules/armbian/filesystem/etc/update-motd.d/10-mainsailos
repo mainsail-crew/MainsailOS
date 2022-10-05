@@ -35,7 +35,8 @@ done
 KERNELID=$(uname -r)
 
 # Odroid N2 exception
-[[ -f /proc/device-tree/model ]] && [[ -n $(tr -d '\000' < /proc/device-tree/model | grep ODROID | grep Plus) ]] && BOARD_NAME+="+"
+ODROID_EXCEPTION="$(tr -d '\000' < /proc/device-tree/model | grep ODROID | grep Plus)"
+[[ -f /proc/device-tree/model ]] && [[ -n "${ODROID_EXCEPTION}" ]] && BOARD_NAME+="+"
 
 
 echo -e "\e[31m$(toilet -f big MainsailOS)\e[0m"
@@ -50,7 +51,7 @@ if [[ "${IMAGE_TYPE}" != "stable" ]]; then
     [[ "${IMAGE_TYPE}" == "user-built" ]] && UNSUPPORTED_TEXT="built from trunk"
     [[ "${IMAGE_TYPE}" == "nightly" ]] && UNSUPPORTED_TEXT="untested automated build"
 else
-    [[ "${BOARD_TYPE}" == "csc" || "$BOARD_TYPE" == "tvb" ]] && UNSUPPORTED_TEXT="community creations"
+    [[ "${BOARD_TYPE}" == "csc" || "${BOARD_TYPE}" == "tvb" ]] && UNSUPPORTED_TEXT="community creations"
     [[ "${BOARD_TYPE}" == "wip" ]] && UNSUPPORTED_TEXT="work in progress"
     [[ "${BOARD_TYPE}" == "eos" ]] && UNSUPPORTED_TEXT="end of life"
 fi
