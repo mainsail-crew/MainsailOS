@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# MainsailOS Specific Tweaks for armbian images
+# written by Stephan Wendel aka KwadFan
+# <me@stephanwe.de>
+# GPL V3
+########
+
+# Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+# Install armbian specific packages
+apt update
+# shellcheck disable=SC2086
+check_install_pkgs ${ARMBIAN_DEPS}
+
+# passwordless sudo during install
+# Will be removed in cleanup
+echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Base User groups
+# Shameless "stolen" from
+# https://github.com/guysoft/CustomPiOS/blob/devel/src/variants/armbian/pre_chroot_script
+
+if_group_exists_run() {
+    group=$1
+    if grep -q $group /etc/group; then
+        "${@:2}"
+    fi
+}
+
+# set groups
+if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
+usermod -aG video,audio,plugdev,games,netdev,sudo "${BASE_USER}"
+
+# Patch sshd_config
+sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+sed -i 's/^X11Forwarding/#X11Forwarding/' /etc/ssh/sshd_config
+sed -i 's/^#MaxAuthTries 6/MaxAuthTries 3/' /etc/ssh/sshd_config
+
+# Try patching first login in build stage
+if [ -f "/root/.not_logged_in_yet" ]; then
+    rm -f /root/.not_logged_in_yet
+fi
+
+# Move armbian-release to display mainsailos-release
+mv /etc/armbian-release /etc/armbian-release-info.txt
+
+# update motd
+unpack /filesystem/root /
+chmod +x /etc/update-motd.d/*
+if [ -f "/etc/default/armbian-motd" ]; then
+    sed -i 's/MOTD_DISABLE=""/MOTD_DISABLE="header"/' /etc/default/armbian-motd
+fi
