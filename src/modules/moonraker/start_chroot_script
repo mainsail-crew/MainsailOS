@@ -25,6 +25,10 @@ unpack /filesystem/home/${BASE_USER} /home/${BASE_USER} ${BASE_USER}
 # clone klipper repo
 pushd /home/${BASE_USER}
 gitclone MOONRAKER_REPO moonraker
+
+# create database dir
+mkdir -p /home/${BASE_USER}/.moonraker_database
+
 # use moonrakers Install script
 echo_green "Launch moonraker Install script (scripts/install-moonraker.sh)"
 sudo -u ${BASE_USER} \
