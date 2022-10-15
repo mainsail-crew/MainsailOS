@@ -28,6 +28,7 @@ gitclone MOONRAKER_REPO moonraker
 
 # create database dir
 mkdir -p /home/${BASE_USER}/.moonraker_database
+chown ${BASE_USER}:${BASE_USER} -R /home/${BASE_USER}/.moonraker_database
 
 # use moonrakers Install script
 echo_green "Launch moonraker Install script (scripts/install-moonraker.sh)"
