@@ -1,0 +1,50 @@
+---
+slug: moonraker-config-changes
+title: Moonraker is now safe to update
+authors: [miklschmidt]
+tags: [RatOS, Releases]
+---
+
+## Major moonraker config and file changes
+
+As you might know, a couple of weeks ago, I issued a warning about updating moonraker due to a major change that involved file restructuring, config changes and deprecations. I now believe i've ironed out all the kinks, and I can now say that the update is safe to do, as long as you update RatOS first, as usual.
+
+**There are a few things to note about this update:**
+
+Users who installed RatOS before 1.2.1 have an unmanaged moonraker config, this means that it's up to the user to manage it and RatOS can't correct it when things need updating. Fear not though, as most of this is automated by moonraker itself. When you update moonraker, make sure to keep an eye on the notifications in the topmenu, there's a chance you might have to follow the instructions in there to finish the config validation. It should be straight forward though.
+
+## Checking if your moonraker config is managed
+To check if you have a managed config (and thus don't need to do anything besides clicking the update buttons), you can look in your moonraker.conf for `[include config/moonraker.conf]`, if that is present, you have a managed moonraker config. If it's not, you have an unmanaged config, and you'll have to follow the instructions in the notification, if any is present.
+
+## Updating to a managed config
+For those who wish to update their moonraker configuration to be managed by RatOS you can do so by making sure RatOS is updated and then replace the contents of moonraker.conf with the following:
+
+```properties
+# Load the RatOS moonraker defaults
+[include config/moonraker.conf]
+
+# If you use a non standard ip range in your local network, 
+# you can specify it under trusted_clients here.
+[authorization]
+cors_domains:
+    http://app.fluidd.xyz
+    https://app.fluidd.xyz
+    https://my.mainsail.xyz
+    http://my.mainsail.xyz
+    http://*.local
+    http://*.lan
+trusted_clients:
+    127.0.0.1
+    10.0.0.0/8
+    127.0.0.0/8
+    169.254.0.0/16
+    172.16.0.0/12
+    192.168.0.0/16
+    FE80::/10
+    ::1/128
+    FD00::/8
+```
+
+Any changes you've made or want to make to the moonraker config, goes after this. The moonraker config works just like the klipper config, so you can override sections and parameters just like you're used to, they just need to come after the `[include]` statement. See [Includes and Overides](/docs/configuration/includes-and-overrides) for more information on how the config merging works.
+
+Thank you for bearing with me, and happy printing!
