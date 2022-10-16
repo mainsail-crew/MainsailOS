@@ -11,7 +11,7 @@ As you might know, a couple of weeks ago, I issued a warning about updating moon
 
 **There are a few things to note about this update:**
 
-Users who installed RatOS before 1.2.1 have an unmanaged moonraker config, this means that it's up to the user to manage it and RatOS can't correct it when things need updating. Fear not though, as most of this is automated by moonraker itself. When you update moonraker, make sure to keep an eye on the notifications in the topmenu, there's a chance you might have to follow the instructions in there to finish the config validation. It should be straight forward though.
+Users who installed RatOS before 1.2.1 have an unmanaged moonraker config, this means that it's up to the user to manage it and RatOS can't correct it when things need updating. Fear not though, as most of this is automated by moonraker itself. When you update moonraker, make sure to keep an eye on the notifications in the topmenu, there's a chance you might have to follow the instructions in there to finish the config validation. If you're asked to enter a sudo password, the default is `raspberry`.
 
 ## Checking if your moonraker config is managed
 To check if you have a managed config (and thus don't need to do anything besides clicking the update buttons), you can look in your moonraker.conf for `[include config/moonraker.conf]`, if that is present, you have a managed moonraker config. If it's not, you have an unmanaged config, and you'll have to follow the instructions in the notification, if any is present.
