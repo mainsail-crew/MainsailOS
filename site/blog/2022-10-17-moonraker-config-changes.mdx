@@ -47,4 +47,9 @@ trusted_clients:
 
 Any changes you've made or want to make to the moonraker config, goes after this. The moonraker config works just like the klipper config, so you can override sections and parameters just like you're used to, they just need to come after the `[include]` statement. See [Includes and Overides](/docs/configuration/includes-and-overrides) for more information on how the config merging works.
 
+## Missing files after update
+If you're missing files after updating (can happen if you do things out of order), you can run the following macro to restore them: `DELETE_AND_RESTORE_PRINTER_DATA_DIRS`. Restart moonraker and reload mainsail after running the macro.
+
+```bash
+
 Thank you for bearing with me, and happy printing!
