@@ -1,7 +1,7 @@
-#Systemd Klipper Service
+# Systemd Klipper Service
 
 [Unit]
-Description=Starts Klipper and provides klippy Unix Domain Socket API
+Description=Klipper 3D Printer Firmware SV1
 Documentation=https://www.klipper3d.org/
 After=network-online.target
 Before=moonraker.service
@@ -11,14 +11,12 @@ Wants=udev.target
 Alias=klippy
 WantedBy=multi-user.target
 
-
 [Service]
-Environment=KLIPPER_CONFIG=/home/pi/klipper_config/printer.cfg
-Environment=KLIPPER_LOG=/home/pi/klipper_logs/klippy.log
-Environment=KLIPPER_SOCKET=/tmp/klippy_uds
 Type=simple
 User=pi
 RemainAfterExit=yes
-ExecStart= /home/pi/klippy-env/bin/python /home/pi/klipper/klippy/klippy.py ${KLIPPER_CONFIG} -l ${KLIPPER_LOG}  -a ${KLIPPER_SOCKET}
+WorkingDirectory=/home/pi/klipper
+EnvironmentFile=/home/pi/printer_data/systemd/klipper.env
+ExecStart= /home/pi/klippy-env/bin/python ${KLIPPER_ARGS}
 Restart=always
 RestartSec=10

@@ -23,7 +23,7 @@ set -Eex
 export LC_ALL=C
 
 # Set DEBIAN_FRONTEND to noninteractive
-if [ "${DEBIAN_FRONTEND}" != "noninteractive" ]; then
+if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
     export DEBIAN_FRONTEND=noninteractive
 fi
 
@@ -58,7 +58,7 @@ gitclone KLIPPER_REPO klipper
 
 ## Create needed dirs
 for dir in ${KLIPPER_USER_DIRS}; do
-    if [ -d "/home/${BASE_USER}/$dir" ]; then
+    if [[ -d "/home/${BASE_USER}/${dir}" ]]; then
         echo_green "${dir} already exists!"
     else
         echo_green "Creating ${dir}"
@@ -66,6 +66,10 @@ for dir in ${KLIPPER_USER_DIRS}; do
     fi
 done
 popd &> /dev/null || exit 1
+
+# Copy printer_data for klipper/klippy
+echo_green "Copy files to 'printer_data' ..."
+unpack /filesystem/home/"${BASE_USER}" /home/"${BASE_USER}" "${BASE_USER}"
 
 ## create python virtualenv and install klipper requirements
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
@@ -80,4 +84,4 @@ popd &> /dev/null || exit 1
 systemctl_if_exists enable klipper.service
 
 ## Done message
-echo_green "Installing Klipper and enable klippy Service ... done!"
+echo_green "Installing Klipper and enable klippy Service ..."

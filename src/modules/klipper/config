@@ -12,6 +12,10 @@ libncurses-dev libusb-dev \
 avrdude gcc-avr binutils-avr avr-libc \
 stm32flash dfu-util libnewlib-arm-none-eabi \
 gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0-0"
+
 [ -n "$KLIPPER_USER_GROUPS" ] || KLIPPER_USER_GROUPS=tty,dialout
-[ -n "$KLIPPER_USER_DIRS" ] || KLIPPER_USER_DIRS="klipper_config klipper_logs gcode_files"
+
+[ -n "$KLIPPER_USER_DIRS" ] || KLIPPER_USER_DIRS="printer_data printer_data/logs \
+printer_data/comm printer_data/logs"
+
 [ -n "$KLIPPER_PYENV_REQ" ] || KLIPPER_PYENV_REQ=scripts/klippy-requirements.txt
