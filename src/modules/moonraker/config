@@ -1,2 +1,4 @@
+#!/usr/bin/env bash
+#Shebang for better file detection
 [ -n "$MOONRAKER_REPO_SHIP" ] || MOONRAKER_REPO_SHIP=https://github.com/Arksine/moonraker.git
 [ -n "$MOONRAKER_REPO_BRANCH" ] || MOONRAKER_REPO_BRANCH=master

@@ -7,33 +7,34 @@
 # GPL V3
 ########
 
+# shellcheck enable=require-variable-braces
+
 # Source error handling, leave this in place
 set -xe
 
 # Source CustomPIOS common.sh
+# shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
 
 # make sure that this module can be used standalone
 apt_update_skip
-check_install_pkgs "git virtualenv wireless-tools"
+check_install_pkgs "git"
 
 echo_green "Installing Moonraker and enable Moonraker Service"
-# install MainsailOS premade moonraker.conf
-echo_green "Copying MainsailOS premade moonraker.conf"
-unpack /filesystem/home/${BASE_USER} /home/${BASE_USER} ${BASE_USER}
 # clone klipper repo
-pushd /home/${BASE_USER}
+pushd /home/"${BASE_USER}"
 gitclone MOONRAKER_REPO moonraker
 # use moonrakers Install script
 echo_green "Launch moonraker Install script (scripts/install-moonraker.sh)"
-sudo -u ${BASE_USER} \
+sudo -u "${BASE_USER}" \
 bash -c \
-'${HOME}/moonraker/scripts/install-moonraker.sh \
--c ${HOME}/klipper_config/moonraker.conf \
--l ${HOME}/klipper_logs/moonraker.log'
+'${HOME}/moonraker/scripts/install-moonraker.sh -z -x'
 # install Polkit Rules
 echo_green "Install PolicyKit Rules"
-sudo -u ${BASE_USER} sh -c './moonraker/scripts/set-policykit-rules.sh --root'
+sudo -u "${BASE_USER}" sh -c './moonraker/scripts/set-policykit-rules.sh --root'
 # finished
 popd
+# install MainsailOS premade moonraker.conf
+echo_green "Copying MainsailOS premade moonraker.conf"
+unpack /filesystem/home/"${BASE_USER}" /home/"${BASE_USER}" "${BASE_USER}"
