@@ -1,4 +1,5 @@
-#!/bin/bash
-# shellcheck disable=all
+#!/usr/bin/env bash
+# Shebang for better file detection
 
-[ -n "$MAINSAILOS_DEPS" ] || MAINSAILOS_DEPS="python3-serial"
+[ -n "$MAINSAILOS_DEPS" ] || MAINSAILOS_DEPS="python3-serial tree mc exa bat \
+nload btop"
