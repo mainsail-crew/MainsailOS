@@ -7,22 +7,28 @@
 # GPL V3
 ########
 
+# shellcheck enable=require-variable-braces
 
 # Source error handling, leave this in place
-set -xe
+set -Eex
+
+# Set LC_ALL to prevent errors
+export LC_ALL=C
 
 # Source CustomPIOS common.sh
+# shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
 
 ### Install mainsail.cfg
-unpack /filesystem/home/${BASE_USER} /home/${BASE_USER} ${BASE_USER}
+unpack /filesystem/home/"${BASE_USER}" /home/"${BASE_USER}" "${BASE_USER}"
 
 echo_green "Installing Mainsail Webfrontend ..."
 
 ### install all deps at once for time consumption reasons.
 ## APT: Update Repo Database and install Dependencies
-
+# shellcheck disable=SC2086
+# Disabling shellcheck SC2086, because we want "wordsplitting"
 apt update && apt install ${MAINSAIL_DEPS} -y
 
 ### Preparing nginx
@@ -33,16 +39,21 @@ ln -s /etc/nginx/sites-available/mainsail /etc/nginx/sites-enabled/
 sudo sed -i 's/rotate 14/rotate 2/' /etc/logrotate.d/nginx
 
 ### Download and Install Mainsail Web Frontend
-pushd /home/${BASE_USER}
-sudo -u ${BASE_USER} wget -q --show-progress -O mainsail.zip "${MAINSAIL_URL}"
-sudo -u ${BASE_USER} unzip mainsail.zip -d /home/${BASE_USER}/mainsail
+pushd /home/"${BASE_USER}" &> /dev/null || exit 1
+sudo -u "${BASE_USER}" wget -q --show-progress -O mainsail.zip "${MAINSAIL_URL}"
+sudo -u "${BASE_USER}" unzip mainsail.zip -d /home/"${BASE_USER}"/mainsail
 ## cleanup
-rm /home/${BASE_USER}/mainsail.zip
-popd
+rm /home/"${BASE_USER}"/mainsail.zip
+popd &> /dev/null || exit 1
+
+# Make sure printer_data exists
+if [[ ! -d "/home/${BASE_USER}/printer_data/logs" ]]; then
+    sudo -u "${BASE_USER}" mkdir -p "/home/${BASE_USER}/printer_data/logs"
+fi
 
 ### Link logfiles to klipper_logs
-ln -s /var/log/nginx/mainsail-access.log /home/${BASE_USER}/klipper_logs/
-ln -s /var/log/nginx/mainsail-error.log /home/${BASE_USER}/klipper_logs/
+ln -s /var/log/nginx/mainsail-access.log /home/"${BASE_USER}"/printer_data/logs
+ln -s /var/log/nginx/mainsail-error.log /home/"${BASE_USER}"/printer_data/logs
 
 # Unpack root at the end, so files are modified before
 unpack /filesystem/root /

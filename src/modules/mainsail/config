@@ -1,2 +1,5 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+
 [ -n "$MAINSAIL_DEPS" ] || MAINSAIL_DEPS="nginx"
 [ -n "$MAINSAIL_URL" ] || MAINSAIL_URL=https://github.com/mainsail-crew/mainsail/releases/latest/download/mainsail.zip
