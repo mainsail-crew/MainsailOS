@@ -38,3 +38,6 @@ popd
 # install MainsailOS premade moonraker.conf
 echo_green "Copying MainsailOS premade moonraker.conf"
 unpack /filesystem/home/"${BASE_USER}" /home/"${BASE_USER}" "${BASE_USER}"
+
+## Enable systemd service
+systemctl_if_exists enable moonraker.service
