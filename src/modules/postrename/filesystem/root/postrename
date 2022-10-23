@@ -8,8 +8,13 @@
 #### This File is distributed under GPLv3
 ####
 
+# shellcheck enable=require-variable-braces
+
 ## Error handling
 set -e
+
+## Set LC_ALL to prevent errors
+export LC_ALL=C
 
 # Colored Output
 RED="\e[31m"
@@ -28,7 +33,7 @@ DEFAULT_USER="$(grep "1000" /etc/passwd | awk -F ':' '{print $1}')"
 ### Mangle services
 function stop_services {
     for srv in "${SERVICES[@]}"; do
-        if [ "$(systemctl is-active "${srv}.service")" != "inactive" ]; then
+        if [[ "$(systemctl is-active "${srv}.service")" != "inactive" ]]; then
             systemctl stop "${srv}.service"
         fi
     done

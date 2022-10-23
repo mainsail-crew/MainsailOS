@@ -8,12 +8,17 @@
 ####
 #### This File is distributed under GPLv3
 ####
-# shellcheck disable=all
 
-# Source error handling, leave this in place
-set -xe
+# shellcheck enable=require-variable-braces
 
-# Source CustomPIOS common.sh
+## Source error handling, leave this in place
+set -Eex
+
+## Set LC_ALL to prevent errors
+export LC_ALL=C
+
+## Source CustomPIOS common.sh
+# shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
 
