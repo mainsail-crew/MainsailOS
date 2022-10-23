@@ -129,7 +129,7 @@ function fix_broken_links {
 
 function fix_timelapse_links {
     local config_dir src_dir target_dir
-    config_dir="/home/${DEFAULT_USER}/klipper_config"
+    config_dir="/home/${DEFAULT_USER}/printer_data/config"
     src_dir="/home/${DEFAULT_USER}/moonraker-timelapse"
     target_dir="/home/${DEFAULT_USER}/moonraker/moonraker/components"
     sudo -u "${DEFAULT_USER}" \

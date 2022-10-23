@@ -52,7 +52,7 @@ function add_timelapse_entry {
 echo_green "Installing moonraker-timelapse plugin ..."
 
 ### Install template file
-unpack /filesystem/home/${BASE_USER} /home/${BASE_USER} ${BASE_USER}
+unpack /filesystem/home/"${BASE_USER}" /home/"${BASE_USER}" "${BASE_USER}"
 
 ## Install all deps at once for time consumption reasons.
 ## APT: Update Repo Database and install Dependencies
@@ -69,10 +69,10 @@ pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 gitclone TIMELAPSE_REPO moonraker-timelapse
 
 ## Link component
-if [ -d "${TIMELAPSE_TARGET_DIR}" ]; then
+if [ -d "${TIMELAPSE_PYTHON_VENV_DIR}" ]; then
     echo "Linking extension to moonraker ..."
     sudo -u "${BASE_USER}" \
-    ln -sf "${TIMELAPSE_SRC_DIR}/component/timelapse.py" "${TIMELAPSE_TARGET_DIR}/timelapse.py"
+    ln -sf "${TIMELAPSE_SRC_DIR}/component/timelapse.py" "${TIMELAPSE_PYTHON_VENV_DIR}/timelapse.py"
 fi
 
 ## Link timelapse.cfg
@@ -85,7 +85,6 @@ fi
 ## Extend moonraker.conf
 echo "Modifying moonraker.conf ..."
 add_timelapse_entry
-
 
 popd || exit 1
 
