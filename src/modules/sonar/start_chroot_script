@@ -17,7 +17,7 @@ set -Eex
 export LC_ALL=C
 
 # Set DEBIAN_FRONTEND to noninteractive
-if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
+if [ "${DEBIAN_FRONTEND}" != "noninteractive" ]; then
     export DEBIAN_FRONTEND=noninteractive
 fi
 
