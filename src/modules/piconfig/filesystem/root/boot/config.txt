@@ -63,6 +63,9 @@ max_framebuffers=2
 # Do not use more than 256Mb on Pi Model 4, it uses its own Management.
 gpu_mem=256
 
+[cm4]
+dtoverlay=dwc2,dr_mode=host
+
 [all]
 #dtoverlay=vc4-fkms-v3d
 
