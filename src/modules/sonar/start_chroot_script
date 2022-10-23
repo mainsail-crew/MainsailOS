@@ -17,7 +17,7 @@ set -Eex
 export LC_ALL=C
 
 # Set DEBIAN_FRONTEND to noninteractive
-if [ "${DEBIAN_FRONTEND}" != "noninteractive" ]; then
+if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
     export DEBIAN_FRONTEND=noninteractive
 fi
 
@@ -31,8 +31,8 @@ MOONRAKER_TEMPLATE="/home/${BASE_USER}/sonar/file_templates/moonraker_update.txt
 
 ## helper func moonraker update_manager
 function add_update_entry {
-    if [ -f "${SONAR_MOONRAKER_CONF}" ]; then
-        if [ -f "/tmp/moonraker.conf" ]; then
+    if [[ -f "${SONAR_MOONRAKER_CONF}" ]]; then
+        if [[ -f "/tmp/moonraker.conf" ]]; then
             rm -rf /tmp/moonraker.conf
         fi
         sudo -u "${BASE_USER}" \
@@ -62,7 +62,7 @@ pushd "/home/${BASE_USER}" &> /dev/null || exit 1
     echo_green "Running sonar installer ..."
         sudo -u "${BASE_USER}" make unattended
     ## Make sure config dir exits
-    if [ ! -d "${SONAR_DEFAULT_CONF_DIR}" ]; then
+    if [[ ! -d "${SONAR_DEFAULT_CONF_DIR}" ]]; then
         sudo -u "${BASE_USER}" mkdir -p "${SONAR_DEFAULT_CONF_DIR}"
     fi
     ## Copy default config
@@ -72,7 +72,7 @@ pushd "/home/${BASE_USER}" &> /dev/null || exit 1
     "${SONAR_DEFAULT_CONF_DIR}/sonar.conf"
 
     ## Add moonraker update_manager
-    if [ "${SONAR_ADD_SONAR_MOONRAKER}" == "1" ]; then
+    if [[ "${SONAR_ADD_SONAR_MOONRAKER}" == "1" ]]; then
         echo -en "Adding Sonar Update Manager entry to moonraker.conf ...\r"
         add_update_entry
         echo -e "Adding Sonar Update Manager entry to moonraker.conf ... [OK]"
