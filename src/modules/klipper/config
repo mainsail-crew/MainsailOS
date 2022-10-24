@@ -15,7 +15,7 @@ gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0-0"
 
 [ -n "$KLIPPER_USER_GROUPS" ] || KLIPPER_USER_GROUPS=tty,dialout
 
-[ -n "$KLIPPER_USER_DIRS" ] || KLIPPER_USER_DIRS="printer_data printer_data/logs \
-printer_data/comm printer_data/logs"
+[ -n "$KLIPPER_USER_DIRS" ] || KLIPPER_USER_DIRS="printer_data printer_data/config \
+printer_data/comms printer_data/logs"
 
 [ -n "$KLIPPER_PYENV_REQ" ] || KLIPPER_PYENV_REQ=scripts/klippy-requirements.txt
