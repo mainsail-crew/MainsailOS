@@ -1,5 +1,3 @@
-# Systemd Klipper Service
-
 [Unit]
 Description=Klipper 3D Printer Firmware SV1
 Documentation=https://www.klipper3d.org/
@@ -17,6 +15,6 @@ User=pi
 RemainAfterExit=yes
 WorkingDirectory=/home/pi/klipper
 EnvironmentFile=/home/pi/printer_data/systemd/klipper.env
-ExecStart= /home/pi/klippy-env/bin/python ${KLIPPER_ARGS}
+ExecStart=/home/pi/klippy-env/bin/python ${KLIPPER_ARGS}
 Restart=always
 RestartSec=10
