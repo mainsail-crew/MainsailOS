@@ -37,7 +37,7 @@ gitclone CROWSNEST_REPO crowsnest
 
 ## Step 3: grep PKGLIST from install.sh for dependencies
 echo_green "Generating packages file ..."
-grep "PKGLIST=" "${HOME}/crowsnest/install.sh" >> "${CN_BUILD_PACKAGE_FILE}"
+grep "PKGLIST=" "/home/${BASE_USER}/crowsnest/install.sh" >> "${CN_BUILD_PACKAGE_FILE}"
 
 ## Step 4: Rename PKGLIST to Module usable Var
 echo_green "Rename variable PKGLIST to CROWSNEST_DEPS ..."
