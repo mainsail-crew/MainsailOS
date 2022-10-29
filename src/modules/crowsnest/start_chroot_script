@@ -52,7 +52,9 @@ sed -i 's/PKGLIST/CROWSNEST_DEPS/g' "${CN_BUILD_PACKAGE_FILE}"
 
 ## Step 6: Install packages
 echo_green "Install crowsnest dependencies ..."
-check_install_pkgs "${CROWSNEST_DEPS}"
+# shellcheck disable=SC2086
+# disabled because we need 'wordsplitting'
+check_install_pkgs ${CROWSNEST_DEPS}
 
 ## Step 7: Move to crowsnest as working directory
 pushd "/home/${BASE_USER}/crowsnest" &> /dev/null || exit 1
