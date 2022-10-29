@@ -9,41 +9,69 @@
 #### This File is distributed under GPLv3
 ####
 
-# shellcheck disable=all
+# shellcheck enable=requires-variable-braces
 
 # Error handling
 set -Ee
 
+# shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
 
-echo_green "Installing crowsnest and enable webcam Service ..."
-# install dependencies
-# force apt update
-apt update
-# It could use inbuilt dependencie check, but should speed up if preinstalled.
-# shellcheck disable=SC2086
-check_install_pkgs ${CROWSNEST_CROWSNEST_DEPS} ${CROWSNEST_USTREAMER_DEPS}
-# Move to $HOME dir
+# Module only Variables
+CN_BUILD_PACKAGE_FILE="/tmp/cn_packages.lst"
+
+echo_green "Installing crowsnest ..."
+
+## Force apt update
+apt-get update
+## Make sure 'git' is installed!
+check_install_pkgs git
+
+## Step 1: clone crowsnest repo
+echo_green "Clone crowsnest repository ..."
+gitclone "${CROWSNEST_REPO}" crowsnest
+
+## Step 2: Move to Home Dir as WorkingDirectoy
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
-    # make sure config folder exist
-    if [ ! -d "${CROWSNEST_DEFAULT_CONF_DIR}" ]; then
-        sudo -u "${BASE_USER}" mkdir -p "${CROWSNEST_DEFAULT_CONF_DIR}"
-    fi
-    # clone Repo
-    echo_green "Clone crowsnest repository ..."
-    gitclone CROWSNEST_CROWSNEST_REPO crowsnest
-    # install crowsnest - use crowsnest's make unattended
-    pushd "/home/${BASE_USER}/crowsnest" &> /dev/null || exit 1
-    echo_green "Launch crowsnest install routine ..."
-    pushd "/home/${BASE_USER}/crowsnest" &> /dev/null || exit 1
-    sudo -u "${BASE_USER}" make unattended
-    # Apply Raspicam fix if enabled.
-    if [ "${CROWSNEST_FORCE_RASPICAMFIX}" == "1" ]; then
-        echo -en "Applying Raspicam Fix ... \r"
-        sudo sh -c 'echo "bcm2835-v4l2" >> /etc/modules'
-        sudo cp file_templates/bcm2835-v4l2.conf /etc/modprobe.d/
-        echo -e "Applying Raspicam Fix ... [OK]"
-    fi
-    popd &> /dev/null || exit 1
+
+## Step 3: grep PKGLIST from install.sh for dependencies
+echo_green "Generating packages file ..."
+grep "PKGLIST=" "${HOME}/crowsnest/install.sh" >> "${CN_BUILD_PACKAGE_FILE}"
+
+## Step 4: Rename PKGLIST to Module usable Var
+echo_green "Rename variable PKGLIST to CROWSNEST_DEPS ..."
+sed -i 's/PKGLIST/CROWSNEST_DEPS/g' "${CN_BUILD_PACKAGE_FILE}"
+
+## Step 5: Source cn_package.lst file
+# shellcheck disable=SC1090
+# Shellcheck has to be disabled here,
+# because it is an dynamic generated file and not checkable
+. "${CN_BUILD_PACKAGE_FILE}"
+
+## Step 6: Install packages
+echo_green "Install crowsnest dependencies ..."
+check_install_pkgs "${CROWSNEST_DEPS}"
+
+## Step 7: Move to crowsnest as working directory
+pushd "/home/${BASE_USER}/crowsnest" &> /dev/null || exit 1
+
+## Step 8: Run crowsnest install routine
+echo_green "Launch crowsnest install routine ..."
+make install
+
+## Step 9: Leave crowsnest
 popd &> /dev/null || exit 1
+
+## Step 10: clean packages.lst file
+rm -f "${CN_BUILD_PACKAGE_FILE}"
+
+## Step 11: leave home dir
+popd &> /dev/null || exit 1
+
+## Step 12:
+echo_green "Enable crowsnest.service ..."
+systemctl_if_exists enable crowsnest.service
+
+## Finish
+echo_green "Installing crowsnest ... DONE!"
