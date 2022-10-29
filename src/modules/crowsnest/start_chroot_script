@@ -20,6 +20,7 @@ install_cleanup_trap
 
 # Module only Variables
 CN_BUILD_PACKAGE_FILE="/tmp/cn_packages.lst"
+CN_BUILD_INSTALL_SH="/home/${BASE_USER}/crowsnest/tools/install.sh"
 
 echo_green "Installing crowsnest ..."
 
@@ -37,7 +38,7 @@ gitclone CROWSNEST_REPO crowsnest
 
 ## Step 3: grep PKGLIST from install.sh for dependencies
 echo_green "Generating packages file ..."
-grep "PKGLIST=" "/home/${BASE_USER}/crowsnest/install.sh" >> "${CN_BUILD_PACKAGE_FILE}"
+grep "PKGLIST=" "${CN_BUILD_INSTALL_SH}" >> "${CN_BUILD_PACKAGE_FILE}"
 
 ## Step 4: Rename PKGLIST to Module usable Var
 echo_green "Rename variable PKGLIST to CROWSNEST_DEPS ..."
