@@ -30,7 +30,7 @@ check_install_pkgs git
 
 ## Step 1: clone crowsnest repo
 echo_green "Clone crowsnest repository ..."
-gitclone "${CROWSNEST_REPO_SHIP}" crowsnest
+gitclone CROWSNEST_REPO crowsnest
 
 ## Step 2: Move to Home Dir as WorkingDirectoy
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
