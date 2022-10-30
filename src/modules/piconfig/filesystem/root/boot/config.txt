@@ -92,6 +92,10 @@ max_framebuffers=2
 ## Do not use more than 256Mb on Pi Model 4, it uses its own Management.
 gpu_mem=256
 
+[cm4]
+## Enable XHCI USB 2 controller for USB support on CM4
+otg_mode=1
+
 [all]
 
 ## SPI Interface is enabled by default for Input Shaper
