@@ -8,7 +8,14 @@ RatOS comes with a bunch of flexible predefined macro's that can be customized v
 ....
 ```
 
-This is a macro that serves as a place to store variables that all the RatOS macro's refer to when they're executed. Here's a list of the available variables and what they do.
+This is a macro that serves as a place to store variables that all the RatOS macro's refer to when they're executed. Since they're gcode variables you can change them on the fly, for example from your slicer's custom gcode sections:
+
+```gcode
+SET_GCODE_VARIABLE MACRO=RatOS VARIABLE=relative_extrusion VALUE=True
+SET_GCODE_VARIABLE MACRO=RatOS VARIABLE=preheat_extruder_temp VALUE=200
+```
+
+Below you'll find a list of the available variables and what they do.
 
 ### Relative Extrusion
 
@@ -41,6 +48,7 @@ Travel speed to use for gcode moves in RatOS Macro's in mm/s.
 | ------------------------------------------ | --------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | variable_preheat_extruder                  | True / False    | True    | Enables or disables preheating of the nozzle to 150 degrees during the START_PRINT macro. There are several benefits to preheating the nozzle. 1) Gives the bed additional time to diffuse the heat. 2) Softens plastic that may be stuck in the nozzle so it doesn't block your probe from triggering. 3) If using a non thermally compensated inductive probe, it makes the temperature and thus the offset of the probe more predictable and consistent. |
 | variable_start_print_heat_chamber_bed_temp | Number          | 115     | The bed temperature to use when heating the chamber when the `CHAMBER_TEMP` parameter is supplied to the `START_PRINT` macro.                                                                                                                                                                                                                                                                                                                               |
+| variable_preheat_extruder_temp             | Number          | 150     | The temperature to preheat the extruder to, to soften the material at the nozzle tip                                                                                                                                                                                                                                                                                                                                                                        |
 
 ### Bed Mesh Calibration
 
@@ -59,6 +67,15 @@ If you want to implement additional mesh handling logic you can override the `_S
 | variable_nozzle_prime_start_x   | "min" / "max" / number            | "max"       | Where to place the primeline or blob in X. "min" starts the blob or line at x=0 + some safety margin. "max" starts the blob or line at x=max - some safety margin. If set to a number, that number will be used as the starting x coordinate of the line or blob.                                                                                                           |
 | variable_nozzle_prime_start_y   | "min" / "max" / number            | "min"       | Where to place the primeline or blob in Y. "min" starts the blob or line at y=0 + some safety margin. "max" starts the blob or line at y=max - some safety margin. If set to a number, that number will be used as the starting y coordinate of the line or blob.                                                                                                           |
 | variable_nozzle_prime_direction | "auto" / "forwards" / "backwards  | "auto"      | The direction to draw the line or blob in, if "backwards" the toolhead will move toward the front of the printer, if "forwards" it will move towards the back. When set to "auto" it will move towards the middle regardless of `variable_nozzle_prime_start_y`.                                                                                                            |
+
+### Filament loading/unloading
+
+| Name                            | Possible Values | Default | Description                                                                       |
+| ------------------------------- | --------------- | ------- | --------------------------------------------------------------------------------- |
+| variable_filament_unload_length | number          | 130     | How much to retract in mm when unloading filament after the tip has been formed   |
+| variable_filament_unload_speed  | number          | 5       | How fast to retract the `filament_unload_length` filament in mm/s                 |
+| variable_filament_load_length   | number          | 100     | How much to extrude in mm when loading filament to get the filament to the nozzle |
+| variable_filament_load_speed    | number          | 10      | How fast to extrude the `filament_load_length` in mm/s                            |
 
 ### Parking
 
