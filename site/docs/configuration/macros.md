@@ -3,7 +3,10 @@
 RatOS comes with a bunch of flexible predefined macro's that can be customized via variables. In your printer.cfg at the bottom of the Macro's section, you'll notice this:
 
 ```properties
+#############################################################################################################
 ### MACRO CONFIGURATION
+### Configure the behavior of RatOS macros
+#############################################################################################################
 [gcode_macro RatOS]
 ....
 ```
