@@ -137,3 +137,7 @@ html[data-theme="dark"] .DocSearch {
     var(--ifm-color-emphasis-100) 100%
   );
 }
+
+#docusaurus_skipToContent_fallback {
+  display: flex;
+}
