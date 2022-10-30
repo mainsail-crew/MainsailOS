@@ -15,7 +15,6 @@
 
 # crowsnest setup
 [[ -n "$CROWSNEST_DEFAULT_CONF" ]] || CROWSNEST_DEFAULT_CONF="resources/crowsnest.conf"
-[[ -n "$CROWSNEST_DEFAULT_CONF_DIR" ]] || CROWSNEST_DEFAULT_CONF_DIR="/home/${BASE_USER}/klipper_config"
 [[ -n "$CROWSNEST_CONFIG_PATH" ]] || CROWSNEST_CONFIG_PATH="/home/pi/printer_data/config"
 [[ -n "$CROWSNEST_LOG_PATH" ]] || CROWSNEST_LOG_PATH="/home/pi/printer_data/logs/crowsnest.log"
 [[ -n "$CROWSNEST_ENV_PATH" ]] || CROWSNEST_ENV_PATH="/home/pi/printer_data/systemd"
