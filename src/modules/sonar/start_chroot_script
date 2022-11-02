@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 #### Sonar - A WiFi Keepalive daemon
 ####
 #### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
@@ -8,77 +9,72 @@
 #### This File is distributed under GPLv3
 ####
 
-# shellcheck enable=require-variable-braces
+# shellcheck enable=requires-variable-braces
 
-## Source error handling, leave this in place
-set -Eex
+# Error handling
+set -Ee
 
-## Set LC_ALL to prevent errors
-export LC_ALL=C
-
-# Set DEBIAN_FRONTEND to noninteractive
-if [ "${DEBIAN_FRONTEND}" != "noninteractive" ]; then
-    export DEBIAN_FRONTEND=noninteractive
-fi
-
-## Source CustomPIOS common.sh
 # shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
 
-# Setup template file
-MOONRAKER_TEMPLATE="/home/${BASE_USER}/sonar/file_templates/moonraker_update.txt"
+# Module only Variables
+SR_BUILD_INSTALL_SH="/home/${BASE_USER}/sonar/tools/install.sh"
+SR_BUILD_PACKAGE_FILE="/tmp/sr_packages.lst"
 
-## helper func moonraker update_manager
-function add_update_entry {
-    if [[ -f "${SONAR_MOONRAKER_CONF}" ]]; then
-        if [[ -f "/tmp/moonraker.conf" ]]; then
-            rm -rf /tmp/moonraker.conf
-        fi
-        sudo -u "${BASE_USER}" \
-        cat "${SONAR_MOONRAKER_CONF}" "${MOONRAKER_TEMPLATE}" | \
-        tee /tmp/moonraker.conf > /dev/null &&
-        cp -rf /tmp/moonraker.conf "${SONAR_MOONRAKER_CONF}"
-    fi
-}
+echo_green "Installing sonar ..."
 
-echo_green "Installing sonar and enable sonar Service ..."
+## Force apt update
+apt-get update
+## Make sure 'git' is installed!
+check_install_pkgs git
 
-## Install all deps at once for time consumption reasons.
-## APT: Update Repo Database and install Dependencies
-# Force apt update
-apt update
-echo_green "Installing Sonar Dependencies ..."
-# shellcheck disable=SC2086
-## Disabling shellcheck SC2086, because we want "wordsplitting"
-check_install_pkgs ${SONAR_DEPS}
-## Move to $HOME dir
+## Step 1: Move to Home Dir as WorkingDirectoy
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
-    ## clone Repo
-    echo_green "Clone sonar repository ..."
-    gitclone SONAR_REPO sonar
-    ## Install sonar, using builtin installer
-    pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
-    echo_green "Running sonar installer ..."
-        sudo -u "${BASE_USER}" make unattended
-    ## Make sure config dir exits
-    if [[ ! -d "${SONAR_DEFAULT_CONF_DIR}" ]]; then
-        sudo -u "${BASE_USER}" mkdir -p "${SONAR_DEFAULT_CONF_DIR}"
-    fi
-    ## Copy default config
-    echo_green "Copying default config file ..."
-    sudo -u "${BASE_USER}" \
-    cp "${PWD}/sample_config/${SONAR_DEFAULT_CONF}" \
-    "${SONAR_DEFAULT_CONF_DIR}/sonar.conf"
 
-    ## Add moonraker update_manager
-    if [[ "${SONAR_ADD_SONAR_MOONRAKER}" == "1" ]]; then
-        echo -en "Adding Sonar Update Manager entry to moonraker.conf ...\r"
-        add_update_entry
-        echo -e "Adding Sonar Update Manager entry to moonraker.conf ... [OK]"
-    fi
-    popd &> /dev/null || exit 1
+## Step 2: clone sonar repo
+echo_green "Clone sonar repository ..."
+gitclone SONAR_REPO sonar
+
+## Step 3: grep PKGLIST from install.sh for dependencies
+echo_green "Generating packages file ..."
+grep "PKGLIST=" "${SR_BUILD_INSTALL_SH}" >> "${SR_BUILD_PACKAGE_FILE}"
+
+## Step 4: Rename PKGLIST to Module usable Var
+echo_green "Rename variable PKGLIST to SONAR_DEPS ..."
+sed -i 's/PKGLIST/SONAR_DEPS/g' "${SR_BUILD_PACKAGE_FILE}"
+
+## Step 5: Source SR_package.lst file
+# shellcheck disable=SC1090
+# Shellcheck has to be disabled here,
+# because it is an dynamic generated file and not checkable
+. "${SR_BUILD_PACKAGE_FILE}"
+
+## Step 6: Install packages
+echo_green "Install sonar dependencies ..."
+# shellcheck disable=SC2086
+# disabled because we need 'wordsplitting'
+check_install_pkgs ${SONAR_DEPS}
+
+## Step 7: Move to sonar as working directory
+pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
+
+## Step 8: Run sonar install routine
+echo_green "Launch sonar install routine ..."
+make install
+
+## Step 9: Leave sonar
 popd &> /dev/null || exit 1
 
-## Done message
-echo_green "Installing sonar and enable sonar Service ... done!"
+## Step 10: clean packages.lst file
+rm -f "${SR_BUILD_PACKAGE_FILE}"
+
+## Step 11: leave home dir
+popd &> /dev/null || exit 1
+
+## Step 12:
+echo_green "Enable sonar.service ..."
+systemctl_if_exists enable sonar.service
+
+## Finish
+echo_green "Installing sonar ... DONE!"
