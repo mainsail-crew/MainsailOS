@@ -16,7 +16,7 @@
 # crowsnest setup
 [[ -n "$CROWSNEST_DEFAULT_CONF" ]] || CROWSNEST_DEFAULT_CONF="resources/crowsnest.conf"
 [[ -n "$CROWSNEST_CONFIG_PATH" ]] || CROWSNEST_CONFIG_PATH="/home/pi/printer_data/config"
-[[ -n "$CROWSNEST_LOG_PATH" ]] || CROWSNEST_LOG_PATH="/home/pi/printer_data/logs/crowsnest.log"
+[[ -n "$CROWSNEST_LOG_PATH" ]] || CROWSNEST_LOG_PATH="/home/pi/printer_data/logs"
 [[ -n "$CROWSNEST_ENV_PATH" ]] || CROWSNEST_ENV_PATH="/home/pi/printer_data/systemd"
 [[ -n "$CROWSNEST_RASPICAMFIX" ]] || CROWSNEST_RASPICAMFIX="1"
 [[ -n "$CROWSNEST_ADD_CROWSNEST_MOONRAKER" ]] || CROWSNEST_ADD_CROWSNEST_MOONRAKER="1"
