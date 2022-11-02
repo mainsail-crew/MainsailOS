@@ -83,7 +83,7 @@ change_env_user() {
     env_path="/home/${DEFAULT_USER}/printer_data/systemd"
     env_files="$(find "${env_path}" -type f -name "*.env" -printf "%f ")"
     for ef in ${env_files}; do
-        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${env_path}/${ef}.env"
+        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${env_path}/${ef}"
     done
 }
 
