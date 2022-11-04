@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
-# MainsailOS Specific Tweaks
-# written by Stephan Wendel aka KwadFan
-# <me@stephanwe.de>
-# GPL V3
-########
+#### mainsailos module
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2021 - 2022
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
 
 # shellcheck enable=require-variable-braces
-
 ## Source error handling, leave this in place
-set -Eex
+set -Ee
 
 # Set DEBIAN_FRONTEND to noninteractive
 if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
