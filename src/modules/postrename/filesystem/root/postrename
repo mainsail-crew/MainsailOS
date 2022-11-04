@@ -152,6 +152,14 @@ fix_timelapse_links() {
     ln -sf "${src_dir}/klipper_macro/timelapse.cfg" "${config_dir}/timelapse.cfg"
 }
 
+fix_mainsailcfg_links() {
+    local config_dir src_dir target_dir
+    config_dir="/home/${DEFAULT_USER}/printer_data/config"
+    src_dir="/home/${DEFAULT_USER}/mainsail-config"
+    sudo -u "${DEFAULT_USER}" \
+    ln -sf "${src_dir}/mainsail.cfg" "${config_dir}/mainsail.cfg"
+}
+
 main() {
 local cmdltxt
 cmdltxt="/boot/cmdline.txt"
@@ -205,6 +213,7 @@ echo -e "${WHITE}Patching crowsnest logrotate ...${NOC}[${GRE}OK${NOC}]"
 echo -en "${WHITE}Fix broken symlinks ...${NOC}\r"
 fix_broken_links
 fix_timelapse_links
+fix_mainsailcfg_links
 echo -e "${WHITE}Fix broken symlinks ...${NOC}[${GRE}OK${NOC}]"
 ## do a short break
 sleep 2
