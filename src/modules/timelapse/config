@@ -1,10 +1,15 @@
-#!/bin/bash
-# moonraker-timelapse custompios module
-# https://github.com/mainsail-crew/moonraker-timelapse
-# written by Stephan Wendel aka KwadFan
-# <me@stephanwe.de>
-# GPL V3
-########
+#!/usr/bin/env bash
+#### moonraker-timelapse module
+####
+#### https://github.com/mainsail-crew/moonraker-timelapse
+#### Thanks to Fry Sennberg for this bueatiful "Plugin"
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2022
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
 
 [ -n "$TIMELAPSE_SRC_DIR" ] || TIMELAPSE_SRC_DIR="/home/${BASE_USER}/moonraker-timelapse"
 [ -n "$TIMELAPSE_PYTHON_VENV_DIR" ] || TIMELAPSE_PYTHON_VENV_DIR="/home/${BASE_USER}/moonraker/moonraker/components"

@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-#### MainsailOS Build Chain
+#### moonraker-timelapse module
 ####
-#### moonraker-timelapse install module
-#### #!/bin/bash
 #### https://github.com/mainsail-crew/moonraker-timelapse
+#### Thanks to Fry Sennberg for this bueatiful "Plugin"
 ####
 #### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
 #### Copyright 2022
@@ -17,7 +16,7 @@
 # shellcheck enable=require-variable-braces
 
 ## Source error handling, leave this in place
-set -Eex
+set -Ee
 
 ## Set LC_ALL to prevent errors
 export LC_ALL=C
@@ -33,7 +32,7 @@ source /common.sh
 install_cleanup_trap
 
 ## helper func moonraker update_manager
-function add_timelapse_entry {
+add_timelapse_entry() {
     if [ -f "${TIMELAPSE_CONFIG_DIR}/moonraker.conf" ]; then
         if [ -f "/tmp/moonraker.conf" ]; then
             rm -rf /tmp/moonraker.conf
@@ -57,7 +56,7 @@ unpack /filesystem/home/"${BASE_USER}" /home/"${BASE_USER}" "${BASE_USER}"
 ## Install all deps at once for time consumption reasons.
 ## APT: Update Repo Database and install Dependencies
 # Force apt update
-apt update
+apt-get update
 echo_green "Installing moonraker-timelapse Dependencies ..."
 ## Disabling shellcheck SC2086, because we want "wordsplitting"
 # shellcheck disable=SC2086
@@ -86,7 +85,7 @@ fi
 echo "Modifying moonraker.conf ..."
 add_timelapse_entry
 
-popd || exit 1
+popd &> /dev/null || exit 1
 
 
 ## Done message
