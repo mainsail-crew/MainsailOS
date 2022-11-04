@@ -71,8 +71,8 @@ echo_green "Installing mainsail.cfg ..."
 gitclone MAINSAIL_CONFIG_REPO mainsail-config
 
 # Make sure printer_data/logs exists
-if [[ ! -d "${MAINSAIL_CONFIG_DEST_PATH%*.*}" ]]; then
-    sudo -u "${BASE_USER}" mkdir -p "${MAINSAIL_CONFIG_DEST_PATH%*.*}"
+if [[ ! -d "/home/${BASE_USER}/printer_data/config" ]]; then
+    sudo -u "${BASE_USER}" mkdir -p "/home/${BASE_USER}/printer_data/config"
 fi
 if [[ -f "${MAINSAIL_CONFIG_SRC_PATH}" ]]; then
     sudo -u "${BASE_USER}" \
