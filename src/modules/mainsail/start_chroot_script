@@ -33,7 +33,7 @@ echo_green "Install mainsail dependencies ..."
 apt_update_skip
 # Disabling shellcheck SC2086, because we want "wordsplitting"
 # shellcheck disable=SC2086
-check_install_pkgs ${MAINSAIL_DEPS} -y
+check_install_pkgs ${MAINSAIL_DEPS}
 
 
 ### Preparing nginx
