@@ -70,7 +70,7 @@ ln -s /var/log/nginx/mainsail-error.log /home/"${BASE_USER}"/printer_data/logs
 echo_green "Installing mainsail.cfg ..."
 gitclone MAINSAIL_CONFIG_REPO mainsail-config
 
-# Make sure printer_data/logs exists
+# Make sure printer_data/config exists
 if [[ ! -d "/home/${BASE_USER}/printer_data/config" ]]; then
     sudo -u "${BASE_USER}" mkdir -p "/home/${BASE_USER}/printer_data/config"
 fi
