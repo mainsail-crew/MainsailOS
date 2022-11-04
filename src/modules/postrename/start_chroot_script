@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#!/bin/bash
 #### Post Rename
 ####
 #### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
@@ -12,7 +11,7 @@
 # shellcheck enable=require-variable-braces
 
 ## Source error handling, leave this in place
-set -Eex
+set -Ee
 
 ## Set LC_ALL to prevent errors
 export LC_ALL=C
