@@ -10,4 +10,4 @@
 ####
 
 [ -n "$MAINSAILOS_DEPS" ] || MAINSAILOS_DEPS="python3-serial tree mc exa bat \
-nload btop"
+nload"
