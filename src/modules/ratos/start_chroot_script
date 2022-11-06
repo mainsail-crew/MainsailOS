@@ -24,11 +24,6 @@ popd
 unpack /filesystem/root /
 unpack /filesystem/home/${BASE_USER} /home/${BASE_USER} ${BASE_USER}
 
-# Run install scripts
-sudo -u pi bash /home/pi/klipper_config/config/scripts/ratos-install.sh
-sudo -u pi bash /home/pi/ratos-configurator/scripts/setup.sh
-
-sudo update-rc.d ratos defaults
 
 # Create release file
 if [ -f "/etc/ratos_version" ]; then
@@ -38,3 +33,12 @@ function get_parent {
 cat /etc/os-release | grep VERSION_CODENAME | cut -d '=' -f2
 }
 echo "${DIST_NAME} v${DIST_VERSION} ($(get_parent))" > /etc/${DIST_NAME,,}-release
+
+# Install RatOS Configurator
+sudo -u pi bash /home/pi/ratos-configurator/scripts/setup.sh
+# Start the configurator so extensions can access the API
+sudo systemctl start ratos-configurator.service
+
+# Install RatOS Configuration
+sudo -u pi bash /home/pi/klipper_config/config/scripts/ratos-install.sh
+sudo update-rc.d ratos defaults

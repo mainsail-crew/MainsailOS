@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Installs RatOS
+# GPL V3
+########
+
+
+# Source error handling, leave this in place
+set -xe
+
+# Stop the configurator
+sudo systemctl stop ratos-configurator.service
