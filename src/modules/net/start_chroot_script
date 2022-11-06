@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# Network
+# Adds to /boot configuration files that let you set up wifi network before booting
+# Written by Guy Sheffer <guysoft at gmail dot com> and Gina Häußge <gina@octoprint.org>
+# GPL V3
+#
+# Modified by Stephan Wendel aka KwadFan <me@stephanwe.de>
+# https://github.com/mainsail-crew/MainsailOS
+# Last modification: August/2022
+#
+########
+set -x
+set -e
+
+export LC_ALL=C
+
+source /common.sh
+install_cleanup_trap
+
+unpack /filesystem/boot /"${BASE_BOOT_MOUNT_PATH}"
+
+if [ "${BASE_DISTRO}" == "ubuntu" ] || [ "${BASE_DISTRO}" == "armbian" ]; then
+    echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev" > /etc/wpa_supplicant/wpa_supplicant.conf
+    echo "update_config=1" >> /etc/wpa_supplicant/wpa_supplicant.conf
+    echo "ap_scan=1" >> /etc/wpa_supplicant/wpa_supplicant.conf
+    echo "country=US" >> /etc/wpa_supplicant/wpa_supplicant.conf
+fi
+
+if [ "${BASE_DISTRO}" == "raspbian" ]; then
+    # Workaround rfkill not unblocking on boot
+    rm /var/lib/systemd/rfkill/*
+fi
+
+# set OS_NAME in Wifi-README.txt according to DIST_NAME
+if [ -f "/boot/WiFi-README.txt" ]; then
+    sed -i 's|OS_NAME|'"${DIST_NAME}"'|g' /boot/WiFi-README.txt
+fi
+
+
+# copy /etc/wpa_supplicant/ifupdown.sh to /etc/ifplugd/action.d/ifupdown - for wlan auto reconnect
+[ -f /etc/ifplugd/action.d/ifupdown ] && mv /etc/ifplugd/action.d/ifupdown /etc/ifplugd/action.d/ifupdown.original
+[ -f /etc/wpa_supplicant/ifupdown.sh ] && ln -s /etc/wpa_supplicant/ifupdown.sh /etc/ifplugd/action.d/ifupdown
+
+if [ ! -f "/etc/rc.local" ];then
+    echo 'exit 0' >> /etc/rc.local
+fi
+
+# prevent ntp updates from failing due to some Rpi3 weirdness, see also "Fix SSH" further below
+apt-get update --allow-releaseinfo-change
+apt-get install -y iptables
+sed -i 's@exit 0@@' /etc/rc.local
+echo '/sbin/iptables -t mangle -I POSTROUTING 1 -o wlan0 -p udp --dport 123 -j TOS --set-tos 0x00' >> /etc/rc.local
+echo 'exit 0' >> /etc/rc.local
+
+# Install powersave option
+if [ "$NETWORK_DISABLE_PWRSAVE" == "yes" ]; then
+
+  # Copy pwrsave script
+  unpack filesystem/usr/local/bin /usr/local/bin root
+
+  # Use rc.local
+  if [ "$NETWORK_PWRSAVE_TYPE" == "rclocal" ]; then
+    echo_green "Modifying /etc/rc.local ..."
+    sed -i 's@exit 0@@' /etc/rc.local
+    (echo "# Disable WiFi Power Management"; \
+    echo 'echo "Disabling power management for wlan0 ..."' ; \
+    echo "/usr/local/bin/pwrsave off"; echo "exit 0") >> /etc/rc.local
+  fi
+  # Use service
+  if [ "$NETWORK_PWRSAVE_TYPE" == "service" ]; then
+    echo_green "Installing disable-wifi-pwr-mgmt service ..."
+    unpack filesystem/etc/systemd/system /etc/systemd/system root
+    systemctl_if_exists enable disable-wifi-pwr-mgmt.service
+  fi
+  # Use udev rule
+  if [ "$NETWORK_PWRSAVE_TYPE" == "udev" ]; then
+    echo_green "Installing WiFi Power Management udev rule ..."
+    unpack filesystem/etc/udev/rules.d /etc/udev/rules.d root
+  fi
+  # strip out unneeded script, depending on choose
+  if [ "$NETWORK_PWRSAVE_TYPE" != "udev" ]; then
+    rm -f /usr/local/bin/pwrsave-udev
+  else
+    rm -f /usr/local/bin/pwrsave
+  fi
+fi

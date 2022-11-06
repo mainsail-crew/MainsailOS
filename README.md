@@ -28,48 +28,15 @@ Start by reading the [Documentation](https://os.ratrig.com)
 - About 5GB of free diskspace for the build
 - Yarn & Docusaurus for docs
 
-### Packages for Ubuntu 18.04/20.04
+## Building
+To prevent you have to deal with an entire build chain setup, \
+simply fork this repository.
 
-** Dekstop variants are known to cause issues during build due to snaps takeing up loop mounts **
+Enable the workflows in your fork and you are good to go. \
+On each push you make, an image is build and uploaded as an artifact.
 
-```bash
-sudo apt-get install gawk make build-essential util-linux \
-qemu-user-static qemu-system-arm \
-git p7zip-full python3 curl
-```
-
-## Compiling source
-
-```bash
-git clone https://github.com/Rat-Rig/RatOS.git
-cd RatOS/
-make build
-```
-
-or without docker:
-
-```
-git clone https://github.com/guysoft/CustomPiOS.git
-git clone https://github.com/Rat-OS/RatOS.git
-cd RatOS/src/image wget -c --trust-server-names 'https://downloads.raspberrypi.org/raspios_lite_armhf_latest'
-cd ..
-../../CustomPiOS/src/update-custompios-paths
-sudo modprobe loop
-sudo bash -x ./build_dist
-```
-
-### Other make options
-
-```bash
-make clean - Clean all previous build items except the source raspian image
-make distclean - Clean up the source image and trigger a new download
-```
-
-### Build layout
-
-RatOS/emulation - Contains dependencies for emulation testing  
-RatOS/src/image - Contains our base raspbian image  
-RatOS/src/workspace - Created during build, and output for compiled images
+If you want or need to build locally please visit [CustomPiOS](https://github.com/guysoft/CustomPiOS). \
+Especially ["Build a Distro From within Raspbian / Debian / Ubuntu / CustomPiOS Distros"](https://github.com/guysoft/CustomPiOS#build-a-distro-from-within-raspbian--debian--ubuntu--custompios-distros)
 
 ## HUGE THANK YOU to the Sponsors
 

@@ -1,2 +1,4 @@
-# This file is intentionally left blank
-# Preparation for later use cases
+#!/bin/bash
+# shellcheck disable=all
+
+[ -n "$MAINSAILOS_DEPS" ] || MAINSAILOS_DEPS="python3-serial"

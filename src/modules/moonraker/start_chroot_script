@@ -3,6 +3,7 @@
 # Script that installs Moonraker API service
 # Written by Raymond Himle and Stefan Dej
 # Refactored by Stephan Wendel aka KwadFan <me@stephanwe.de>
+# Moonraker printer_data compat by Mikkel Schmidt aka miklschmidt <mikkel.schmidt@gmail.com>
 # Thanks to Arksine
 # GPL V3
 ########
@@ -16,7 +17,7 @@ install_cleanup_trap
 
 # make sure that this module can be used standalone
 apt_update_skip
-check_install_pkgs "git virtualenv"
+check_install_pkgs "git virtualenv wireless-tools"
 
 echo_green "Installing Moonraker and enable Moonraker Service"
 # install MainsailOS premade moonraker.conf
@@ -25,11 +26,9 @@ unpack /filesystem/home/${BASE_USER} /home/${BASE_USER} ${BASE_USER}
 # clone klipper repo
 pushd /home/${BASE_USER}
 gitclone MOONRAKER_REPO moonraker
-
 # create database dir
 mkdir -p /home/${BASE_USER}/.moonraker_database
 chown ${BASE_USER}:${BASE_USER} -R /home/${BASE_USER}/.moonraker_database
-
 # use moonrakers Install script
 echo_green "Launch moonraker Install script (scripts/install-moonraker.sh)"
 sudo -u ${BASE_USER} \

@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+#### crowsnest - A webcam Service for multiple Cams and Stream Services.
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2021
+#### https://github.com/mainsail-crew/crowsnest
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck disable=all
+
+# Error handling
+set -Ee
+
+source /common.sh
+install_cleanup_trap
+
+echo_green "Installing crowsnest and enable webcam Service ..."
+# install dependencies
+# force apt update
+apt update
+# It could use inbuilt dependencie check, but should speed up if preinstalled.
+# shellcheck disable=SC2086
+check_install_pkgs ${CROWSNEST_CROWSNEST_DEPS} ${CROWSNEST_USTREAMER_DEPS}
+# Move to $HOME dir
+pushd "/home/${BASE_USER}" &> /dev/null || exit 1
+    # make sure config folder exist
+    if [ ! -d "${CROWSNEST_DEFAULT_CONF_DIR}" ]; then
+        sudo -u "${BASE_USER}" mkdir -p "${CROWSNEST_DEFAULT_CONF_DIR}"
+    fi
+    # clone Repo
+    echo_green "Clone crowsnest repository ..."
+    gitclone CROWSNEST_CROWSNEST_REPO crowsnest
+    # install crowsnest - use crowsnest's make unattended
+    pushd "/home/${BASE_USER}/crowsnest" &> /dev/null || exit 1
+    echo_green "Launch crowsnest install routine ..."
+    pushd "/home/${BASE_USER}/crowsnest" &> /dev/null || exit 1
+    sudo -u "${BASE_USER}" make unattended
+    # Apply Raspicam fix if enabled.
+    if [ "${CROWSNEST_FORCE_RASPICAMFIX}" == "1" ]; then
+        echo -en "Applying Raspicam Fix ... \r"
+        sudo sh -c 'echo "bcm2835-v4l2" >> /etc/modules'
+        sudo cp file_templates/bcm2835-v4l2.conf /etc/modprobe.d/
+        echo -e "Applying Raspicam Fix ... [OK]"
+    fi
+    popd &> /dev/null || exit 1
+popd &> /dev/null || exit 1

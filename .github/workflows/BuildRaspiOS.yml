@@ -2,19 +2,20 @@ name: Build RatOS - Raspberry Pi OS buster
 on:
   push:
     branches:
-      - '**'
+      - "**"
     paths:
-    - 'src/**'
-    - 'emulation/**'
-    - '.github/workflows/BuildRaspiOS.yml'
+      - "src/**"
+      - "emulation/**"
+      - ".github/workflows/BuildRaspiOS.yml"
     tags-ignore:
       - "**"
   pull_request:
-    types: [ opened, edited, reopened, synchronize ]
+    types: [opened, edited, reopened, synchronize]
     paths:
-    - 'src/**'
-    - 'emulation/**'
-    - '.github/workflows/BuildRaspiOS.yml'
+      - "src/**"
+      - "emulation/**"
+      - ".github/workflows/BuildRaspiOS.yml"
+
   workflow_dispatch:
 
 jobs:

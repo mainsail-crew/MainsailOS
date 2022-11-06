@@ -1,60 +1,83 @@
 #!/usr/bin/env bash
-# Klipper install script
-# Script that installs Klipper
-# Written by Raymond Himle and Stefan Dej
-# Revamped by KwadFan
-# Thanks to KevinOConnor
-# GPL V3
-########
+#### MainsailOS Build Chain
+####
+#### Klipper Install Module
+####
+#### Based on work done by Raymond Himle and Stefan Dej
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2022
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck enable=require-variable-braces
 
 ### For easier maintainability look to klipper/config.
 
 ## Source error handling, leave this in place
-set -xe
+set -Eex
 
-# Source CustomPIOS common.sh
+## Set LC_ALL to prevent errors
+export LC_ALL=C
+
+# Set DEBIAN_FRONTEND to noninteractive
+if [ "${DEBIAN_FRONTEND}" != "noninteractive" ]; then
+    export DEBIAN_FRONTEND=noninteractive
+fi
+
+## Source CustomPIOS common.sh
+# shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
 
 unpack /filesystem/root /
 
-echo_green "Installing Klipper and enable klippy Service"
+echo_green "Installing Klipper and enable klippy Service ..."
 
-### install all deps at once for time consumption reasons.
+## Install all deps at once for time consumption reasons.
 ## APT: Update Repo Database and install Dependencies
+# Force apt update
+apt update
+echo_green "Installing Klipper Dependencies ..."
+## Disabling shellcheck SC2086, because we want "wordsplitting"
+# shellcheck disable=SC2086
+check_install_pkgs ${KLIPPER_DEPS}
 
-apt update && apt install ${KLIPPER_DEPS} -y 
-
-### Make sure user pi has access to serial ports
+## Make sure user pi has access to serial ports
 ## NOTE: BASE_USER is defined by CustomPIOS Variable
 ## there for if you plan to set something else than "pi"
 ## Currently CustomPIOS uses "pi"
 
-usermod -a -G ${KLIPPER_USER_GROUPS} ${BASE_USER}
+usermod -a -G "${KLIPPER_USER_GROUPS}" "${BASE_USER}"
 
-### clone klipper repo
-pushd /home/${BASE_USER}
+## Clone klipper repo
+pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 gitclone KLIPPER_REPO klipper
 
-### Create needed dirs
-for dirs in ${KLIPPER_USER_DIRS}; do
-    if [ -d /home/$BASE_USER/$dirs ]; then
-        echo_green "$dirs already exists!"
+## Create needed dirs
+for dir in ${KLIPPER_USER_DIRS}; do
+    if [ -d "/home/${BASE_USER}/$dir" ]; then
+        echo_green "${dir} already exists!"
     else
-        echo_green "Creating $dirs"
-        sudo -u $BASE_USER mkdir -p $dirs
+        echo_green "Creating ${dir}"
+        sudo -u "${BASE_USER}" mkdir -p "${dir}"
     fi
 done
-popd
+popd &> /dev/null || exit 1
 
-# create python virtualenv and install klipper requirements
-pushd /home/${BASE_USER}
-echo_green "Creating Virtualenv for Klipper (klipper-env) ..."
-sudo -u ${BASE_USER} virtualenv -p python2 ${KLIPPER_PYTHON_DIR}
+## create python virtualenv and install klipper requirements
+pushd "/home/${BASE_USER}" &> /dev/null || exit 1
+echo_green "Creating Virtualenv for Klipper (klippy-env) ..."
+sudo -u "${BASE_USER}" virtualenv -p python3 "${KLIPPER_PYTHON_DIR}"
 echo_green "Installing klippy Python Dependencies ..."
-sudo -u ${BASE_USER} ${KLIPPER_PYTHON_DIR}/bin/pip install -r ${KLIPPER_SRC_DIR}/${KLIPPER_PYENV_REQ}
-popd
+sudo -u "${BASE_USER}" "${KLIPPER_PYTHON_DIR}"/bin/pip install -r "${KLIPPER_SRC_DIR}"/"${KLIPPER_PYENV_REQ}"
+popd &> /dev/null || exit 1
 
 
-# enable systemd service
+## Enable systemd service
 systemctl_if_exists enable klipper.service
+
+## Done message
+echo_green "Installing Klipper and enable klippy Service ... done!"
