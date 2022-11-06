@@ -16,6 +16,6 @@
 [ -n "$SONAR_DEFAULT_CONF_DIR" ] || SONAR_DEFAULT_CONF_DIR="/home/${BASE_USER}/klipper_config"
 [ -n "$SONAR_DEFAULT_CONF" ] || SONAR_DEFAULT_CONF="mainsail_default.conf"
 # Add Sonar to moonraker.conf (update_manager) bool (1:yes / 0:no)
-[ -n "$SONAR_ADD_SONAR_MOONRAKER" ] || SONAR_ADD_SONAR_MOONRAKER=1
+[ -n "$SONAR_ADD_SONAR_MOONRAKER" ] || SONAR_ADD_SONAR_MOONRAKER=0
 # Path to moonraker.conf (must be set if add to update_manager)
 [ -n "$SONAR_MOONRAKER_CONF" ] || SONAR_MOONRAKER_CONF="${SONAR_DEFAULT_CONF_DIR}/moonraker.conf"
