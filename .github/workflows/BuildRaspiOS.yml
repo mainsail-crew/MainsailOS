@@ -56,8 +56,12 @@ jobs:
       - name: Copy output image
         run: cp ${{ github.workspace }}/repository/src/workspace/*-raspios-*-lite.img RatOS-latest.img
 
-      - name: Compress the image
-        run: zip RatOS-latest.zip RatOS-latest.img
+      - name: Compressing Image
+        shell: bash
+        run: |
+          CPU_COUNT="$(nproc)"
+          echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
+          xz -efkvz9T"${CPU_COUNT}" RatOS-latest.img
 
       - uses: actions/upload-artifact@v2
         with:
