@@ -83,8 +83,8 @@ if [ -d "/home/${BASE_USER}/klipper_config" ]; then
 fi
 
 ## Extend moonraker.conf
-echo "Modifying moonraker.conf ..."
-add_timelapse_entry
+# echo "Modifying moonraker.conf ..."
+# add_timelapse_entry
 
 
 popd || exit 1
