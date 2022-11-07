@@ -55,8 +55,10 @@ ln -s /home/pi/klipper_logs /home/pi/printer_data/logs
 # Start the configurator so extensions can access the API
 echo "Starting RatOS Configurator"
 pushd /home/pi/ratos-configurator
-setsid sh -c "sudo -u ${BASE_USER} yarn start &" &
+sudo -u ${BASE_USER} yarn start &
 configuratorid=$!
+echo $configuratorid > /tmp/configuratorid
+
 popd
 # Install RatOS Configuration
 sudo -u pi bash /home/pi/klipper_config/config/scripts/ratos-install.sh

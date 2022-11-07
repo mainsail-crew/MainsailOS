@@ -10,6 +10,8 @@ set -xe
 sudo -u ${BASE_USER} /home/${BASE_USER}/klipper_config/config/scripts/ratos-post-install.sh
 
 # Stop the configurator
-kill $configuratorid
+
+configuratorid=$(cat /tmp/configuratorid)
+kill -SIGTERM $configuratorid
 # kill $moonrakerid
 
