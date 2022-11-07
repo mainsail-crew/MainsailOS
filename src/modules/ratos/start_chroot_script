@@ -22,8 +22,6 @@ popd
 popd
 
 unpack /filesystem/root /
-unpack /filesystem/home/${BASE_USER} /home/${BASE_USER} ${BASE_USER}
-
 
 # Create release file
 if [ -f "/etc/ratos_version" ]; then
@@ -36,9 +34,30 @@ echo "${DIST_NAME} v${DIST_VERSION} ($(get_parent))" > /etc/${DIST_NAME,,}-relea
 
 # Install RatOS Configurator
 sudo -u pi bash /home/pi/ratos-configurator/scripts/setup.sh
-# Start the configurator so extensions can access the API
-sudo systemctl start ratos-configurator.service
 
+# Symlink printer data dirs
+if [ -d "/home/pi/printer_data" ]; then
+  echo "Deleting printer data config, database, gcodes and logs directories.."
+  rm -rf /home/pi/printer_data/config
+  rm -rf /home/pi/printer_data/database
+  rm -rf /home/pi/printer_data/gcodes
+  rm -rf /home/pi/printer_data/logs
+else
+  mkdir /home/pi/printer_data
+fi
+
+echo "Symlinking printer data config, database, gcodes and logs directories.."
+ln -s /home/pi/klipper_config /home/pi/printer_data/config
+ln -s /home/pi/.moonraker_database /home/pi/printer_data/database
+ln -s /home/pi/gcode_files /home/pi/printer_data/gcodes
+ln -s /home/pi/klipper_logs /home/pi/printer_data/logs
+
+# Start the configurator so extensions can access the API
+echo "Starting RatOS Configurator"
+pushd /home/pi/ratos-configurator
+setsid sh -c "sudo -u ${BASE_USER} yarn start &" &
+configuratorid=$!
+popd
 # Install RatOS Configuration
 sudo -u pi bash /home/pi/klipper_config/config/scripts/ratos-install.sh
 sudo update-rc.d ratos defaults
