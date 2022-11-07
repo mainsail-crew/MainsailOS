@@ -65,5 +65,5 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: RatOS-latest.zip
-          path: RatOS-latest.zip
+          name: RatOS-latest.img.xz
+          path: RatOS-latest.img.xz
