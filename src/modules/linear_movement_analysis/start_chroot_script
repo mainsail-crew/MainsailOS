@@ -21,7 +21,7 @@ register_klippy_extension() {
     EXT_NAME=$1
     EXT_PATH=$2
     EXT_FILE=$3
-    report_status "Registering klippy extension '$EXT_NAME' with the RatOS Configurator..."
+    echo_green "Registering klippy extension '$EXT_NAME' with the RatOS Configurator..."
     if [ ! -e $EXT_PATH/$EXT_FILE ]
     then
         echo "ERROR: The file you're trying to register does not exist"
