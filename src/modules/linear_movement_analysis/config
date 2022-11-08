@@ -1,0 +1,2 @@
+[ -n "$LINEAR_MOVEMENT_ANALYSIS_SHIP" ] || LINEAR_MOVEMENT_ANALYSIS_SHIP=https://github.com/worksasintended/klipper_linear_movement_analysis.git
+[ -n "$LINEAR_MOVEMENT_ANALYSIS_BRANCH" ] || LINEAR_MOVEMENT_ANALYSIS_BRANCH=main

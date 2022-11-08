@@ -12,11 +12,11 @@ install_cleanup_trap
 
 echo_green "Installing RatOS"
 
-pushd /home/pi/klipper_config
+pushd /home/${BASE_USER}/klipper_config
 
 gitclone RATOS_CONFIG config
 gitclone RATOS_THEME .theme
-pushd /home/pi
+pushd /home/${BASE_USER}
 gitclone RATOS_CONFIGURATOR ratos-configurator
 popd
 popd
@@ -33,30 +33,30 @@ cat /etc/os-release | grep VERSION_CODENAME | cut -d '=' -f2
 echo "${DIST_NAME} v${DIST_VERSION} ($(get_parent))" > /etc/${DIST_NAME,,}-release
 
 # Install RatOS Configurator
-sudo -u pi bash /home/pi/ratos-configurator/scripts/setup.sh
+sudo -u pi bash /home/${BASE_USER}/ratos-configurator/scripts/setup.sh
 
 # Symlink printer data dirs
-if [ -d "/home/pi/printer_data" ]; then
+if [ -d "/home/${BASE_USER}/printer_data" ]; then
   echo "Deleting printer data config, database, gcodes and logs directories.."
-  rm -rf /home/pi/printer_data/config
-  rm -rf /home/pi/printer_data/database
-  rm -rf /home/pi/printer_data/gcodes
-  rm -rf /home/pi/printer_data/logs
+  rm -rf /home/${BASE_USER}/printer_data/config
+  rm -rf /home/${BASE_USER}/printer_data/database
+  rm -rf /home/${BASE_USER}/printer_data/gcodes
+  rm -rf /home/${BASE_USER}/printer_data/logs
 else
-  mkdir /home/pi/printer_data
+  mkdir /home/${BASE_USER}/printer_data
 fi
 
 echo "Symlinking printer data config, database, gcodes and logs directories.."
-ln -s /home/pi/klipper_config /home/pi/printer_data/config
-ln -s /home/pi/.moonraker_database /home/pi/printer_data/database
-ln -s /home/pi/gcode_files /home/pi/printer_data/gcodes
-ln -s /home/pi/klipper_logs /home/pi/printer_data/logs
+ln -s /home/${BASE_USER}/klipper_config /home/${BASE_USER}/printer_data/config
+ln -s /home/${BASE_USER}/.moonraker_database /home/${BASE_USER}/printer_data/database
+ln -s /home/${BASE_USER}/gcode_files /home/${BASE_USER}/printer_data/gcodes
+ln -s /home/${BASE_USER}/klipper_logs /home/${BASE_USER}/printer_data/logs
 
 # Start the configurator so extensions can access the API
 echo "Starting RatOS Configurator"
-pushd /home/pi/ratos-configurator
+pushd /home/${BASE_USER}/ratos-configurator
 sudo -u ${BASE_USER} yarn start &
 popd
 # Install RatOS Configuration
-sudo -u pi bash /home/pi/klipper_config/config/scripts/ratos-install.sh
+sudo -u pi bash /home/${BASE_USER}/klipper_config/config/scripts/ratos-install.sh
 sudo update-rc.d ratos defaults

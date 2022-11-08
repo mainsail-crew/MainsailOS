@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Installs Klipper_linear_movement_analysis
+########
+
+set -xe
+
+source /common.sh
+install_cleanup_trap
+
+echo_green "Installing Klipper Linear Movement Analysis by MarschallMarc#6420"
+
+pushd /home/${BASE_USER}
+
+gitclone LINEAR_MOVEMENT_ANALYSIS klipper_linear_movement_analysis
+
+EXTENSION_PATH="/home/${BASE_USER}/klipper_linear_movement_analysis"
+SCRIPT_NAME="linear_movement_vibrations.py"
+GIT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+register_klippy_extension() {
+    EXT_NAME=$1
+    EXT_PATH=$2
+    EXT_FILE=$3
+    report_status "Registering klippy extension '$EXT_NAME' with the RatOS Configurator..."
+    if [ ! -e $EXT_PATH/$EXT_FILE ]
+    then
+        echo "ERROR: The file you're trying to register does not exist"
+        exit 1
+    fi
+    curl --silent --fail -X POST 'http://localhost:3000/configure/api/trpc/klippy-extensions.register' -H 'content-type: application/json' --data-raw "{\"json\":{\"extensionName\":\"$EXT_NAME\",\"path\":\"$EXT_PATH\",\"fileName\":\"$EXT_FILE\"}}" > /dev/null
+    if [ $? -eq 0 ]
+    then
+        echo "Registered $EXT_NAME successfully."
+    else
+        echo "ERROR: Failed to register $EXT_NAME. Is the RatOS configurator running?"
+        exit 1
+    fi
+}
+
+register_klippy_extension "linear_movement_analysis" "${EXTENSION_PATH}" "${SCRIPT_NAME}"
+
+echo_green "Installing matplotlib for python 2"
+
+/home/${BASE_USER}/klippy-env/bin/pip install -v matplotlib
