@@ -1,0 +1,61 @@
+---
+slug: no-you-dont-want-to-use-can
+title: No, you don't want to use CAN
+authors: [miklschmidt]
+tags: [RatOS, CAN, USB, klipper]
+---
+
+## No, you don't want to use CAN.
+
+For some reason, the entire 3d printing community has convinced itself that it needs to use CAN bus connections for everything. I'm here to tell you why that's a waste of your time when running klipper.
+
+## What is CAN bus?
+
+CAN bus is a multi-master protocol in which any device can initiate a message to any other on embedded systems where every device is known and there are no strangers. It can work over long distances and is less susceptible to noise than USB.
+CAN bus is also the opposite of plug and play, requiring configuration for each device and setup. It's also not very fast, and requires a lot of overhead to work. It was developed for use in vehicles, where redundancy is critical.
+
+The strengths of CAN boil down to:
+
+-   Redundancy
+-   Noise tolerance
+-   Long distance
+-   4 wires (power and data).
+
+## What is USB?
+
+USB is a strict master/slave protocol, where unknown devices can be connected to a host which controls them. It was made so you grandmother can plug in a keyboard without knowing the intricacy of serial communications, device mapping and drivers. USB is fast, has ultra low latency but works best over short distances.
+
+The strengths of USB boil down to:
+
+-   Plug and play
+-   Low latency
+-   High throughput
+-   Low overhead.
+-   3 wires (usb cable and power)
+
+## Why CAN has no benefits over USB for 3d printers running klipper.
+
+Klippy (the klipper brain that runs on your raspberry pi) is in charge of everything going on in your 3d printer. It's the master. Your control boards are slaves, they do what they're told by Klippy. Latency is critical for homing and nobody likes additional overhead.
+We have 4 USB ports (and you can add more via hubs) on a standard raspberry pi, that means you can connect a virtually unlimited amount of boards to your printer.
+
+### But Mikkel, USB cables are so fragile?
+
+No. Good modern USB cables are made to take years of abuse from teenagers plugging and unplugging their phone, dogs chewing on them, heck some of them can even be used to [pull cars and lift weights](https://www.indiegogo.com/projects/zus-super-duty-charging-cable-lifetime-guarantee/). Durability is really not a concern, and even if your cable breaks, a new one is cheap and takes seconds to swap. Get a good braided USB cable and it will outlast the rest of your wiring.
+
+### But Mikkel, USB cables are super susceptible to noise!
+
+Also no. If you use a modern 3.1 or better spec USB cable they come with heavy shielding and have no issues operating inside your 3d printer. You're not running 10 meters of cable here, even on a V-Core 500, you won't need much more than 1.5 meters. It's a non issue.
+
+### But what about redundancy?
+
+CAN redundancy is wasted on klipper, your raspberry pi is the single point of failure anyway, so it literally doesn't matter if you connect a bunch of can devices together and then to the pi or you connect a bunch of devices via USB directly to the pi. If the pi dies, everything dies, CAN or no CAN.
+
+### But Mikkel, CAN is so much more reliable!
+
+Is it? Your control board has run on USB for ever. It's been tested and proven to work.
+
+None of the benefits CAN brings are relevant to 3d printing. You're wasting your time trying to get it to work, when you could just plug in a USB cable and be on your way.
+
+CAN is slower, has higher latency, uses more system resources, requires more configuration and is more expensive to implement, and you benefit from none of it.
+
+Stop worrying about CAN, and save yourself the headache!
