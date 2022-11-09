@@ -4,7 +4,7 @@
 export DIST_NAME=RatOS
 export DIST_VERSION=2.0
 export BASE_IMAGE_ENLARGEROOT=6500
-export MODULES="base,pkgupgrade,mainsailos(net,piconfig,klipper,node,is_req_preinstall,moonraker,mainsail,crowsnest,sonar,ratos(linear_movement_analysis,timelapse),rpi_mcu,klipperscreen,disable-services(hotspot),password-for-sudo)"
+export MODULES="base,pkgupgrade(network,piconfig,klipper,node,is_req_preinstall,moonraker,mainsail,crowsnest,ratos(linear_movement_analysis,timelapse),klipperscreen,rpi_mcu,disable-services(hotspot),password-for-sudo)"
 export BASE_IMAGE_RESIZEROOT=600
 export BASE_RELEASE_COMPRESS=yes
 
