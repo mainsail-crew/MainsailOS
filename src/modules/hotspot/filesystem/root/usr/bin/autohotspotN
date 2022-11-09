@@ -62,7 +62,7 @@ createAdHocNetwork()
     # We need dhcpcd in host mode for ipv6
     systemctl restart dhcpcd
     echo 1 > /proc/sys/net/ipv4/ip_forward
-    echo 1 > /proc/sys/net/ipv6/conf/all/forwarding
+    # echo 1 > /proc/sys/net/ipv6/conf/all/forwarding
 }
 
 KillHotspot()
@@ -79,7 +79,7 @@ KillHotspot()
         # nft delete table inet ap
     fi
     echo 0 > /proc/sys/net/ipv4/ip_forward
-    echo 0 > /proc/sys/net/ipv6/conf/all/forwarding
+    # echo 0 > /proc/sys/net/ipv6/conf/all/forwarding
     ip addr flush dev "$wifidev"
     ip link set dev "$wifidev" up
     dhcpcd  -n "$wifidev" >/dev/null 2>&1

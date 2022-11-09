@@ -10,7 +10,7 @@ set -e
 
 source /common.sh
 
-apt-get update
+apt-get update --allow-releaseinfo-change
 apt-get -y purge dns-root-data
 apt-get -y install iw
 
@@ -37,14 +37,14 @@ fi
 
 sed -i "s@^DAEMON_OPTS=\"\"@^#DAEMON_OPTS=\"\"@g" /etc/default/hostapd
 
-echo "
-# IPv6
-duid
-interface eth0
-        ipv6rs
-        iaid 1
-        ia_pd 2 wlan0/1/64 # request prefixes for VLANs
-" >> /etc/dhcpcd.conf
+# echo "
+# # IPv6
+# duid
+# interface eth0
+#         ipv6rs
+#         iaid 1
+#         ia_pd 2 wlan0/1/64 # request prefixes for VLANs
+# " >> /etc/dhcpcd.conf
 
 sed -i 's/clientid/# clientid/g' /etc/dhcpcd.conf
 
@@ -55,10 +55,6 @@ interface=wlan0
 bind-interfaces
 dhcp-range=192.168.50.150,192.168.50.200,255.255.255.0,12h
 
-# IPv6
-except-interface=eth0
-enable-ra
-dhcp-range=tag:wlan0,::1,constructor:wlan0, ra-names, 12h
 " >> /etc/dnsmasq.conf
 
 sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
