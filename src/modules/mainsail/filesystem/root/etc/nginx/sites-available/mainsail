@@ -1,6 +1,5 @@
 server {
     listen 80 default_server;
-    listen [::]:80 default_server;
 
     access_log /var/log/nginx/mainsail-access.log;
     error_log /var/log/nginx/mainsail-error.log;
@@ -100,6 +99,9 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Scheme $scheme;
+        proxy_read_timeout 300;
+        proxy_connect_timeout 300;
+        proxy_send_timeout 300;
     }
 
     location = /vcore.log {
