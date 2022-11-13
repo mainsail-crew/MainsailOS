@@ -6,7 +6,7 @@ sidebar_label: Manual Firmware Compilation
 # Manual klipper firmware compilation
 
 :::info
-RatOS automatically compiles firmware for your board when klipper is updated. You shouldn't have to do this unless something is broken.
+RatOS automatically compiles firmware for your board when klipper is updated, if that fails, the [RatOS Configurator](http://ratos.local/configure?step=1) will assist you in flashing your board in one of multiple ways. You shouldn't have to do this unless something is severely broken.
 :::
 
 If you need to compile the firmware for your board yourself, here's how you do it.

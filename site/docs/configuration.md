@@ -55,16 +55,16 @@ To test, debug and/or verify a BLTouch, refer to the [BLTouch klipper documentat
 
 ## Z-Offset
 
-An easy way to do probe z-offset calibration is to home the printer, then put a piece of paper underneath the nozzle. Now babystep Z through the Mainsail interface (or by issuing G0 commands through the console) until the nozzle touches the paper and there's a bit of resistance when you pull on it. Then write "GET_POSITION" in the console and find the line that says `// kinematic: ...` And use the Z coordinate from that line, multiplied by -1. So if it says `// kinematic: X:0.000000 Y:0.000000 Z:-0.400000` you need to add 0.4 to your probe's z_offset in printer.cfg.
+An easy way to do probe z-offset calibration is to home the printer, then put a piece of paper underneath the nozzle. Now babystep Z through the Mainsail interface by using the machine controls (or by issuing G0 commands through the console) until the nozzle touches the paper and there's a bit of resistance when you pull on it. If you reach `Z=0` and the nozzle hasn't touched the paper yet, you can use the z-offset panel to adjust your offset until the nozzle lightly touches the paper. If the nozzle is touching the paper before your hit `Z=0` you can adjust your offset in the positive direction to counteract your Z coordinate, ie. if Z is 0.4 when your nozzle touches the paper, adjust your z-offset in the positive direction by 0.4mm. Then proceed to babystep Z towards zero, repeat until the nozzle touches the paper at `Z=0`. When you're done, click the save button in the z-offset dialog, and you're done.
 
-Alternatively you can use the `PROBE_CALIBRATE` command, read more in the [klipper probe calibration documentation](https://www.klipper3d.org/Probe_Calibrate.html#calibrating-probe-z-offset)
+Alternatively you can use the `PROBE_CALIBRATE` command, read more in the [klipper probe calibration documentation](https://www.klipper3d.org/Probe_Calibrate.html#calibrating-probe-z-offset). You should also refer to this documentation in case you use a non EVA standard toolhead, which might have a different probe offset than the RatOS defaults.
+
+:::warning
+If you're using a third party printer (ie. not Rat Rig), you should calibrate your probe's x/y offset, refer to the [klipper probe calibration documentation](https://www.klipper3d.org/Probe_Calibrate.html#calibrating-probe-z-offset).
+:::
 
 :::info
 The z-offset is the distance in Z between your probe's trigger point and your nozzle in gcode space. This is typically within 0-4mm, if you get a larger value or a negative value, something is wrong, and you should investigate further.
-:::
-
-:::tip
-in Mainsail 2.1 you can enable the Z-Offset panel outside of printing in your interface settings, and it now has a "Save" button, which means you can use those buttons to babystep until the nozzle touches the paper and just hit "Save" and you're done.
 :::
 
 ## Updating
@@ -75,14 +75,14 @@ In general, it's advisable to keep all your packages up to date, but if you're h
 
 ### Update
 
-Now we've got that out of the way, please go ahead and update everything to the latest version.
+Now that we've gotten that out of the way, please go ahead and update everything to the latest version, starting with the `RatOS` package.
 
 ## Tuning
 
 When you've verified that everything works, and you have your [slicer configured](slicers) to use the `START_PRINT` and `END_PRINT` macros, you can now start tuning. Refer to the klipper documentation for [PID Tuning](https://www.klipper3d.org/Config_checks.html#calibrate-pid-settings), [Pressure Advance tuning](https://www.klipper3d.org/Pressure_Advance.html), [manual Input Shaper calibration](https://www.klipper3d.org/Resonance_Compensation.html) or [automatic Input Shaper calibration via an ADXL345](https://www.klipper3d.org/Measuring_Resonances.html), and [Skew Correction](https://www.klipper3d.org/Skew_Correction.html) respectively.
 
 :::info Using an accelerometer (ADXL345)
-See the wiring diagram for you board on how to connect your ADXL345, RatOS primarily uses an SPI connection on the MCU itself instead of the RPi, for ease of use. Some printers may require more than one ADXL345, and in that case a config for the ADXL345 connected to the Raspberry Pi is also available.
+See the wiring diagram for your board on how to connect your ADXL345, RatOS primarily uses an SPI connection on the MCU itself instead of the RPi, for ease of use. Some printers may require more than one ADXL345, and in that case a config for the ADXL345 connected to the Raspberry Pi is also available.
 
 If you want to use an ADXL345 for automatic input shaper calibration, all the software you need is already preinstalled on the pi, you just need to wire and map the pins for your ADXL345, and you're good to go.
 

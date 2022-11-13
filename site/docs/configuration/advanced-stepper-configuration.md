@@ -2,7 +2,7 @@
 
 RatOS V1.1 introduced modularized stepper and driver configuration, this can be used for more fine grained control of your steppers. In your printer.cfg you might have noticed a section like this:
 
-```properties
+```properties title="printer.cfg"
 #############################################################################################################
 ### STEPPER MOTORS, DRIVERS & SPEED LIMITS
 ### Pick the drivers and stepper motors you're using. See the RatOS documentation for custom combinations.
@@ -30,7 +30,7 @@ RatOS V1.1 introduced modularized stepper and driver configuration, this can be 
 
 You can comment out this whole section (except for steppers.cfg) to use your own combination of steppers and drivers. For example, let's say we're using an Octopus Pro with 50V 5160's powering the LDO-42STH48-2504AC on X and Y, and 2209's for the Z's. We could do the following in our user overrides section after commenting out the entire stepper motors, drivers and speed limits section:
 
-```properties
+```properties title="printer.cfg"
 #############################################################################################################
 ### USER OVERRIDES
 ### Anything custom you want to add, or RatOS configuration you want to override, do it here.
@@ -47,7 +47,7 @@ You can comment out this whole section (except for steppers.cfg) to use your own
 
 Notice how we no longer include a speed limit config or a tmc2209 config. We need to do reproduce the function of these configs ourselves in the user overrides section. The tmc2209 profile's job is to define stealthchop and interpolation. Let's add klipper's recommended defaults to our user overrides section:
 
-```properties
+```properties title="printer.cfg"
 [tmc5160 stepper_x]
 stealthchop_threshold: 0
 interpolate: False
@@ -75,7 +75,7 @@ stealthchop_threshold: 0
 
 The speed-limits profile is used to set move speeds for built in klipper functionality such as bed mesh calibration and z-tilt calibration (if present). It also sets your printer limits. We have 50V stepper motors now, tuned for maximum performance, so let's go a little crazy:
 
-```properties
+```properties title="printer.cfg"
 [bed_mesh]
 speed: 1000
 

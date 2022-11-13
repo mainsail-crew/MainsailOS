@@ -24,7 +24,11 @@ Alternatively, if you're using a pi with Ethernet, you can use an ethernet cable
 
 ## Preparing your control board
 
-After completing the setup wizard, wait a couple of minutes, then open [http://RatOS.local/](http://RatOS.local/) in your browser (or whatever hostname you chose during setup). This will present you with the mainsail interface. On the dashboard you'll see a box with the heading "Scripts", in that box there'll be a button called "COMPILE FIRMWARE", click that. This will compile fresh firmware for the supported RatOS boards, it'll take a couple of minutes, **don't shut down your pi during this process**. When the process is complete you'll see "Firmware binaries compiled successfully!" in the console. At this point you're ready to download the firmware for your board. On the left there's a menu option named "Machine", click on that, and you'll see a list of files and folders. There's a folder here called "firmware_binaries", open that folder. You can download the firmware binary for your board from here. Use the links below to move on to the preparation of the control board.
+:::info
+It is heavily recommended that you flash your board and make sure it is detected in the configurator **before** your start connecting your wiring.
+:::
+
+After completing the wifi setup wizard, wait a couple of minutes, then open [http://RatOS.local/configure?step=1](http://RatOS.local/configure?step=1) in your browser (or whatever hostname you chose during setup). Complete the wizard to flash your control board and optionally a toolboard. When you've done that successfully, the configurator will lead you to Mainsail where you can install your printer config and start editing printer.cfg to match your hardware. You can now complete your wiring. Click the links below to see the wiring diagram for your board.
 
 [BIGTREETECH Octopus v1.1](boards/btt/octopus-11.md)
 
@@ -38,17 +42,14 @@ After completing the setup wizard, wait a couple of minutes, then open [http://R
 
 [Fysetc Spider v1.1](boards/fysetc/spider-11.md)
 
-## Setup
-
-With the control board connected via USB to your Raspberry Pi and the printer turned on, open your browser and navigate to [http://RatOS.local/](http://RatOS.local) or your chosen hostname and proceed to the [configuration guide](configuration).
-
 ## Updating
-
-:::caution
-It is important that you **don't** update the klipper package _before_ your board connects correctly, because firmware updates will not compile or flash automatically before your board is properly flashed and connected.
-:::
 
 After you've configured your printer.cfg and everything is working, go to the `MACHINE` tab in Mainsail. You'll see a sheet with the title "Update Manager", if you're familiar with Fluidd or Mainsail, you'll notice a new entry called `RatOS`. This `RatOS` package will update all the config files in the config folder, improvements, support for hotends, macros, extruders, new boards etc, will be coming to your printer this way in the future. **Be sure to keep this up to date, especially if you update klipper or moonraker**. Always update the RatOS package first, before updating anything else. This is important because Klipper and Moonraker sometimes make changes that require manual system or configuration changes which RatOS will try to do for you.
 
+In case your board fails to flash automatically, you can always go back to the [http://RatOS.local/configure?step=1](http://RatOS.local/configure?step=1) to flash your board if necessary. If you get a klipper error mentioning mcu and hosts versions, this means you need to flash your board.
 
 In general, it's advisable to keep all your packages up to date, but if you're happy with how your printer works and there's nothing interesting for you in the updates, it's perfectly fine to delay updating until a later time. Klipper is a continually evolving project, that also means that bugs _do happen_. In the rare circumstance that bugs are introduced, they're usually fixed very quickly, but if you have a bunch of important prints coming up, maybe delay the updates till afterwards. Now that we've gotten that out of the way, **please go ahead and update RatOS to the latest version**.
+
+## Setup
+
+With the board flashed and everything wired up, you can now proceed to the [configuration guide](configuration).
