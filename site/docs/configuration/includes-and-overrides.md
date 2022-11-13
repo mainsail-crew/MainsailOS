@@ -6,7 +6,7 @@ sidebar_position: 2
 
 RatOS uses a modular configuration that heavily takes advantage of the config file include and merge logic in Klipper. For this reason, the order of includes and overrides are very important, do **not** change the order of the configuration unless you know what you're doing.
 
-## All RatOS really does is change the klipper defaults.
+## All RatOS really does is change the klipper defaults
 
 Imagine that each `[include]` section is simply replaced by the contents of the included file, you can go and check out the contents of the included file if you want to know the RatOS defaults, but they are just that, defaults. Everything that comes after that overrides those defaults, much in the same way that the RatOS configuration itself overrides the klipper defaults.
 
