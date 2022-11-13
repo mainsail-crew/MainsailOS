@@ -17,18 +17,19 @@ Start by reading the [Documentation](https://os.ratrig.com)
 
 ## Requirements
 
-- [qemu-arm-static](http://packages.debian.org/sid/qemu-user-static)
-- [CustomPiOS](https://github.com/guysoft/CustomPiOS)
-- [Downloaded Raspbian Image](http://www.raspbian.org/)
-- Bash
-- Git
-- [Docker](https://docs.docker.com/engine/install/ubuntu/)
-- [Docker-Compose](https://docs.docker.com/compose/install/)
-- QEMU for emulation
-- About 5GB of free diskspace for the build
-- Yarn & Docusaurus for docs
+-   [qemu-arm-static](http://packages.debian.org/sid/qemu-user-static)
+-   [CustomPiOS](https://github.com/guysoft/CustomPiOS)
+-   [Downloaded Raspbian Image](http://www.raspbian.org/)
+-   Bash
+-   Git
+-   [Docker](https://docs.docker.com/engine/install/ubuntu/)
+-   [Docker-Compose](https://docs.docker.com/compose/install/)
+-   QEMU for emulation
+-   About 5GB of free diskspace for the build
+-   Yarn & Docusaurus for docs
 
 ## Building
+
 To prevent you have to deal with an entire build chain setup, \
 simply fork this repository.
 
@@ -37,7 +38,3 @@ On each push you make, an image is build and uploaded as an artifact.
 
 If you want or need to build locally please visit [CustomPiOS](https://github.com/guysoft/CustomPiOS). \
 Especially ["Build a Distro From within Raspbian / Debian / Ubuntu / CustomPiOS Distros"](https://github.com/guysoft/CustomPiOS#build-a-distro-from-within-raspbian--debian--ubuntu--custompios-distros)
-
-## HUGE THANK YOU to the Sponsors
-
-- Dnoell
