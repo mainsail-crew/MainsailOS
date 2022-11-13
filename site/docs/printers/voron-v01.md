@@ -1,9 +1,10 @@
-# Rat Rig V-Core 3
+# Voron V0.1
 
-The [Rat Rig V-Core 3](https://v-core.ratrig.com/) is a Core XY printer in 3 large sizes produced and sold as kits by [Rat Rig](https://www.ratrig.com)
+The [Voron V0.1](https://vorondesign.com/voron0.1) is a mini Core XY printer designed by Voron. The v0.1 can be bought in kits from multiple manufacturers, or selfsourced by following the official sourcing guide.
 
 ## Supported Boards
 
+-   [SKR 2](boards/btt/skr-2-429.md)
 -   [BIGTREETECH Octopus v1.1](boards/btt/octopus-11.md)
 -   [BIGTREETECH Octopus Pro 446](boards/btt/octopus-pro-446.md)
 -   [BIGTREETECH Octopus Pro 429](boards/btt/octopus-pro-429.md)

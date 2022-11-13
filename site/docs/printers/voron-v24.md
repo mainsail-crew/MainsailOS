@@ -1,6 +1,6 @@
-# Rat Rig V-Core 3
+# Voron V2.4
 
-The [Rat Rig V-Core 3](https://v-core.ratrig.com/) is a Core XY printer in 3 large sizes produced and sold as kits by [Rat Rig](https://www.ratrig.com)
+The [Voron V2.4](https://vorondesign.com/voron2.4) is a floating gantry Core XY printer in 3 medium sizes designed by Voron. The v2.4 can be bought in kits from multiple vendors, or selfsourced by following the official sourcing guide.
 
 ## Supported Boards
 
