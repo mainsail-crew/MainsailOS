@@ -43,7 +43,7 @@ const config = {
     ],
   ],
   plugins: [
-    './plugins/image-zoom/index.js'
+    require.resolve("docusaurus-plugin-image-zoom"),
   ],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
@@ -63,9 +63,12 @@ const config = {
   
         //... other Algolia params
       },
-      zoomOptions: {
-        background: '#000',
-        margin: 60,
+      zoom: {
+        selector: '.markdown img',
+        background: {dark: '#000'},
+        config : {
+          margin: 60,
+        }
       },
       colorMode: {
         defaultMode: 'dark',
