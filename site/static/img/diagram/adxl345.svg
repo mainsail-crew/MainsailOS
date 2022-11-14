@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="249px" height="189px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;">
+    <g>
+        <g id="pcb">
+            <path d="M248.031,0l-248.031,0l0,188.976l248.031,0l0,-188.976Zm-199.015,165.118c4.719,-0 8.55,3.831 8.55,8.55c-0,4.719 -3.831,8.55 -8.55,8.55c-4.719,-0 -8.55,-3.831 -8.55,-8.55c-0,-4.719 3.831,-8.55 8.55,-8.55Zm60,-0c4.719,-0 8.55,3.831 8.55,8.55c-0,4.719 -3.831,8.55 -8.55,8.55c-4.719,-0 -8.55,-3.831 -8.55,-8.55c-0,-4.719 3.831,-8.55 8.55,-8.55Zm-90,-0c4.719,-0 8.55,3.831 8.55,8.55c-0,4.719 -3.831,8.55 -8.55,8.55c-4.719,-0 -8.55,-3.831 -8.55,-8.55c-0,-4.719 3.831,-8.55 8.55,-8.55Zm60,-0c4.719,-0 8.55,3.831 8.55,8.55c-0,4.719 -3.831,8.55 -8.55,8.55c-4.719,-0 -8.55,-3.831 -8.55,-8.55c-0,-4.719 3.831,-8.55 8.55,-8.55Zm60,-0c4.719,-0 8.55,3.831 8.55,8.55c-0,4.719 -3.831,8.55 -8.55,8.55c-4.719,-0 -8.55,-3.831 -8.55,-8.55c-0,-4.719 3.831,-8.55 8.55,-8.55Zm30,-0c4.719,-0 8.55,3.831 8.55,8.55c-0,4.719 -3.831,8.55 -8.55,8.55c-4.719,-0 -8.55,-3.831 -8.55,-8.55c-0,-4.719 3.831,-8.55 8.55,-8.55Zm30,-0c4.719,-0 8.55,3.831 8.55,8.55c-0,4.719 -3.831,8.55 -8.55,8.55c-4.719,-0 -8.55,-3.831 -8.55,-8.55c-0,-4.719 3.831,-8.55 8.55,-8.55Zm30,-0c4.719,-0 8.55,3.831 8.55,8.55c-0,4.719 -3.831,8.55 -8.55,8.55c-4.719,-0 -8.55,-3.831 -8.55,-8.55c-0,-4.719 3.831,-8.55 8.55,-8.55Zm-204.709,-159.118c10.104,0 18.307,8.203 18.307,18.307c0,10.104 -8.203,18.307 -18.307,18.307c-10.104,0 -18.307,-8.203 -18.307,-18.307c0,-10.104 8.203,-18.307 18.307,-18.307Zm200,0c10.104,0 18.307,8.203 18.307,18.307c0,10.104 -8.203,18.307 -18.307,18.307c-10.104,0 -18.307,-8.203 -18.307,-18.307c0,-10.104 8.203,-18.307 18.307,-18.307Z" style="fill:url(#_Radial1);"/>
+            <g transform="matrix(-1,-1.22465e-16,1.22465e-16,-1,507.651,70.7878)">
+                <text x="347.481px" y="62.238px" style="font-family:'DroidSansMono', 'Droid Sans Mono', monospace;font-size:17.5px;fill:#fff;">ADXL345</text>
+            </g>
+            <g id="copper0">
+                <circle id="connector0pin" cx="19.016" cy="173.668" r="8.55" style="fill:none;stroke:#9a916c;stroke-width:5px;"/>
+                <circle id="connector1pin" cx="49.016" cy="173.668" r="8.55" style="fill:none;stroke:#9a916c;stroke-width:5px;"/>
+                <circle id="connector2pin" cx="79.016" cy="173.668" r="8.55" style="fill:none;stroke:#9a916c;stroke-width:5px;"/>
+                <circle id="connector3pin" cx="109.016" cy="173.668" r="8.55" style="fill:none;stroke:#9a916c;stroke-width:5px;"/>
+                <circle id="connector4pin" cx="139.016" cy="173.668" r="8.55" style="fill:none;stroke:#9a916c;stroke-width:5px;"/>
+                <circle id="connector5pin" cx="169.016" cy="173.668" r="8.55" style="fill:none;stroke:#9a916c;stroke-width:5px;"/>
+                <circle id="connector6pin" cx="199.016" cy="173.668" r="8.55" style="fill:none;stroke:#9a916c;stroke-width:5px;"/>
+                <circle id="connector7pin" cx="229.016" cy="173.668" r="8.55" style="fill:none;stroke:#9a916c;stroke-width:5px;"/>
+                <rect x="10.466" y="165.118" width="17.1" height="17.1" style="fill:none;stroke:#9a916c;stroke-width:5px;"/>
+            </g>
+            <g id="silkscreen">
+                <g transform="matrix(-3.82857e-16,-1,1,-3.82857e-16,-101.242,211.729)">
+                    <text x="55.243px" y="156.486px" style="font-family:'DroidSansMono', 'Droid Sans Mono', monospace;font-size:17.4px;fill:#fff;">VCC</text>
+                </g>
+                <g transform="matrix(-3.82857e-16,-1,1,-3.82857e-16,-131.242,181.729)">
+                    <text x="25.243px" y="156.486px" style="font-family:'DroidSansMono', 'Droid Sans Mono', monospace;font-size:17.4px;fill:#fff;">GND</text>
+                </g>
+                <g transform="matrix(-3.82857e-16,-1,1,-3.82857e-16,-71.2424,241.729)">
+                    <text x="85.243px" y="156.486px" style="font-family:'DroidSansMono', 'Droid Sans Mono', monospace;font-size:17.4px;fill:#fff;">CS</text>
+                </g>
+                <g transform="matrix(-3.82857e-16,-1,1,-3.82857e-16,18.7576,331.729)">
+                    <text x="175.243px" y="156.486px" style="font-family:'DroidSansMono', 'Droid Sans Mono', monospace;font-size:17.4px;fill:#fff;">SDO</text>
+                </g>
+                <g transform="matrix(-3.82857e-16,-1,1,-3.82857e-16,48.7576,361.729)">
+                    <text x="205.243px" y="156.486px" style="font-family:'DroidSansMono', 'Droid Sans Mono', monospace;font-size:17.4px;fill:#fff;">SDA</text>
+                </g>
+                <g transform="matrix(-3.82857e-16,-1,1,-3.82857e-16,78.7576,391.729)">
+                    <text x="235.243px" y="156.486px" style="font-family:'DroidSansMono', 'Droid Sans Mono', monospace;font-size:17.4px;fill:#fff;">SCL</text>
+                </g>
+                <g transform="matrix(-3.82857e-16,-1,1,-3.82857e-16,-41.2424,271.729)">
+                    <text x="115.243px" y="156.486px" style="font-family:'DroidSansMono', 'Droid Sans Mono', monospace;font-size:17.4px;fill:#fff;">INT1</text>
+                </g>
+                <g transform="matrix(-3.82857e-16,-1,1,-3.82857e-16,-11.2424,301.729)">
+                    <text x="145.243px" y="156.486px" style="font-family:'DroidSansMono', 'Droid Sans Mono', monospace;font-size:17.4px;fill:#fff;">INT2</text>
+                </g>
+            </g>
+            <rect x="89.764" y="66.142" width="61.417" height="37.795" style="fill:#333;"/>
+        </g>
+    </g>
+    <defs>
+        <radialGradient id="_Radial1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(124.016,0,0,124.016,124.016,94.4882)"><stop offset="0" style="stop-color:#00568f;stop-opacity:1"/><stop offset="1" style="stop-color:#004675;stop-opacity:1"/></radialGradient>
+    </defs>
+</svg>
