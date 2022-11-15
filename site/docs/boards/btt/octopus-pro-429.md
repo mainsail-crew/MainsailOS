@@ -14,7 +14,8 @@ This board is currently not recommended, as it cannot be flashed automatically t
 [Open Full Size Image](_media/octopus-pro-wiring-full.png)
 
 :::danger if you use the Ratrig endstop switches and cables, do **not** blindly plug them in to your Octopus as doing this will short the board's 5V power rail.
-You will probably have to swap the outer two wires (red and white) on the board end of the cable but double check to make sure your cables match the wiring diagram.
+You will probably have to swap the outer two wires (red and white) on the board end of the cable but double check to make sure your cables match the wiring diagram in both ends.
+Orders shipped after October 2022 should have the correct cables (the connectors on the new cables are white).
 :::
 
 :::info Jumpers
