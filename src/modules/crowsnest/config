@@ -11,7 +11,7 @@
 
 # crowsnest repo
 [[ -n "$CROWSNEST_REPO_SHIP" ]] || CROWSNEST_REPO_SHIP="https://github.com/mainsail-crew/crowsnest.git"
-[[ -n "$CROWSNEST_REPO_BRANCH" ]] || CROWSNEST_REPO_BRANCH="develop"
+[[ -n "$CROWSNEST_REPO_BRANCH" ]] || CROWSNEST_REPO_BRANCH="master"
 
 # crowsnest setup
 [[ -n "$CROWSNEST_DEFAULT_CONF" ]] || CROWSNEST_DEFAULT_CONF="resources/crowsnest.conf"
