@@ -19,6 +19,12 @@ Orders shipped after October 2022 should have the correct cables (the connectors
 remove all jumpers on the board that are not marked by this symbol.
 :::
 
+### Jumpers
+
+The jumpers above the stepper drivers switches stepper driver input power between V_MOT and VIN (ie, board power terminals and motor power terminals).
+In the configuration shown in the image above, the MOTOR power isn't connected because the jumpers are set to use the board power (VIN).
+If you wanted to use 48V for example, you would connect your 48V psu to the motor power terminal and switch those jumpers to the other position to use V_MOT instead. Of course you shouldn't do this unless you use high voltage capable 5160 drivers.
+
 ## Firmware installation
 
 :::caution Use a proper cable
