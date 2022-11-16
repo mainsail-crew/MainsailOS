@@ -6,6 +6,12 @@ import WiringSVG from "./_media/ebb42-wiring.svg";
 
 # BIGTREETECH EBB42 v1.1
 
+:::danger This board can be dangerous
+When this board boots into DFU mode (which happens during firmware updates), the heater pin will be set to high, meaning your hotend will heat up for the duration of the firmware update process.
+For this reason automatic firmware updates is disabled by default for the BTT EBB v1.1 boards in RatOS. You'll have to flash it through the [RatOS Configurator](http://RatOS.local/configure?step=2) when needed.
+See page 14 and 15 in the [BTT EBB v1.1 manual](<https://github.com/bigtreetech/EBB/blob/master/EBB%20CAN%20V1.1%20(STM32G0B1)/EBB42%20CAN%20V1.1/BIGTREETECH%20EBB42%20CAN%20V1.1%20User%20Manual.pdf>)
+:::
+
 ## Wiring
 
 <WiringSVG width="100%" height={null} />
