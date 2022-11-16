@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+source /common.sh
+install_cleanup_trap
+
+pushd /home/${BASE_USER}
+apt-get build-dep dfu-util
+apt-get install libusb-1.0-0-dev autoconf
+git clone git://git.code.sf.net/p/dfu-util/dfu-util
+pushd /home/${BASE_USER}/dfu-util
+./autogen.sh
+./configure
+make install
+popd
+popd
