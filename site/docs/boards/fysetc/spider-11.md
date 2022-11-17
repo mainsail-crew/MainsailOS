@@ -101,7 +101,7 @@ Build the firmware which is covered here: [Manual Firmware Compilation](manual-f
 Once the firmware is built on the Pi run:
 
     sudo service klipper stop
-    dfu-util -a 0 -s 0x08000000:leave -D ~/klipper/out/klipper.bin
+    dfu-util -a 0 -s 0x08008000:leave -D ~/klipper/out/klipper.bin
 
 You should see the firmware being written to your Spider.
 
