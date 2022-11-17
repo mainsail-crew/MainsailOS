@@ -8,7 +8,7 @@ source /common.sh
 install_cleanup_trap
 
 pushd /home/${BASE_USER}
-apt-get install libusb-1.0-0-dev autoconf
+apt-get -y install libusb-1.0-0-dev autoconf
 git clone git://git.code.sf.net/p/dfu-util/dfu-util
 pushd /home/${BASE_USER}/dfu-util
 ./autogen.sh
