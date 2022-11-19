@@ -37,7 +37,7 @@ jobs:
         id: set-matrix
         run: |
           ARRAY=$(find ${{ github.workspace }}/config -type f -printf '%P\n' | sed '/default/d' | sort | jq -R -s -c 'split("\n")[:-1]')
-          echo "::set-output name=matrix::${ARRAY}"
+          echo "matrix=${ARRAY}" >> $GITHUB_OUTPUT
 
   build:
     needs: setup
@@ -65,7 +65,7 @@ jobs:
 
           cp repository/src/workspace/*.img $IMAGE.img
 
-          echo "::set-output name=image::$IMAGE"
+          echo "image=${$IMAGE}" >> $GITHUB_OUTPUT
 
       - name: Upload failed Logfile
         if: failure()
