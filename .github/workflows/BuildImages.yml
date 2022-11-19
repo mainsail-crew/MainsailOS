@@ -65,7 +65,7 @@ jobs:
 
           cp repository/src/workspace/*.img $IMAGE.img
 
-          echo "image=${$IMAGE}" >> $GITHUB_OUTPUT
+          echo "image=${IMAGE}" >> $GITHUB_OUTPUT
 
       - name: Upload failed Logfile
         if: failure()
