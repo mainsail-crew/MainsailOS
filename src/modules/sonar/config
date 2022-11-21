@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #### Sonar - A WiFi Keepalive daemon
 ####
 #### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
@@ -9,13 +9,21 @@
 ####
 # shellcheck disable=all
 
-# Sonar
-[ -n "$SONAR_REPO_SHIP" ] || SONAR_REPO_SHIP=https://github.com/mainsail-crew/sonar.git
-[ -n "$SONAR_REPO_BRANCH" ] || SONAR_REPO_BRANCH=main
-[ -n "$SONAR_DEPS" ] || SONAR_DEPS="git crudini iputils-ping"
-[ -n "$SONAR_DEFAULT_CONF_DIR" ] || SONAR_DEFAULT_CONF_DIR="/home/${BASE_USER}/klipper_config"
-[ -n "$SONAR_DEFAULT_CONF" ] || SONAR_DEFAULT_CONF="mainsail_default.conf"
+# sonar repo
+[[ -n "$SONAR_REPO_SHIP" ]] || SONAR_REPO_SHIP=https://github.com/mainsail-crew/sonar.git
+[[ -n "$SONAR_REPO_BRANCH" ]] || SONAR_REPO_BRANCH=main
+
+# sonar setup
+[[ -n "$SONAR_DEFAULT_CONF" ]] || SONAR_DEFAULT_CONF="resources/sonar.conf"
+[[ -n "$SONAR_CONFIG_PATH" ]] || SONAR_CONFIG_PATH="/home/${BASE_USER}/printer_data/config"
+[[ -n "$SONAR_LOG_PATH" ]] || SONAR_LOG_PATH="/home/${BASE_USER}/printer_data/logs"
 # Add Sonar to moonraker.conf (update_manager) bool (1:yes / 0:no)
-[ -n "$SONAR_ADD_SONAR_MOONRAKER" ] || SONAR_ADD_SONAR_MOONRAKER=1
+[[ -n "$SONAR_ADD_SONAR_MOONRAKER" ]] || SONAR_ADD_SONAR_MOONRAKER="1"
 # Path to moonraker.conf (must be set if add to update_manager)
-[ -n "$SONAR_MOONRAKER_CONF" ] || SONAR_MOONRAKER_CONF="${SONAR_DEFAULT_CONF_DIR}/moonraker.conf"
+[[ -n "$SONAR_MOONRAKER_CONF_PATH" ]] || SONAR_MOONRAKER_CONF_PATH="${SONAR_CONFIG_PATH}/moonraker.conf"
+
+###########################################################################
+### DO NOT EDIT BELOW THIS LINE, UNLESS YOU KNOW EXACTLY WHAT HAPPENDS! ###
+###########################################################################
+
+SONAR_UNATTENDED="1"
