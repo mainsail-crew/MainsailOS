@@ -2,27 +2,33 @@
 #### crowsnest - A webcam Service for multiple Cams and Stream Services.
 ####
 #### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
-#### Copyright 2021
+#### Copyright 2021 - 2022
 #### https://github.com/mainsail-crew/crowsnest
 ####
 #### This File is distributed under GPLv3
 ####
 # shellcheck disable=all
 
-# crowsnest
-[ -n "$CROWSNEST_CROWSNEST_REPO_SHIP" ] || CROWSNEST_CROWSNEST_REPO_SHIP=https://github.com/mainsail-crew/crowsnest.git
-[ -n "$CROWSNEST_CROWSNEST_REPO_BRANCH" ] || CROWSNEST_CROWSNEST_REPO_BRANCH=master
-[ -n "$CROWSNEST_CROWSNEST_DEPS" ] || CROWSNEST_CROWSNEST_DEPS="git crudini bsdutils findutils v4l-utils ffmpeg"
-[ -n "$CROWSNEST_DEFAULT_CONF" ] || CROWSNEST_DEFAULT_CONF="mainsail_default.conf"
-[ -n "$CROWSNEST_DEFAULT_CONF_DIR" ] || CROWSNEST_DEFAULT_CONF_DIR="/home/${BASE_USER}/klipper_config"
-# Force Raspicam fix bool (1:yes / 0:no)
-[ -n "$CROWSNEST_FORCE_RASPICAMFIX" ] || CROWSNEST_FORCE_RASPICAMFIX=1
-# Add Crowsnest to moonraker.conf (update manager) bool (1:yes / 0:no)
-[ -n "$CROWSNEST_ADD_CROWSNEST_MOONRAKER" ] || CROWSNEST_ADD_CROWSNEST_MOONRAKER=1
+# crowsnest repo
+[[ -n "$CROWSNEST_REPO_SHIP" ]] || CROWSNEST_REPO_SHIP="https://github.com/mainsail-crew/crowsnest.git"
+[[ -n "$CROWSNEST_REPO_BRANCH" ]] || CROWSNEST_REPO_BRANCH="master"
+
+# crowsnest setup
+[[ -n "$CROWSNEST_DEFAULT_CONF" ]] || CROWSNEST_DEFAULT_CONF="resources/crowsnest.conf"
+[[ -n "$CROWSNEST_CONFIG_PATH" ]] || CROWSNEST_CONFIG_PATH="/home/${BASE_USER}/printer_data/config"
+[[ -n "$CROWSNEST_LOG_PATH" ]] || CROWSNEST_LOG_PATH="/home/${BASE_USER}/printer_data/logs"
+[[ -n "$CROWSNEST_ENV_PATH" ]] || CROWSNEST_ENV_PATH="/home/${BASE_USER}/printer_data/systemd"
+[[ -n "$CROWSNEST_RASPICAMFIX" ]] || CROWSNEST_RASPICAMFIX="1"
+[[ -n "$CROWSNEST_ADD_CROWSNEST_MOONRAKER" ]] || CROWSNEST_ADD_CROWSNEST_MOONRAKER="1"
+[[ -n "$CROWSNEST_MOONRAKER_CONF_PATH" ]] || CROWSNEST_MOONRAKER_CONF_PATH="/home/${BASE_USER}/printer_data/config/moonraker.conf"
 
 
 # ustreamer
-[ -n "$CROWSNEST_USTREAMER_DEPS" ] || CROWSNEST_USTREAMER_DEPS="git build-essential libevent-dev libjpeg-dev \
-libbsd-dev libraspberrypi-dev libgpiod-dev"
-[ -n "$CROWSNEST_USTREAMER_WITH_OMX" ] || CROWSNEST_USTREAMER_WITH_OMX="y"
-[ -n "$CROWSNEST_USTREAMER_WITH_GPIO" ] || CROWSNEST_USTREAMER_WITH_GPIO="n"
+[[ -n "$CROWSNEST_USTREAMER_REPO_SHIP" ]] || CROWSNEST_USTREAMER_REPO_SHIP="https://github.com/pikvm/ustreamer.git"
+[[ -n "$CROWSNEST_USTREAMER_REPO_BRANCH" ]] || CROWSNEST_USTREAMER_REPO_BRANCH="master"
+
+###########################################################################
+### DO NOT EDIT BELOW THIS LINE, UNLESS YOU KNOW EXACTLY WHAT HAPPENDS! ###
+###########################################################################
+
+CROWSNEST_UNATTENDED="1"

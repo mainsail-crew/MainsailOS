@@ -1,39 +1,92 @@
 #!/usr/bin/env bash
-# Moonraker install script
-# Script that installs Moonraker API service
-# Written by Raymond Himle and Stefan Dej
-# Refactored by Stephan Wendel aka KwadFan <me@stephanwe.de>
-# Thanks to Arksine
-# GPL V3
-########
+#### mainsail module
+####
+#### Based on work of:
+#### Raymond Himle and meteyou (Stefan Dej)
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2021 - 2022
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+#### Credits: Thanks to Arksine for this great API :)
+
+# shellcheck enable=require-variable-braces
 
 # Source error handling, leave this in place
-set -xe
+set -Ee
 
 # Source CustomPIOS common.sh
+# shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
 
-# make sure that this module can be used standalone
-apt_update_skip
-check_install_pkgs "git virtualenv wireless-tools"
+# Module only Variables
+MN_BUILD_PACKAGE_FILE="/tmp/mn_packages.lst"
+MN_BUILD_INSTALL_SH="/home/${BASE_USER}/moonraker/scripts/install-moonraker.sh"
 
-echo_green "Installing Moonraker and enable Moonraker Service"
-# install MainsailOS premade moonraker.conf
-echo_green "Copying MainsailOS premade moonraker.conf"
-unpack /filesystem/home/${BASE_USER} /home/${BASE_USER} ${BASE_USER}
-# clone klipper repo
-pushd /home/${BASE_USER}
+echo_green "Installing Moonraker and enable Moonraker Service ..."
+
+## Force apt update
+apt-get update
+## Make sure 'git' is installed!
+check_install_pkgs git
+
+## Step 1: Move to Home Dir as WorkingDirectoy
+pushd "/home/${BASE_USER}" &> /dev/null || exit 1
+
+## Step 2: clone moonraker repo
 gitclone MOONRAKER_REPO moonraker
-# use moonrakers Install script
-echo_green "Launch moonraker Install script (scripts/install-moonraker.sh)"
-sudo -u ${BASE_USER} \
-bash -c \
-'${HOME}/moonraker/scripts/install-moonraker.sh \
--c ${HOME}/klipper_config/moonraker.conf \
--l ${HOME}/klipper_logs/moonraker.log'
-# install Polkit Rules
-echo_green "Install PolicyKit Rules"
-sudo -u ${BASE_USER} sh -c './moonraker/scripts/set-policykit-rules.sh --root'
-# finished
-popd
+
+## Step 3: grep PKGLIST from install-moonraker.sh for dependencies
+echo_green "Generating packages file ..."
+grep "PKGLIST=" "${MN_BUILD_INSTALL_SH}" >> "${MN_BUILD_PACKAGE_FILE}"
+
+## Step 4: Rename PKGLIST to Module usable Var
+echo_green "Rename variable PKGLIST to MOONRAKER_DEPS ..."
+sed -i 's/PKGLIST/MOONRAKER_DEPS/g' "${MN_BUILD_PACKAGE_FILE}"
+
+## Step 5: Source cn_package.lst file
+# shellcheck disable=SC1090
+# Shellcheck has to be disabled here,
+# because it is an dynamic generated file and not checkable
+. "${MN_BUILD_PACKAGE_FILE}"
+
+## Step 6: Install packages
+echo_green "Install moonraker dependencies ..."
+# shellcheck disable=SC2086
+# disabled because we need 'wordsplitting'
+check_install_pkgs ${MOONRAKER_DEPS}
+
+
+## Step 7: Move to moonraker as working directory
+pushd "/home/${BASE_USER}/moonraker" &> /dev/null || exit 1
+
+## Step 8: Run moonraker install routine
+echo_green "Launch moonraker install routine ..."
+sudo -u "${BASE_USER}" ./scripts/install-moonraker.sh -z -x
+
+## Step 9: Install policykit rules
+echo_green "Install moonrakers PolicyKit Rules ..."
+sudo -u "${BASE_USER}" ./scripts/set-policykit-rules.sh --root
+
+## Step 10: Leave moonraker
+popd &> /dev/null || exit 1
+
+## Step 11: clean packages.lst file
+rm -f "${MN_BUILD_PACKAGE_FILE}"
+
+## Step 12: leave home dir
+popd &> /dev/null || exit 1
+
+## Step 13: Install MainsailOS premade moonraker.conf
+echo_green "Copying MainsailOS premade moonraker.conf ..."
+unpack /filesystem/home/"${BASE_USER}" /home/"${BASE_USER}" "${BASE_USER}"
+
+## Step 14:
+echo_green "Enable moonraker.service ..."
+systemctl_if_exists enable moonraker.service
+
+## Finish
+echo_green "Installing Moonraker and enable Moonraker Service ... DONE!"

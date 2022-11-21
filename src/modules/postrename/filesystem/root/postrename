@@ -8,8 +8,16 @@
 #### This File is distributed under GPLv3
 ####
 
+# shellcheck enable=require-variable-braces
+
 ## Error handling
-set -e
+set -Ee
+
+# Debug
+# set -x
+
+## Set LC_ALL to prevent errors
+export LC_ALL=C
 
 # Colored Output
 RED="\e[31m"
@@ -26,22 +34,22 @@ DEFAULT_USER="$(grep "1000" /etc/passwd | awk -F ':' '{print $1}')"
 
 ## Helper funcs
 ### Mangle services
-function stop_services {
+stop_services() {
     for srv in "${SERVICES[@]}"; do
-        if [ "$(systemctl is-active "${srv}.service")" != "inactive" ]; then
+        if [[ "$(systemctl is-active "${srv}.service")" != "inactive" ]]; then
             systemctl stop "${srv}.service"
         fi
     done
 }
 
-function start_services {
+start_services() {
     for srv in "${SERVICES[@]}"; do
         systemctl start "${srv}.service"
     done
 }
 
 ### Clean up
-function cleanup {
+cleanup() {
     # Cleanup self
     rm -rf "${0}"
     # Cleanup rc.local
@@ -49,7 +57,7 @@ function cleanup {
 }
 
 ### Change nginx root
-function change_www_root {
+change_www_root() {
     bash -c "
         sed -i 's|/home/pi/mainsail|/home/${DEFAULT_USER}/mainsail|g' \
         /etc/nginx/sites-available/mainsail
@@ -58,19 +66,28 @@ function change_www_root {
 
 
 ### change username in service files
-function change_service_user {
+change_service_user() {
     ### Filter nginx service first!
     local -a servicefile
     servicefile=( "${SERVICES[@]/nginx}" )
 
     for i in "${servicefile[@]}"; do
-        if [ -n "${i}" ]; then
+        if [[ -n "${i}" ]]; then
         sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${SYSTEMD_DIR}/${i}.service"
         fi
     done
 }
 
-function relocate_venv {
+change_env_user() {
+    local env_files env_path
+    env_path="/home/${DEFAULT_USER}/printer_data/systemd"
+    env_files="$(find "${env_path}" -type f -name "*.env" -printf "%f ")"
+    for ef in ${env_files}; do
+        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${env_path}/${ef}"
+    done
+}
+
+relocate_venv() {
     local -a venvs
     venvs=(klippy-env moonraker-env)
 
@@ -81,45 +98,42 @@ function relocate_venv {
 
         # repair shebangs
         while IFS= read -r file ; do
-
             sed -i 's|pi/'"${venv}"'|'"${DEFAULT_USER}"'/'"${venv}"'|g' "${file}"
-
         done < <(grep -iR "pi/${venv}" "/home/${DEFAULT_USER}/${venv}"/* | cut -d":" -f1)
-
     done
 }
 
-function patch_polkit_rules {
+patch_polkit_rules() {
     local polkit_dir polkit_legacy_dir polkit_usr_dir
     polkit_legacy_dir="/etc/polkit-1/localauthority/50-local.d"
     polkit_dir="/etc/polkit-1/rules.d"
     polkit_usr_dir="/usr/share/polkit-1/rules.d"
-    if [ -f "${polkit_dir}/moonraker.rules" ]; then
+    if [[ -f "${polkit_dir}/moonraker.rules" ]]; then
         sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_dir}/moonraker.rules"
     fi
-    if [ -f "${polkit_usr_dir}/moonraker.rules" ]; then
+    if [[ -f "${polkit_usr_dir}/moonraker.rules" ]]; then
         sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_usr_dir}/moonraker.rules"
     fi
-    if [ -f "${polkit_legacy_dir}/10-moonraker.pkla" ]; then
+    if [[ -f "${polkit_legacy_dir}/10-moonraker.pkla" ]]; then
         sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_legacy_dir}/10-moonraker.pkla"
     fi
 }
 
-function patch_cn_logrotate {
-    if [ -f "/etc/logrotate.d/crowsnest" ]; then
+patch_cn_logrotate() {
+    if [[ -f "/etc/logrotate.d/crowsnest" ]]; then
         sed -i 's/pi/'"${DEFAULT_USER}"'/g' "/etc/logrotate.d/crowsnest"
     fi
 }
 
 ## Fix broken links
-function fix_broken_links {
+fix_broken_links() {
     local -a brokenlinks
     local path
     brokenlinks=(crowsnest sonar)
     path="/usr/local/bin"
 
     for bl in "${brokenlinks[@]}"; do
-        if [ -h "${path}/${bl}" ]; then
+        if [[ -h "${path}/${bl}" ]]; then
             rm -rf "${path:?}/${bl}"
         fi
         find "/home/${DEFAULT_USER}" -type f -iname "${bl}" -print0 | \
@@ -127,9 +141,9 @@ function fix_broken_links {
     done
 }
 
-function fix_timelapse_links {
+fix_timelapse_links() {
     local config_dir src_dir target_dir
-    config_dir="/home/${DEFAULT_USER}/klipper_config"
+    config_dir="/home/${DEFAULT_USER}/printer_data/config"
     src_dir="/home/${DEFAULT_USER}/moonraker-timelapse"
     target_dir="/home/${DEFAULT_USER}/moonraker/moonraker/components"
     sudo -u "${DEFAULT_USER}" \
@@ -138,20 +152,28 @@ function fix_timelapse_links {
     ln -sf "${src_dir}/klipper_macro/timelapse.cfg" "${config_dir}/timelapse.cfg"
 }
 
-function main {
+fix_mainsailcfg_links() {
+    local config_dir src_dir target_dir
+    config_dir="/home/${DEFAULT_USER}/printer_data/config"
+    src_dir="/home/${DEFAULT_USER}/mainsail-config"
+    sudo -u "${DEFAULT_USER}" \
+    ln -sf "${src_dir}/mainsail.cfg" "${config_dir}/mainsail.cfg"
+}
+
+main() {
 local cmdltxt
 cmdltxt="/boot/cmdline.txt"
 
 ## Make sure init_resize.sh and firstrun.sh are finished
-if [ "$(grep -c "init" "${cmdltxt}")" != "0" ] && \
-[ "$(grep -c "systemd.run.*" "${cmdltxt}")" != "0" ]; then
+if [[ "$(grep -c "init" "${cmdltxt}")" != "0" ]] && \
+[[ "$(grep -c "systemd.run.*" "${cmdltxt}")" != "0" ]]; then
     echo -e "[${RED}ERROR${NOC}] \
     ${WHITE}Sdcard resize and firtrun are not finished yet ... [ABORT]${NOC}"
     ## Make sure not failing rc.local
     return 0
 fi
 ## Abort if user = pi
-if [ "${DEFAULT_USER}" == "pi" ]; then
+if [[ "${DEFAULT_USER}" == "pi" ]]; then
     echo -e "[${YEL}SKIPPED${NOC}] \
     ${WHITE}User is ${DEFAULT_USER}! Nothing to do ...${NOC}"
     cleanup
@@ -171,6 +193,10 @@ echo -e "${WHITE}Try changing path of nginx root ...${NOC}[${GRE}OK${NOC}]"
 echo -en "${WHITE}Patching service files ...${NOC}\r"
 change_service_user
 echo -e "${WHITE}Patching service files ...${NOC}[${GRE}OK${NOC}]"
+## patch env files
+echo -en "${WHITE}Patching environment files ...${NOC}\r"
+change_env_user
+echo -e "${WHITE}Patching environment files ...${NOC}[${GRE}OK${NOC}]"
 ## relocate venvs
 echo -e "${WHITE}Trying to relocate venv's ...${NOC}"
 relocate_venv
@@ -187,6 +213,7 @@ echo -e "${WHITE}Patching crowsnest logrotate ...${NOC}[${GRE}OK${NOC}]"
 echo -en "${WHITE}Fix broken symlinks ...${NOC}\r"
 fix_broken_links
 fix_timelapse_links
+fix_mainsailcfg_links
 echo -e "${WHITE}Fix broken symlinks ...${NOC}[${GRE}OK${NOC}]"
 ## do a short break
 sleep 2
@@ -200,7 +227,7 @@ sleep 2
 echo -e "${WHITE}Trying to restart services ...${NOC}"
 start_services
 ## wait 30sec to come up
-echo -e "${WHITE}Waiting for service restart completed ...${NOC}"
+echo -e "${WHITE}Waiting 30 seconds for service restart completed ...${NOC}"
 sleep 30
 ## Cleanup
 echo -e "${WHITE}Cleanup files, remove postrename ...${NOC}"
