@@ -7,6 +7,8 @@ on:
       - "config/**"
       - "src/**"
       - "!src/version"
+      # Add workflow itself for now
+      - ".github/workflows/ShellCheck.yml"
 
   pull_request:
     types: [opened, edited, reopened, synchronize]
@@ -17,13 +19,12 @@ on:
       - "src/**"
       - "!src/version"
 
+  workflow_dispatch:
+
 jobs:
-  shellcheck:
-    name: Shellcheck
+  lint_modules:
+    name: Shellcheck (modules)
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        scripts: ["./config", "./src"]
     steps:
       - name: Fetch Repository
         uses: actions/checkout@v3
@@ -33,6 +34,58 @@ jobs:
         env:
           SHELLCHECK_OPTS: -ax -s bash
         with:
-          scandir: ${{ matrix.scripts }}
-          ignore_paths: ./version ./image/
-          format: gcc
+          scandir: "./src"
+          additional_files: "config start_chroot_script end_chroot_script"
+          ignore_paths: "./version ./image"
+          format: tty
+
+      - name: Failure Summary
+        if: failure()
+        run: |
+          echo "## Shellcheck failed! :no_entry:" >> $GITHUB_STEP_SUMMARY
+          echo "_Please check Annotations for details ..._ :point_up:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "These Errors have to be corrected, before the changes can be accepted :exclamation:" >> $GITHUB_STEP_SUMMARY
+
+      - name: Success Summary
+        if: success()
+        run: |
+          echo "## Shellcheck succeeded :tada:" >> $GITHUB_STEP_SUMMARY
+          echo "Well done .. :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+
+  lint_configs:
+    name: Shellcheck (configs)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v3
+
+      - name: Get configs
+        id: configs
+        run: |
+          SCANFILES="$(find ${{ github.workspace }}/config -type f -printf "%f\n" | uniq | tr '\n' ' ')"
+          echo "additional=${SCANFILES}" >> $GITHUB_OUTPUT
+
+      - name: Run ShellCheck
+        id: sc-configs
+        uses: ludeeus/action-shellcheck@master
+        env:
+          SHELLCHECK_OPTS: -ax -s bash
+        with:
+          scandir: "./config"
+          additional_files: "${{ steps.configs.outputs.additional }}"
+          format: tty
+
+      - name: Failure Summary
+        if: failure()
+        run: |
+          echo "## Shellcheck failed! :no_entry:" >> $GITHUB_STEP_SUMMARY
+          echo "_Please check Annotations for details ..._ :point_up:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "These Errors have to be corrected, before the changes can be accepted :exclamation:" >> $GITHUB_STEP_SUMMARY
+
+      - name: Success Summary
+        if: success()
+        run: |
+          echo "## Shellcheck succeeded :tada:" >> $GITHUB_STEP_SUMMARY
+          echo "Well done .. :white_check_mark:" >> $GITHUB_STEP_SUMMARY
