@@ -28,7 +28,7 @@ echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 if_group_exists_run() {
     group=$1
-    if grep -q $group /etc/group; then
+    if grep -q "${group}" /etc/group; then
         "${@:2}"
     fi
 }
