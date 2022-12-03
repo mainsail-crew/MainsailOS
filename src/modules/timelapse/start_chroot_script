@@ -16,13 +16,13 @@
 # shellcheck enable=require-variable-braces
 
 ## Source error handling, leave this in place
-set -Ee
+set -Eexuo pipefail
 
 ## Set LC_ALL to prevent errors
 export LC_ALL=C
 
 # Set DEBIAN_FRONTEND to noninteractive
-if [ "${DEBIAN_FRONTEND}" != "noninteractive" ]; then
+if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
     export DEBIAN_FRONTEND=noninteractive
 fi
 
@@ -33,8 +33,8 @@ install_cleanup_trap
 
 ## helper func moonraker update_manager
 add_timelapse_entry() {
-    if [ -f "${TIMELAPSE_CONFIG_DIR}/moonraker.conf" ]; then
-        if [ -f "/tmp/moonraker.conf" ]; then
+    if [[ -f "${TIMELAPSE_CONFIG_DIR}/moonraker.conf" ]]; then
+        if [[ -f "/tmp/moonraker.conf" ]]; then
             rm -rf /tmp/moonraker.conf
         fi
         sudo -u "${BASE_USER}" \
@@ -43,7 +43,7 @@ add_timelapse_entry() {
         cp -rf /tmp/moonraker.conf "${TIMELAPSE_CONFIG_DIR}/moonraker.conf"
     fi
     ## Cleanup template
-    if [ -f "${TIMELAPSE_TEMPLATE}" ]; then
+    if [[ -f "${TIMELAPSE_TEMPLATE}" ]]; then
         rm -f "${TIMELAPSE_TEMPLATE}"
     fi
 }
@@ -68,14 +68,14 @@ pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 gitclone TIMELAPSE_REPO moonraker-timelapse
 
 ## Link component
-if [ -d "${TIMELAPSE_PYTHON_VENV_DIR}" ]; then
+if [[ -d "${TIMELAPSE_PYTHON_VENV_DIR}" ]]; then
     echo "Linking extension to moonraker ..."
     sudo -u "${BASE_USER}" \
     ln -sf "${TIMELAPSE_SRC_DIR}/component/timelapse.py" "${TIMELAPSE_PYTHON_VENV_DIR}/timelapse.py"
 fi
 
 ## Link timelapse.cfg
-if [ -d "/home/${BASE_USER}/klipper_config" ]; then
+if [[ -d "${TIMELAPSE_CONFIG_DIR}" ]]; then
     echo "Linking macro file ..."
     sudo -u "${BASE_USER}" \
     ln -sf "${TIMELAPSE_SRC_DIR}/klipper_macro/timelapse.cfg" "${TIMELAPSE_CONFIG_DIR}/timelapse.cfg"
