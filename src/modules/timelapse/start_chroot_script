@@ -16,7 +16,7 @@
 # shellcheck enable=require-variable-braces
 
 ## Source error handling, leave this in place
-set -Eexuo pipefail
+set -Eex
 
 ## Set LC_ALL to prevent errors
 export LC_ALL=C
