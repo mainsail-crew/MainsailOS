@@ -64,24 +64,23 @@ Here a list of included and preinstalled Software:
 -   crowsnest
 -   sonar
 
-If there is really a bug that belongs to the OS itself,
+If there is a bug that belongs to the OS itself,
 please look first at the official Forum of Raspberry Pi OS.\
 MainsailOS is based on Raspberry Pi OS and is only slightly modified to\
 carry the basics to run Klipper on your 3D Printer.
 Most configuration of the single components is up to you.
-We only want provide an Image as starting point.
+We only want to provide an Image as a starting point.
 
-If there is really something that is a bug caused due misconfiguration of MainsailOS itself, please let us know, we will take action as soon as possible.
+If there is something that is a bug caused due to the misconfiguration of MainsailOS itself, please let us know, and we will take action as soon as possible.
 Please use the issue section for that.
-Please provide as much information you can.
+Please provide as much information as you can.
 
-**Q:** What is the philosophy behind MainsailOS ?
+**Q:** What is the philosophy behind MainsailOS?
 **A:** KISS - Keep it simple and stupid.\
-We only do a bit of modification, all other documented things of the Raspberry Foundation apply.
+We only do a bit of modification. All other documented things of the Raspberry Foundation apply.
 
-And thats our main goal staying compatible with existing documentation.
-If something will be handled different as the original documentation handles,
-we will provide documentation for that.
+And that's our main goal of staying compatible with existing documentation.
+We will provide documentation if something is handled differently than the original documentation.
 
 **Q:** How do I contribute/support?
 **A:** There are several ways to contribute or support our work.
