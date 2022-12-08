@@ -85,17 +85,7 @@ we will provide documentation for that.
 
 **Q:** How do I contribute/support?
 **A:** There are several ways to contribute or support our work.
-
--   Become a [patreon](https://patreon.com/meteyou), this will help us to buy stuff for testing and developing, also pay our bills related to this project to keep it running.
--   Leave a Tip at [Ko-Fi](https://ko-fi.com/mainsail). This implies the same as for Patreons.
-
--   Open a PR with useful changes! That would be the best fit.
-
-    -   Please obey that your Pull Request has to be made against the develop branch.
-    -   This has to pass our automated Test Chain.
-    -   Has to be reviewed due one of our maintainers, so please request a review
-    -   Your commits have to meet the [Conventional Commits Specifications](https://www.conventionalcommits.org/en/v1.0.0/)
-    -   The PR has to pass internal test on bare metal hardware, therefor they could take time to be merged into master (Release Branch).
+Please take a closer look to [CONTRIBUTING.md](https://github.com/mainsail-crew/MainsailOS/blob/develop/CONTRIBUTING.md)
 
 # Build your own / Developing
 
