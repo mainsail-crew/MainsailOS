@@ -22,11 +22,13 @@ You can find detailed instructions in our [documentation](https://docs.mainsail.
 
 We recommend the installation via [Raspberry Pi Imager](https://docs.mainsail.xyz/setup/mainsailos/pi-imager).
 
-## Community
+## How to get help?
 
-For additional help, join us on [Discord](https://discord.gg/mainsail).
+Please join us on [Discord](https://discord.gg/mainsail), if you need additional help.
 
 [![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/mainsail)
+
+Also see the [FAQ](#faq) section.
 
 ## What is included?
 
@@ -51,6 +53,49 @@ Here a list of included and preinstalled Software:
 ## Screenshots
 
 ![screenshot-dashboard](https://github.com/mainsail-crew/docs/raw/master/assets/img/screenshot.png)
+
+# FAQ
+
+**Q:** How do I report a Bug?
+**A:** First of all make sure it is _not_ an misconfiguration of
+
+-   moonraker
+-   klipper
+-   crowsnest
+-   sonar
+
+If there is really a bug that belongs to the OS itself,
+please look first at the official Forum of Raspberry Pi OS.\
+MainsailOS is based on Raspberry Pi OS and is only slightly modified to\
+carry the basics to run Klipper on your 3D Printer.
+Most configuration of the single components is up to you.
+We only want provide an Image as starting point.
+
+If there is really something that is a bug caused due misconfiguration of MainsailOS itself, please let us know, we will take action as soon as possible.
+Please use the issue section for that.
+Please provide as much information you can.
+
+**Q:** What is the philosophy behind MainsailOS ?
+**A:** KISS - Keep it simple and stupid.\
+We only do a bit of modification, all other documented things of the Raspberry Foundation apply.
+
+And thats our main goal staying compatible with existing documentation.
+If something will be handled different as the original documentation handles,
+we will provide documentation for that.
+
+**Q:** How do I contribute/support?
+**A:** There are several ways to contribute or support our work.
+
+-   Become a [patreon](https://patreon.com/meteyou), this will help us to buy stuff for testing and developing, also pay our bills related to this project to keep it running.
+-   Leave a Tip at [Ko-Fi](https://ko-fi.com/mainsail). This implies the same as for Patreons.
+
+-   Open a PR with useful changes! That would be the best fit.
+
+    -   Please obey that your Pull Request has to be made against the develop branch.
+    -   This has to pass our automated Test Chain.
+    -   Has to be reviewed due one of our maintainers, so please request a review
+    -   Your commits have to meet the [Conventional Commits Specifications](https://www.conventionalcommits.org/en/v1.0.0/)
+    -   The PR has to pass internal test on bare metal hardware, therefor they could take time to be merged into master (Release Branch).
 
 # Build your own / Developing
 
