@@ -52,7 +52,6 @@ jobs:
         uses: mainsail-crew/MainsailOS-actions/build-image@master
         with:
           config: ${{ matrix.config }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Copy output
         id: copy-image
