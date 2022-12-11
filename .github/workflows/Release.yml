@@ -43,7 +43,7 @@ jobs:
 
   update-master-branch:
     name: Update master branch
-    needs: ['push-version-number']
+    needs: push-version-number
     runs-on: ubuntu-latest
     steps:
       - uses: everlytic/branch-merge@1.1.5
@@ -55,7 +55,7 @@ jobs:
 
   release:
     name: Create Release
-    needs: ['update-master-branch']
+    needs: update-master-branch
     runs-on: ubuntu-latest
     outputs:
       id: ${{ steps.create-release.outputs.id }}
@@ -78,6 +78,9 @@ jobs:
           config: ./cliff-release.toml
           args: ${{ steps.latest_tag.outputs.TAG_NAME }}..HEAD
 
+      - name: Debug output changelog
+        run: echo ${{ steps.changelog.outputs.content }}
+
       - name: Create empty release
         id: create-release
         uses: softprops/action-gh-release@v1
@@ -88,7 +91,60 @@ jobs:
           body: ${{ steps.changelog.outputs.content }}
           draft: true
 
+  matrix:
+    name: Create Matrix
+    needs: release
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: master
 
+      - name: Create Matrix
+        id: set-matrix
+        run: |
+          ARRAY=$(find ${{ github.workspace }}/config -type f -printf '%P\n' | sed '/default/d' | sort | jq -R -s -c 'split("\n")[:-1]')
+          echo "matrix=${ARRAY}" >> $GITHUB_OUTPUT
+
+  build:
+    needs: matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config: ${{ fromJson(needs.matrix.outputs.matrix) }}
+    steps:
+      - name: Build image
+        id: build
+        uses: mainsail-crew/MainsailOS-actions/dummy-image@master
+        with:
+          config: ${{ matrix.config }}
+
+      - name: Copy output
+        id: copy-image
+        if: always()
+        shell: bash
+        run: |
+          source repository/src/config
+          NOW="$(date +"%Y-%m-%d")"
+          IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
+
+          cp repository/src/workspace/*.img $IMAGE.img
+
+          echo "image=${IMAGE}" >> $GITHUB_OUTPUT
+
+      - name: Upload failed Logfile
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: failed-${{ steps.copy-image.outputs.image }}.log
+          path: repository/src/build.log
+
+      - name: Debug output
+        run: echo ${{ steps.copy-image.outputs.image }}
 
 #
 #  release:
