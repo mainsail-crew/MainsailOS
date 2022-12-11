@@ -321,9 +321,6 @@ jobs:
             contentb = barak.read()
             print(contentb)
 
-      - name: Debug
-        run: cat rpi-imager.json
-
       - name: Upload JSON
         if: success()
         uses: xresloader/upload-to-github-release@v1
@@ -333,49 +330,50 @@ jobs:
           release_id: ${{ needs.release.outputs.id }}
           file: rpi-imager.json
 
+      - name: Move in seperate dir
+        run: |
+          mkdir upload
+          mv rpi-imager.json ./upload
 
+      - name: Upload to remote server
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.OSHOST }}
+          username: ${{ secrets.OSUSER }}
+          password: ${{ secrets.OSPASSWORD }}
+          local-dir: ./upload/
 
-#
-#      - name: Upload to remote server
-#        uses: SamKirkland/FTP-Deploy-Action@4.3.3
-#        with:
-#          server: ${{ secrets.REMOTEHOST }}
-#          username: ${{ secrets.REMOTEUSER }}
-#          password: ${{ secrets.REMOTEPASSWORD }}
-#          dangerous-clean-slate: true
-#          local-dir: ./dist/
-#
-#  update-changelog:
-#    needs: ['release']
-#    name: Generate changelog
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v3
-#        with:
-#          ref: 'develop'
-#          token: ${{ secrets.PAT }}
-#          fetch-depth: 0
-#
-#      - name: Get latest tag
-#        id: latest_tag
-#        shell: bash
-#        run: |
-#          echo "TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
-#
-#      - name: Generate a changelog
-#        uses: orhun/git-cliff-action@v1
-#        id: git-cliff
-#        with:
-#          config: cliff.toml
-#          args: v0.0.4..${{ steps.latest_tag.outputs.TAG_NAME }}
-#        env:
-#          OUTPUT: ${{ github.workspace }}/CHANGELOG.md
-#
-#      - name: Show CHANGELOG
-#        run: |
-#          cat CHANGELOG.md
-#      - uses: stefanzweifel/git-auto-commit-action@v4
-#        with:
-#          commit_message: 'docs(changelog): update changelog'
-#          file_pattern: CHANGELOG.md
+  update-changelog:
+    needs: update-rpi-imager
+    name: Generate changelog
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: 'develop'
+          token: ${{ secrets.PAT }}
+          fetch-depth: 0
+
+      - name: Get latest tag
+        id: latest_tag
+        shell: bash
+        run: |
+          echo "TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
+
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v1
+        id: git-cliff
+        with:
+          config: cliff.toml
+          args: 0.5.0..${{ steps.latest_tag.outputs.TAG_NAME }}
+        env:
+          OUTPUT: ${{ github.workspace }}/CHANGELOG.md
+
+      - name: Show CHANGELOG
+        run: |
+          cat CHANGELOG.md
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'docs(changelog): update changelog'
+          file_pattern: CHANGELOG.md
