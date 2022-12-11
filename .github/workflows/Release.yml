@@ -288,8 +288,11 @@ jobs:
       - name: Download snipes
         uses: robinraju/release-downloader@v1.6
         with:
-          releaseId: ${{ needs.release.outputs.id }}
+          tag: ${{ github.event.inputs.version }}
           fileName: "${{ needs.build.outputs.base_name }}-raspberry-*.json"
+
+      - name: Debug
+        run: ls ./*
 
 
 
