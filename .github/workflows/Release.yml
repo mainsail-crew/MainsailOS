@@ -120,7 +120,7 @@ jobs:
           echo "matrix=${ARRAY}" >> $GITHUB_OUTPUT
 
   build:
-    needs: matrix
+    needs: [ release, matrix ]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
