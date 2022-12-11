@@ -137,6 +137,7 @@ jobs:
         if: always()
         shell: bash
         run: |
+          source repository/src/config
           base_name="${{ needs.release.outputs.date }}-${DIST_NAME}-${DIST_VERSION}"
           image="${base_name}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
           cp repository/src/workspace/*.img $image.img
