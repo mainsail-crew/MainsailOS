@@ -95,7 +95,7 @@ jobs:
         if: always()
         shell: bash
         run: |
-          source src/config
+          source ./src/config
           NOW="$(date +"%Y-%m-%d")"
           output="${NOW}-${DIST_NAME}-${DIST_VERSION}-"
 
