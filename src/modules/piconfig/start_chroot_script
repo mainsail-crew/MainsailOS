@@ -40,8 +40,8 @@ cp /tmp/config.new "${PICONFIG_CONFIG_TXT_FILE}"
 # Step 6: Cleanup
 rm -f /tmp/*config*
 
-# Step 7: Move default cmdline.txt to backup file
-mv "${PICONFIG_CMDLINE_TXT_FILE}" "${PICONFIG_CMDLINE_BAK_FILE}"
+# Step 7: Copy default cmdline.txt to backup file
+cp "${PICONFIG_CMDLINE_TXT_FILE}" "${PICONFIG_CMDLINE_BAK_FILE}"
 
 # Step 8: Disable serial console to enable Hardware Serial (PL011).
 echo_green "Disable Serial Linux console ..."
