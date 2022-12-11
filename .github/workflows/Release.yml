@@ -95,7 +95,7 @@ jobs:
         if: always()
         shell: bash
         run: |
-          source ${{ github.workspace }}/src/config
+          source config/default
           NOW="$(date +"%Y-%m-%d")"
           output="${NOW}-${DIST_NAME}-${DIST_VERSION}-"
 
