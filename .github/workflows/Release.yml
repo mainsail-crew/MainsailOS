@@ -59,6 +59,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       id: ${{ steps.create-release.outputs.id }}
+      date: ${{ steps.base-name.outputs.date }}
+      base_name: ${{ steps.base-name.outputs.output }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -78,9 +80,6 @@ jobs:
           config: ./cliff-release.toml
           args: ${{ steps.latest_tag.outputs.TAG_NAME }}..HEAD
 
-      - name: Debug output changelog
-        run: echo ${{ steps.changelog.outputs.content }}
-
       - name: Create empty release
         id: create-release
         uses: softprops/action-gh-release@v1
@@ -91,15 +90,17 @@ jobs:
           body: ${{ steps.changelog.outputs.content }}
           draft: true
 
-      - name: Debug output
-        run: echo ${{ steps.create-release.outputs.id }}
-
-      - name: emit version
-        id: emit-version
+      - name: Create Base Name
+        id: base-name
+        if: always()
         shell: bash
         run: |
-          version=${{ steps.create-release.outputs.id }}
-          echo "version=${version}" >> $GITHUB_OUTPUT
+          source src/config
+          NOW="$(date +"%Y-%m-%d")"
+          output="${NOW}-${DIST_NAME}-${DIST_VERSION}-"
+
+          echo "output=${output}" >> $GITHUB_OUTPUT
+          echo "date=${NOW}" >> $GITHUB_OUTPUT
 
   matrix:
     name: Create Matrix
@@ -139,14 +140,10 @@ jobs:
         if: always()
         shell: bash
         run: |
-          source repository/src/config
-          NOW="$(date +"%Y-%m-%d")"
-          IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
-
+          IMAGE="${ needs.release.outputs.base_name }${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
           cp repository/src/workspace/*.img $IMAGE.img
 
           echo "image=${IMAGE}" >> $GITHUB_OUTPUT
-          echo "date=${NOW}" >> $GITHUB_OUTPUT
 
       - name: Upload Image
         if: success()
@@ -236,7 +233,7 @@ jobs:
           url: 'https://github.com/mainsail-crew/MainsailOS/releases/download/${{ github.event.inputs.version }}/${{ steps.copy-image.outputs.image }}.img.xz'
           icon: 'https://os.mainsail.xyz/rpi-imager.png'
           init_format: 'systemd'
-          release_date: ${{ steps.copy-image.outputs.date }}
+          release_date: ${{ needs.release.outputs.date }}
           extract_size: ${{ steps.filesizes.outputs.image }}
           extract_sha256: ${{ steps.checksums.outputs.image }}
           image_download_size: ${{ steps.filesizes.outputs.zip }}
@@ -282,6 +279,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           id: ${{ needs.release.outputs.id }}
+
+  update-rpi-imager:
+    name: Update rpi-imager json
+    needs: [ release, finish ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download snipes
+        uses: robinraju/release-downloader@v1.6
+        with:
+          releaseId: ${{ needs.release.outputs.id }}
+          fileName: "${{ needs.release.outputs.base_name }}-raspberry-*.json"
+
 
 
 #
