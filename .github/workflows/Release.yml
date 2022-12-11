@@ -135,6 +135,7 @@ jobs:
           cp repository/src/workspace/*.img $IMAGE.img
 
           echo "image=${IMAGE}" >> $GITHUB_OUTPUT
+          echo "date=${NOW}" >> $GITHUB_OUTPUT
 
       - name: Upload failed Logfile
         if: failure()
@@ -184,6 +185,40 @@ jobs:
 
           echo ${{ steps.filesizes.outputs.image }}
           echo ${{ steps.filesizes.outputs.zip }}
+
+      - name: Generate JSON
+        id: json
+        uses: actions/github-script@v6
+        env:
+          name: 'Mainsail OS ${{ github.event.inputs.version }}'
+          description: 'Type: ${{ steps.build.outputs.type }}, SBC: ${{ steps.build.outputs.sbc }}'
+          url: 'https://github.com/mainsail-crew/MainsailOS/releases/download/${{ github.event.inputs.version }}/${{ steps.copy-image.outputs.image }}.img.xz'
+          icon: 'https://os.mainsail.xyz/rpi-imager.png'
+          init_format: 'systemd'
+          release_date: ${{ steps.copy-image.outputs.image }}
+          extract_size: ${{ steps.filesizes.outputs.date }}
+          extract_sha256: ${{ steps.checksums.outputs.image }}
+          image_download_size: ${{ steps.filesizes.outputs.zip }}
+          image_download_sha256: ${{ steps.checksums.outputs.zip }}
+        with:
+          result-encoding: string
+          script: |
+            const { name, description, url, icon, init_format, release_date, extract_size, extract_sha256, image_download_size, image_download_sha256 } = process.env
+
+            return JSON.stringify({
+              name,
+              description,
+              url,
+              icon,
+              init_format,
+              release_date,
+              extract_size,
+              extract_sha256,
+              image_download_size,
+              image_download_sha256
+            })
+
+
 
 #
 #  release:
