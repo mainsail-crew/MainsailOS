@@ -76,7 +76,7 @@ jobs:
         id: changelog
         with:
           config: ./cliff-release.toml
-          args: -u
+          args: ${{ steps.latest_tag.outputs.TAG_NAME }}..HEAD
 
       - name: Debug output changelog
         run: echo ${{ steps.changelog.outputs.content }}
