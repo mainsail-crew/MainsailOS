@@ -195,8 +195,8 @@ jobs:
           url: 'https://github.com/mainsail-crew/MainsailOS/releases/download/${{ github.event.inputs.version }}/${{ steps.copy-image.outputs.image }}.img.xz'
           icon: 'https://os.mainsail.xyz/rpi-imager.png'
           init_format: 'systemd'
-          release_date: ${{ steps.copy-image.outputs.image }}
-          extract_size: ${{ steps.filesizes.outputs.date }}
+          release_date: ${{ steps.copy-image.outputs.date }}
+          extract_size: ${{ steps.filesizes.outputs.image }}
           extract_sha256: ${{ steps.checksums.outputs.image }}
           image_download_size: ${{ steps.filesizes.outputs.zip }}
           image_download_sha256: ${{ steps.checksums.outputs.zip }}
@@ -217,6 +217,8 @@ jobs:
               image_download_size,
               image_download_sha256
             })
+      - name: Get result
+        run: echo "${{steps.json.outputs.result}}"
 
 
 
