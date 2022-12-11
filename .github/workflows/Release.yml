@@ -144,7 +144,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           release_id: ${{ needs.release.id }}
-          file: ${{ steps.copy-image.outputs.image }}.img
+          file: ${{ github.workspace }}/${{ steps.copy-image.outputs.image }}.img
 
       - name: Upload failed Logfile
         if: failure()
