@@ -293,7 +293,9 @@ jobs:
           out-file-path: "downloads"
 
       - name: Debug
-        run: ls ./downloads/*
+        run: |
+          ls ./downloads/*
+          touch rpi-imager.json
 
       - name: setup python
         uses: actions/setup-python@v2
