@@ -10,6 +10,7 @@ on:
 
 jobs:
   push-version-number:
+    name: Push version number
     runs-on: ubuntu-latest
     steps:
       - name: Clone develop repository
@@ -41,6 +42,7 @@ jobs:
           push: true
 
   update-master-branch:
+    name: Update master branch
     needs: ['push-version-number']
     runs-on: ubuntu-latest
     steps:
