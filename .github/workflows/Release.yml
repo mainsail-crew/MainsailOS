@@ -127,7 +127,7 @@ jobs:
     steps:
       - name: Build image
         id: build
-        uses: mainsail-crew/MainsailOS-actions/dummy-image@master
+        uses: mainsail-crew/MainsailOS-actions/build-image@master
         with:
           config: ${{ matrix.config }}
           build-ref: master
