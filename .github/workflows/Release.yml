@@ -233,7 +233,7 @@ jobs:
           url: '"https://github.com/mainsail-crew/MainsailOS/releases/download/${{ github.event.inputs.version }}/${{ steps.copy-image.outputs.image }}.img.xz"'
           icon: '"https://os.mainsail.xyz/rpi-imager.png"'
           init_format: '"systemd"'
-          release_date: ${{ needs.release.outputs.date }}
+          release_date: '"${{ needs.release.outputs.date }}"'
           extract_size: ${{ steps.filesizes.outputs.image }}
           extract_sha256: '"${{ steps.checksums.outputs.image }}"'
           image_download_size: ${{ steps.filesizes.outputs.zip }}
@@ -309,14 +309,14 @@ jobs:
             import os, json, shutil
             with open("rpi-imager.json", "r+") as t:
               t.truncate(0)
-              t.write('[')
+              t.write('{ "os_list": [')
               for filename in os.scandir('downloads'):
                 print(filename)
                 with open(filename, "r") as f:
                   content = f.read()
                   t.write(content)
                   t.write(',')
-              t.write(']')
+              t.write('] }')
             barak = open("rpi-imager.json", "r+")
             contentb = barak.read()
             print(contentb)
