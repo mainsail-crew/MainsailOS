@@ -143,7 +143,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ needs.release.id }}
+          release_id: ${{ needs.release.outputs.id }}
           file: ${{ github.workspace }}/${{ steps.copy-image.outputs.image }}.img
 
       - name: Upload failed Logfile
@@ -169,7 +169,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ needs.release.id }}
+          release_id: ${{ needs.release.outputs.id }}
           file: ${{ steps.copy-image.outputs.image }}.img.xz
 
       - name: Calculating checksums
@@ -190,7 +190,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ needs.release.id }}
+          release_id: ${{ needs.release.outputs.id }}
           file: ${{ steps.copy-image.outputs.image }}.img.sha256;${{ steps.copy-image.outputs.image }}.img.xz.sha256
 
       - name: Calculating filesizes
@@ -254,7 +254,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ needs.release.id }}
+          release_id: ${{ needs.release.outputs.id }}
           file: ${{ steps.copy-image.outputs.image }}.json
 
   finish:
