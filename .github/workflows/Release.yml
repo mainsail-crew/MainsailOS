@@ -91,6 +91,9 @@ jobs:
           body: ${{ steps.changelog.outputs.content }}
           draft: true
 
+      - name: Debug output
+        run: echo ${{ steps.create-release.outputs.id }}
+
   matrix:
     name: Create Matrix
     needs: release
