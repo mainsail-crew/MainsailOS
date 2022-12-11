@@ -25,18 +25,11 @@ jobs:
           version=$(cat ./src/version)
           echo "version=${version}" >> $GITHUB_OUTPUT
 
-      - name: Debug output current version
-        run: echo ${{ steps.current-version.outputs.version }}
-
       - name: Push version number
         if: steps.current-version.outputs.version != github.event.inputs.version
         shell: bash
         run: |
           echo ${{ github.event.inputs.version }} > ./src/version
-
-      - name: Debug output current version output
-        if: steps.current-version.outputs.version != github.event.inputs.version
-        run: cat ./src/version
 
       - name: git add & commit & push
         if: steps.current-version.outputs.version != github.event.inputs.version
@@ -57,6 +50,44 @@ jobs:
           source_ref: 'develop'
           target_branch: 'master'
           commit_message_template: '[Automated] Merged {source_ref} into target {target_branch}'
+
+  release:
+    name: Create Release
+    needs: ['update-master-branch']
+    runs-on: ubuntu-latest
+    outputs:
+      id: ${{ steps.create-release.outputs.id }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: 'develop'
+
+      - name: Get latest tag
+        id: latest_tag
+        shell: bash
+        run: |
+          echo "TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
+
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v1
+        id: changelog
+        with:
+          config: ./cliff-release.toml
+          args: ${{ steps.latest_tag.outputs.TAG_NAME }}..HEAD
+
+      - name: Create empty release
+        id: create-release
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: 'MainsailOS ${{ github.event.inputs.version }}'
+          tag_name: ${{ github.event.inputs.version }}
+          body: ${{ steps.changelog.outputs.content }}
+          draft: true
+
+
+
 #
 #  release:
 #    needs: ['update-master-branch']
