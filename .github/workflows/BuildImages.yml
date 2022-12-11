@@ -5,6 +5,7 @@ on:
       - "master"
       - "develop"
     paths:
+      - "!src/version"
       - "src/**"
       - "config/**"
       - ".github/workflows/BuildImages.yml"
