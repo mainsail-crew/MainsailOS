@@ -205,6 +205,8 @@ jobs:
 
       - name: Debug output
         run: |
+          echo ${{ needs.release.outputs.id }}
+
           echo ${{ steps.copy-image.outputs.image }}
 
           echo ${{ steps.checksums.outputs.image }}
