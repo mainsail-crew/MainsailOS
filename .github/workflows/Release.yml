@@ -146,6 +146,45 @@ jobs:
       - name: Debug output
         run: echo ${{ steps.copy-image.outputs.image }}
 
+      - name: Compressing Image
+        shell: bash
+        run: |
+          CPU_COUNT="$(nproc)"
+          echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
+          xz -efkvz9T"${CPU_COUNT}" ${{ steps.copy-image.outputs.image }}.img
+
+      - name: Calculating checksums
+        id: checksums
+        shell: bash
+        run: |
+          sha256sum ${{ steps.copy-image.outputs.image }}.img > ${{ steps.copy-image.outputs.image }}.img.sha256
+          image_checksum=`cat ${{ steps.copy-image.outputs.image }}.img.sha256 | awk '{ print $1 }'`
+          echo "image=${image_checksum}" >> $GITHUB_OUTPUT
+
+          sha256sum ${{ steps.copy-image.outputs.image }}.img.xz > ${{ steps.copy-image.outputs.image }}.img.xz.sha256
+          zip_checksum=`cat ${{ steps.copy-image.outputs.image }}.img.xz.sha256 | awk '{ print $1 }'`
+          echo "zip=${zip_checksum}" >> $GITHUB_OUTPUT
+
+      - name: Calculating filesizes
+        id: filesizes
+        shell: bash
+        run: |
+          image_filesize=`wc -c ${{ steps.copy-image.outputs.image }}.img | awk '{print $1}'`
+          echo "image=${image_filesize}" >> $GITHUB_OUTPUT
+
+          zip_filesize=`wc -c ${{ steps.copy-image.outputs.image }}.img.xz | awk '{print $1}'`
+          echo "zip=${zip_filesize}" >> $GITHUB_OUTPUT
+
+      - name: Debug output
+        run: |
+          echo ${{ steps.copy-image.outputs.image }}
+
+          echo ${{ steps.checksums.outputs.image }}
+          echo ${{ steps.checksums.outputs.zip }}
+
+          echo ${{ steps.filesizes.outputs.image }}
+          echo ${{ steps.filesizes.outputs.zip }}
+
 #
 #  release:
 #    needs: ['update-master-branch']
