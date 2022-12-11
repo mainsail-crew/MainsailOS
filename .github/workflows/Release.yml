@@ -60,7 +60,6 @@ jobs:
     outputs:
       id: ${{ steps.create-release.outputs.id }}
       date: ${{ steps.base-name.outputs.date }}
-      base_name: ${{ steps.base-name.outputs.output }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -90,16 +89,12 @@ jobs:
           body: ${{ steps.changelog.outputs.content }}
           draft: true
 
-      - name: Create Base Name
+      - name: Create Date
         id: base-name
         if: always()
         shell: bash
         run: |
-          source config/default
           NOW="$(date +"%Y-%m-%d")"
-          output="${NOW}-${DIST_NAME}-${DIST_VERSION}-"
-
-          echo "output=${output}" >> $GITHUB_OUTPUT
           echo "date=${NOW}" >> $GITHUB_OUTPUT
 
   matrix:
@@ -123,6 +118,8 @@ jobs:
   build:
     needs: [ release, matrix ]
     runs-on: ubuntu-latest
+    outputs:
+      base_name: ${{ steps.copy-image.outputs.base_name }}
     strategy:
       fail-fast: false
       matrix:
@@ -140,10 +137,13 @@ jobs:
         if: always()
         shell: bash
         run: |
-          IMAGE="${ needs.release.outputs.base_name }${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
-          cp repository/src/workspace/*.img $IMAGE.img
+          output="${NOW}"
+          base_name="${ needs.release.outputs.date }-${DIST_NAME}-${DIST_VERSION}
+          image="${base_name}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
+          cp repository/src/workspace/*.img $image.img
 
-          echo "image=${IMAGE}" >> $GITHUB_OUTPUT
+          echo "base_name=${base_name}" >> $GITHUB_OUTPUT
+          echo "image=${image}" >> $GITHUB_OUTPUT
 
       - name: Upload Image
         if: success()
@@ -282,14 +282,14 @@ jobs:
 
   update-rpi-imager:
     name: Update rpi-imager json
-    needs: [ release, finish ]
+    needs: [ release, build, finish ]
     runs-on: ubuntu-latest
     steps:
       - name: Download snipes
         uses: robinraju/release-downloader@v1.6
         with:
           releaseId: ${{ needs.release.outputs.id }}
-          fileName: "${{ needs.release.outputs.base_name }}-raspberry-*.json"
+          fileName: "${{ needs.build.outputs.base_name }}-raspberry-*.json"
 
 
 
