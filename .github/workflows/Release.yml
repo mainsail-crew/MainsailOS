@@ -132,6 +132,7 @@ jobs:
         uses: mainsail-crew/MainsailOS-actions/dummy-image@master
         with:
           config: ${{ matrix.config }}
+          build-ref: master
 
       - name: Copy output
         id: copy-image
