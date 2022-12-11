@@ -94,6 +94,13 @@ jobs:
       - name: Debug output
         run: echo ${{ steps.create-release.outputs.id }}
 
+      - name: emit version
+        id: emit-version
+        shell: bash
+        run: |
+          version=${{ steps.create-release.outputs.id }}
+          echo "version=${version}" >> $GITHUB_OUTPUT
+
   matrix:
     name: Create Matrix
     needs: release
@@ -209,6 +216,7 @@ jobs:
       - name: Debug output
         run: |
           echo ${{ needs.release.outputs.id }}
+          echo ${{ needs.release.outputs.version }}
 
           echo ${{ steps.copy-image.outputs.image }}
 
