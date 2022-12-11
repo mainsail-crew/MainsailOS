@@ -54,9 +54,4 @@ echo_green "Cleanup ..."
 sudo -u "${BASE_USER}" rm -rf "/home/${BASE_USER}/.cache"
 popd  &> /dev/null || exit 1
 
-## Enable spi interface by default
-### SPI Handling done via "piconfig module", please uncomment if used standalone!!
-# echo_green "Enabling SPI Interface..."
-# sed -i 's/#dtparam=spi=on/dtparam=spi=on/' "${IS_REQ_PREINSTALL_CFG_FILE}"
-
 echo_green "Install Input Shaper requirements ... done!"
