@@ -28,11 +28,17 @@ jobs:
       - name: Debug output current version
         run: echo ${{ steps.current-version.outputs.version }}
 
-#      - name: Push version number
-#        if: steps.package-version.outputs.current-version != github.event.inputs.version
-#        shell: bash
-#        run: |
-#          npm version --no-git-tag-version ${{ github.event.inputs.version }}
+      - name: Push version number
+        if: steps.current-version.outputs.version != github.event.inputs.version
+        shell: bash
+        run: |
+          echo ${{ steps.current-version.outputs.version }} >> ./src/version
+
+      - name: Debug output current version output
+        if: steps.current-version.outputs.version != github.event.inputs.version
+        run: cat ./src/version
+
+
 #
 #      - name: git add & commit & push
 #        if: steps.package-version.outputs.current-version != github.event.inputs.version
