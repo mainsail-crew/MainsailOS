@@ -3,5 +3,5 @@
 
 [ -n "$PICONFIG_CONFIG_TXT_FILE" ] || PICONFIG_CONFIG_TXT_FILE="/boot/config.txt"
 [ -n "$PICONFIG_CMDLINE_TXT_FILE" ] || PICONFIG_CMDLINE_TXT_FILE="/boot/cmdline.txt"
-[ -n "$PICONFIG_CONFIG_BAK_FILE" ] || PICONFIG_CONFIG_BAK_FILE="/boot/orig-config.txt"
-[ -n "$PICONFIG_CMDLINE_BAK_FILE" ] || PICONFIG_CMDLINE_BAK_FILE="/boot/orig-cmdline.txt"
+[ -n "$PICONFIG_CONFIG_BAK_FILE" ] || PICONFIG_CONFIG_BAK_FILE="/boot/config.txt.backup"
+[ -n "$PICONFIG_CMDLINE_BAK_FILE" ] || PICONFIG_CMDLINE_BAK_FILE="/boot/cmdline.txt.backup"

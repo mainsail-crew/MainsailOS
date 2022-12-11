@@ -1,0 +1,66 @@
+
+####################################################
+####     MainsailOS specific configurations     ####
+####################################################
+####      DO NOT CHANGE SECTION BELOW !!!       ####
+####   UNLESS YOU KNOW WHAT YOU ARE DOING !!!   ####
+####################################################
+
+## For more options and information see
+## https://www.raspberrypi.com/documentation/computers/config_txt.html
+## Some settings may impact device functionality. See link above for details
+
+## For additional information about device filters see
+## https://www.raspberrypi.com/documentation/computers/config_txt.html#model-filters
+
+
+[pi0]
+## This affects Pi Zero(W) and Pi Zero2
+## Due lag of RAM, limit GPU RAM
+gpu_mem=128
+
+[pi2]
+gpu_mem=256
+
+[pi3]
+## Use 256 if 1Gb Ram Model!
+gpu_mem=128
+# gpu_mem=256
+
+[pi4]
+## Enable DRM VC4 V3D driver on top of the dispmanx display stack
+dtoverlay=vc4-fkms-v3d
+max_framebuffers=2
+## Do not use more than 256Mb on Pi Model 4, it uses its own Management.
+gpu_mem=256
+
+[all]
+
+## SPI Interface is enabled by default for Input Shaper
+## This colides with Hyperpixel Display!
+## Hyperpixel Screen uses the same Pin for Backlight.
+dtparam=spi=on
+
+
+## Enable Hardware UART for Serial Communication
+## This also disables Bluetooth!
+enable_uart=1
+dtoverlay=disable-bt
+
+
+## Disable libcamera (interferes with ustreamer, when using raspicams)
+camera_auto_detect=0
+
+## Enable VideoCore at boot, needed for Crowsnest (Raspicams and DSI devices).
+start_x=1
+
+
+### EXPERIMENTAL - Enable 64bit Kernel
+### The 64-bit kernel will only work on:
+### Raspberry Pi 3, 3+, 4, 400, Zero 2 W and 2B rev 1.2
+### and Raspberry Pi Compute Modules 3, 3+ and 4.
+# arm_64bit=1
+
+####################################################
+
+[all]
