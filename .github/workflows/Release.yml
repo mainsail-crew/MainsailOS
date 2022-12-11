@@ -32,7 +32,7 @@ jobs:
         if: steps.current-version.outputs.version != github.event.inputs.version
         shell: bash
         run: |
-          echo ${{ steps.current-version.outputs.version }} >> ./src/version
+          echo ${{ github.event.inputs.version }} > ./src/version
 
       - name: Debug output current version output
         if: steps.current-version.outputs.version != github.event.inputs.version
