@@ -145,15 +145,6 @@ jobs:
           echo "base_name=${base_name}" >> $GITHUB_OUTPUT
           echo "image=${image}" >> $GITHUB_OUTPUT
 
-      - name: Upload Image
-        if: success()
-        uses: xresloader/upload-to-github-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release_id: ${{ needs.release.outputs.id }}
-          file: ${{ github.workspace }}/${{ steps.copy-image.outputs.image }}.img
-
       - name: Upload failed Logfile
         if: failure()
         uses: actions/upload-artifact@v3
