@@ -5,7 +5,8 @@ on:
       - "master"
       - "develop"
     paths:
-      - "src/**"
+      - "src/modules/**"
+      - "src/build_dist"
       - "config/**"
       - ".github/workflows/BuildImages.yml"
     tags-ignore:
