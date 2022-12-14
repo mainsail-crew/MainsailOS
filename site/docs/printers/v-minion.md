@@ -8,11 +8,12 @@ The [Rat Rig V-Minion](https://v-minion.ratrig.com/) is a yet upcoming cantileve
 Since the v-minion only has 1 z stepper, you only need to connect the `Left Z` stepper and stepper driver when using >5 stepper boards.
 :::
 
+-   [BIGTREETECH SKRat v1.0](boards/btt/skrat-10.mdx)
 -   [BIGTREETECH SKR 2 429](boards/btt/skr-2-429.md)
 -   [BIGTREETECH Octopus v1.1](boards/btt/octopus-11.md)
 -   [BIGTREETECH Octopus Pro 446](boards/btt/octopus-pro-446.md)
 -   [BIGTREETECH Octopus Pro 429](boards/btt/octopus-pro-429.md)
--   [BIGTREETECH Manta M8P](boards/btt/manta-m8p.md)
+-   [BIGTREETECH Manta M8P](boards/btt/manta-m8p.mdx)
 -   [BIGTREETECH SKR Pro v1.2](boards/btt/skr-pro-12.md)
 -   [Fysetc Spider v1.1](boards/fysetc/spider-11.md)
 
