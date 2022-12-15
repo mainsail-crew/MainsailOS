@@ -1,6 +1,61 @@
 # Changelog
 
+## RatOS V2.0
+
+**RatOS v2 is not backwards compatible with RatOS v1, you will have to reflash your Raspberry Pi and start over with a new configuration template. Use your old printer.cfg for reference values.**
+
+### Major new features
+
+- Toolboards are now supported.
+- The RatOS configurator will now help you flash your controlboard and toolboards.
+- Stowable probes like euclid and klicky are now support.
+- Unified homing: everything is now handled through a single homing override. Sensorless homing now requires no tinkering with homing macros (you still need to tweak current and sensitivities). Including a stowable probe config automatically enables deploying and stowing. Axes can now use individual homing procedures, such as sensorless on X and endstops on Y.
+- MainsailOS has been merged which brings timelapse and crowsnest.
+- Preinstalled: https://github.com/worksasintended/klipper_linear_movement_analysis
+- Klipper now runs Python 3
+
+### Minor new features
+
+- A bunch of new macro variables to tweak the RatOS macros, including end park z hop, prime positions, safe home coordinates, z speed, filament load/unload length and speed, and more.
+- Configurator now maintains klipper and moonraker extension symlinks (will automatically restore in case of a hard reset, can also be triggered manually through the configurator actions menu at RatOS.local/configure)
+- Configurator now in charge of flashing all connected boards when klipper is updated. (can also be triggered manually through the configurator actions menu at RatOS.local/configure)
+- `START_PRINT` can now use the hotend to measure chamber temp. For example to wait for chamber to reach 40 degrees, use `START_PRINT CHAMBER_TEMP=40`. The bed temperature during chamber heating is configurable via the macro variable `variable_start_print_heat_chamber_bed_temp`.
+- Prime macros now follow the edge of the bed and only lowers Z once in the start position. This minimizes accidents in case of bad z_offset configuration.
+- Fix waiting for moves in load_filament
+- Use left screw as base for screw_adjust on V-Minion
+- Log rotation should now work correctly.
+- 4 pin fan support on selected boards.
+
+### New supported printers
+
+- Voron V2.4 support (BETA)
+- Voron V0.1 Support (BETA)
+
+### New supported boards
+
+- BTT EBB42 v1.0
+- BTT EBB42 v1.1
+- BTT EBB42 v1.2
+- BTT EBB36 v1.0
+- BTT EBB36 v1.1
+- BTT EBB36 v1.2
+- Mellow Fly SHT42
+- Mellow Fly SHT36
+- BTT Manta M8P
+- BTT Manta M4P
+- BTT SKR 3
+- BTT SKR 3 EZ
+- BTT SKR Mini E3 3.0
+- BTT SKRat v1.0
+
+### Bug fixes
+
+- IPv6 has been disabled (no more issues with RatOS.local / moonraker not working on some IPv6 capable networks).
+- Automatic flashing is now more resilient and will detect and attempt to recover if the board gets stuck in DFU mode.
+- Configurator now correctly restarts on updates.
+
 ## RatOS V1.2
+
 This release adds a wifi connection configurator and hotspot functionality so users no longer have to edit the wpa-supplicant files, the syntax of which has been challenging for many. The hotspot also enables printing in areas with no wifi or ethernet connectivity.
 
 ## RatOS V1.1
