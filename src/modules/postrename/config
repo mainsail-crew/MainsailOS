@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #### Post Rename
 ####
 #### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>

@@ -1,15 +1,24 @@
 #!/usr/bin/env bash
-# MainsailOS Specific Tweaks
-# written by Stephan Wendel aka KwadFan
-# <me@stephanwe.de>
-# GPL V3
-########
+#### mainsailos module
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2021 - 2022
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
 
+# shellcheck enable=require-variable-braces
+## Source error handling, leave this in place
+set -Ee
 
-# Source error handling, leave this in place
-set -xe
+# Set DEBIAN_FRONTEND to noninteractive
+if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
+    export DEBIAN_FRONTEND=noninteractive
+fi
 
-# Source CustomPIOS common.sh
+## Source CustomPIOS common.sh
+# shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
 
@@ -18,9 +27,10 @@ if [ -f "/etc/mainsailos_version" ]; then
     sudo rm -f /etc/mainsailos_version
 fi
 function get_parent {
-cat /etc/os-release | grep VERSION_CODENAME | cut -d '=' -f2
+    grep VERSION_CODENAME /etc/os-release | cut -d '=' -f2
 }
-echo "${DIST_NAME} release ${DIST_VERSION} ($(get_parent))" > /etc/${DIST_NAME,,}-release
+
+echo "${DIST_NAME} release ${DIST_VERSION} ($(get_parent))" > /etc/"${DIST_NAME,,}"-release
 
 ### Install CANBoot Dependency
 apt update

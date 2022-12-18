@@ -5,26 +5,57 @@
 # Copyright 2021
 ########
 
-# Source error handling, leave this in place
-set -e
+# shellcheck enable=require-variable-braces
 
-# Source CustomPIOS common.sh
+## Source error handling, leave this in place
+set -Eex
+
+# Set DEBIAN_FRONTEND to noninteractive
+if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
+    export DEBIAN_FRONTEND=noninteractive
+fi
+
+## Source CustomPIOS common.sh
+# shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
 
-echo_green "Backup original config.txt and cmdline.txt ..."
+# Step 1: Copy msos_config.txt
+echo_green "Copying temporary file ..."
+unpack /filesystem/tmp /tmp root
+
+echo_green "Merge MainsailOS configuration with default config.txt ..."
+# Step 2: Copy default config to "/tmp"
+cp "${PICONFIG_CONFIG_TXT_FILE}" /tmp
+
+# Step 3: Move default config to backup file
 mv "${PICONFIG_CONFIG_TXT_FILE}" "${PICONFIG_CONFIG_BAK_FILE}"
+
+# Step 4: Concatenate files to config
+cat /tmp/config.txt /tmp/msos_config.txt > /tmp/config.new
+
+# Step 5: Copy new config to "/boot/config.txt"
+cp /tmp/config.new "${PICONFIG_CONFIG_TXT_FILE}"
+
+# Step 6: Cleanup
+rm -f /tmp/*config*
+
+# Step 7: Copy default cmdline.txt to backup file
 cp "${PICONFIG_CMDLINE_TXT_FILE}" "${PICONFIG_CMDLINE_BAK_FILE}"
 
-echo_green "Copying files to root filesystem ..."
-unpack /filesystem/root /
-
-### Disable Console and services to enable Hardware Serial.
+# Step 8: Disable serial console to enable Hardware Serial (PL011).
 echo_green "Disable Serial Linux console ..."
 sed -i 's/console=serial0,115200 //' "${PICONFIG_CMDLINE_TXT_FILE}"
 
-### disable bluetooth and related services
+# Step 9: Disable bluetooth and related services
 echo_green "Disabling Bluetooth related services..."
 systemctl_if_exists disable hciuart.service
 systemctl_if_exists disable bluetooth.service
 systemctl_if_exists disable bluealsa.service
+
+# Step 10: Increase swapfile size
+if [[ -f "${PICONFIG_SWAP_CONF_FILE}" ]]; then
+    echo_green "Increasing swap file size to ${PICONFIG_SWAP_SIZE} Mb. Limit to ${PICONFIG_SWAP_MAX} Mb"
+    sed -i 's/^CONF_SWAPSIZE.*/'CONF_SWAPSIZE="${PICONFIG_SWAP_SIZE}"'/' "${PICONFIG_SWAP_CONF_FILE}"
+    sed -i 's/^#CONF_MAXSWAP.*/'CONF_MAXSWAP="${PICONFIG_SWAP_MAX}"'/' "${PICONFIG_SWAP_CONF_FILE}"
+fi
