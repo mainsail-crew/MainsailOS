@@ -160,6 +160,14 @@ fix_mainsailcfg_links() {
     ln -sf "${src_dir}/mainsail.cfg" "${config_dir}/mainsail.cfg"
 }
 
+fix_kiauh_links() {
+    local src_dir target_dir
+    src_dir="/home/${DEFAULT_USER}/kiauh"
+    target_dir="/usr/local/bin"
+    ln -sf "${src_dir}/kiauh.sh" "${target_dir}/kiauh"
+}
+
+
 main() {
 local cmdltxt
 cmdltxt="/boot/cmdline.txt"
@@ -214,6 +222,7 @@ echo -en "${WHITE}Fix broken symlinks ...${NOC}\r"
 fix_broken_links
 fix_timelapse_links
 fix_mainsailcfg_links
+fix_kiauh_links
 echo -e "${WHITE}Fix broken symlinks ...${NOC}[${GRE}OK${NOC}]"
 ## do a short break
 sleep 2
