@@ -23,7 +23,6 @@ BASE_RELEASE_COMPRESS=no
 MODULES="base,pkgupgrade,armbian(mainsailos,klipper,moonraker,mainsail,timelapse,crowsnest,sonar)"
 
 # export Variables
-export DOWNLOAD_BASE_URL
 export BASE_ADD_USER
 export BASE_USER
 export BASE_USER_PASSWORD
