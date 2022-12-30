@@ -17,6 +17,7 @@ set -eou pipefail
 # set -x
 
 ### noninteractive Check
+DEBIAN_FRONTEND=""
 if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
     export DEBIAN_FRONTEND=noninteractive
 fi
