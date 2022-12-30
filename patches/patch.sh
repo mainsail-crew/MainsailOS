@@ -11,7 +11,7 @@
 ####
 
 # Error Handling
-set -eou pipefail
+set -eo pipefail
 
 # Debug
 # set -x
