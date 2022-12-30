@@ -10,7 +10,7 @@ DOWNLOAD_BASE_URL="https://github.com/mainsail-crew/armbian-builds/releases/late
 # Base User
 BASE_ADD_USER="yes"
 BASE_USER="pi"
-BASE_USER_PASSWORD="orangepi"
+BASE_USER_PASSWORD="armbian"
 
 # Needed while building for non rpi sbc
 BASE_DISTRO="armbian"
