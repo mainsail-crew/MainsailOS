@@ -56,6 +56,6 @@ if [[ "$(is_board_type)" == "orangepi4-lts" ]]; then
 fi
 
 # Step 3: add spi-dev module to /etc/modules
-echo "param_spidev_spi_bus=1" >> "${OPICONFIG_MODULES_FILE}"
+echo "spi-dev" >> "${OPICONFIG_MODULES_FILE}"
 
 echo_green "Enable SPI interface on Orange Pi SBC's ... DONE!"
