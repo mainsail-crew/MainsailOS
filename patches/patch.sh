@@ -16,11 +16,11 @@ set -eou pipefail
 # Debug
 # set -x
 
-### noninteractive Check
-DEBIAN_FRONTEND=""
-if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
-    export DEBIAN_FRONTEND=noninteractive
-fi
+# ### noninteractive Check
+# DEBIAN_FRONTEND=""
+# if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
+#     export DEBIAN_FRONTEND=noninteractive
+# fi
 
 # Global Vars
 TITLE="\e[31MainsailOS Patcher\e[0m - Patch OS to latest changes (MainsailOS ${MAINSAILOS_VER})"
