@@ -21,7 +21,7 @@ set -eo pipefail
 DEBIAN_FRONTEND="noninteractive"
 
 # Global Vars
-TITLE="\e[31MainsailOS Patcher\e[0m - Patch OS to latest changes (MainsailOS ${MAINSAILOS_VER})"
+TITLE="\e[31mMainsailOS Patcher\e[0m - Patch OS to latest changes (MainsailOS ${MAINSAILOS_VER})"
 MAINSAILOS_VER="1.0.1"
 RELEASE_FILE="/etc/mainsailos-release"
 BASE_DL_URL="https://raw.githubusercontent.com/mainsail-crew/MainsailOS/develop"
