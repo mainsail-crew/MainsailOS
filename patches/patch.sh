@@ -62,6 +62,7 @@ print_header(){
 
 print_footer(){
     echo -e "\nThank you for being patient ..."
+    echo_red "Reboot as soon as possible!\n"
 }
 
 # Helper Funcs
@@ -74,30 +75,6 @@ check_version(){
         echo_red "Minimum required MainsailOS Version is 1.0.0! ... [Exiting]"
         exit 1
     fi
-}
-
-## ask reboot
-ask_reboot() {
-    local reply
-    while true; do
-        read -erp "Reboot NOW? [y/N]: " -i "N" reply
-        case "${reply}" in
-            [yY]*)
-                echo -e "Going to reboot in 5 seconds!"
-                sleep 5
-                reboot
-            ;;
-            [nN]*)
-                echo -e "\n\e[31mNot to reboot may cause issues!"
-                echo -e "Reboot as soon as possible!\e[0m\n"
-                echo -e "Goodbye ..."
-                break
-            ;;
-            * )
-                echo -e "\e[31mERROR:\e[0m Please choose Y or N !"
-            ;;
-        esac
-    done
 }
 
 # Patch Funcs
@@ -155,6 +132,3 @@ patch_release_file
 
 # Step 5: Print footer
 print_footer
-
-# Step 6: Ask for reboot
-ask_reboot
