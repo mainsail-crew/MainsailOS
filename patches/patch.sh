@@ -16,20 +16,19 @@ set -eo pipefail
 # Debug
 # set -x
 
-### Declare Variables
+### Variables
 # shellcheck disable=SC2034
-
-declare -i DEBIAN_FRONTEND="noninteractive"
+DEBIAN_FRONTEND="noninteractive"
 
 # Global Vars
-declare -i TITLE="\e[31MainsailOS Patcher\e[0m - Patch OS to latest changes (MainsailOS ${MAINSAILOS_VER})"
-declare -i MAINSAILOS_VER="1.0.1"
-declare -i RELEASE_FILE="/etc/mainsailos-release"
-declare -i BASE_DL_URL="https://raw.githubusercontent.com/mainsail-crew/MainsailOS/develop"
+TITLE="\e[31MainsailOS Patcher\e[0m - Patch OS to latest changes (MainsailOS ${MAINSAILOS_VER})"
+MAINSAILOS_VER="1.0.1"
+RELEASE_FILE="/etc/mainsailos-release"
+BASE_DL_URL="https://raw.githubusercontent.com/mainsail-crew/MainsailOS/develop"
 
 # Message Vars
-declare -i MP_OK="\e[32mOK\e[0m"
-declare -i MP_SK="\e[33mSKIPPED\e[0m"
+MP_OK="\e[32mOK\e[0m"
+MP_SK="\e[33mSKIPPED\e[0m"
 
 ## Helper funcs
 
