@@ -43,6 +43,8 @@ All notable changes to Mainsail will be documented in this file.
 - Add otg_mode=1 for CM4 in config.txt (#167) | [cb0bf60](cb0bf600e8526a79ae534a64e9fccd584eb20388)
 - Fix SC2086 in armbian module (#173) | [2f4f8b1](2f4f8b13737b3f95582b9c8b824136413e9884eb)
 - Fixes error setting link to macro (#175) | [d1ad3f8](d1ad3f8006ad7c9b84a9a34acc4798f15ab605e4)
+- Fix shellcheck errors (#185) | [efe1b68](efe1b68d0a8cd5ccf3238d280c83ae523c331688)
+- Fix syntax error in net module (#191) | [cb890af](cb890afafaa1ab6dc68fbfdc103ceca61432e064)
 
 ### Refactor
 
