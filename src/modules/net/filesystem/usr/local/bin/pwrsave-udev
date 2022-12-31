@@ -33,7 +33,6 @@ function check_rule {
     if [ ! -f /etc/udev/rules.d/070-wifi-powersave.rules ]; then
         echo -e "[  \e[31mERROR\e[0m  ] Udev Rule for WiFi Powermanagement not found!"
         help_msg
-        exit 1
     fi
 }
 
