@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+
+# Declare Variables before exporting.
+# See https://www.shellcheck.net/wiki/SC2155
+
+BASE_IMAGE_ENLARGEROOT=6500
+BASE_IMAGE_RESIZEROOT=600
+# Compress not needed due compression done in workflow
+BASE_RELEASE_COMPRESS=no
+# Modules are valid for 32bit and 64bit images
+MODULES="base,pkgupgrade(network,piconfig,klipper,node,is_req_preinstall,moonraker,mainsail,crowsnest,ratos(linear_movement_analysis,timelapse),klipperscreen,rpi_mcu,disable-services(hotspot),dfu-util,password-for-sudo),postrename"
+# export Variables
+export BASE_IMAGE_ENLARGEROOT
+export BASE_IMAGE_RESIZEROOT
+export BASE_RELEASE_COMPRESS
+export MODULES
+
+export RPI_IMAGER_NAME="${DIST_NAME}"
+export RPI_IMAGER_DESCRIPTION="Modular klipper configuration for supported 3d printers"
+export RPI_IMAGER_ICON="https://raw.githubusercontent.com/Rat-OS/RatOS/master/site/static/img/logos/rpi-imager.png"

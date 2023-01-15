@@ -1,4 +1,5 @@
 src/config.local
+src/config
 src/custompios_path
 src/image-variants/*.zip
 src/nightly_build_scripts/index.html

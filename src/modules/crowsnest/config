@@ -10,17 +10,17 @@
 # shellcheck disable=all
 
 # crowsnest repo
-[[ -n "$CROWSNEST_REPO_SHIP" ]] || CROWSNEST_REPO_SHIP=https://github.com/mainsail-crew/crowsnest.git
-[[ -n "$CROWSNEST_REPO_BRANCH" ]] || CROWSNEST_REPO_BRANCH=master
+[[ -n "$CROWSNEST_REPO_SHIP" ]] || CROWSNEST_REPO_SHIP="https://github.com/mainsail-crew/crowsnest.git"
+[[ -n "$CROWSNEST_REPO_BRANCH" ]] || CROWSNEST_REPO_BRANCH="master"
 
 # crowsnest setup
 [[ -n "$CROWSNEST_DEFAULT_CONF" ]] || CROWSNEST_DEFAULT_CONF="resources/crowsnest.conf"
-[[ -n "$CROWSNEST_CONFIG_PATH" ]] || CROWSNEST_CONFIG_PATH="/home/pi/printer_data/config"
-[[ -n "$CROWSNEST_LOG_PATH" ]] || CROWSNEST_LOG_PATH="/home/pi/printer_data/logs"
-[[ -n "$CROWSNEST_ENV_PATH" ]] || CROWSNEST_ENV_PATH="/home/pi/printer_data/systemd"
+[[ -n "$CROWSNEST_CONFIG_PATH" ]] || CROWSNEST_CONFIG_PATH="/home/${BASE_USER}/printer_data/config"
+[[ -n "$CROWSNEST_LOG_PATH" ]] || CROWSNEST_LOG_PATH="/home/${BASE_USER}/printer_data/logs"
+[[ -n "$CROWSNEST_ENV_PATH" ]] || CROWSNEST_ENV_PATH="/home/${BASE_USER}/printer_data/systemd"
 [[ -n "$CROWSNEST_RASPICAMFIX" ]] || CROWSNEST_RASPICAMFIX="1"
 [[ -n "$CROWSNEST_ADD_CROWSNEST_MOONRAKER" ]] || CROWSNEST_ADD_CROWSNEST_MOONRAKER="0"
-[[ -n "$CROWSNEST_MOONRAKER_CONF_PATH" ]] || CROWSNEST_MOONRAKER_CONF_PATH="/home/pi/printer_data/config/moonraker.conf"
+[[ -n "$CROWSNEST_MOONRAKER_CONF_PATH" ]] || CROWSNEST_MOONRAKER_CONF_PATH="/home/${BASE_USER}/printer_data/config/moonraker.conf"
 
 
 # ustreamer

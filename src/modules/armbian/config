@@ -1,0 +1,5 @@
+#!/bin/bash
+# shellcheck disable=all
+
+[ -n "$ARMBIAN_DEPS" ] || ARMBIAN_DEPS="armbian-config avahi-daemon iptables \
+bash-completion"

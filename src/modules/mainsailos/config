@@ -1,4 +1,12 @@
-#!/bin/bash
-# shellcheck disable=all
+#!/usr/bin/env bash
+# Shebang for better file detection
+#### mainsailos module
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2021 - 2022
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
 
 [ -n "$MAINSAILOS_DEPS" ] || MAINSAILOS_DEPS="python3-serial"

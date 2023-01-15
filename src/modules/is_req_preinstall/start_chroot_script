@@ -19,7 +19,7 @@ set -Eex
 export LC_ALL=C
 
 # Set DEBIAN_FRONTEND to noninteractive
-if [ "${DEBIAN_FRONTEND}" != "noninteractive" ]; then
+if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
     export DEBIAN_FRONTEND=noninteractive
 fi
 
@@ -41,7 +41,7 @@ check_install_pkgs ${IS_REQ_PREINSTALL_DEPS}
 
 ### Check for Klipper Venv installed.
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
-if [ -d "${IS_REQ_PREINSTALL_VENV_DIR}" ] && [ -x "${IS_REQ_PREINSTALL_VENV_DIR}/bin/pip" ]; then
+if [[ -d "${IS_REQ_PREINSTALL_VENV_DIR}" ]] && [[ -x "${IS_REQ_PREINSTALL_VENV_DIR}/bin/pip" ]]; then
     echo_green "Installing numpy..."
     sudo -u "${BASE_USER}" "${IS_REQ_PREINSTALL_VENV_DIR}"/bin/pip install -v "${IS_REQ_PREINSTALL_PIP}"
 else
@@ -53,9 +53,5 @@ fi
 echo_green "Cleanup ..."
 sudo -u "${BASE_USER}" rm -rf "/home/${BASE_USER}/.cache"
 popd  &> /dev/null || exit 1
-
-## Enable spi interface by default
-echo_green "Enabling SPI Interface..."
-sed -i 's/#dtparam=spi=on/dtparam=spi=on/' "${IS_REQ_PREINSTALL_CFG_FILE}"
 
 echo_green "Install Input Shaper requirements ... done!"

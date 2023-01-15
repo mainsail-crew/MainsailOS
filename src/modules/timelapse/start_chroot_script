@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-#### MainsailOS Build Chain
+#### moonraker-timelapse module
 ####
-#### moonraker-timelapse install module
-#### #!/bin/bash
 #### https://github.com/mainsail-crew/moonraker-timelapse
+#### Thanks to Fry Sennberg for this bueatiful "Plugin"
 ####
 #### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
 #### Copyright 2022
@@ -23,7 +22,7 @@ set -Eex
 export LC_ALL=C
 
 # Set DEBIAN_FRONTEND to noninteractive
-if [ "${DEBIAN_FRONTEND}" != "noninteractive" ]; then
+if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
     export DEBIAN_FRONTEND=noninteractive
 fi
 
@@ -33,9 +32,9 @@ source /common.sh
 install_cleanup_trap
 
 ## helper func moonraker update_manager
-function add_timelapse_entry {
-    if [ -f "${TIMELAPSE_CONFIG_DIR}/moonraker.conf" ]; then
-        if [ -f "/tmp/moonraker.conf" ]; then
+add_timelapse_entry() {
+    if [[ -f "${TIMELAPSE_CONFIG_DIR}/moonraker.conf" ]]; then
+        if [[ -f "/tmp/moonraker.conf" ]]; then
             rm -rf /tmp/moonraker.conf
         fi
         sudo -u "${BASE_USER}" \
@@ -44,7 +43,7 @@ function add_timelapse_entry {
         cp -rf /tmp/moonraker.conf "${TIMELAPSE_CONFIG_DIR}/moonraker.conf"
     fi
     ## Cleanup template
-    if [ -f "${TIMELAPSE_TEMPLATE}" ]; then
+    if [[ -f "${TIMELAPSE_TEMPLATE}" ]]; then
         rm -f "${TIMELAPSE_TEMPLATE}"
     fi
 }
@@ -77,7 +76,7 @@ echo_green "Installing moonraker-timelapse plugin ..."
 ## Install all deps at once for time consumption reasons.
 ## APT: Update Repo Database and install Dependencies
 # Force apt update
-apt update
+apt-get update
 echo_green "Installing moonraker-timelapse Dependencies ..."
 ## Disabling shellcheck SC2086, because we want "wordsplitting"
 # shellcheck disable=SC2086
@@ -89,12 +88,12 @@ pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 gitclone TIMELAPSE_REPO moonraker-timelapse
 
 ## Link component
-if [ -d "${TIMELAPSE_TARGET_DIR}" ]; then
+if [[ -d "${TIMELAPSE_PYTHON_VENV_DIR}" ]]; then
     register_moonraker_extension "timelapse" "${TIMELAPSE_SRC_DIR}/component" "timelapse.py"
 fi
 
 ## Link timelapse.cfg
-if [ -d "/home/${BASE_USER}/klipper_config" ]; then
+if [[ -d "${TIMELAPSE_CONFIG_DIR}" ]]; then
     echo "Linking macro file ..."
     sudo -u "${BASE_USER}" \
     ln -sf "${TIMELAPSE_SRC_DIR}/klipper_macro/timelapse.cfg" "${TIMELAPSE_CONFIG_DIR}/timelapse.cfg"
@@ -104,8 +103,7 @@ fi
 # echo "Modifying moonraker.conf ..."
 # add_timelapse_entry
 
-
-popd || exit 1
+popd &> /dev/null || exit 1
 
 ## Done message
 echo_green "Installing moonraker-timelapse plugin ... done!"
