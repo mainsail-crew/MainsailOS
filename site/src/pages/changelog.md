@@ -86,15 +86,15 @@ If you are using sensorless homing, you'll now need to remove the HOLDCURRENT pa
 
 #### Stepper Motors
 
-On V-Core 3 and V-Core Pro printers using the stock 48mm steppers on all axes add `[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-*.cfg]` (cooled drivers) or `[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-*.cfg]` (uncooled drivers) to your USER OVERRIDES section. You can skip this step if you're migrating your printer.cfg (see below).
+On V-Core 3 and V-Core Pro printers using the stock 48mm steppers on all axes add `[include RatOS/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-*.cfg]` (cooled drivers) or `[include RatOS/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-*.cfg]` (uncooled drivers) to your USER OVERRIDES section. You can skip this step if you're migrating your printer.cfg (see below).
 If you only use the stock steppers on some axes, or want different currents, voltages etc you can include the stepper config for specific steppers like this:
 
 ```properties
-[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-x.cfg]
-[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-y.cfg]
-[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-z.cfg]
-[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-z1.cfg]
-[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-z2.cfg]
+[include RatOS/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-x.cfg]
+[include RatOS/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-y.cfg]
+[include RatOS/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-z.cfg]
+[include RatOS/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-z1.cfg]
+[include RatOS/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-z2.cfg]
 ```
 
 These stepper specific configs have their DRIVER\_\* settings tuned for the given driver, voltage and amperage. Take a look in the config/steppers folders to see which options are available.

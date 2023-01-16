@@ -7,25 +7,25 @@ RatOS V1.1 introduced modularized stepper and driver configuration, this can be 
 ### STEPPER MOTORS, DRIVERS & SPEED LIMITS
 ### Pick the drivers and stepper motors you're using. See the RatOS documentation for custom combinations.
 #############################################################################################################
-[include config/printers/v-core-3/steppers.cfg]
+[include RatOS/printers/v-core-3/steppers.cfg]
 
 # UNCOOLED TMC 2209 + LDO-42STH48-2504AC
-[include config/printers/v-core-3/speed-limits-basic.cfg]
-[include config/printers/v-core-3/tmc2209.cfg]
-[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-*.cfg]
+[include RatOS/printers/v-core-3/speed-limits-basic.cfg]
+[include RatOS/printers/v-core-3/tmc2209.cfg]
+[include RatOS/steppers/ldo/42sth48-2504ac/2209/24v-1.1a-*.cfg]
 
 # COOLED TMC 2209 + LDO-42STH48-2504AC
 # This increases motor torque, positional accuracy and speed limits.
 # don't enable this before your printer is fully configured and you have a fan blowing on your stepper drivers.
-#[include config/printers/v-core-3/speed-limits-performance.cfg]
-#[include config/printers/v-core-3/tmc2209-performance.cfg]
-#[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-*.cfg]
+#[include RatOS/printers/v-core-3/speed-limits-performance.cfg]
+#[include RatOS/printers/v-core-3/tmc2209-performance.cfg]
+#[include RatOS/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-*.cfg]
 
 # STEALTH MODE (Enables stealthchop and limits velocity and acceleration)
 # NOTE: You still need to include one of the above stepper motor definitions.
 # NOTE: This will make your printer quiter but less accurate, it's an inherent side effect of stealthchop.
-#[include config/printers/v-core-3/speed-limits-stealth.cfg]
-#[include config/printers/v-core-3/tmc2209-stealth.cfg]
+#[include RatOS/printers/v-core-3/speed-limits-stealth.cfg]
+#[include RatOS/printers/v-core-3/tmc2209-stealth.cfg]
 ```
 
 You can comment out this whole section (except for steppers.cfg) to use your own combination of steppers and drivers. For example, let's say we're using an Octopus Pro with 50V 5160's powering the LDO-42STH48-2504AC on X and Y, and 2209's for the Z's. We could do the following in our user overrides section after commenting out the entire stepper motors, drivers and speed limits section:
@@ -37,12 +37,12 @@ You can comment out this whole section (except for steppers.cfg) to use your own
 #############################################################################################################
 # Set speed limits to performance limits.
 # Include driver and stepper configuration for 50V 5160's on X/Y
-[include config/steppers/ldo/42sth48-2504ac/5160/50v-1.768a-x.cfg]
-[include config/steppers/ldo/42sth48-2504ac/5160/50v-1.768a-y.cfg]
+[include RatOS/steppers/ldo/42sth48-2504ac/5160/50v-1.768a-x.cfg]
+[include RatOS/steppers/ldo/42sth48-2504ac/5160/50v-1.768a-y.cfg]
 # Include driver and stepper configuration for Z's
-[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-z.cfg]
-[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-z1.cfg]
-[include config/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-z2.cfg]
+[include RatOS/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-z.cfg]
+[include RatOS/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-z1.cfg]
+[include RatOS/steppers/ldo/42sth48-2504ac/2209/24v-1.6a-z2.cfg]
 ```
 
 Notice how we no longer include a speed limit config or a tmc2209 config. We need to do reproduce the function of these configs ourselves in the user overrides section. The tmc2209 profile's job is to define stealthchop and interpolation. Let's add klipper's recommended defaults to our user overrides section:
