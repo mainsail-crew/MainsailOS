@@ -12,9 +12,9 @@ install_cleanup_trap
 
 echo_green "Installing RatOS"
 
-pushd /home/${BASE_USER}/klipper_config
+pushd /home/${BASE_USER}/printer_data/config
 
-gitclone RATOS_CONFIG config
+gitclone RATOS_CONFIG RatOS
 gitclone RATOS_THEME .theme
 pushd /home/${BASE_USER}
 gitclone RATOS_CONFIGURATOR ratos-configurator
@@ -22,6 +22,9 @@ popd
 popd
 
 unpack /filesystem/root /
+
+# Set default git merge strategy
+sudo -u pi git config --global pull.ff only
 
 # Create release file
 if [ -f "/etc/ratos_version" ]; then
@@ -35,22 +38,8 @@ echo "${DIST_NAME} v${DIST_VERSION} ($(get_parent))" > /etc/${DIST_NAME,,}-relea
 # Install RatOS Configurator
 sudo -u pi bash /home/${BASE_USER}/ratos-configurator/scripts/setup.sh
 
-# Symlink printer data dirs
-if [ -d "/home/${BASE_USER}/printer_data" ]; then
-  echo "Deleting printer data config, database, gcodes and logs directories.."
-  rm -rf /home/${BASE_USER}/printer_data/config
-  rm -rf /home/${BASE_USER}/printer_data/database
-  rm -rf /home/${BASE_USER}/printer_data/gcodes
-  rm -rf /home/${BASE_USER}/printer_data/logs
-else
-  mkdir /home/${BASE_USER}/printer_data
-fi
-
-echo "Symlinking printer data config, database, gcodes and logs directories.."
-ln -s /home/${BASE_USER}/klipper_config /home/${BASE_USER}/printer_data/config
-ln -s /home/${BASE_USER}/.moonraker_database /home/${BASE_USER}/printer_data/database
-ln -s /home/${BASE_USER}/gcode_files /home/${BASE_USER}/printer_data/gcodes
-ln -s /home/${BASE_USER}/klipper_logs /home/${BASE_USER}/printer_data/logs
+echo "Symlinking printer data config directory, until ratos-configuration and configurator is updated"
+ln -s /home/${BASE_USER}/printer_data/config /home/${BASE_USER}/klipper_config 
 
 # Start the configurator so extensions can access the API
 echo "Starting RatOS Configurator"
@@ -58,5 +47,5 @@ pushd /home/${BASE_USER}/ratos-configurator
 sudo -u ${BASE_USER} yarn start &
 popd
 # Install RatOS Configuration
-sudo -u pi bash /home/${BASE_USER}/klipper_config/config/scripts/ratos-install.sh
+sudo -u pi bash /home/${BASE_USER}/printer_data/config/RatOS/scripts/ratos-install.sh
 sudo update-rc.d ratos defaults

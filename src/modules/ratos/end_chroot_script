@@ -7,7 +7,7 @@
 # Source error handling, leave this in place
 set -xe
 
-sudo -u ${BASE_USER} /home/${BASE_USER}/klipper_config/config/scripts/ratos-post-install.sh
+sudo -u ${BASE_USER} /home/${BASE_USER}/printer_data/config/RatOS/scripts/ratos-post-install.sh
 
 # Stop the configurator
 

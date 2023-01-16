@@ -25,16 +25,16 @@ Now navigate to the klipper directory:
 cd ~/klipper
 ```
 
-The configuration klipper needs to compile the firmware for your board is stored in `~/klipper_config/config/boards/[BOARD_NAME]/firmware.config`. To list the board names execute the following command:
+The configuration klipper needs to compile the firmware for your board is stored in `~/printer_data/config/RatOS/boards/[BOARD_NAME]/firmware.config`. To list the board names execute the following command:
 
 ```bash
-ls -la ~/klipper_config/config/boards
+ls -la ~/printer_data/config/RatOS/boards
 ```
 
-Let's say we need to compile the firmware for the octopus. We then need to copy the configuration file from `~/klipper_config/config/boards/btt-octopus-11/firmware.config`
+Let's say we need to compile the firmware for the octopus. We then need to copy the configuration file from `~/printer_data/config/RatOS/boards/btt-octopus-11/firmware.config`
 
 ```bash
-cp -f ~/klipper_config/config/boards/btt-octopus-11/firmware.config ~/klipper/.config
+cp -f ~/printer_data/config/RatOS/boards/btt-octopus-11/firmware.config ~/klipper/.config
 ```
 
 Now we're ready to compile the firmware!
