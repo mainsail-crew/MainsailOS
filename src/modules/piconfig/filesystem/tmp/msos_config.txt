@@ -48,7 +48,9 @@ dtoverlay=disable-bt
 ## This is used by Klipper's Host MCU
 ## See https://www.klipper3d.org/RPi_microcontroller.html#optional-enabling-i2c
 ## for destails.
-dtparam=i2c_arm=on,i2c_arm_baudrate=400000
+## For MPU Accelrometer please use
+## dtparam=i2c_arm=on,i2c_arm_baudrate=400000
+dtparam=i2c_arm=on
 
 ## Disable libcamera (interferes with ustreamer, when using raspicams)
 camera_auto_detect=0
