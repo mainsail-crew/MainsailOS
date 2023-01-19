@@ -1,5 +1,5 @@
 [ -n "$RATOS_CONFIG_SHIP" ] || RATOS_CONFIG_SHIP=https://github.com/Rat-OS/RatOS-configuration.git
-[ -n "$RATOS_CONFIG_BRANCH" ] || RATOS_CONFIG_BRANCH=ft-bullseye
+[ -n "$RATOS_CONFIG_BRANCH" ] || RATOS_CONFIG_BRANCH=v2.x
 [ -n "$RATOS_THEME_SHIP" ] || RATOS_THEME_SHIP=https://github.com/Rat-OS/RatOS-theme.git
 [ -n "$RATOS_THEME_BRANCH" ] || RATOS_THEME_BRANCH=v2.x
 [ -n "$RATOS_CONFIGURATOR_SHIP" ] || RATOS_CONFIGURATOR_SHIP=https://github.com/Rat-OS/RatOS-configurator.git
