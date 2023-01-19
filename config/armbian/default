@@ -7,4 +7,4 @@ export BASE_IMAGE_RASPBIAN=no
 export BASE_IMAGE_ENLARGEROOT=1000
 export BASE_ARCH=arm64
 
-export MODULES="base,pkgupgrade"
+export MODULES="base,pkgupgrade(network,piconfig,klipper,node,is_req_preinstall,moonraker,mainsail,crowsnest,ratos(linear_movement_analysis,timelapse,klipperscreen,rpi_mcu,disable-services(hotspot),dfu-util),password-for-sudo),postrename"
