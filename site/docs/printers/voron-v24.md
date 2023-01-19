@@ -9,8 +9,10 @@ The [Voron V2.4](https://vorondesign.com/voron2.4) is a floating gantry Core XY 
 ## Supported Boards
 
 -   [BIGTREETECH Octopus v1.1](boards/btt/octopus-11.md)
+-   [BIGTREETECH Octopus v1.1 F407](boards/btt/octopus-11-407.md)
 -   [BIGTREETECH Octopus Pro 446](boards/btt/octopus-pro-446.md)
 -   [BIGTREETECH Octopus Pro 429](boards/btt/octopus-pro-429.md)
+-   [BIGTREETECH Octopus Pro H723](boards/btt/octopus-pro-h723.md)
 -   [BIGTREETECH Manta M8P](boards/btt/manta-m8p.mdx)
 -   [Fysetc Spider v1.1](boards/fysetc/spider-11.md)
 
