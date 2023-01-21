@@ -18,8 +18,8 @@ make flash
 popd
 
 pushd /home/${BASE_USER}/klipper
-sudo cp "./scripts/klipper-mcu-start.sh" /etc/init.d/klipper_mcu
-sudo update-rc.d klipper_mcu defaults
+sudo cp "./scripts/klipper-mcu.service" /etc/systemd/system/klipper_mcu.service
+sudo systemctl enable klipper_mcu.service
 popd
 
 
