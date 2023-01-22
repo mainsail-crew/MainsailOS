@@ -1,0 +1,41 @@
+import Illustration from "./_media/stowable_probes.excalidraw.svg";
+
+# Stowable Probes
+
+RatOS 2.0 and higher has support for Stowable Probes. To use one, you need to include the specific probe in your printer.cfg.
+
+## Dock position
+
+You may need to change and/or finetune your dock position for reliable pickup and stowing. The procedure is made out of the following 4 points:
+
+1. Dock preflight
+2. Dock side
+3. Dock
+4. Dock exit
+
+When the probe is deployed the toolhead will travel to the points in the following order: 1, 2, 3, 4, 1 - preflight, side, dock, exit, preflight. When stowed it's reversed, so it goes 1, 4, 3, 2, 1 - preflight, dock exit, dock, preflight.
+
+<Illustration width="100%" />
+
+You can change the coordinates of each point by adding/modifying the following variables to the `MACRO CONFIGURATION` section of your printer.cfg:
+
+```properties
+[gcode_macro RatOS]
+variable_stowable_probe_position_preflight: [ 30, 60  ]
+variable_stowable_probe_position_side:      [  30, 0  ]
+variable_stowable_probe_position_dock:      [   0, 0  ]
+variable_stowable_probe_position_exit:      [   0, 60 ]
+```
+
+The first number inside the `[]` is the X coordinate, the second is the Y coordinate. The coordinates are absolute positions.
+You can see the defaults for your particular stowable probe in the included file (eg RatOS/z-probe/euclid.cfg).
+
+A good way to fine tune is to manually move the toolhead to the desired position via the movement controls in mainsail and then use the X and Y coordinates displayed right above the controls.
+
+## Testing the coordinates
+
+You can test if your confiugred coordinates work by running the `DEPLOY_PROBE` and `STOW_PROBE` macro's in the console.
+
+## Safety
+
+RatOS checks the probe state to make sure the physical world matches the software's expectations, if this fails it will throw an error and abort the current macro (or trigger an emergency stop during homing). This is to avoid damaging the probe and/or the toolhead, and prevents you from probing if the probe is stowed.
