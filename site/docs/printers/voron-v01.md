@@ -1,5 +1,5 @@
 ---
-sidebar_label: Voron V2.4 (BETA)
+sidebar_label: Voron V0.1 (BETA)
 ---
 
 # Voron V0.1
