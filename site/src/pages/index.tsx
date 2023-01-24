@@ -77,7 +77,7 @@ export default function Index(): JSX.Element {
         </p>
         <p>
           <a
-            href="https://github.com/Rat-OS/RatOS/releases"
+            href="https://github.com/Rat-OS/RatOS/releases/latest"
             className="button button--primary"
           >
             Download
