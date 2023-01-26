@@ -1,19 +1,18 @@
 ---
-sidebar_label: Manta M8P v1.0
+sidebar_label: Manta M4P v1.0
 ---
 
-import WiringSVG from "./_media/manta-m8p-wiring.svg";
-import FanSVG from "./_media/manta-m8p-fan-wiring.svg";
+import WiringSVG from "./_media/manta-m4p-wiring.svg";
 
-# BIGTREETECH Manta M8P
+# BIGTREETECH Manta M4P
 
 ## Wiring
 
 <WiringSVG width="100%" height={null} />
 
-[Open Full Size Image](_media/manta-m8p-wiring.svg)
+[Open Full Size Image](_media/manta-m4p-wiring.svg)
 
-:::danger if you use the Ratrig endstop switches and cables, do **not** blindly plug them in to your M8P as doing this will short the board's 5V power rail.
+:::danger if you use the Ratrig endstop switches and cables, do **not** blindly plug them in to your M4P as doing this will short the board's 5V power rail.
 You will probably have to swap the outer two wires (red and white) on the board end of the cable but double check to make sure your cables match the wiring diagram in both ends.
 Orders shipped after October 2022 should have the correct cables (the connectors on the new cables are white).
 :::
@@ -21,22 +20,6 @@ Orders shipped after October 2022 should have the correct cables (the connectors
 :::info Jumpers
 A green square is where you would place a jumper, remove all jumpers on the board that are not marked by this symbol.
 :::
-
-### FAN Wiring
-
-<FanSVG width="100%" height={null} />
-
-[Open Full Size Image](_media/manta-m8p-fan-wiring.svg)
-
-:::caution Verify wire colors
-The fan wire colors in this diagram might not match the colors of the wires on your particular fan. Always refer to the spec sheet of your fan to make sure you're connecting your fan correctly.
-:::
-
-:::danger Fan Voltage
-**Always** remember to set the voltage selector correctly for the fan you're using.
-:::
-
-The Manta M8P supports both 2-pin and 4-pin fans. Since there's only 2 4-pin fan headers, you can only run either the Hotend or the Controller as a four pin fan besides the Part Cooling Fan. You can mix and match as you like. **Always** remember to set the voltage selector correctly for the fan you're using.
 
 ### Jumpers
 
@@ -47,11 +30,11 @@ If you wanted to use 48V for example, you would connect your 48V psu to the moto
 ## Installing RatOS on eMMC
 
 :::info
-The Manta M8P is a Compute Module 4 (CM4) host board. RatOS supports CM4's as long as there's no eMMC (using micro SD card, recommended for ease of use) or at least 16gb eMMC storage.
+The Manta M4P is a Compute Module 4 (CM4) host board. RatOS supports CM4's as long as there's no eMMC (using micro SD card, recommended for ease of use) or at least 16gb eMMC storage.
 The BTT CB1 is currently not supported.
 :::
 
-If you're using a CM4 with eMMC storage, you cannot use an SD card. You'll have to connect the Manta to a PC and flash the eMMC storage, please follow the steps in the [BTT Manta M8P User Manual](https://github.com/bigtreetech/Manta-M8P/raw/master/BIGTREETECH%20MANTA%20M8P%20V1.0%20User%20Manual.pdf), for how to mount the eMMC storage to your PC. Then use Balena Etcher to flash RatOS to the CM4, just like it was an SD card.
+If you're using a CM4 with eMMC storage, you cannot use an SD card. You'll have to connect the Manta to a PC and flash the eMMC storage, please follow the steps in the [BTT Manta M4P User Manual](https://github.com/bigtreetech/Manta-M4P/raw/master/BIGTREETECH_MANTA_M4P_User_Manual.pdf), for how to mount the eMMC storage to your PC. Then use Balena Etcher to flash RatOS to the CM4, just like it was an SD card.
 
 ## Firmware installation
 
