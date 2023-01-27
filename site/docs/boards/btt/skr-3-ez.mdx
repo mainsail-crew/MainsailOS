@@ -1,0 +1,47 @@
+---
+sidebar_label: SKR 3 EZ
+---
+
+import WiringSVG from "./_media/skr-3-ez-wiring.svg";
+
+# BIGTREETECH SKR 3 EZ
+
+## Wiring
+
+<WiringSVG width="100%" height={null} />
+
+[Open Full Size Image](_media/skr-3-ez-wiring.svg)
+
+:::danger if you use the Ratrig endstop switches and cables, do **not** blindly plug them in to your SKR 3 EZ as doing this will short the board's 5V power rail.
+You will probably have to swap the outer two wires (red and white) on the board end of the cable but double check to make sure your cables match the wiring diagram in both ends.
+Orders shipped after October 2022 should have the correct cables (the connectors on the new cables are white).
+:::
+
+:::info Jumpers
+The small green squares are where you would place a jumper,
+**remove all unmarked jumpers on the board.**
+:::
+
+### Jumpers
+
+The jumper marked by the yellow square should be removed, when in place the board is powered via USB (your Pi), this can be fine for initial firmware flashing with nothing else connected, but **will not work** after installation.
+
+#### Fan voltage
+
+The jumper labed "V-Fan" is to control fan voltage. On the diagram this is set to 24V. To change fan voltage, refer to the [Big Tree Tech SKR 3 EZ documentation](https://github.com/bigtreetech/SKR-3/raw/master/BIGTREETECH%20SKR%203%20EZ%20user%20manual.pdf).
+
+## Firmware installation
+
+:::caution Use a proper cable
+Make sure your board is connected to the Pi **via the provided USB cable** (USB-B on the SKR 3 EZ, USB-A on the Pi).
+:::
+
+Follow the steps in the RatOS Configurator at [http://RatOS.local/configure?step=1](http://RatOS.local/configure?step=1).
+
+## I updated klipper and now i get an error!
+
+When you update klipper and for some reason RatOS fails to flash your board automatically, you might see an error that looks like this:
+
+![Firmware version mismatch between host and guest](/img/firmware_version_mismatch.png)
+
+This is because klipper made changes to a part of the MCU firmware that we use, and something went wrong when RatOS attempted to flash your SKR 3 EZ. Klipper is telling us that the version of klipper running on the Pi is newer than the version running on the MCU. To fix this, we have to flash the board with a new version of the firmware, follow the steps in the RatOS Configurator at [http://RatOS.local/configure?step=1](http://RatOS.local/configure?step=1) to flash your board with new firmware.
