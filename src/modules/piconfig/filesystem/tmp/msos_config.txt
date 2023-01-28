@@ -33,7 +33,6 @@ dtoverlay=dwc2,dr_mode=host
 
 [pi4]
 ## Do not use more than 256Mb on Pi Model 4, it uses its own Management.
-dtoverlay=vc4-fkms-v3d
 gpu_mem=256
 
 [all]

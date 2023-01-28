@@ -47,6 +47,9 @@ cp "${PICONFIG_CMDLINE_TXT_FILE}" "${PICONFIG_CMDLINE_BAK_FILE}"
 echo_green "Disable Serial Linux console ..."
 sed -i 's/console=serial0,115200 //' "${PICONFIG_CMDLINE_TXT_FILE}"
 
+echo_green "Disable kms and enable fkms - temporary workaround for BTT pi TFT touch screens"
+sed -i 's/^dtoverlay=vc4-kms-v3d/dtoverlay=vc4-fkms-v3d/' "${PICONFIG_CONFIG_TXT_FILE}"
+
 # Step 9: Disable bluetooth and related services
 echo_green "Disabling Bluetooth related services..."
 systemctl_if_exists disable hciuart.service
