@@ -49,3 +49,6 @@ popd
 # Install RatOS Configuration
 sudo -u pi bash /home/${BASE_USER}/printer_data/config/RatOS/scripts/ratos-install.sh
 sudo update-rc.d ratos defaults
+
+# Create variant file
+echo "${BASE_DISTRO}" > /etc/"${BASE_DISTRO}"-variant
