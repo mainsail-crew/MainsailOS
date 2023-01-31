@@ -17,16 +17,16 @@ Start by reading the [Documentation](https://os.ratrig.com)
 
 ## Requirements
 
-- [qemu-arm-static](http://packages.debian.org/sid/qemu-user-static)
-- [CustomPiOS](https://github.com/guysoft/CustomPiOS)
-- [Downloaded Raspbian Image](http://www.raspbian.org/)
-- Bash
-- Git
-- [Docker](https://docs.docker.com/engine/install/ubuntu/)
-- [Docker-Compose](https://docs.docker.com/compose/install/)
-- QEMU for emulation
-- About 5GB of free diskspace for the build
-- Yarn & Docusaurus for docs
+-   [qemu-arm-static](http://packages.debian.org/sid/qemu-user-static)
+-   [CustomPiOS](https://github.com/guysoft/CustomPiOS)
+-   [Downloaded Raspbian Image](http://www.raspbian.org/)
+-   Bash
+-   Git
+-   [Docker](https://docs.docker.com/engine/install/ubuntu/)
+-   [Docker-Compose](https://docs.docker.com/compose/install/)
+-   QEMU for emulation
+-   About 5GB of free diskspace for the build
+-   Yarn & Docusaurus for docs
 
 ### Packages for Ubuntu 18.04/20.04
 
@@ -73,4 +73,4 @@ RatOS/src/workspace - Created during build, and output for compiled images
 
 ## HUGE THANK YOU to the Sponsors
 
-- Dnoell
+![Intermode](sponsors/intermode-logo.png)
