@@ -73,4 +73,5 @@ RatOS/src/workspace - Created during build, and output for compiled images
 
 ## HUGE THANK YOU to the Sponsors
 
+![Rat Rig](sponsors/ratrig-logo.png)
 ![Intermode](sponsors/intermode-logo.png)
