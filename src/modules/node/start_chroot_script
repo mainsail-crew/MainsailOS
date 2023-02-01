@@ -14,6 +14,5 @@ fi
 chmod 777 /tmp
 
 curl -fsSL https://deb.nodesource.com/setup_16.x | bash - &&\
-curl -sSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null
-echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list
-apt update && apt install nodejs yarn -y 
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+apt update && apt install nodejs -y 
