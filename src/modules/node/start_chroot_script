@@ -15,4 +15,5 @@ chmod 777 /tmp
 
 curl -fsSL https://deb.nodesource.com/setup_16.x | bash - &&\
 curl -fsSL https://get.pnpm.io/install.sh | sh -
+source /home/$BASE_USER/.bashrc
 apt update && apt install nodejs -y 
