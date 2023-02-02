@@ -14,6 +14,10 @@ fi
 chmod 777 /tmp
 
 curl -fsSL https://deb.nodesource.com/setup_16.x | bash - &&\
-curl -fsSL https://get.pnpm.io/install.sh | sh -
+curl -fsSL https://get.pnpm.io/install.sh | sudo -u pi sh -
 source /home/$BASE_USER/.bashrc
+if ! which pnpm &> /dev/null; then
+	echo "pnpm not found after sourcing"
+	exit 1
+fi
 apt update && apt install nodejs -y 
