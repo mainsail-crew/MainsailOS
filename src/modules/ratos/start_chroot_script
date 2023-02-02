@@ -36,7 +36,7 @@ cat /etc/os-release | grep VERSION_CODENAME | cut -d '=' -f2
 echo "${DIST_NAME} v${DIST_VERSION} ($(get_parent))" > /etc/${DIST_NAME,,}-release
 
 # Install RatOS Configurator
-sudo -u pi bash /home/${BASE_USER}/ratos-configurator/scripts/setup.sh
+/home/${BASE_USER}/ratos-configurator/scripts/setup.sh
 
 echo "Symlinking printer data config directory, until ratos-configuration and configurator is updated"
 ln -s /home/${BASE_USER}/printer_data/config /home/${BASE_USER}/klipper_config 
