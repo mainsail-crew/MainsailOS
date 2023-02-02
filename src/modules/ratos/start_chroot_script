@@ -12,11 +12,11 @@ install_cleanup_trap
 
 echo_green "Installing RatOS"
 
-pushd /home/${BASE_USER}/printer_data/config
+pushd "/home/${BASE_USER}/printer_data/config"
 
 gitclone RATOS_CONFIG RatOS
 gitclone RATOS_THEME .theme
-pushd /home/${BASE_USER}
+pushd "/home/${BASE_USER}"
 gitclone RATOS_CONFIGURATOR ratos-configurator
 popd
 popd
@@ -31,23 +31,22 @@ if [ -f "/etc/ratos_version" ]; then
     sudo rm -f /etc/ratos_version
 fi
 function get_parent {
-cat /etc/os-release | grep VERSION_CODENAME | cut -d '=' -f2
+    cat /etc/os-release | grep VERSION_CODENAME | cut -d '=' -f2
 }
-echo "${DIST_NAME} v${DIST_VERSION} ($(get_parent))" > /etc/${DIST_NAME,,}-release
+echo "${DIST_NAME} v${DIST_VERSION} ($(get_parent))" > "/etc/${DIST_NAME,,}-release"
 
 # Install RatOS Configurator
-/home/${BASE_USER}/ratos-configurator/scripts/setup.sh
-
-echo "Symlinking printer data config directory, until ratos-configuration and configurator is updated"
-ln -s /home/${BASE_USER}/printer_data/config /home/${BASE_USER}/klipper_config 
+sudo -u "${BASE_USER}" bash /home/"${BASE_USER}"/ratos-configurator/scripts/setup.sh
 
 # Start the configurator so extensions can access the API
 echo "Starting RatOS Configurator"
-pushd /home/${BASE_USER}/ratos-configurator
-sudo -u ${BASE_USER} pnpm start &
+pushd "/home/${BASE_USER}/ratos-configurator"
+sudo -u "${BASE_USER}" npm run start &
+# Wait for configurator to start
+timeout 300 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:3000)" != "404" ]]; do sleep 5; done' || false
 popd
 # Install RatOS Configuration
-sudo -u pi bash /home/${BASE_USER}/printer_data/config/RatOS/scripts/ratos-install.sh
+sudo -u pi bash /home/"${BASE_USER}"/printer_data/config/RatOS/scripts/ratos-install.sh
 sudo update-rc.d ratos defaults
 
 # Create variant file
