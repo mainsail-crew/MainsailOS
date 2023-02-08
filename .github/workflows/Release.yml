@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.PAT }}
-          ref: 'develop'
+          ref: "v2.x"
 
       - name: Get current version
         id: current-version
@@ -36,22 +36,22 @@ jobs:
         if: steps.current-version.outputs.version != github.event.inputs.version
         uses: EndBug/add-and-commit@v9
         with:
-          add: './src/version'
+          add: "./src/version"
           default_author: github_actions
-          message: 'chore: push version number to v${{ github.event.inputs.version }}'
+          message: "chore: push version number to v${{ github.event.inputs.version }}"
           push: true
 
-  update-master-branch:
-    name: Update master branch
-    needs: push-version-number
-    runs-on: ubuntu-latest
-    steps:
-      - uses: everlytic/branch-merge@1.1.5
-        with:
-          github_token: ${{ secrets.PAT }}
-          source_ref: 'develop'
-          target_branch: 'master'
-          commit_message_template: '[Automated] Merged {source_ref} into target {target_branch}'
+  # update-master-branch:
+  #   name: Update master branch
+  #   needs: push-version-number
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: everlytic/branch-merge@1.1.5
+  #       with:
+  #         github_token: ${{ secrets.PAT }}
+  #         source_ref: 'develop'
+  #         target_branch: 'master'
+  #         commit_message_template: '[Automated] Merged {source_ref} into target {target_branch}'
 
   release:
     name: Create Release
@@ -64,7 +64,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: 'master'
+          ref: "master"
           fetch-depth: 0
 
       - name: Get latest tag
@@ -85,8 +85,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: 'MainsailOS ${{ github.event.inputs.version }}'
-          tag_name: ${{ github.event.inputs.version }}
+          name: "RatOS-v${{ github.event.inputs.version }}"
+          tag_name: v${{ github.event.inputs.version }}
           body: ${{ steps.changelog.outputs.content }}
           draft: true
 
@@ -117,7 +117,7 @@ jobs:
           echo "matrix=${ARRAY}" >> $GITHUB_OUTPUT
 
   build:
-    needs: [ release, matrix ]
+    needs: [release, matrix]
     runs-on: ubuntu-latest
     outputs:
       base_name: ${{ steps.copy-image.outputs.base_name }}
@@ -139,7 +139,7 @@ jobs:
         shell: bash
         run: |
           source repository/src/config
-          base_name="${{ needs.release.outputs.date }}-${DIST_NAME}-${DIST_VERSION}"
+          base_name="${{ needs.release.outputs.date }}-${DIST_NAME}-v${DIST_VERSION}"
           image="${base_name}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
           cp repository/src/workspace/*.img $image.img
 
@@ -161,7 +161,7 @@ jobs:
         run: |
           CPU_COUNT="$(nproc)"
           echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
-          xz -efkvz9T"${CPU_COUNT}" ${{ steps.copy-image.outputs.image }}.img
+          xz -fkvz9T"${CPU_COUNT}" ${{ steps.copy-image.outputs.image }}.img
 
       - name: Upload Compressing Image
         if: success()
@@ -260,112 +260,112 @@ jobs:
           release_id: ${{ needs.release.outputs.id }}
           file: ${{ steps.copy-image.outputs.image }}.json
 
-  finish:
-    name: Finish Release
-    needs: [ release, build ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Publish Release
-        uses: StuYarrow/publish-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          id: ${{ needs.release.outputs.id }}
+  # finish:
+  #   name: Finish Release
+  #   needs: [ release, build ]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Publish Release
+  #       uses: StuYarrow/publish-release@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         id: ${{ needs.release.outputs.id }}
 
-  update-rpi-imager:
-    name: Update rpi-imager json
-    needs: [ release, build, finish ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download snipes
-        uses: robinraju/release-downloader@v1.6
-        with:
-          tag: ${{ github.event.inputs.version }}
-          fileName: "${{ needs.build.outputs.base_name }}-raspberry-*.json"
-          out-file-path: "downloads"
+  # update-rpi-imager:
+  #   name: Update rpi-imager json
+  #   needs: [ release, build, finish ]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Download snipes
+  #       uses: robinraju/release-downloader@v1.6
+  #       with:
+  #         tag: ${{ github.event.inputs.version }}
+  #         fileName: "${{ needs.build.outputs.base_name }}-raspberry-*.json"
+  #         out-file-path: "downloads"
 
-      - name: Debug
-        run: |
-          ls ./downloads/*
-          touch rpi-imager.json
+  #     - name: Debug
+  #       run: |
+  #         ls ./downloads/*
+  #         touch rpi-imager.json
 
-      - name: setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
+  #     - name: setup python
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: 3.8
 
-      - name: Run script
-        uses: jannekem/run-python-script-action@v1
-        with:
-          script: |
-            import os, json, shutil
-            with open("rpi-imager.json", "r+") as t:
-              t.truncate(0)
-              t.write('{ "os_list": [')
-              for filename in os.scandir('downloads'):
-                print(filename)
-                with open(filename, "r") as f:
-                  content = f.read()
-                  t.write(content)
-                  t.write(',')
-              t.write('] }')
-            barak = open("rpi-imager.json", "r+")
-            contentb = barak.read()
-            print(contentb)
+  #     - name: Run script
+  #       uses: jannekem/run-python-script-action@v1
+  #       with:
+  #         script: |
+  #           import os, json, shutil
+  #           with open("rpi-imager.json", "r+") as t:
+  #             t.truncate(0)
+  #             t.write('{ "os_list": [')
+  #             for filename in os.scandir('downloads'):
+  #               print(filename)
+  #               with open(filename, "r") as f:
+  #                 content = f.read()
+  #                 t.write(content)
+  #                 t.write(',')
+  #             t.write('] }')
+  #           barak = open("rpi-imager.json", "r+")
+  #           contentb = barak.read()
+  #           print(contentb)
 
-      - name: Upload JSON
-        if: success()
-        uses: xresloader/upload-to-github-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release_id: ${{ needs.release.outputs.id }}
-          file: rpi-imager.json
+  #     - name: Upload JSON
+  #       if: success()
+  #       uses: xresloader/upload-to-github-release@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         release_id: ${{ needs.release.outputs.id }}
+  #         file: rpi-imager.json
 
-      - name: Move in seperate dir
-        run: |
-          mkdir upload
-          mv rpi-imager.json ./upload
+  #     - name: Move in seperate dir
+  #       run: |
+  #         mkdir upload
+  #         mv rpi-imager.json ./upload
 
-      - name: Upload to remote server
-        uses: SamKirkland/FTP-Deploy-Action@4.3.3
-        with:
-          server: ${{ secrets.OSHOST }}
-          username: ${{ secrets.OSUSER }}
-          password: ${{ secrets.OSPASSWORD }}
-          local-dir: ./upload/
+  #     - name: Upload to remote server
+  #       uses: SamKirkland/FTP-Deploy-Action@4.3.3
+  #       with:
+  #         server: ${{ secrets.OSHOST }}
+  #         username: ${{ secrets.OSUSER }}
+  #         password: ${{ secrets.OSPASSWORD }}
+  #         local-dir: ./upload/
 
-  update-changelog:
-    needs: update-rpi-imager
-    name: Generate changelog
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          ref: 'develop'
-          token: ${{ secrets.PAT }}
-          fetch-depth: 0
+  # update-changelog:
+  #   needs: update-rpi-imager
+  #   name: Generate changelog
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #       with:
+  #         ref: 'develop'
+  #         token: ${{ secrets.PAT }}
+  #         fetch-depth: 0
 
-      - name: Get latest tag
-        id: latest_tag
-        shell: bash
-        run: |
-          echo "TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
+  #     - name: Get latest tag
+  #       id: latest_tag
+  #       shell: bash
+  #       run: |
+  #         echo "TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
 
-      - name: Generate a changelog
-        uses: orhun/git-cliff-action@v1
-        id: git-cliff
-        with:
-          config: cliff.toml
-          args: 0.5.0..${{ steps.latest_tag.outputs.TAG_NAME }}
-        env:
-          OUTPUT: ${{ github.workspace }}/CHANGELOG.md
+  #     - name: Generate a changelog
+  #       uses: orhun/git-cliff-action@v1
+  #       id: git-cliff
+  #       with:
+  #         config: cliff.toml
+  #         args: 0.5.0..${{ steps.latest_tag.outputs.TAG_NAME }}
+  #       env:
+  #         OUTPUT: ${{ github.workspace }}/CHANGELOG.md
 
-      - name: Show CHANGELOG
-        run: |
-          cat CHANGELOG.md
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: 'docs(changelog): update changelog'
-          file_pattern: CHANGELOG.md
+  #     - name: Show CHANGELOG
+  #       run: |
+  #         cat CHANGELOG.md
+  #     - uses: stefanzweifel/git-auto-commit-action@v4
+  #       with:
+  #         commit_message: 'docs(changelog): update changelog'
+  #         file_pattern: CHANGELOG.md
