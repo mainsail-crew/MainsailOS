@@ -1,9 +1,3 @@
-#!/usr/bin/env bash
-# Shebang for better file detection
-
-# Declare Variables before exporting.
-# See https://www.shellcheck.net/wiki/SC2155
-
 BASE_ARCH="arm64"
 
 DOWNLOAD_URL_CHECKSUM="https://downloads.raspberrypi.org/raspios_lite_arm64_latest.sha256"

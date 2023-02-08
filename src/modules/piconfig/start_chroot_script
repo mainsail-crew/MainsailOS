@@ -31,6 +31,9 @@ cp "${PICONFIG_CONFIG_TXT_FILE}" /tmp
 # Step 3: Move default config to backup file
 mv "${PICONFIG_CONFIG_TXT_FILE}" "${PICONFIG_CONFIG_BAK_FILE}"
 
+echo_green "Disable kms and enable fkms - temporary workaround for BTT pi TFT touch screens"
+sed -i 's/^dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/' /tmp/config.txt
+
 # Step 4: Concatenate files to config
 cat /tmp/config.txt /tmp/msos_config.txt > /tmp/config.new
 
@@ -47,8 +50,6 @@ cp "${PICONFIG_CMDLINE_TXT_FILE}" "${PICONFIG_CMDLINE_BAK_FILE}"
 echo_green "Disable Serial Linux console ..."
 sed -i 's/console=serial0,115200 //' "${PICONFIG_CMDLINE_TXT_FILE}"
 
-echo_green "Disable kms and enable fkms - temporary workaround for BTT pi TFT touch screens"
-sed -i 's/^dtoverlay=vc4-kms-v3d/dtoverlay=vc4-fkms-v3d/' "${PICONFIG_CONFIG_TXT_FILE}"
 
 # Step 9: Disable bluetooth and related services
 echo_green "Disabling Bluetooth related services..."
@@ -56,9 +57,24 @@ systemctl_if_exists disable hciuart.service
 systemctl_if_exists disable bluetooth.service
 systemctl_if_exists disable bluealsa.service
 
+
 # Step 10: Increase swapfile size
 if [[ -f "${PICONFIG_SWAP_CONF_FILE}" ]]; then
     echo_green "Increasing swap file size to ${PICONFIG_SWAP_SIZE} Mb. Limit to ${PICONFIG_SWAP_MAX} Mb"
     sed -i 's/^CONF_SWAPSIZE.*/'CONF_SWAPSIZE="${PICONFIG_SWAP_SIZE}"'/' "${PICONFIG_SWAP_CONF_FILE}"
     sed -i 's/^#CONF_MAXSWAP.*/'CONF_MAXSWAP="${PICONFIG_SWAP_MAX}"'/' "${PICONFIG_SWAP_CONF_FILE}"
 fi
+
+# Step 11: Enable autologin (required for Pi3's, Pi4's do this by default, for some reason)
+echo_green "Enable autologin..."
+systemctl set-default multi-user.target
+cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf << EOF
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin $BASE_USER --noclear %I \$TERM
+EOF
+
+# Step 12: Add root rights to X11
+echo_green "Adding root rights to X11.."
+echo needs_root_rights=yes>>/etc/X11/Xwrapper.config
+

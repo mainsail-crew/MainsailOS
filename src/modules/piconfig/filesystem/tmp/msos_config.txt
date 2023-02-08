@@ -19,6 +19,9 @@
 ## Due lag of RAM, limit GPU RAM
 gpu_mem=128
 
+[pi02]
+dtoverlay=vc4-kms-v3d
+
 [pi2]
 gpu_mem=256
 
@@ -26,14 +29,19 @@ gpu_mem=256
 ## Use 256 if 1Gb Ram Model!
 gpu_mem=128
 # gpu_mem=256
+## BTT Pi TFT's touch don't work with FKMS on pi3, unlike pi4.
+dtoverlay=vc4-kms-v3d
 
 [cm4]
 ## Enable DWC2 for usb on CM4
 dtoverlay=dwc2,dr_mode=host
+dtoverlay=vc4-fkms-v3d
 
 [pi4]
 ## Do not use more than 256Mb on Pi Model 4, it uses its own Management.
 gpu_mem=256
+## Unlike pi3, BTT Pi TFT's touch don't work with KMS on pi4
+dtoverlay=vc4-fkms-v3d
 
 [all]
 
