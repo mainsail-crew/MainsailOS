@@ -64,7 +64,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: "master"
+          ref: "v2.x"
           fetch-depth: 0
 
       - name: Get latest tag
@@ -108,12 +108,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: master
+          ref: v2.x
 
       - name: Create Matrix
         id: set-matrix
         run: |
-          ARRAY=$(find ${{ github.workspace }}/../config -type f -printf '%P\n' | sed '/default/d' | sort | jq -R -s -c 'split("\n")[:-1]')
+          ARRAY=$(find ${{ github.workspace }}/config -type f -printf '%P\n' | sed '/default/d' | sort | jq -R -s -c 'split("\n")[:-1]')
           echo "matrix=${ARRAY}" >> $GITHUB_OUTPUT
 
   build:
@@ -131,7 +131,7 @@ jobs:
         uses: mainsail-crew/MainsailOS-actions/build-image@master
         with:
           config: ${{ matrix.config }}
-          build-ref: master
+          build-ref: v2.x
 
       - name: Copy output
         id: copy-image
