@@ -55,7 +55,7 @@ jobs:
 
   release:
     name: Create Release
-    needs: update-master-branch
+    # needs: update-master-branch
     runs-on: ubuntu-latest
     outputs:
       id: ${{ steps.create-release.outputs.id }}
