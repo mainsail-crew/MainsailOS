@@ -113,7 +113,7 @@ jobs:
       - name: Create Matrix
         id: set-matrix
         run: |
-          ARRAY=$(find ${{ github.workspace }}/config -type f -printf '%P\n' | sed '/default/d' | sort | jq -R -s -c 'split("\n")[:-1]')
+          ARRAY=$(find ${{ github.workspace }}/../config -type f -printf '%P\n' | sed '/default/d' | sort | jq -R -s -c 'split("\n")[:-1]')
           echo "matrix=${ARRAY}" >> $GITHUB_OUTPUT
 
   build:
