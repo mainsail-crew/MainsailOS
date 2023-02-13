@@ -25,7 +25,7 @@ Alternatively, if you're using a pi with Ethernet, you can use an ethernet cable
 ## Preparing your control board
 
 :::info
-It is heavily recommended that you flash your board and make sure it is detected in the configurator **before** your start connecting your wiring.
+It is heavily recommended that you flash your board and make sure it is detected in the configurator **before** you plug in your stepper drivers and start connecting your wiring.
 :::
 
 After completing the wifi setup wizard, wait a couple of minutes, then open [http://RatOS.local/configure?step=1](http://RatOS.local/configure?step=1) in your browser (or whatever hostname you chose during setup). Complete the wizard to flash your control board and optionally a toolboard. When you've done that successfully, the configurator will lead you to Mainsail, which we'll now use to update RatOS and related packages to the latest version.
