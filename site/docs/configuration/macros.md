@@ -22,6 +22,8 @@ SET_GCODE_VARIABLE MACRO=RatOS VARIABLE=relative_extrusion VALUE=True
 SET_GCODE_VARIABLE MACRO=RatOS VARIABLE=preheat_extruder_temp VALUE=200
 ```
 
+Not all of the available variables are listed in printer.cfg by default. If you want to change a variable that isn't in printer.cfg simply just add it under the `[gcode_macro RatOS]` section.
+
 Below you'll find a list of the available variables and what they do.
 
 ### Relative Extrusion
@@ -63,8 +65,13 @@ Travel speed to use for gcode moves in RatOS Macro's in mm/s.
 | --------------------------- | --------------- | ------- |
 | variable_calibrate_bed_mesh | True / False    | True    |
 
-Whether or not to calibrate a bed mesh before each print. If you prefer calibrating your bed mesh manually instead of on each print, you can disable it by setting this to False. With bed meshing disabled you must have a mesh saved under the "ratos" profile, use BED_MESH_CALIBRATE PROFILE=ratos and SAVE_CONFIG to calibrate and save a mesh.
-If you want to implement additional mesh handling logic you can override the `_START_PRINT_BED_MESH` macro in your printer.cfg `USER OVERRIDES` section.
+Whether or not to calibrate a bed mesh before each print. If you prefer calibrating your bed mesh manually instead of on each print, you can disable it by setting this to `False`. Disabling `variable_calibrate_bed_mesh` will stop RatOS from loading a bed mesh entirely. If you want it to load a mesh, you can set `variable_bed_mesh_profile` to the name of the profile you want it to load.
+
+| Name                      | Possible Values    | Default   |
+| ------------------------- | ------------------ | --------- |
+| variable_bed_mesh_profile | undefined / string | undefined |
+
+Use this variable to set name for the bed_mesh profile that RatOS calibrate and loads. If `variable_calibrate_bed_mesh` is `False` you must set this variable to the profile name you wish to load, or no bed mesh will be loaded. If variable_calibrate_bed_mesh is `True` and this variable isn't set, RatOS will use `ratos` as the profile name.
 
 ### Nozzle Priming
 
