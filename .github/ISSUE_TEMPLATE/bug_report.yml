@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         This issue form is for reporting bugs only!
-        If you have a feature request, please use [feature_request](/new?template=feature_request.yml)
+        If you have a feature request, please use [feature_request](/Rat-OS/RatOS/issues/new?template=feature_request.yml)
   - type: textarea
     id: what-happened
     attributes:
