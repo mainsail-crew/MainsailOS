@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+# shellcheck enable=require-variable-braces
+
+BASE_ARCH="arm64"
+BASE_IMAGE_ENLARGEROOT=10500
+BASE_IMAGE_RESIZEROOT=600
+BASE_ADD_USER="yes"
+BASE_USER="pi"
+BASE_USER_PASSWORD="raspberry"
+
+# Image source
+DOWNLOAD_URL_CHECKSUM="https://github.com/bigtreetech/CB1/releases/download/V2.3.0/CB1_Debian11_minimal_kernel5.16_20230208.img.sha256"
+DOWNLOAD_URL_IMAGE="https://github.com/bigtreetech/CB1/releases/download/V2.3.0/CB1_Debian11_minimal_kernel5.16_20230208.img.xz"
+
+# export Variables
+export BASE_ARCH
+export BASE_IMAGE_ENLARGEROOT
+export BASE_IMAGE_RESIZEROOT
+export DOWNLOAD_URL_CHECKSUM
+export DOWNLOAD_URL_IMAGE
+
+export MODULES="base,deb_namserver,passwordless_sudo,pkgupgrade(network,cb1config,klipper,node,is_req_preinstall,moonraker,opiconfig,ratos(mainsail,crowsnest,linear_movement_analysis,timelapse,klipperscreen,rpi_mcu,disable-services(hotspot_cb1),dfu-util),password-for-sudo),postrename"

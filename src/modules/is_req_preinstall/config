@@ -4,4 +4,3 @@
 [ -n "$IS_REQ_PREINSTALL_DEPS" ] || IS_REQ_PREINSTALL_DEPS="python3-numpy python3-matplotlib \
 libatlas3-base libatlas-base-dev libgfortran5"
 [ -n "$IS_REQ_PREINSTALL_PIP" ] || IS_REQ_PREINSTALL_PIP="numpy<=1.23.4"
-[ -n "$IS_REQ_PREINSTALL_CFG_FILE" ] || IS_REQ_PREINSTALL_CFG_FILE="/boot/config.txt"

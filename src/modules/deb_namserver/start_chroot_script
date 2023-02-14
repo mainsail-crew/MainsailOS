@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# because the builder kept failing to resolve 'deb.debian.org' https://stackoverflow.com/a/51037151
+########
+
+# Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+echo "nameserver 8.8.8.8" >> /etc/resolv.conf

@@ -46,7 +46,9 @@ sed -i "s@^DAEMON_OPTS=\"\"@^#DAEMON_OPTS=\"\"@g" /etc/default/hostapd
 #         ia_pd 2 wlan0/1/64 # request prefixes for VLANs
 # " >> /etc/dhcpcd.conf
 
-sed -i 's/clientid/# clientid/g' /etc/dhcpcd.conf
+if [ -f /etc/dhcpcd.conf ]; then
+  sed -i 's/clientid/# clientid/g' /etc/dhcpcd.conf
+fi
 
 echo "
 # Auto-hotspot Config

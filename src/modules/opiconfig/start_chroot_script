@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#### opiconfig - SB1 Configuration Module
+#from https://www.reddit.com/r/BIGTREETECH/comments/xfom6n/comment/it32e6v/
+
+# shellcheck enable=require-variable-braces
+
+## Source error handling, leave this in place
+set -Ee
+
+# Set DEBIAN_FRONTEND to noninteractive
+if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
+    export DEBIAN_FRONTEND=noninteractive
+fi
+
+## Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+echo_green "Enable SPI interface on Orange Pi SBC's ..."
+
+# Step 1: Copy default config to backup file
+cp "${OPICONFIG_CONFIG_TXT_FILE}" "${OPICONFIG_CONFIG_BAK_FILE}"
+
+# Step 2: Enable SPI
+echo "overlays=spi" >> "${OPICONFIG_CONFIG_TXT_FILE}"
+echo "spidevparam_spidev_spi_bus=1" >> "${OPICONFIG_CONFIG_TXT_FILE}"
+echo "param_spidev_spi_cs=1" >> "${OPICONFIG_CONFIG_TXT_FILE}"
+echo "param_spidev_max_freq=1000000" >> "${OPICONFIG_CONFIG_TXT_FILE}"
+
+echo_green "Enable SPI interface on SB1 ... DONE!"

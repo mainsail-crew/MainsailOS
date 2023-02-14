@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# because the CB1 image doesn't have the Pi user, 
+#and the add user module doesn't make it passwordless 
+#which breaks the rest of the build because it assumes passwordless sudo
+########
+
+# Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+echo -e "${BASE_USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/010_pi-nopasswd

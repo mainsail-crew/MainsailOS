@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#### opiconfig - CB1 Configuration Module
+
+# Shebang for better file detection
+# shellcheck disable=all
+
+[ -n "$OPICONFIG_CONFIG_TXT_FILE" ] || OPICONFIG_CONFIG_TXT_FILE="/boot/BoardEnv.txt"
+[ -n "$OPICONFIG_CONFIG_BAK_FILE" ] || OPICONFIG_CONFIG_BAK_FILE="/boot/BoardEnv.txt.backup"

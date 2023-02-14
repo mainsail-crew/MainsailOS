@@ -25,8 +25,12 @@ get_img_name() {
 DIST_VERSION="$(get_version)"
 BASE_ZIP_IMG="$(get_img_name)"
 DIST_NAME="RatOS"
+BASE_IMAGE_ENLARGEROOT=6500
+BASE_IMAGE_RESIZEROOT=600
 
 # export Variables
 export DIST_NAME
 export DIST_VERSION
 export BASE_ZIP_IMG
+export BASE_IMAGE_ENLARGEROOT
+export BASE_IMAGE_RESIZEROOT

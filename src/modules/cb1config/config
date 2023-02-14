@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+
+[ -n "$PICONFIG_SWAP_CONF_FILE" ] || PICONFIG_SWAP_CONF_FILE="/etc/dphys-swapfile"
+[ -n "$PICONFIG_SWAP_SIZE" ] || PICONFIG_SWAP_SIZE="256"
+[ -n "$PICONFIG_SWAP_MAX" ] || PICONFIG_SWAP_MAX="1024"

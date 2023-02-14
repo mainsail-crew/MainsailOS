@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# install ratos wifi hotspot on cb1
+# GPL V3
+########
+
+# Error handling
+set -xe
+
+source /common.sh
+install_cleanup_trap
+
+echo_green "Install ratos hotspot tool dependencies..."
+check_install_pkgs dnsmasq
+
+echo_green "Downloading ratos hotspot tool..."
+pushd "/home/${BASE_USER}"
+gitclone HOTSPOT_CB1 create_ap
+
+echo_green "Installing ratos hotspot tool..."
+pushd "/home/${BASE_USER}/create_ap"
+make install
+
+#edit the config
+unpack /filesystem/root /
+
+systemctl enable create_ap
+echo_green "Installing ratos hotspot tool ... DONE!"

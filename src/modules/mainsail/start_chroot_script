@@ -52,6 +52,7 @@ chmod 644 /etc/logrotate.d/*
 ### Download and Install Mainsail Web Frontend
 echo_green "Install mainsail Web Frontend ..."
 pushd /home/"${BASE_USER}" &> /dev/null || exit 1
+echo_green "Downloading Mainsail ..."
 sudo -u "${BASE_USER}" wget -q --show-progress -O mainsail.zip "${MAINSAIL_URL}"
 sudo -u "${BASE_USER}" unzip mainsail.zip -d /home/"${BASE_USER}"/mainsail
 ## cleanup
