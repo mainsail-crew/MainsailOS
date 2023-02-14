@@ -11,6 +11,10 @@ set -e
 source /common.sh
 install_cleanup_trap
 
+# Add root rights to X11
+echo_green "Adding root rights to X11.."
+echo needs_root_rights=yes>>/etc/X11/Xwrapper.config
+
 echo_green "Installing KlipperScreen"
 
 cd /home/pi

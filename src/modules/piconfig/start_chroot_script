@@ -73,8 +73,3 @@ cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf << EOF
 ExecStart=
 ExecStart=-/sbin/agetty --autologin $BASE_USER --noclear %I \$TERM
 EOF
-
-# Step 12: Add root rights to X11
-echo_green "Adding root rights to X11.."
-echo needs_root_rights=yes>>/etc/X11/Xwrapper.config
-
