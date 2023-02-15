@@ -8,11 +8,15 @@ source /common.sh
 install_cleanup_trap
 
 pushd /home/${BASE_USER}
-apt-get -y install libusb-1.0-0-dev autoconf
+echo_green "Installing DFU-util build dependencies"
+apt-get -y install libusb-1.0-0-dev autoconf pandoc
+echo_green "Cloning and building DFU-util"
 git clone git://git.code.sf.net/p/dfu-util/dfu-util
 pushd /home/${BASE_USER}/dfu-util
 ./autogen.sh
 ./configure
 make install
+echo_green "Removing DFU-util build dependencies"
+apt-get -y purge pandoc
 popd
 popd
