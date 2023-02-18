@@ -3,14 +3,12 @@
 # shellcheck enable=require-variable-braces
 
 BASE_ROOT_PARTITION=1
-BASE_ARCH="arm64"
 
 # Image source
 DOWNLOAD_URL_CHECKSUM="https://fi.mirror.armbian.de/archive/lime2/archive/Armbian_22.08.7_Lime2_bullseye_current_5.15.74.img.xz.sha"
 DOWNLOAD_URL_IMAGE="https://fi.mirror.armbian.de/archive/lime2/archive/Armbian_22.08.7_Lime2_bullseye_current_5.15.74.img.xz"
 
 # export Variables
-export BASE_ARCH
 export BASE_ROOT_PARTITION
 export DOWNLOAD_URL_CHECKSUM
 export DOWNLOAD_URL_IMAGE
