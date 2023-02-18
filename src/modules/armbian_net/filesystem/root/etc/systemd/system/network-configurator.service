@@ -13,7 +13,7 @@ ConditionPathExists=/boot/network_config.txt
 [Service]
 Type=idle
 RemainAfterExit=yes
-ExecStart=/usr/lib/armbian/armbian-firstrun-config
+ExecStart=/usr/local/bin/network-configurator
 TimeoutStartSec=2min
 
 [Install]
