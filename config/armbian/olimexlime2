@@ -3,8 +3,8 @@
 # shellcheck enable=require-variable-braces
 
 # Image source
-DOWNLOAD_URL_CHECKSUM="https://images.mainsail.xyz/olimexlime2/2023-02-18-armbian-23.02.0-trunk-olimex_lime_2.img.xz.sha256"
-DOWNLOAD_URL_IMAGE="https://images.mainsail.xyz/olimexlime2/2023-02-18-armbian-23.02.0-trunk-olimex_lime_2.img.xz"
+DOWNLOAD_URL_CHECKSUM="http://images.mainsail.xyz/olimexlime2/2023-02-18-armbian-23.02.0-trunk-olimex_lime_2.img.xz.sha256"
+DOWNLOAD_URL_IMAGE="http://images.mainsail.xyz/olimexlime2/2023-02-18-armbian-23.02.0-trunk-olimex_lime_2.img.xz"
 
 # export Variables
 export BASE_ARCH
