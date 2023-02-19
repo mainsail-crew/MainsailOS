@@ -5,8 +5,8 @@
 BASE_ROOT_PARTITION=1
 
 # Image source
-DOWNLOAD_URL_CHECKSUM="https://fi.mirror.armbian.de/archive/lime2/archive/Armbian_22.08.7_Lime2_bullseye_current_5.15.74.img.xz.sha"
-DOWNLOAD_URL_IMAGE="https://fi.mirror.armbian.de/archive/lime2/archive/Armbian_22.08.7_Lime2_bullseye_current_5.15.74.img.xz"
+DOWNLOAD_URL_CHECKSUM="https://github.com/mainsail-crew/armbian-builds/suites/11067166690/artifacts/562910330"
+DOWNLOAD_URL_IMAGE="https://github.com/mainsail-crew/armbian-builds/suites/11067166690/artifacts/562910329"
 
 # export Variables
 export BASE_ROOT_PARTITION
