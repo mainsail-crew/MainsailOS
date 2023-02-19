@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+# shellcheck enable=require-variable-braces
+
+# Image source
+DOWNLOAD_URL_CHECKSUM="https://github.com/mainsail-crew/armbian-builds/suites/11067166690/artifacts/562910330"
+DOWNLOAD_URL_IMAGE="https://github.com/mainsail-crew/armbian-builds/suites/11067166690/artifacts/562910329"
+
+# export Variables
+export BASE_ARCH
+export DOWNLOAD_URL_CHECKSUM
+export DOWNLOAD_URL_IMAGE
