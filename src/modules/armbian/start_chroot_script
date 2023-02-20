@@ -13,6 +13,17 @@ set -xe
 source /common.sh
 install_cleanup_trap
 
+### Helper func
+is_board_type() {
+    local board releasefile
+    board=""
+    releasefile="/etc/armbian-release-info.txt"
+    if [[ -f "${releasefile}" ]]; then
+        board="$(grep "BOARD=" "${releasefile}" | cut -d'=' -f2)"
+    fi
+    echo "${board}"
+}
+
 # Install armbian specific packages
 apt update
 # shellcheck disable=SC2086
@@ -56,3 +67,27 @@ chmod +x /etc/update-motd.d/*
 if [ -f "/etc/default/armbian-motd" ]; then
     sed -i 's/MOTD_DISABLE=""/MOTD_DISABLE="header"/' /etc/default/armbian-motd
 fi
+
+
+echo_green "Enable SPI interface on Orange Pi SBC's ..."
+
+# Step 1: Copy default config to backup file
+cp "${ARMBIAN_CONFIG_TXT_FILE}" "${ARMBIAN_CONFIG_BAK_FILE}"
+
+# Step 2: Enable SPI in armbianEnv.txt depending on device
+
+## OrangePi 3 LTS
+if [[ "$(is_board_type)" == "orangepi3-lts" ]]; then
+    echo "overlays=spi-spidev1" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+fi
+
+## OrangePi 4 LTS
+if [[ "$(is_board_type)" == "orangepi4-lts" ]]; then
+    echo "overlays=spi-spidev" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+    echo "param_spidev_spi_bus=1" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+fi
+
+# Step 3: add spi-dev module to /etc/modules
+echo "spi-dev" >> "${ARMBIAN_MODULES_FILE}"
+
+echo_green "Enable SPI interface on Orange Pi SBC's ... DONE!"

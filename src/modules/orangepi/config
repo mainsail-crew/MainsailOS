@@ -3,3 +3,6 @@
 
 [ -n "$ORANGEPI_DEPS" ] || ORANGEPI_DEPS="avahi-daemon iptables \
 bash-completion"
+[ -n "$ORANGEPI_CONFIG_TXT_FILE" ] || ORANGEPI_CONFIG_TXT_FILE="/boot/orangepiEnv.txt"
+[ -n "$ORANGEPI_CONFIG_BAK_FILE" ] || ORANGEPI_CONFIG_BAK_FILE="/boot/orangepiEnv.txt.backup"
+[ -n "$ORANGEPI_MODULES_FILE" ] || ORANGEPI_MODULES_FILE="/etc/modules"
