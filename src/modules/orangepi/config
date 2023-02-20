@@ -1,0 +1,5 @@
+#!/bin/bash
+# shellcheck disable=all
+
+[ -n "$ORANGEPI_DEPS" ] || ORANGEPI_DEPS="avahi-daemon iptables \
+bash-completion"
