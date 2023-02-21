@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Shebang for better file detection
 #### MainsailOS Specific Tweaks for armbian images
 ####
 #### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
