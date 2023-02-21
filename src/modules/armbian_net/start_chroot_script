@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
-# MainsailOS network configurator for armbian images
-# written by Stephan Wendel aka KwadFan
-# <me@stephanwe.de>
-# GPL V3
-########
+#### MainsailOS network configurator for armbian images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
 
 # shellcheck enable=require-variable-braces
 

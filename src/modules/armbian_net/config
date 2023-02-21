@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #Shebang for better file detection
-#### armbian_net module
+#### MainsailOS network configurator for armbian images
 ####
 #### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
 #### Copyright 2023 - till today
