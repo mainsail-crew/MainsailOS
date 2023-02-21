@@ -24,13 +24,13 @@ gen_root_pw() {
 
 ## Clean up
 ## Step 1: Remove autologin and lock root account
-if [ -f "/etc/systemd/system/getty@.service.d/override.conf" ]; then
+if [[ -f "/etc/systemd/system/getty@.service.d/override.conf" ]]; then
     rm -f /etc/systemd/system/getty@.service.d/override.conf
 fi
 ## END
 
 ## Step 2: Disable autologin on serial console
-if [ -f "/etc/systemd/system/serial-getty@.service.d/override.conf" ]; then
+if [[ -f "/etc/systemd/system/serial-getty@.service.d/override.conf" ]]; then
     sed -i 's/--autologin root //' /etc/systemd/system/serial-getty@.service.d/override.conf
 fi
 ## END
