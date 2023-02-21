@@ -17,10 +17,10 @@ set -Ee
 source /common.sh
 install_cleanup_trap
 
-## Helper functions
-gen_root_pw() {
-    tr -dc "[:alnum:]" < /dev/urandom | head -c 50
-}
+# ## Helper functions
+# gen_root_pw() {
+#     tr -dc "[:alnum:]" < /dev/urandom | head -c 50
+# }
 
 ## Clean up
 ## Step 1: Remove autologin and lock root account
@@ -36,11 +36,12 @@ fi
 ## END
 
 ## Step 3: Generate random root passwd
-yes "$(gen_root_pw)" | passwd root
+# yes "$(gen_root_pw)" | passwd root
+sudo passwd -d root
 ## END
 
 ## Step 4: Lock root account
-yes "${BASE_USER_PASSWORD}" | sudo -u "${BASE_USER}" passwd -l root
+sudo passwd -l root
 ## END
 
 ## Step 5: Remove passwdless sudo
