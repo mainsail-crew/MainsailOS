@@ -35,35 +35,35 @@ if_group_exists_run() {
     fi
 }
 
-
-# Install armbian specific packages
-apt update
-# shellcheck disable=SC2086
-check_install_pkgs ${ORANGEPI_DEPS}
-
 # passwordless sudo during install
 # Will be removed in cleanup
 echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# set groups
+
+## Step 1: Install armbian specific packages
+apt update
+# shellcheck disable=SC2086
+check_install_pkgs ${ORANGEPI_DEPS}
+
+# Step 2: Set default groups
 if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
 usermod -aG video,audio,plugdev,games,netdev,sudo,systemd-journal "${BASE_USER}"
 
-# Remove user "orangepi"
+# Substep 1: Remove user "orangepi"
 sudo userdel orangepi
 sudo rm -rf /home/orangepi
 
-# Patch sshd_config
+# Step 3: Patch sshd_config (Limit retrys, disable root login via ssh)
 sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
 sed -i 's/^X11Forwarding/#X11Forwarding/' /etc/ssh/sshd_config
 sed -i 's/^#MaxAuthTries 6/MaxAuthTries 3/' /etc/ssh/sshd_config
 
-# Try patching first login in build stage
+# Step 4: Try patching first login in build stage
 if [ -f "/root/.not_logged_in_yet" ]; then
     rm -f /root/.not_logged_in_yet
 fi
 
-# Move armbian-release to display mainsailos-release
+# Step 5: Move armbian-release to display mainsailos-release
 if [[ -f "/etc/orangepi-release" ]]; then
     echo_green "OrangePi release file found! moving to: 'orangepi-release-info.txt'"
     mv /etc/orangepi-release /etc/orangepi-release-info.txt
@@ -71,24 +71,33 @@ else
     echo_red "OrangePi release file not found! [SKIPPED]"
 fi
 
-# Remove orangepi_first_run.txt
-if [[ -f "/boot/orangepi_first_run.txt" ]]; then
-    sudo rm -rf /boot/orangepi_first_run.txt
+# Step 6: Remove orangepi_first_run.txt.template
+if [[ -f "/boot/orangepi_first_run.txt.template" ]]; then
+    sudo rm -rf /boot/orangepi_first_run.txt.template
 fi
 
-# update motd
+## Step 7: Patch dynamic motd
+echo_green "Patch dynamic motd ..."
 unpack /filesystem/root /
 chmod +x /etc/update-motd.d/*
-if [ -f "/etc/default/armbian-motd" ]; then
-    sed -i 's/MOTD_DISABLE=""/MOTD_DISABLE="header"/' /etc/default/armbian-motd
+if [ -f "/etc/default/orangepi-motd" ]; then
+    sed -i 's/^MOTD_DISABLE=""/MOTD_DISABLE="header tips"/' /etc/default/orangepi-motd
 fi
+## End
 
+## Step 8: Enable SPI interface by default
 echo_green "Enable SPI interface on Orange Pi SBC's ..."
 
-# Step 1: Copy default config to backup file
+# Substep 1: Copy default config to backup file
 cp "${ORANGEPI_CONFIG_TXT_FILE}" "${ORANGEPI_CONFIG_BAK_FILE}"
 
-# Step 2: Enable SPI in armbianEnv.txt depending on device
+# Substep 2: Enable SPI in armbianEnv.txt depending on device
+
+## Orangepi Zero2
+if [[ "$(is_board_type)" == "orangepizero2" ]]; then
+    echo "overlays=spi-spidev" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+    echo "param_spidev_spi_bus=1" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+fi
 
 ## OrangePi 3 LTS
 if [[ "$(is_board_type)" == "orangepi3-lts" ]]; then
@@ -101,7 +110,8 @@ if [[ "$(is_board_type)" == "orangepi4-lts" ]]; then
     echo "param_spidev_spi_bus=1" >> "${ORANGEPI_CONFIG_TXT_FILE}"
 fi
 
-# Step 3: add spi-dev module to /etc/modules
+# Substep 3: add spi-dev module to /etc/modules
 echo "spi-dev" >> "${ORANGEPI_MODULES_FILE}"
 
 echo_green "Enable SPI interface on Orange Pi SBC's ... DONE!"
+## END
