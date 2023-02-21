@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------
 #
-# MainsailOS (armbian edition) Network Configuration
+# MainsailOS (orangepi edition) Network Configuration
 # Set optional end user configuration
 #    - Rename this file from /boot/network_config.txt.template to /boot/network_config.txt
 #    - Settings below will be applied every time you reboot your machine.
