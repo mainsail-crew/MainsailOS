@@ -26,19 +26,23 @@ install_cleanup_trap
 
 ## Step 1: Install files
 unpack filesystem/root / root
+## END
 
 ## Step 2: remove original template
 if [[ -f "${ARMBIAN_NET_FIRSTRUN_FILE}" ]]; then
     sudo rm -rf "${ARMBIAN_NET_FIRSTRUN_FILE}"
 fi
+## END
 
 ## Step 3: Disable first run service
 systemctl_if_exists disable armbian-firstrun-config.service
+## END
 
 ## Step 4: Copy original script to /usr/local/bin/network-configurator
 if [[ -f "${ARMBIAN_NET_FIRSTRUN_SCRIPT}" ]]; then
     sudo cp -p "${ARMBIAN_NET_FIRSTRUN_SCRIPT}" "${ARMBIAN_NET_NC_PATH}"
 fi
+## END
 
 ## Step 5: patch /usr/local/bin/network-configurator
 if [[ -f "${ARMBIAN_NET_NC_PATH}" ]]; then
@@ -53,6 +57,8 @@ if [[ -f "${ARMBIAN_NET_NC_PATH}" ]]; then
     sed -i '10 i # Original located at /usr/lib/armbian/armbian-firstrun-config' "${ARMBIAN_NET_NC_PATH}"
     sed -i '11 i # Changes made by https:\/\/github.com/mainsail-crew' "${ARMBIAN_NET_NC_PATH}"
 fi
+## END
 
 ## Step 6: Enable systemd service
 systemctl_if_exists enable network-configurator.service
+## END
