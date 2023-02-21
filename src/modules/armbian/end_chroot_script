@@ -5,27 +5,27 @@
 # GPL V3
 ########
 
-## functions
+## Helper functions
 gen_root_pw() {
     tr -dc "[:alnum:]" < /dev/urandom | head -c 50
 }
 
-# Clean up
-# Remove autologin and lock root account
+## Clean up
+## Step 1: Remove autologin and lock root account
 if [ -f "/etc/systemd/system/getty@.service.d/override.conf" ]; then
     rm -f /etc/systemd/system/getty@.service.d/override.conf
 fi
 
-# Disable autologin on serial console
+## Step 2: Disable autologin on serial console
 if [ -f "/etc/systemd/system/serial-getty@.service.d/override.conf" ]; then
     sed -i 's/--autologin root //' /etc/systemd/system/serial-getty@.service.d/override.conf
 fi
 
-# Generate random root passwd
+## Step 3: Generate random root passwd
 yes "$(gen_root_pw)" | passwd root
 
-# lock root account
+## Step 4: Lock root account
 sudo -u "${BASE_USER}" passwd -l root
 
-# Remove passwdless sudo
+## Step 5: Remove passwdless sudo
 sed -i '/'"${BASE_USER}"' ALL=(ALL:ALL) NOPASSWD:ALL/d' /etc/sudoers
