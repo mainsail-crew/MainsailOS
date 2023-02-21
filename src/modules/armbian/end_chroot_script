@@ -40,7 +40,7 @@ yes "$(gen_root_pw)" | passwd root
 ## END
 
 ## Step 4: Lock root account
-sudo -u "${BASE_USER}" passwd -l root
+yes "${BASE_USER_PASSWORD}" | sudo -u "${BASE_USER}" passwd -l root
 ## END
 
 ## Step 5: Remove passwdless sudo
