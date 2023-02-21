@@ -62,7 +62,7 @@ sed -i 's/^#MaxAuthTries 6/MaxAuthTries 3/' /etc/ssh/sshd_config
 ## END
 
 ## Step 4: Try patching first login in build stage
-if [ -f "/root/.not_logged_in_yet" ]; then
+if [[ -f "/root/.not_logged_in_yet" ]]; then
     rm -f /root/.not_logged_in_yet
 fi
 ## END
@@ -80,7 +80,7 @@ fi
 echo_green "Patch dynamic motd ..."
 unpack /filesystem/root /
 chmod +x /etc/update-motd.d/*
-if [ -f "/etc/default/armbian-motd" ]; then
+if [[ -f "/etc/default/armbian-motd" ]]; then
     sed -i 's/MOTD_DISABLE=""/MOTD_DISABLE="header"/' /etc/default/armbian-motd
 fi
 ## END
