@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
-# MainsailOS Specific Tweaks for orangepi images
-# written by Stephan Wendel aka KwadFan
-# <me@stephanwe.de>
-# GPL V3
-########
+#### MainsailOS Specific Tweaks for orangepi images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
 
+# shellcheck enable=require-variable-braces
 # Source error handling, leave this in place
-set -xe
+set -Ee
 
 # Source CustomPIOS common.sh
 # shellcheck disable=SC1091
@@ -17,7 +21,7 @@ install_cleanup_trap
 is_board_type() {
     local board releasefile
     board=""
-    releasefile="/etc/armbian-release-info.txt"
+    releasefile="/etc/orangepi-release-info.txt"
     if [[ -f "${releasefile}" ]]; then
         board="$(grep "BOARD=" "${releasefile}" | cut -d'=' -f2)"
     fi
@@ -44,48 +48,49 @@ echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 apt update
 # shellcheck disable=SC2086
 check_install_pkgs ${ORANGEPI_DEPS}
+## END
 
-# Step 2: Set default groups
+## Step 2: Set default groups
 if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
 usermod -aG video,audio,plugdev,games,netdev,sudo,systemd-journal "${BASE_USER}"
+## END
 
-# Substep 1: Remove user "orangepi"
+## Substep 1: Remove user "orangepi"
 sudo userdel orangepi
 sudo rm -rf /home/orangepi
+## END
 
-# Step 3: Patch sshd_config (Limit retrys, disable root login via ssh)
+## Step 3: Patch sshd_config (Limit retrys, disable root login via ssh)
 sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
 sed -i 's/^X11Forwarding/#X11Forwarding/' /etc/ssh/sshd_config
 sed -i 's/^#MaxAuthTries 6/MaxAuthTries 3/' /etc/ssh/sshd_config
+## END
 
-# Step 4: Try patching first login in build stage
+## Step 4: Try patching first login in build stage
 if [ -f "/root/.not_logged_in_yet" ]; then
     rm -f /root/.not_logged_in_yet
 fi
+## END
 
-# Step 5: Move armbian-release to display mainsailos-release
+## Step 5: Move armbian-release to display mainsailos-release
 if [[ -f "/etc/orangepi-release" ]]; then
     echo_green "OrangePi release file found! moving to: 'orangepi-release-info.txt'"
     mv /etc/orangepi-release /etc/orangepi-release-info.txt
 else
     echo_red "OrangePi release file not found! [SKIPPED]"
 fi
+## END
 
-# Step 6: Remove orangepi_first_run.txt.template
-if [[ -f "/boot/orangepi_first_run.txt.template" ]]; then
-    sudo rm -rf /boot/orangepi_first_run.txt.template
-fi
-
-## Step 7: Patch dynamic motd
+## Step 6: Patch dynamic motd
 echo_green "Patch dynamic motd ..."
 unpack /filesystem/root /
 chmod +x /etc/update-motd.d/*
 if [ -f "/etc/default/orangepi-motd" ]; then
     sed -i 's/^MOTD_DISABLE=""/MOTD_DISABLE="header tips"/' /etc/default/orangepi-motd
 fi
-## End
+## END
 
-## Step 8: Enable SPI interface by default
+## Step 7: Enable SPI interface by default
 echo_green "Enable SPI interface on Orange Pi SBC's ..."
 
 # Substep 1: Copy default config to backup file
