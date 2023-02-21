@@ -35,12 +35,13 @@ if [[ -f "/etc/systemd/system/serial-getty@.service.d/override.conf" ]]; then
 fi
 ## END
 
-## Step 3: Generate random root passwd
-yes "$(gen_root_pw)" | passwd root
+## Step 3: Delete root passwd
+### Deleting root passwd doesn't let you unlock the account
+sudo passwd -d root
 ## END
 
 ## Step 4: Lock root account
-yes "${BASE_USER_PASSWORD}" | sudo -u "${BASE_USER}" passwd -l root
+sudo passwd -l root
 ## END
 
 ## Step 5: Remove passwdless sudo
