@@ -27,17 +27,22 @@ gen_root_pw() {
 if [ -f "/etc/systemd/system/getty@.service.d/override.conf" ]; then
     rm -f /etc/systemd/system/getty@.service.d/override.conf
 fi
+## END
 
 ## Step 2: Disable autologin on serial console
 if [ -f "/etc/systemd/system/serial-getty@.service.d/override.conf" ]; then
     sed -i 's/--autologin root //' /etc/systemd/system/serial-getty@.service.d/override.conf
 fi
+## END
 
 ## Step 3: Generate random root passwd
 yes "$(gen_root_pw)" | passwd root
+## END
 
 ## Step 4: Lock root account
 sudo -u "${BASE_USER}" passwd -l root
+## END
 
 ## Step 5: Remove passwdless sudo
 sed -i '/'"${BASE_USER}"' ALL=(ALL:ALL) NOPASSWD:ALL/d' /etc/sudoers
+## END
