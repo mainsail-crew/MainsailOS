@@ -55,7 +55,7 @@ unpack /filesystem/home/"${BASE_USER}" /home/"${BASE_USER}" "${BASE_USER}"
 
 ## Install all deps at once for time consumption reasons.
 ## APT: Update Repo Database and install Dependencies
-# Force apt update
+# Force apt-get update
 apt-get update
 echo_green "Installing moonraker-timelapse Dependencies ..."
 ## Disabling shellcheck SC2086, because we want "wordsplitting"

@@ -24,7 +24,7 @@ CN_BUILD_INSTALL_SH="/home/${BASE_USER}/crowsnest/tools/install.sh"
 
 echo_green "Installing crowsnest ..."
 
-## Force apt update
+## Force apt-get update
 apt-get update
 ## Make sure 'git' is installed!
 check_install_pkgs git

@@ -28,7 +28,7 @@ MN_BUILD_INSTALL_SH="/home/${BASE_USER}/moonraker/scripts/install-moonraker.sh"
 
 echo_green "Installing Moonraker and enable Moonraker Service ..."
 
-## Force apt update
+## Force apt-get update
 apt-get update
 ## Make sure 'git' is installed!
 check_install_pkgs git

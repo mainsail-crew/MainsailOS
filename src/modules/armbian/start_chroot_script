@@ -14,7 +14,7 @@ source /common.sh
 install_cleanup_trap
 
 # Install armbian specific packages
-apt update
+apt-get update
 # shellcheck disable=SC2086
 check_install_pkgs ${ARMBIAN_DEPS}
 

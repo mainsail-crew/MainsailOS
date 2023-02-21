@@ -33,6 +33,6 @@ function get_parent {
 echo "${DIST_NAME} release ${DIST_VERSION} ($(get_parent))" > /etc/"${DIST_NAME,,}"-release
 
 ### Install CANBoot Dependency
-apt update
+apt-get update
 # shellcheck disable=SC2086
 check_install_pkgs ${MAINSAILOS_DEPS}

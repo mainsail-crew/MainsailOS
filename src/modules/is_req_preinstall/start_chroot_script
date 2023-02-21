@@ -32,8 +32,8 @@ echo_green "Install Input Shaper requirements ..."
 
 ### install all deps at once for time consumption reasons.
 ## APT: Update Repo Database and install Dependencies
-# Force apt update
-apt update
+# Force apt-get update
+apt-get update
 echo_green "Installing Input Shaper Dependencies ..."
 # shellcheck disable=SC2086
 # Disabling shellcheck SC2086, because we want "wordsplitting"
