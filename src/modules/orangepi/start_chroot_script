@@ -8,6 +8,10 @@
 #### This File is distributed under GPLv3
 ####
 
+#### NOTE: udev rules file is applied in Step 6!
+#### This is based on https://github.com/Arksine/moonraker/issues/562
+
+
 # shellcheck enable=require-variable-braces
 # Source error handling, leave this in place
 set -Ee
@@ -50,9 +54,14 @@ apt update
 check_install_pkgs ${ORANGEPI_DEPS}
 ## END
 
-## Step 2: Set default groups
+## Step 2: Manage groups
+
+# Substep 1: Create group for gpio usage
+sudo groupadd gpio
+
+# Substep 2: Set default groups
 if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
-usermod -aG video,audio,plugdev,games,netdev,sudo,systemd-journal "${BASE_USER}"
+usermod -aG video,audio,plugdev,games,netdev,sudo,systemd-journal,gpio "${BASE_USER}"
 ## END
 
 ## Substep 1: Remove user "orangepi"
