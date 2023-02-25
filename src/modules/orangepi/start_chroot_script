@@ -129,3 +129,46 @@ echo "spi-dev" >> "${ORANGEPI_MODULES_FILE}"
 
 echo_green "Enable SPI interface on Orange Pi SBC's ... DONE!"
 ## END
+
+## Step 4: Install orangepi-config from git source repository
+if [[ "${ORANGEPI_INSTALL_OPI_CONFIG}" == "true" ]]; then
+    echo_green "Install orangepi-config from git sources ..."
+
+    ### Substep 1: Create temporary dir 'src/workspace/opi-config-src'
+    ORANGEPI_OPI_CONFIG_TEMP="src/workspace/opi-config-src"
+    if [[ ! -d "${ORANGEPI_OPI_CONFIG_TEMP}" ]]; then
+        mkdir -p "${ORANGEPI_OPI_CONFIG_TEMP}"
+    fi
+    ### END
+
+    ### Substep 2: curl sources from git repo to src/workspace/opi-config
+    for file in "${ORANGEPI_OPI_CONFIG_FILES[@]}"; do
+        curl -sL "${ORANGEPI_OPI_CONFIG_URL}"/"${file}" --output "${ORANGEPI_OPI_CONFIG_TEMP}"/"${file}"
+    done
+    ### END
+
+    ### Substep 3: Create subdir 'orangepi-config' in /usr/lib/
+    if [[ ! -d "/usr/lib/orangepi-config" ]]; then
+        mkdir -p "/usr/lib/orangepi-config"
+    fi
+    ### END
+
+    ### Substep 4: Copy main script to /usr/sbin (orangepi-config)
+    cp -f "src/workspace/opi-config-src"/"${ORANGEPI_OPI_CONFIG_FILES[*]:0:1}" "/usr/sbin/orangepi-config"
+    ### END
+
+    ### Substep 5: Link main script to /usr/bin/orangepi-config
+    ln -sf "/usr/sbin/orangepi-config" "/usr/bin/orangepi-config"
+    ### END
+
+    ### Substep 6: Install script librarys to /usr/lib/orangepi-config
+    for i in "${ORANGEPI_OPI_CONFIG_FILES[@]:1}"; do
+        stripped="${i##debian-config-}"
+        cp -f "${ORANGEPI_OPI_CONFIG_TEMP}/${i}" "/usr/lib/orangepi-config/${stripped}.sh"
+    done
+    ### END
+
+else
+    echo_red "WARN: orangepi-config install not configured ... [SKIPPED]"
+fi
+## END
