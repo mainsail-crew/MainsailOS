@@ -174,9 +174,15 @@ if [[ "${ORANGEPI_INSTALL_OPI_CONFIG}" == "true" ]]; then
     cp -f "src/workspace/opi-config-src/${ORANGEPI_OPI_CONFIG_FILES_ARR[*]:0:1}" "/usr/sbin/orangepi-config"
     ### END Substep 5
 
-    ### Substep 6: Link main script to /usr/bin/orangepi-config
-    ln -sf "/usr/sbin/orangepi-config" "/usr/bin/orangepi-config"
+    ### Substep 6: Add executable flag
+    if [[ ! -x "/usr/sbin/orangepi-config" ]]; then
+        chmod +x "/usr/sbin/orangepi-config"
+    fi
     ### END Substep 6
+
+    ### Substep 7: Link main script to /usr/bin/orangepi-config
+    ln -sf "/usr/sbin/orangepi-config" "/usr/bin/orangepi-config"
+    ### END Substep 7
 
     ### Substep 7: Install script librarys to /usr/lib/orangepi-config
     for i in "${ORANGEPI_OPI_CONFIG_FILES_ARR[@]:1}"; do
