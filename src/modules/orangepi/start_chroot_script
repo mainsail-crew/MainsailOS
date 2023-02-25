@@ -105,7 +105,6 @@ fi
 
 ## Step 7: Enable SPI interface by default
 echo_green "Enable SPI interface on Orange Pi SBC's ..."
-## END Step 7
 
 ### Substep 1: Copy default config to backup file
 cp "${ORANGEPI_CONFIG_TXT_FILE}" "${ORANGEPI_CONFIG_BAK_FILE}"
@@ -115,9 +114,11 @@ cp "${ORANGEPI_CONFIG_TXT_FILE}" "${ORANGEPI_CONFIG_BAK_FILE}"
 
 #### Orangepi Zero2
 if [[ "$(is_board_type)" == "orangepizero2" ]]; then
-    echo "overlays=spi-spidev" >> "${ORANGEPI_CONFIG_TXT_FILE}"
-    echo "param_spidev_spi_bus=1" >> "${ORANGEPI_CONFIG_TXT_FILE}"
-    echo "param_spidev_spi_cs=1" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+    {
+        echo "overlays=spi-spidev"
+        echo "param_spidev_spi_bus=1"
+        echo "param_spidev_spi_cs=1"
+    } >> "${ORANGEPI_CONFIG_TXT_FILE}"
 fi
 #### END
 
@@ -140,9 +141,9 @@ fi
 echo "spi-dev" >> "${ORANGEPI_MODULES_FILE}"
 
 echo_green "Enable SPI interface on Orange Pi SBC's ... DONE!"
-## END
+## END Step 7
 
-## Step 4: Install orangepi-config from git source repository
+## Step 8: Install orangepi-config from git source repository
 if [[ "${ORANGEPI_INSTALL_OPI_CONFIG}" == "true" ]]; then
     echo_green "Install orangepi-config from git sources ..."
 
@@ -195,20 +196,20 @@ if [[ "${ORANGEPI_INSTALL_OPI_CONFIG}" == "true" ]]; then
 else
     echo_red "WARN: orangepi-config install not configured ... [SKIPPED]"
 fi
-## END Step 4
+## END Step 8
 
-## Step 5: Enable uart connection on ttyS5 Orangepi Zero2
+## Step 9: Enable uart connection on ttyS5 Orangepi Zero2
 ## Based on: https://github.com/nhchiu/Klipper-on-Orange-Pi-Zero-2#connect-to-mcu-through-uart-pins
 echo_green "Enable UART 5 (/dev/ttyS5) interface on Orange Pi SBC's ..."
 if [[ "$(is_board_type)" == "orangepizero2" ]]; then
     echo "overlays=uart5" >> "${ORANGEPI_CONFIG_TXT_FILE}"
 fi
-## END Step 5
+## END Step 9
 
-## Step 6: Enable I2C on gpio pins
+## Step 10: Enable I2C on gpio pins
 ## Based on: https://github.com/nhchiu/Klipper-on-Orange-Pi-Zero-2#connect-to-mcu-through-uart-pins
 echo_green "Enable I2C interface on Orange Pi SBC's ..."
 if [[ "$(is_board_type)" == "orangepizero2" ]]; then
     echo "overlays=i2c3" >> "${ORANGEPI_CONFIG_TXT_FILE}"
 fi
-## END Step 6
+## END Step 10
