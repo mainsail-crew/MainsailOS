@@ -14,3 +14,12 @@
 [[ -n "$ORANGEPI_NET_FIRSTRUN_FILE" ]] || ORANGEPI_NET_FIRSTRUN_FILE="/boot/orangepi_first_run.txt.template"
 [[ -n "$ORANGEPI_NET_FIRSTRUN_SCRIPT" ]] || ORANGEPI_NET_FIRSTRUN_SCRIPT="/usr/lib/orangepi/orangepi-firstrun-config"
 [[ -n "$ORANGEPI_NET_NC_PATH" ]] || ORANGEPI_NET_NC_PATH="/usr/local/bin/network-configurator"
+
+
+#### EXPERIMENTAL: Install orangepi-config from source git repo
+[[ -n "$ORANGEPI_INSTALL_ORANGEPI_CONFIG" ]] || ORANGEPI_INSTALL_ORANGEPI_CONFIG="true"
+[[ -n "$ORANGEPI_OPI_CONFIG_URL" ]] || ORANGEPI_OPI_CONFIG_URL="https://raw.githubusercontent.com/orangepi-xunlong/orangepi-build/next/external/cache/sources/orangepi-config/"
+[[ -n "$ORANGEPI_OPI_CONFIG_FILES" ]] || ORANGEPI_OPI_CONFIG_FILES=( debian-config
+    debian-config-functions debian-config-functions-network
+    debian-config-jobs
+    debian-config-submenu )
