@@ -117,6 +117,7 @@ cp "${ORANGEPI_CONFIG_TXT_FILE}" "${ORANGEPI_CONFIG_BAK_FILE}"
 if [[ "$(is_board_type)" == "orangepizero2" ]]; then
     echo "overlays=spi-spidev" >> "${ORANGEPI_CONFIG_TXT_FILE}"
     echo "param_spidev_spi_bus=1" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+    echo "param_spidev_spi_cs=1" >> "${ORANGEPI_CONFIG_TXT_FILE}"
 fi
 #### END
 
@@ -195,3 +196,17 @@ else
     echo_red "WARN: orangepi-config install not configured ... [SKIPPED]"
 fi
 ## END Step 4
+
+## Step 5: Enable uart connection on ttyS5 Orangepi Zero2
+## Based on: https://github.com/nhchiu/Klipper-on-Orange-Pi-Zero-2#connect-to-mcu-through-uart-pins
+if [[ "$(is_board_type)" == "orangepizero2" ]]; then
+    echo "overlays=uart5" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+fi
+## END Step 5
+
+## Step 6: Enable I2C on gpio pins
+## Based on: https://github.com/nhchiu/Klipper-on-Orange-Pi-Zero-2#connect-to-mcu-through-uart-pins
+if [[ "$(is_board_type)" == "orangepizero2" ]]; then
+    echo "overlays=i2c3" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+fi
+## END Step 6
