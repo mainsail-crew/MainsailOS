@@ -7,7 +7,13 @@
 
 # MainsailOS
 
-A [Raspberry Pi OS](https://www.raspberrypi.org/software/) based distribution for 3D Printers. \
+A Linux Distribution based on
+
+-   [Raspberry Pi OS](https://www.raspberrypi.org/software/) for Raspberry SBC's
+-   [Armbian](https://www.armbian.com/) for several SBC's
+-   [Orange Pi OS](http://www.orangepi.org/html/softWare/orangePiOS/index.html) for Orange Pi Zero 2
+
+to run your 3D Printers with [mainsail](https://github.com/mainsail-crew/mainsail). \
 It includes everything to get started with Klipper Firmware and Mainsail.
 
 Learn more about:
@@ -15,12 +21,30 @@ Learn more about:
 -   [Klipper Firmware](https://www.klipper3d.org/)
 -   [Moonraker](https://moonraker.readthedocs.io/en/latest/)
 -   [Mainsail](https://docs.mainsail.xyz/)
+-   [Crowsnest](https://github.com/mainsail-crew/crowsnest)
+-   [Sonar](https://github.com/mainsail-crew/sonar)
 
 ## How to install MainsailOS ?
 
 You can find detailed instructions in our [documentation](https://docs.mainsail.xyz/setup/mainsail-os).
 
-We recommend the installation via [Raspberry Pi Imager](https://docs.mainsail.xyz/setup/mainsailos/pi-imager).
+We recommend the installation for Raspberry images via [Raspberry Pi Imager](https://docs.mainsail.xyz/setup/mainsailos/pi-imager).
+
+For other images, we recommend [balena-etcher](https://www.balena.io/etcher).
+
+## Currently supported Single Board Computer's (SBC)
+
+| Single Board Computer |                                    OS based on                                     |  32/64bit  |
+| :-------------------: | :--------------------------------------------------------------------------------: | :--------: |
+|     Raspberry Pi      |           [Raspberry Pi OS lite](https://www.raspberrypi.org/software/)            |  32/64bit  |
+|   Orange Pi Zero 2    | [Orange Pi OS server](http://www.orangepi.org/html/softWare/orangePiOS/index.html) | 64bit only |
+|    Orange Pi 3 LTS    |                  [Armbian cli minimal](https://www.armbian.com/)                   | 64bit only |
+|    Orange Pi 4 LTS    |                  [Armbian cli minimal](https://www.armbian.com/)                   | 64bit only |
+
+_NOTE: Raspberry Pi Models Zero, 2 and 1 are not recommended, even they might run with_
+
+Hopefully, we can improve existing images and add more SBC's.\
+Hardware donations for testing and developing are welcome :wink:
 
 ## How to get help?
 
@@ -44,7 +68,9 @@ Here a list of included and preinstalled Software:
 ## also includes
 
 -   Enabled Serial Connection by default. \
-    Using Hardware UART (PL011) for Boards like BTT SKR Mini E3 V3
+    Using Hardware UART (PL011) for Boards like BTT SKR Mini E3 V3 on Raspberry Pi's
+    Using UART5 on Orange Pi Zero2 (/dev/ttyS5)
+-   Enabled i2c and SPI for Raspberry and Orange Pi Zero 2
 -   Preinstalled Dependencies for Klipper's Input Shaper. \
     You only need to build the [klipper_mcu](https://www.klipper3d.org/RPi_microcontroller.html) and installing the service. \
     See [Klipper documentation](https://www.klipper3d.org/Measuring_Resonances.html) for more information.
