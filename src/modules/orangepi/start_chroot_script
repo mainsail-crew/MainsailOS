@@ -14,14 +14,17 @@
 
 # shellcheck enable=require-variable-braces
 # Source error handling, leave this in place
-set -Eex
+set -Ee
+
+## Uncomment for deeper debugging
+# set -x
 
 # Source CustomPIOS common.sh
 # shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
 
-### Helper func
+# Helper func
 is_board_type() {
     local board releasefile
     board=""
@@ -47,39 +50,40 @@ if_group_exists_run() {
 # Will be removed in cleanup
 echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-
 ## Step 1: Install armbian specific packages
 apt update
 # shellcheck disable=SC2086
 check_install_pkgs ${ORANGEPI_DEPS}
-## END
+## END Step 1
 
-## Step 2: Manage groups
+## Step 2: Manage groups and default user
 
-# Substep 1: Create group for gpio usage
+### Substep 1: Create group for gpio usage
 sudo groupadd gpio
+### END Substep 1
 
-# Substep 2: Set default groups
+### Substep 2: Set default groups
 if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
 usermod -aG video,audio,plugdev,games,netdev,sudo,systemd-journal,gpio "${BASE_USER}"
-## END
+### END Substep 2
 
-## Substep 1: Remove user "orangepi"
+### Substep 3: Remove user "orangepi"
 sudo userdel orangepi
 sudo rm -rf /home/orangepi
-## END
+### END Substep 3
+## END Step 2
 
 ## Step 3: Patch sshd_config (Limit retrys, disable root login via ssh)
 sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
 sed -i 's/^X11Forwarding/#X11Forwarding/' /etc/ssh/sshd_config
 sed -i 's/^#MaxAuthTries 6/MaxAuthTries 3/' /etc/ssh/sshd_config
-## END
+## END Step 3
 
 ## Step 4: Try patching first login in build stage
 if [ -f "/root/.not_logged_in_yet" ]; then
     rm -f /root/.not_logged_in_yet
 fi
-## END
+## END Step 4
 
 ## Step 5: Move armbian-release to display mainsailos-release
 if [[ -f "/etc/orangepi-release" ]]; then
@@ -88,7 +92,7 @@ if [[ -f "/etc/orangepi-release" ]]; then
 else
     echo_red "OrangePi release file not found! [SKIPPED]"
 fi
-## END
+## END Step 5
 
 ## Step 6: Patch dynamic motd
 echo_green "Patch dynamic motd ..."
@@ -97,32 +101,39 @@ chmod +x /etc/update-motd.d/*
 if [ -f "/etc/default/orangepi-motd" ]; then
     sed -i 's/^MOTD_DISABLE=""/MOTD_DISABLE="header tips"/' /etc/default/orangepi-motd
 fi
-## END
+## END Step 6
 
 ## Step 7: Enable SPI interface by default
 echo_green "Enable SPI interface on Orange Pi SBC's ..."
+## END Step 7
 
-# Substep 1: Copy default config to backup file
+### Substep 1: Copy default config to backup file
 cp "${ORANGEPI_CONFIG_TXT_FILE}" "${ORANGEPI_CONFIG_BAK_FILE}"
+### END Substep 1
 
-# Substep 2: Enable SPI in armbianEnv.txt depending on device
+### Substep 2: Enable SPI in armbianEnv.txt depending on device
 
-## Orangepi Zero2
+#### Orangepi Zero2
 if [[ "$(is_board_type)" == "orangepizero2" ]]; then
     echo "overlays=spi-spidev" >> "${ORANGEPI_CONFIG_TXT_FILE}"
     echo "param_spidev_spi_bus=1" >> "${ORANGEPI_CONFIG_TXT_FILE}"
 fi
+#### END
 
-## OrangePi 3 LTS
+#### OrangePi 3 LTS
 if [[ "$(is_board_type)" == "orangepi3-lts" ]]; then
     echo "overlays=spi-spidev1" >> "${ORANGEPI_CONFIG_TXT_FILE}"
 fi
+#### END
 
-## OrangePi 4 LTS
+#### OrangePi 4 LTS
 if [[ "$(is_board_type)" == "orangepi4-lts" ]]; then
     echo "overlays=spi-spidev" >> "${ORANGEPI_CONFIG_TXT_FILE}"
     echo "param_spidev_spi_bus=1" >> "${ORANGEPI_CONFIG_TXT_FILE}"
 fi
+#### END
+
+### END Substep 2
 
 # Substep 3: add spi-dev module to /etc/modules
 echo "spi-dev" >> "${ORANGEPI_MODULES_FILE}"
@@ -139,42 +150,42 @@ if [[ "${ORANGEPI_INSTALL_OPI_CONFIG}" == "true" ]]; then
     if [[ ! -d "${ORANGEPI_OPI_CONFIG_TEMP}" ]]; then
         mkdir -p "${ORANGEPI_OPI_CONFIG_TEMP}"
     fi
-    ### END
+    ### END Substep 1
 
     ### Substep 2: Create array from ORANGEPI_OPI_CONFIG_FILES
     for name in ${ORANGEPI_OPI_CONFIG_FILES}; do
         ORANGEPI_OPI_CONFIG_FILES_ARR+=("${name}")
     done
-    ### END
+    ### END Substep 2
 
     ### Substep 3: curl sources from git repo to src/workspace/opi-config
     for file in "${ORANGEPI_OPI_CONFIG_FILES_ARR[@]}"; do
         curl -sL "${ORANGEPI_OPI_CONFIG_URL}"/"${file}" --output "${ORANGEPI_OPI_CONFIG_TEMP}"/"${file}"
     done
-    ### END
+    ### END Substep 3
 
     ### Substep 4: Create subdir 'orangepi-config' in /usr/lib/
     if [[ ! -d "/usr/lib/orangepi-config" ]]; then
         mkdir -p "/usr/lib/orangepi-config"
     fi
-    ### END
+    ### END Substep 4
 
     ### Substep 5: Copy main script to /usr/sbin (orangepi-config)
     cp -f "src/workspace/opi-config-src/${ORANGEPI_OPI_CONFIG_FILES_ARR[*]:0:1}" "/usr/sbin/orangepi-config"
-    ### END
+    ### END Substep 5
 
     ### Substep 6: Link main script to /usr/bin/orangepi-config
     ln -sf "/usr/sbin/orangepi-config" "/usr/bin/orangepi-config"
-    ### END
+    ### END Substep 6
 
     ### Substep 7: Install script librarys to /usr/lib/orangepi-config
     for i in "${ORANGEPI_OPI_CONFIG_FILES_ARR[@]:1}"; do
         stripped="${i##debian-config-}"
         cp -f "${ORANGEPI_OPI_CONFIG_TEMP}/${i}" "/usr/lib/orangepi-config/${stripped}.sh"
     done
-    ### END
+    ### END Substep 7
 
 else
     echo_red "WARN: orangepi-config install not configured ... [SKIPPED]"
 fi
-## END
+## END Step 4
