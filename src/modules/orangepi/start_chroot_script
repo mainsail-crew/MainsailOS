@@ -199,6 +199,7 @@ fi
 
 ## Step 5: Enable uart connection on ttyS5 Orangepi Zero2
 ## Based on: https://github.com/nhchiu/Klipper-on-Orange-Pi-Zero-2#connect-to-mcu-through-uart-pins
+echo_green "Enable UART 5 (/dev/ttyS5) interface on Orange Pi SBC's ..."
 if [[ "$(is_board_type)" == "orangepizero2" ]]; then
     echo "overlays=uart5" >> "${ORANGEPI_CONFIG_TXT_FILE}"
 fi
@@ -206,6 +207,7 @@ fi
 
 ## Step 6: Enable I2C on gpio pins
 ## Based on: https://github.com/nhchiu/Klipper-on-Orange-Pi-Zero-2#connect-to-mcu-through-uart-pins
+echo_green "Enable I2C interface on Orange Pi SBC's ..."
 if [[ "$(is_board_type)" == "orangepizero2" ]]; then
     echo "overlays=i2c3" >> "${ORANGEPI_CONFIG_TXT_FILE}"
 fi
