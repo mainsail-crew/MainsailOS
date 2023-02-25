@@ -87,7 +87,7 @@ if [[ "${ORANGEPI_INSTALL_ORANGEPI_CONFIG}" = "true" ]]; then
     ### END
 
     ### Substep 4: Copy main script to /usr/sbin (orangepi-config)
-    cp -f "src/workspace/opi-config-src"/"${FILES[*]:0:1}" "/usr/sbin/orangepi-config"
+    cp -f "src/workspace/opi-config-src"/"${ORANGEPI_OPI_CONFIG_FILES[*]:0:1}" "/usr/sbin/orangepi-config"
     ### END
 
     ### Substep 5: Install script librarys to /usr/lib/orangepi-config
