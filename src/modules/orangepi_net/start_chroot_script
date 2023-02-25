@@ -90,7 +90,11 @@ if [[ "${ORANGEPI_INSTALL_ORANGEPI_CONFIG}" = "true" ]]; then
     cp -f "src/workspace/opi-config-src"/"${ORANGEPI_OPI_CONFIG_FILES[*]:0:1}" "/usr/sbin/orangepi-config"
     ### END
 
-    ### Substep 5: Install script librarys to /usr/lib/orangepi-config
+    ### Substep 5: Link main script to /usr/bin/orangepi-config
+    ln -sf "/usr/sbin/orangepi-config" "/usr/bin/orangepi-config"
+    ### END
+
+    ### Substep 6: Install script librarys to /usr/lib/orangepi-config
     for i in "${ORANGEPI_OPI_CONFIG_FILES[@]:1}"; do
         stripped="${i##debian-config-}"
         cp -f "${ORANGEPI_OPI_CONFIG_TEMP}/${i}" "/usr/lib/orangepi-config/${stripped}.sh"
