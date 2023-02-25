@@ -20,7 +20,7 @@ bash-completion"
 
 ## Orange Pi Zero 2 additional configuration
 [[ -n "$ORANGEPI_ENABLE_OVERLAYS_OPIZ2" ]] || ORANGEPI_ENABLE_OVERLAYS_OPIZ2="true"
-[[ -n "$ORANGEPI_ADD_OVERLAYS_OPIZ2" ]] || ORANGEPI_ADD_OVERLAYS_OPIZ2="i2c3 uart5 overlays=spi-spidev"
+[[ -n "$ORANGEPI_ADD_OVERLAYS_OPIZ2" ]] || ORANGEPI_ADD_OVERLAYS_OPIZ2="i2c3 uart5 spi-spidev"
 [[ -n "$ORANGEPI_ADD_OVERLAYS_OPIZ2_PARAMS" ]] || ORANGEPI_ADD_OVERLAYS_OPIZ2_PARAMS="param_spidev_spi_bus=1 param_spidev_spi_cs=1"
 
 ### EXPERIMENTAL: Install orangepi-config from source git repo

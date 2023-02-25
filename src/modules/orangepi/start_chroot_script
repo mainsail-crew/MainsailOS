@@ -118,7 +118,7 @@ if [[ "$(is_board_type)" == "orangepizero2" ]] &&
 
     if [[ -n "${ORANGEPI_ADD_OVERLAYS_OPIZ2}" ]]; then
         echo_green "Adding overlays '${ORANGEPI_ADD_OVERLAYS_OPIZ2}' to ${ORANGEPI_CONFIG_TXT_FILE} ..."
-        echo "${ORANGEPI_ADD_OVERLAYS_OPIZ2}" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+        echo "overlays=${ORANGEPI_ADD_OVERLAYS_OPIZ2}" >> "${ORANGEPI_CONFIG_TXT_FILE}"
     fi
 
     if [[ -n "${ORANGEPI_ADD_OVERLAYS_OPIZ2_PARAMS}" ]]; then
