@@ -104,7 +104,7 @@ fi
 ## END Step 6
 
 ## Step 7: Enable SPI interface by default
-echo_green "Enable SPI interface on Orange Pi SBC's ..."
+echo_green "Enable interfaces on Orange Pi SBC's ..."
 
 ### Substep 1: Copy default config to backup file
 cp "${ORANGEPI_CONFIG_TXT_FILE}" "${ORANGEPI_CONFIG_BAK_FILE}"
@@ -113,25 +113,20 @@ cp "${ORANGEPI_CONFIG_TXT_FILE}" "${ORANGEPI_CONFIG_BAK_FILE}"
 ### Substep 2: Enable SPI in armbianEnv.txt depending on device
 
 #### Orangepi Zero2
-if [[ "$(is_board_type)" == "orangepizero2" ]]; then
-    {
-        echo "overlays=spi-spidev"
-        echo "param_spidev_spi_bus=1"
-        echo "param_spidev_spi_cs=1"
-    } >> "${ORANGEPI_CONFIG_TXT_FILE}"
-fi
-#### END
+if [[ "$(is_board_type)" == "orangepizero2" ]] &&
+[[ "${ORANGEPI_ENABLE_OVERLAYS_OPIZ2}" == "true" ]]; then
 
-#### OrangePi 3 LTS
-if [[ "$(is_board_type)" == "orangepi3-lts" ]]; then
-    echo "overlays=spi-spidev1" >> "${ORANGEPI_CONFIG_TXT_FILE}"
-fi
-#### END
+    if [[ -n "${ORANGEPI_ADD_OVERLAYS_OPIZ2}" ]]; then
+        echo_green "Adding overlays '${ORANGEPI_ADD_OVERLAYS_OPIZ2}' to ${ORANGEPI_CONFIG_TXT_FILE} ..."
+        echo "${ORANGEPI_ADD_OVERLAYS_OPIZ2}" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+    fi
 
-#### OrangePi 4 LTS
-if [[ "$(is_board_type)" == "orangepi4-lts" ]]; then
-    echo "overlays=spi-spidev" >> "${ORANGEPI_CONFIG_TXT_FILE}"
-    echo "param_spidev_spi_bus=1" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+    if [[ -n "${ORANGEPI_ADD_OVERLAYS_OPIZ2_PARAMS}" ]]; then
+        for param in ${ORANGEPI_ADD_OVERLAYS_OPIZ2_PARAMS}; do
+            echo_green "Add ${param} to ${ORANGEPI_CONFIG_TXT_FILE} ..."
+            echo "${param}" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+        done
+    fi
 fi
 #### END
 
@@ -197,19 +192,3 @@ else
     echo_red "WARN: orangepi-config install not configured ... [SKIPPED]"
 fi
 ## END Step 8
-
-## Step 9: Enable uart connection on ttyS5 Orangepi Zero2
-## Based on: https://github.com/nhchiu/Klipper-on-Orange-Pi-Zero-2#connect-to-mcu-through-uart-pins
-echo_green "Enable UART 5 (/dev/ttyS5) interface on Orange Pi SBC's ..."
-if [[ "$(is_board_type)" == "orangepizero2" ]]; then
-    echo "overlays=uart5" >> "${ORANGEPI_CONFIG_TXT_FILE}"
-fi
-## END Step 9
-
-## Step 10: Enable I2C on gpio pins
-## Based on: https://github.com/nhchiu/Klipper-on-Orange-Pi-Zero-2#connect-to-mcu-through-uart-pins
-echo_green "Enable I2C interface on Orange Pi SBC's ..."
-if [[ "$(is_board_type)" == "orangepizero2" ]]; then
-    echo "overlays=i2c3" >> "${ORANGEPI_CONFIG_TXT_FILE}"
-fi
-## END Step 10
