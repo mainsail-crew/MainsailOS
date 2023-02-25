@@ -14,7 +14,7 @@
 
 # shellcheck enable=require-variable-braces
 # Source error handling, leave this in place
-set -Ee
+set -Eex
 
 # Source CustomPIOS common.sh
 # shellcheck disable=SC1091
