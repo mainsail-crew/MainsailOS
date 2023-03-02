@@ -23,5 +23,7 @@ make install
 #edit the config
 unpack /filesystem/root /
 
+chmod +x /usr/bin/start_hotspot.sh
+
 systemctl enable create_ap
 echo_green "Installing ratos hotspot tool ... DONE!"

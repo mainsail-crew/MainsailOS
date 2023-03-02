@@ -10,8 +10,8 @@ BASE_USER="pi"
 BASE_USER_PASSWORD="raspberry"
 
 # Image source
-DOWNLOAD_URL_CHECKSUM="https://github.com/bigtreetech/CB1/releases/download/V2.3.0/CB1_Debian11_minimal_kernel5.16_20230208.img.sha256"
-DOWNLOAD_URL_IMAGE="https://github.com/bigtreetech/CB1/releases/download/V2.3.0/CB1_Debian11_minimal_kernel5.16_20230208.img.xz"
+DOWNLOAD_URL_CHECKSUM="https://github.com/bigtreetech/CB1/releases/download/V2.3.1/CB1_Debian11_Klipper_kernel5.16_20230215.img.sha256"
+DOWNLOAD_URL_IMAGE="https://github.com/bigtreetech/CB1/releases/download/V2.3.1/CB1_Debian11_minimal_kernel5.16_20230215.img.xz"
 
 # export Variables
 export BASE_ARCH

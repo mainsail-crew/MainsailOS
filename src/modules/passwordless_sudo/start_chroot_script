@@ -12,4 +12,5 @@ set -xe
 source /common.sh
 install_cleanup_trap
 
+echo_green "making ${BASE_USER} passwordless sudo for easy setup ..."
 echo -e "${BASE_USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/010_pi-nopasswd

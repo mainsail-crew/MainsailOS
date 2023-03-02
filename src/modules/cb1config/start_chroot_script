@@ -43,3 +43,6 @@ fi
 
 # install avahi so ratos.local works
 check_install_pkgs avahi
+
+#add the same groups as the biqu user
+usermod -a -G disk,audio,plugdev,games,users,systemd-journal,input,netdev,ssh "${BASE_USER}"
