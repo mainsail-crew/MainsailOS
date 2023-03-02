@@ -1,4 +1,4 @@
-name: 'Close stale issues or PRs'
+name: "Close stale issues or PRs"
 
 # Both `issue_comment` and `scheduled` event types are required for this Action
 # to work properly.
@@ -6,7 +6,7 @@ on:
   issue_comment:
     types: [created]
   schedule:
-    - cron: '30 1 * * *'
+    - cron: "30 1 * * *"
 
 permissions:
   issues: write
@@ -22,29 +22,23 @@ jobs:
           days-before-close: 7
           exempt-all-milestones: true
           close-issue-reason: not_planned
-          only-labels: '❔ User Input'
-          labels-to-remove-when-unstale: '❔ User Input,💤 Stale'
-          stale-issue-label: '💤 Stale'
-          stale-pr-label: '💤 Stale'
+          only-labels: "❔ User Input"
+          labels-to-remove-when-unstale: "❔ User Input,💤 Stale"
+          stale-issue-label: "💤 Stale"
+          stale-pr-label: "💤 Stale"
           stale-issue-message: |
-            Ahoi!
             It looks like there hasn't been any recent updates on
             this issue. If you created this issue and no longer
             consider it to get merged, then please login to github
             and close it. Otherwise, if there is no further activity
-            on this issue, it will be automatically closedwithin the
+            on this issue, it will be automatically closed within the
             next 7 days.
-            Fair wind and a following sea!
-            ~ Your friendly MainsailGithubBot
-            *PS: I'm just an automated script, not a real sailor.*
+            *PS: I'm just an automated script, not a real human.*
           stale-pr-message: |
-            Ahoi!
             It looks like there hasn't been any recent updates on
             this pull request. If you created this pull request and
             no longer consider it to get merged, then please login
             to github and close it. Otherwise, if there is no further
             activity on this pull request, it will be automatically
             closed within the next 7 days.
-            Fair wind and a following sea!
-            ~ Your friendly MainsailGithubBot
-            *PS: I'm just an automated script, not a real sailor.*
+            *PS: I'm just an automated script, not a real human.*
