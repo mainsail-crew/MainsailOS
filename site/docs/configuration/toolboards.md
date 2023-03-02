@@ -14,7 +14,7 @@ If, despite all this, still want to use CAN, you can do so manually just like ev
 
 # Wiring
 
-Because we use USB we need to take extra care to secure our wiring, it is **imperative** to make sure that the USB-C connector cannot move. Generally this is a lot easier to achieve with the "42" size variety of toolboards than "36". There are several mounts for EVA on printables for inspiration, just make sure you use one where you can tie down the usb connector and cable. If you want a gucci cable, 3do.eu has a nice flexible FEP/Silicone sleeved USB-C cable rated for up to 200c in various lengths.
+Because we use USB we need to take extra care to secure our wiring, it is **imperative** to make sure that the USB-C connector cannot move. Generally this is a lot easier to achieve with the "42" size variety of toolboards than "36". There are several mounts for EVA on printables for inspiration, just make sure you use one where you can tie down the usb connector and cable. If you want a gucci cable, 3do.eu has a nice flexible FEP/Silicone sleeved USB-C cable rated for up to 200c in various lengths. To keep the umbilical nice and straight, pianowire does a great job. The bigger the size of your printer the thicker a wire you need, for reference a 0.8mm piano wire is perfect on a 400mm.
 
 # Toolboard accelerometer
 
