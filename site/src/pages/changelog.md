@@ -7,7 +7,7 @@
 ### Major new features
 
 - Now based on bullseye
-- The RatOS configurator will now help you flash your controlboard and toolboards.
+- The RatOS configurator will now help you flash your controlboard and toolboards, greatly simplifying installation.
 - Toolboards are now supported.
 - Stowable probes like euclid and klicky are now support.
 - Unified homing: everything is now handled through a single homing override. Sensorless homing now requires no tinkering with homing macros (you still need to tweak current and sensitivities). Including a stowable probe config automatically enables deploying and stowing. Axes can now use individual homing procedures, such as sensorless on X and endstops on Y.
