@@ -30,6 +30,10 @@ It is heavily recommended that you flash your board and make sure it is detected
 
 After completing the wifi setup wizard, wait a couple of minutes, then open [http://RatOS.local/configure?step=1](http://RatOS.local/configure?step=1) in your browser (or whatever hostname you chose during setup). Complete the wizard to flash your control board and optionally a toolboard. When you've done that successfully, the configurator will lead you to Mainsail, which we'll now use to update RatOS and related packages to the latest version.
 
+:::info Troubleshooting
+If you cannot connect to http://RatOS.local/ but the RatOS hotspot doesn't show up, try looking up the IP of your pi on your routers admin interface and use that instead. Eg: http://192.168.0.123/.
+:::
+
 ## Mainsail
 
 Mainsail is the control interface for your printer. Mainsail is a web application that talks to Klipper through Moonraker (the Klipper API). Mainsail is what you'll be using to start prints, monitor progress, configure klipper and much more. Mainsail is what you see when you open [http://RatOS.local/](http://RatOS.local/)
