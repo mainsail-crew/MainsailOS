@@ -6,32 +6,53 @@
 
 ### Major new features
 
-- Toolboards are now supported.
+- Now based on bullseye
 - The RatOS configurator will now help you flash your controlboard and toolboards.
+- Toolboards are now supported.
 - Stowable probes like euclid and klicky are now support.
 - Unified homing: everything is now handled through a single homing override. Sensorless homing now requires no tinkering with homing macros (you still need to tweak current and sensitivities). Including a stowable probe config automatically enables deploying and stowing. Axes can now use individual homing procedures, such as sensorless on X and endstops on Y.
 - MainsailOS has been merged which brings timelapse and crowsnest.
 - Preinstalled: https://github.com/worksasintended/klipper_linear_movement_analysis
 - Klipper now runs Python 3
+- Experimental BTT CB1 support
+- RatOS notifications in Mainsail.
 
 ### Minor new features
 
-- A bunch of new macro variables to tweak the RatOS macros, including end park z hop, prime positions, safe home coordinates, z speed, filament load/unload length and speed, and more.
-- Configurator now maintains klipper and moonraker extension symlinks (will automatically restore in case of a hard reset, can also be triggered manually through the configurator actions menu at RatOS.local/configure)
-- Configurator now in charge of flashing all connected boards when klipper is updated. (can also be triggered manually through the configurator actions menu at RatOS.local/configure)
+- A bunch of new macro variables to tweak the RatOS macros (see http://os.ratright.com/docs/configuration/macros), including end park z hop, prime positions, etc etc.
+- Configurator now maintains klipper and moonraker extension symlinks (will automatically restore in case of a hard reset, can also be triggered automatically through the configurator actions menu at RatOS.local/configure)
+- Configurator now in charge of flashing all connected boards when klipper is updated.
 - `START_PRINT` can now use the hotend to measure chamber temp. For example to wait for chamber to reach 40 degrees, use `START_PRINT CHAMBER_TEMP=40`. The bed temperature during chamber heating is configurable via the macro variable `variable_start_print_heat_chamber_bed_temp`.
-- Prime macros now follow the edge of the bed and only lowers Z once in the start position. This minimizes accidents in case of bad z_offset configuration.
-- Fix waiting for moves in load_filament
-- Use left screw as base for screw_adjust on V-Minion
-- Log rotation should now work correctly.
-- 4 pin fan support on selected boards.
+
+### Minor changes
+
+- Primeblob has changed sides for stowable probe support.
+- The toolhead now moves along the edge of the buildplate when navigating to the primeline/primeblob start position, and only lowers the nozzle when it has arrived.
+- config repository directory has been renamed to RatOS.
+
+### Bug fixes
+
+- IPv6 has been disabled (hopefully no more issues with RatOS.local / moonraker not working on IPv6 capable networks).
 
 ### New supported printers
 
-- Voron V2.4 support (BETA)
-- Voron V0.1 Support (BETA)
+- Voron V2.4 support (Experimental)
+- Voron V0.1 Support (Experimental)
+- Prusa Mini (Experimental)
+- Prusa MK3S (Experimental)
 
 ### New supported boards
+
+- BTT Manta M8P
+- BTT Manta M4P
+- BTT Manta E3EZ
+- BTT SKR 3
+- BTT SKR 3 EZ
+- BTT SKR Mini E3 3.0
+- BTT SKRat 1.0
+- BTT Octopus Pro H723
+
+### New supported toolboards
 
 - BTT EBB42 v1.0
 - BTT EBB42 v1.1
@@ -39,20 +60,15 @@
 - BTT EBB36 v1.0
 - BTT EBB36 v1.1
 - BTT EBB36 v1.2
-- Mellow Fly SHT42
-- Mellow Fly SHT36
-- BTT Manta M8P
-- BTT Manta M4P
-- BTT SKR 3
-- BTT SKR 3 EZ
-- BTT SKR Mini E3 3.0
-- BTT SKRat v1.0
+- Mellow Fly SHT42 v1
+- Mellow Fly SHT36 v1
 
 ### Bug fixes
 
 - IPv6 has been disabled (no more issues with RatOS.local / moonraker not working on some IPv6 capable networks).
 - Automatic flashing is now more resilient and will detect and attempt to recover if the board gets stuck in DFU mode.
 - Configurator now correctly restarts on updates.
+- Since the initial flashing is now done via the configurator, the issues with broken firmware should now be eliminated.
 
 ## RatOS V1.2
 
