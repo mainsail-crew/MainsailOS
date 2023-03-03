@@ -15,7 +15,7 @@ Once you have completed the initial [setup](installation) and opened [http://Rat
 
 Mainsail is the control interface for your printer. Mainsail is a web application that talks to Klipper through Moonraker (the Klipper API). Mainsail is what you'll be using to start prints, monitor progress, configure klipper and much more. Mainsail is what you see when you open [http://RatOS.local/](http://RatOS.local/);
 
-![Mainsail](/img/mainsail.png)
+![Mainsail](/img/mainsail.jpg)
 
 :::info
 To learn more about mainsail, [read the mainsail documentation](https://docs.mainsail.xyz/).
