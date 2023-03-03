@@ -1,0 +1,53 @@
+---
+title: What is RatOS?
+sidebar_label: Introduction
+sidebar_position: 0
+---
+
+import Link from "@docusaurus/Link";
+
+# What is RatOS?
+
+RatOS is a preconfigured Raspberry Pi image that aims to make it as painless as possible to get [Klipper](https://www.klipper3d.org/), [Moonraker](https://moonraker.readthedocs.io/en/latest/), [Mainsail](https://docs.mainsail.xyz/) and [KlipperScreen](https://klipperscreen.readthedocs.io/) up and running on your printer, via an easy to use, modular configuration. It is developed and maintained by Mikkel Schmidt (miklschmidt#2036 on the Rat Rig Unofficial Discord).
+
+## How does it work?
+
+A typical klipper setup consists of three parts, there's Klipper itself, which does all the stuff Marlin or RRF would do - read gcode and control your printer.
+Then there's the API, Moonraker which exposes printer status and methods for other programs to talk to Klipper. Lastly there's the user interface, sort of like octoprint / duet web control / octodash / octoscreen, there are currently three popular options for that: Mainsail, Fluidd and Klipperscreen.
+
+Like MainsailOS and FluiddPi, RatOS is just an image for your Raspberry Pi consisting of a combination of these parts and some initial setup. RatOS goes a step further than the others and provides a complete managed modular configuration supporting several printers, extruders, hotends, boards, probes, sensors, macros, etc and some extra neat features such as automatic firmware updates, easy input shaper graph generation and so on. RatOS's main design principle is that the user shouldn't be required to interact with the commandline to use Klipper on their 3D Printer.
+
+## What do I need?
+
+To run RatOS on your printer you need a supported control board and a Raspberry Pi.
+
+<Link to="/docs/installation" className="button button--primary">
+  Ready? Get started!
+</Link>
+
+## Currently Supported Printers
+
+- [Rat Rig V-Core 3](printers/v-core-3.md)
+- [Rat Rig V-Core Pro 1.3](printers/v-core-pro.md)
+- [Rat Rig V-Minion](printers/v-minion.md)
+
+## Contribute
+
+Join the discussion on discord!
+
+[Join the Unnofficial RatRig Discord Community](https://discord.gg/D62e8XNeYa ":class=button")
+
+## Software Credits
+
+RatOS is based on [Klipper](https://www.klipper3d.org/), [Moonraker](https://moonraker.readthedocs.io/en/latest/), [Mainsail](https://docs.mainsail.xyz/), [MainsailOS](https://github.com/raymondh2/MainsailOS) and [KlipperScreen](https://klipperscreen.readthedocs.io/) without these and the amazing people behind them, RatOS would not have been possible.
+
+## Disclaimer
+The software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
+
+## Github links
+
+[RatOS](https://github.com/Rat-OS/RatOS/)
+
+[Configuration Repository](https://github.com/rat-os/ratos-configuration)
+
+[Old Configuration Repository (<= RC1)](https://github.com/Rat-Rig/v-core-3-klipper-config)

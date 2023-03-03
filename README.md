@@ -38,3 +38,9 @@ On each push you make, an image is build and uploaded as an artifact.
 
 If you want or need to build locally please visit [CustomPiOS](https://github.com/guysoft/CustomPiOS). \
 Especially ["Build a Distro From within Raspbian / Debian / Ubuntu / CustomPiOS Distros"](https://github.com/guysoft/CustomPiOS#build-a-distro-from-within-raspbian--debian--ubuntu--custompios-distros)
+
+## HUGE THANK YOU to the Sponsors
+
+![Rat Rig](sponsors/ratrig-logo.png)
+
+![Intermode](sponsors/intermode-logo.png)
