@@ -45,6 +45,7 @@ echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 ## Test: fake dpkg
 alias dpkg="sudo dpkg"
+alias ln="sudo ln"
 
 ## Step 1: Install armbian specific packages
 apt update
