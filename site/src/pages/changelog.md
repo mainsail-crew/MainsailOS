@@ -19,7 +19,7 @@
 
 ### Minor new features
 
-- A bunch of new macro variables to tweak the RatOS macros (see http://os.ratright.com/docs/configuration/macros), including end park z hop, prime positions, etc etc.
+- A bunch of new macro variables to tweak the RatOS macros (see http://os.ratrig.com/docs/configuration/macros), including end park z hop, prime positions, etc etc.
 - Configurator now maintains klipper and moonraker extension symlinks (will automatically restore in case of a hard reset, can also be triggered automatically through the configurator actions menu at RatOS.local/configure)
 - Configurator now in charge of flashing all connected boards when klipper is updated.
 - `START_PRINT` can now use the hotend to measure chamber temp. For example to wait for chamber to reach 40 degrees, use `START_PRINT CHAMBER_TEMP=40`. The bed temperature during chamber heating is configurable via the macro variable `variable_start_print_heat_chamber_bed_temp`.
