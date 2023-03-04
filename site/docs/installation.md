@@ -14,6 +14,10 @@ Then use [Balena Etcher](https://www.balena.io/etcher/) to write that image to t
 
 Note: this will destroy all data on the card!
 
+:::info
+For Raspberry Pis with 1gb or less memory, it's recommended to use the 32-bit (`rpi32`) version of the image. 64-bit (`rpi64`) causes too high memory usage in some situations.
+:::
+
 <a class="button button--primary" href="https://github.com/Rat-Os/RatOS/releases/latest">Download RatOS</a>
 
 ### WIFI or Ethernet
