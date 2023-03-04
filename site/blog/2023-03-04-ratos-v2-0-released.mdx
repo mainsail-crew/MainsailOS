@@ -1,0 +1,74 @@
+---
+slug: ratos-v2-2-released
+title: RatOS V2.0.0 Released!
+authors: [miklschmidt]
+tags: [RatOS, Releases]
+---
+
+## RatOS V2.0.0 is now released!
+
+![RatOS](/img/logos/Type.png)
+
+This is a huge milestone and I'm very excited to finally release RatOS V2.0.0!
+
+There's been quite a few changes since the last release, so I'll quickly go over the most notable ones, feel free to check out the [changelog](https://os.ratrig.com/changelog#ratos-v20) for the complete picture!
+
+### Toolboards
+
+You asked for it, and now it's finally here! Toolboards are now supported! There are currently 8 supported models to choose from, and more are on the way. The supported toolboards can be used with any of the control boards and any supported printer. As of the time of writing, RatOS currently supports the following toolboards:
+
+-   BTT EBB42 v1.0
+-   BTT EBB42 v1.1
+-   BTT EBB42 v1.2
+-   BTT EBB36 v1.0
+-   BTT EBB36 v1.1
+-   BTT EBB36 v1.2
+-   Mellow Fly SHT42 v1
+-   Mellow Fly SHT36 v1
+
+### Speaking of printers!
+
+Thanks to our awesome contributors, RatOS now supports 7 different printers! v2.0.0 adds experimental support for the following:
+
+-   Voron V2.4 (Thanks to Heisenberg19x#4580)
+-   Voron V0.1 (Thanks to Heisenberg19x#4580)
+-   Prusa i3 MK3S (Thanks to cloudhd3d#6175)
+-   Prusa Mini (Thanks to cloudhd3d#6175)
+
+These printers are still in the experimental phase, and we're looking for more contributors to help us test and improve them. If you're interested in helping out, please join our [Discord](https://discord.gg/ratrig) and let us know!
+
+### Experimental BTT CB1 support
+
+Thanks to the awesome work of blacksmithforlife#6070 we now have experimental support for the BTT CB1, this should be great news to those of you who are having trouble sourcing Raspberry Pi's. It's an ongoing process, and the CB1 itself is still maturing, but please give it a try and let us know how it goes!
+
+### Control boards
+
+The control boards have also gotten a lot of love in this release. RatOS now additionally supports the following boards:
+
+-   BTT Manta M8P
+-   BTT Manta M4P
+-   BTT Manta E3EZ
+-   BTT SKR 3
+-   BTT SKR 3 EZ
+-   BTT SKR Mini E3 3.0
+-   BTT SKRat 1.0
+-   BTT Octopus Pro H723
+
+Thanks to everyone who helped test the configurations and wiring diagrams!
+
+### Stowable probes
+
+By popular request, stowable probes like euclid and klicky are now supported natively in RatOS (currently only on CoreXY). As usual everything you need is a single include and possibly some minor tweaking to 4 coordinates, quite a stark contrast to the work usually involved in configuring stowable probes. The probes are automatically stowed and deployed when needed and safeguards are in place to ensure safe operations.
+
+### Simplified installation
+
+The configurator has gotten smarter and now knows how to flash your control boards and toolboards, check their versions and keep them up to date. This takes a lot of guess work out of the flashing process and makes it much easier to get started. This is a huge step towards making RatOS more user friendly while remaining modular and flexible, and it's only the beginning. As you might now, the goal is for the entire setup process - including configuration - to be done through the configurator interface in 3.0. This brings us one step closer to that goal.
+
+### Onwards and upwards!
+
+RatOS has come a long way in the last year, and 2.0.0 brings us even closer to reaching the goal of a more accessible Klipper that doesn't require a computer science degree. We're not done yet, and i'm personally looking forward to the next major release, which i think is going to be really special. Onwards and upwards!
+
+### THANK YOU for your support
+
+Thank you to everyone who donated, contributed, helped me test and suggest changes and improvements, it is much appreciated!
+If you wish to support the development of RatOS, please consider [donating](https://paypal.me/miklschmidt) or [becoming a sponsor](https://github.com/sponsors/miklschmidt), thank you!
