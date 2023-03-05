@@ -21,6 +21,6 @@ install_cleanup_trap
 DEBIAN_FRONTEND=noninteractive
 export DEBIAN_FRONTEND
 apt-get update --allow-releaseinfo-change
-apt-get install --yes --assume-yes
+apt-get install --yes --assume-yes sudo
 
 unset DEBIAN_FRONTEND
