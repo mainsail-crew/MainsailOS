@@ -28,6 +28,12 @@ echo "armbian-firmware hold" | dpkg --set-selections
 echo "linux-image-current-sunxi64 hold" | dpkg --set-selections
 echo "linux-dtb-current-sunxi64 hold" | dpkg --set-selections
 
+## Run full upgrade
 apt-get upgrade --yes --assume-yes
+
+## Revert hold status
+echo "armbian-firmware install" | dpkg --set-selections
+echo "linux-image-current-sunxi64 install" | dpkg --set-selections
+echo "linux-dtb-current-sunxi64 install" | dpkg --set-selections
 
 unset DEBIAN_FRONTEND
