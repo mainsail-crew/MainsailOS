@@ -11,7 +11,7 @@
 
 # shellcheck disable=all
 
-[[ -n "$ARMBIAN_DEPS" ]] || ARMBIAN_DEPS="armbian-config avahi-daemon iptables \
+[[ -n "$ARMBIAN_DEPS" ]] || ARMBIAN_DEPS="sudo armbian-config avahi-daemon iptables \
 bash-completion"
 [[ -n "$ARMBIAN_CONFIG_TXT_FILE" ]] || ARMBIAN_CONFIG_TXT_FILE="/boot/armbianEnv.txt"
 [[ -n "$ARMBIAN_CONFIG_BAK_FILE" ]] || ARMBIAN_CONFIG_BAK_FILE="/boot/armbianEnv.txt.backup"
