@@ -24,7 +24,7 @@ BASE_IMAGE_RESIZEROOT=600
 BASE_RELEASE_COMPRESS=no
 # Modules are valid for 32bit and 64bit images
 # MODULES="base,pkgupgrade,armbian(armbian_net,mainsailos,klipper,is_req_preinstall,moonraker,mainsail,timelapse,crowsnest,sonar)"
-MODULES="base,armbian_fix,pkgupgrade,armbian(armbian_net,mainsailos,klipper,is_req_preinstall,moonraker,mainsail,timelapse,crowsnest,sonar)"
+MODULES="base,armbian_fix,armbian(armbian_net,mainsailos,klipper,is_req_preinstall,moonraker,mainsail,timelapse,crowsnest,sonar)"
 # export Variables
 export DOWNLOAD_BASE_URL
 export BASE_ADD_USER
