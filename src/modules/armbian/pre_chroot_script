@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+#### MainsailOS Specific Tweaks for armbian images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck enable=require-variable-braces
+# Source error handling, leave this in place
+set -Ee
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+## Install sudo before chrooting
+DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND
+apt-get update --allow-releaseinfo-change
+apt-get install --yes --assume-yes
+
+unset DEBIAN_FRONTEND
