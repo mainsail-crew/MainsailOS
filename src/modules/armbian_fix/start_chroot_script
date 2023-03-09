@@ -21,7 +21,7 @@ install_cleanup_trap
 DEBIAN_FRONTEND=noninteractive
 export DEBIAN_FRONTEND
 apt-get update --allow-releaseinfo-change
-apt-get install --yes --assume-yes sudo apt-utils wget
+apt-get install --yes --assume-yes sudo apt-utils wget net-tools
 
 ## Set kernel package on hold
 echo "armbian-firmware hold" | dpkg --set-selections
