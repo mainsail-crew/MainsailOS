@@ -23,6 +23,18 @@ set -Ee
 source /common.sh
 install_cleanup_trap
 
+### Helper func
+is_board_type() {
+    local board releasefile
+    board=""
+    releasefile="/etc/armbian-release"
+    if [[ -f "${releasefile}" ]]; then
+        board="$(grep "BOARD=" "${releasefile}" | cut -d'=' -f2)"
+    fi
+    echo "${board}"
+}
+
+
 ## Install some basic packages that are needed during build
 ## Package net-tools fixes module 'armbian_net'
 DEBIAN_FRONTEND=noninteractive
@@ -31,16 +43,36 @@ apt-get update --allow-releaseinfo-change
 apt-get install --yes --assume-yes sudo apt-utils wget net-tools
 
 ## Set kernel package on hold
-echo "armbian-firmware hold" | dpkg --set-selections
-echo "linux-image-current-sunxi64 hold" | dpkg --set-selections
-echo "linux-dtb-current-sunxi64 hold" | dpkg --set-selections
+### Orange Pi 3 LTS
+if [[ "$(is_board_type)" == "orangepi3-lts" ]]; then
+    echo "armbian-firmware hold" | dpkg --set-selections
+    echo "linux-image-current-sunxi64 hold" | dpkg --set-selections
+    echo "linux-dtb-current-sunxi64 hold" | dpkg --set-selections
+fi
+
+### Orange Pi 4 LTS
+if [[ "$(is_board_type)" == "orangepi4-lts" ]]; then
+    echo "armbian-firmware hold" | dpkg --set-selections
+    echo "linux-image-current-rockchip64 hold" | dpkg --set-selections
+    echo "linux-dtb-current-rockchip64 hold" | dpkg --set-selections
+fi
 
 ## Run full upgrade
 apt-get upgrade --yes --assume-yes
 
 ## Revert hold status
-echo "armbian-firmware install" | dpkg --set-selections
-echo "linux-image-current-sunxi64 install" | dpkg --set-selections
-echo "linux-dtb-current-sunxi64 install" | dpkg --set-selections
+### Orange Pi 3 LTS
+if [[ "$(is_board_type)" == "orangepi3-lts" ]]; then
+    echo "armbian-firmware install" | dpkg --set-selections
+    echo "linux-image-current-sunxi64 install" | dpkg --set-selections
+    echo "linux-dtb-current-sunxi64 install" | dpkg --set-selections
+fi
+
+### Orange Pi 4 LTS
+if [[ "$(is_board_type)" == "orangepi4-lts" ]]; then
+    echo "armbian-firmware install" | dpkg --set-selections
+    echo "linux-image-current-rockchip64 install" | dpkg --set-selections
+    echo "linux-dtb-current-rockchip64 install" | dpkg --set-selections
+fi
 
 unset DEBIAN_FRONTEND
