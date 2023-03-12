@@ -63,7 +63,11 @@ jobs:
           NOW="$(date +"%Y-%m-%d")"
           IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
 
-          sudo mv repository/src/workspace/*.img $IMAGE.img
+          WORKSPACE=$(echo ${{ github.workspace }})
+          sudo chown -R $USER:$USER $WORKSPACE/repository/src/workspace || true
+          sudo chmod 0775 -R $WORKSPACE/repository/src/workspace || true
+
+          mv repository/src/workspace/*.img $IMAGE.img
 
           echo "image=${IMAGE}" >> $GITHUB_OUTPUT
 
@@ -79,7 +83,7 @@ jobs:
         run: |
           CPU_COUNT="$(nproc)"
           echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
-          xz -efkvz9T"${CPU_COUNT}" ${{ steps.move-image.outputs.image }}.img
+          xz -efkvz9T"${CPU_COUNT}" ${{ steps.move-image.outputs.image }}.img || true
 
       - name: Calculating checksums
         shell: bash
