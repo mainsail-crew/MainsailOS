@@ -141,7 +141,7 @@ jobs:
           source repository/src/config
           base_name="${{ needs.release.outputs.date }}-${DIST_NAME}-${DIST_VERSION}"
           image="${base_name}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
-          cp repository/src/workspace/*.img $image.img
+          mv repository/src/workspace/*.img $image.img
 
           echo "base_name=${base_name}" >> $GITHUB_OUTPUT
           echo "image=${image}" >> $GITHUB_OUTPUT
