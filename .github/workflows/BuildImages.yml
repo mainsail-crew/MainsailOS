@@ -63,8 +63,7 @@ jobs:
           NOW="$(date +"%Y-%m-%d")"
           IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
 
-          chmod -R 0777 repository/src/workspace
-          mv repository/src/workspace/*.img $IMAGE.img
+          sudo mv repository/src/workspace/*.img $IMAGE.img
 
           echo "image=${IMAGE}" >> $GITHUB_OUTPUT
 
