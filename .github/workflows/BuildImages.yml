@@ -63,7 +63,7 @@ jobs:
           NOW="$(date +"%Y-%m-%d")"
           IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
 
-          sudo chown "$(whoami)":"$(whoami)" repository/src/workspace/*.img
+          sudo chown "${USER}":"${USER}" repository/src/workspace/*.img
           sudo chmod 0777 repository/src/workspace/*.img
           mv repository/src/workspace/*.img $IMAGE.img
 
