@@ -50,11 +50,17 @@ check_install_pkgs ${ARMBIAN_DEPS}
 
 
 
-# set groups
-if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
-usermod -aG video,audio,plugdev,games,netdev,sudo "${BASE_USER}"
+## Step 1: Manage groups
+### Substep 1: Create group for gpio usage
+sudo groupadd gpio
+### END Substep 1
 
-## Step 2: Set default groups
+### Substep 2: Set default groups
+if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
+usermod -aG video,audio,plugdev,games,netdev,sudo,systemd-journal,gpio "${BASE_USER}"
+### END Substep 2
+
+## Step 2: patch sshd_config
 sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
 sed -i 's/^X11Forwarding/#X11Forwarding/' /etc/ssh/sshd_config
 sed -i 's/^#MaxAuthTries 6/MaxAuthTries 3/' /etc/ssh/sshd_config
