@@ -90,4 +90,18 @@ if [[ "$(is_board_type)" == "orangepi4-lts" ]]; then
     echo "linux-dtb-current-rockchip64 install" | dpkg --set-selections
 fi
 
+### Rock Pi 4 SE
+if [[ "$(is_board_type)" == "rockpi-4b" ]]; then
+    echo "armbian-firmware install" | dpkg --set-selections
+    echo "linux-image-current-rockchip64 install" | dpkg --set-selections
+    echo "linux-dtb-current-rockchip64 install" | dpkg --set-selections
+fi
+
+### Rock CM3
+if [[ "$(is_board_type)" == "rock-3a" ]]; then
+    echo "armbian-firmware install" | dpkg --set-selections
+    echo "linux-image-edge-rk35xx install" | dpkg --set-selections
+    echo "linux-dtb-edge-rk35xx install" | dpkg --set-selections
+fi
+
 unset DEBIAN_FRONTEND
