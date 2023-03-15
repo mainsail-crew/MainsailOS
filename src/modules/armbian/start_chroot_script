@@ -153,7 +153,7 @@ if [[ "$(is_board_type)" =~ "rock" ]]; then
             sudo dpkg -i "yq_4.30.5_arm64.deb"
             # shellcheck disable=SC2086
             # We need word spliiting here
-            apt-get install ${ARMBIAN_RADXA_RSETUP_PKG_DEPS}
+            apt-get install --yes --no-install-recommends ${ARMBIAN_RADXA_RSETUP_PKG_DEPS}
             sudo dpkg -i rsetup_*_all.deb
         popd &> /dev/null || exit 1
         rm -rf rsetup-tmp
