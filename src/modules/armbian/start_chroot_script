@@ -104,7 +104,7 @@ fi
 ## END
 
 ## Step 7: Enable SPI interface by default
-echo_green "Enable SPI interface on ..."
+echo_green "Trying to enable SPI interface ..."
 
 ### Substep 1: Copy default config to backup file
 cp "${ARMBIAN_CONFIG_TXT_FILE}" "${ARMBIAN_CONFIG_BAK_FILE}"
@@ -129,14 +129,16 @@ fi
 #### Radxa Rock Pi 4 SE (probably other Rock Pi 4 models does work also)
 #### "NOTE: Will not work with soldered on SPI Flash !!!"
 if [[ "$(is_board_type)" == "rockpi-4b" ]]; then
-    ARMBIAN_BOARD_TYPE="Orange Pi 4 LTS"
+    ARMBIAN_BOARD_TYPE="Radxa RockPi 4"
     echo "overlays=spi-spidev" >> "${ARMBIAN_CONFIG_TXT_FILE}"
     echo "param_spidev_spi_bus=1" >> "${ARMBIAN_CONFIG_TXT_FILE}"
     echo "spi-dev" >> "${ARMBIAN_MODULES_FILE}"
 fi
 
 ### END Substep 2
-echo_green "Enabled SPI interface on ${ARMBIAN_BOARD_TYPE} ... DONE!"
+if [[ -n "${ARMBIAN_BOARD_TYPE}" ]]; then
+    echo_green "Enabled SPI interface on ${ARMBIAN_BOARD_TYPE} ... DONE!"
+fi
 ## END
 
 
