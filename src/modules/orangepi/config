@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+#### MainsailOS Specific Tweaks for orangepi images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck disable=all
+
+## General module configuration
+[[ -n "$ORANGEPI_DEPS" ]] || ORANGEPI_DEPS="avahi-daemon iptables unzip \
+bash-completion"
+[[ -n "$ORANGEPI_CONFIG_TXT_FILE" ]] || ORANGEPI_CONFIG_TXT_FILE="/boot/orangepiEnv.txt"
+[[ -n "$ORANGEPI_CONFIG_BAK_FILE" ]] || ORANGEPI_CONFIG_BAK_FILE="/boot/orangepiEnv.txt.backup"
+[[ -n "$ORANGEPI_MODULES_FILE" ]] || ORANGEPI_MODULES_FILE="/etc/modules"
+
+## Orange Pi Zero 2 additional configuration
+[[ -n "$ORANGEPI_ENABLE_OVERLAYS_OPIZ2" ]] || ORANGEPI_ENABLE_OVERLAYS_OPIZ2="true"
+[[ -n "$ORANGEPI_ADD_OVERLAYS_OPIZ2" ]] || ORANGEPI_ADD_OVERLAYS_OPIZ2="i2c3 uart5 spi-spidev"
+[[ -n "$ORANGEPI_ADD_OVERLAYS_OPIZ2_PARAMS" ]] || ORANGEPI_ADD_OVERLAYS_OPIZ2_PARAMS="param_spidev_spi_bus=1 param_spidev_spi_cs=1"
+
+### EXPERIMENTAL: Install orangepi-config from source git repo
+[[ -n "$ORANGEPI_INSTALL_OPI_CONFIG" ]] || ORANGEPI_INSTALL_OPI_CONFIG="true"
+[[ -n "$ORANGEPI_OPI_CONFIG_URL" ]] || ORANGEPI_OPI_CONFIG_URL="https://raw.githubusercontent.com/orangepi-xunlong/orangepi-build/next/external/cache/sources/orangepi-config/"
+[[ -n "$ORANGEPI_OPI_CONFIG_FILES" ]] || ORANGEPI_OPI_CONFIG_FILES="debian-config debian-config-functions debian-config-functions-network debian-config-jobs debian-config-submenu"

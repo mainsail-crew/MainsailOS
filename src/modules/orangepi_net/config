@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+#### MainsailOS network configurator for orange images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck disable=all
+
+[[ -n "$ORANGEPI_NET_FIRSTRUN_FILE" ]] || ORANGEPI_NET_FIRSTRUN_FILE="/boot/orangepi_first_run.txt.template"
+[[ -n "$ORANGEPI_NET_FIRSTRUN_SCRIPT" ]] || ORANGEPI_NET_FIRSTRUN_SCRIPT="/usr/lib/orangepi/orangepi-firstrun-config"
+[[ -n "$ORANGEPI_NET_NC_PATH" ]] || ORANGEPI_NET_NC_PATH="/usr/local/bin/network-configurator"

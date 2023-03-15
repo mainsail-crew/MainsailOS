@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#### MainsailOS network configurator for armbian images
+#### MainsailOS network configurator for orange images
 ####
 #### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
 #### Copyright 2023 - till today
@@ -29,33 +29,33 @@ unpack filesystem/root / root
 ## END
 
 ## Step 2: remove original template
-if [[ -f "${ARMBIAN_NET_FIRSTRUN_FILE}" ]]; then
-    sudo rm -rf "${ARMBIAN_NET_FIRSTRUN_FILE}"
+if [[ -f "${ORANGEPI_NET_FIRSTRUN_FILE}" ]]; then
+    sudo rm -rf "${ORANGEPI_NET_FIRSTRUN_FILE}"
 fi
 ## END
 
 ## Step 3: Disable first run service
-systemctl_if_exists disable armbian-firstrun-config.service
+systemctl_if_exists disable orangepi-firstrun-config.service
 ## END
 
 ## Step 4: Copy original script to /usr/local/bin/network-configurator
-if [[ -f "${ARMBIAN_NET_FIRSTRUN_SCRIPT}" ]]; then
-    sudo cp -p "${ARMBIAN_NET_FIRSTRUN_SCRIPT}" "${ARMBIAN_NET_NC_PATH}"
+if [[ -f "${ORANGEPI_NET_FIRSTRUN_SCRIPT}" ]]; then
+    sudo cp -p "${ORANGEPI_NET_FIRSTRUN_SCRIPT}" "${ORANGEPI_NET_NC_PATH}"
 fi
 ## END
 
 ## Step 5: patch /usr/local/bin/network-configurator
-if [[ -f "${ARMBIAN_NET_NC_PATH}" ]]; then
-    ### Substep 1: replace any amrbian_first_run.txt with network_config.txt
-    sed -i 's|armbian_first_run.txt|network_config.txt|g' "${ARMBIAN_NET_NC_PATH}"
+if [[ -f "${ORANGEPI_NET_NC_PATH}" ]]; then
+    ### Substep 1: replace any orangepi_first_run.txt with network_config.txt
+    sed -i 's|orangepi_first_run.txt|network_config.txt|g' "${ORANGEPI_NET_NC_PATH}"
     ### Substep 2: replace any FR* Variable name with NC*
-    sed -i 's|FR|NC|g' "${ARMBIAN_NET_NC_PATH}"
+    sed -i 's|FR|NC|g' "${ORANGEPI_NET_NC_PATH}"
     ### Supstep 3: Rename function
-    sed -i 's|do_firstrun_automated_user_configuration|do_network_configuration|g' "${ARMBIAN_NET_NC_PATH}"
+    sed -i 's|do_firstrun_automated_user_configuration|do_network_configuration|g' "${ORANGEPI_NET_NC_PATH}"
     ### Substep 4: Add a patch note
-    sed -i '8 i \\n\# This is a patched version of armbian-firstrun-config for MainsailOS' "${ARMBIAN_NET_NC_PATH}"
-    sed -i '10 i # Original located at /usr/lib/armbian/armbian-firstrun-config' "${ARMBIAN_NET_NC_PATH}"
-    sed -i '11 i # Changes made by https:\/\/github.com/mainsail-crew' "${ARMBIAN_NET_NC_PATH}"
+    sed -i '8 i \\n\# This is a patched version of orangepi-firstrun-config for MainsailOS' "${ORANGEPI_NET_NC_PATH}"
+    sed -i '10 i # Original located at /usr/lib/orangepi/orangepi-firstrun-config' "${ORANGEPI_NET_NC_PATH}"
+    sed -i '11 i # Changes made by https:\/\/github.com/mainsail-crew' "${ORANGEPI_NET_NC_PATH}"
 fi
 ## END
 
