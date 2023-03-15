@@ -138,3 +138,16 @@ fi
 ### END Substep 2
 echo_green "Enabled SPI interface on ${ARMBIAN_BOARD_TYPE} ... DONE!"
 ## END
+
+
+## Step 8: Install rsetup on Rock Pis/CM
+if [[ "$(is_board_type)" =~ "rock" ]]; then
+    pushd "/home/${BASE_USER}" &> /dev/null || exit 1
+    mkdir rsetup-tmp
+        pushd "/home/${BASE_USER}/rsetup-tmp" &> /dev/null || exit 1
+            wget -q --show-progress "${ARMBIAN_RADXA_RSETUP_PKG}"
+            sudo dpkg -i rsetup_*_all.deb
+        popd &> /dev/null || exit 1
+        rm -rf rsetup-tmp
+    popd &> /dev/null || exit 1
+fi

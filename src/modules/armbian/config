@@ -16,3 +16,7 @@ bash-completion"
 [[ -n "$ARMBIAN_CONFIG_TXT_FILE" ]] || ARMBIAN_CONFIG_TXT_FILE="/boot/armbianEnv.txt"
 [[ -n "$ARMBIAN_CONFIG_BAK_FILE" ]] || ARMBIAN_CONFIG_BAK_FILE="/boot/armbianEnv.txt.backup"
 [[ -n "$ARMBIAN_MODULES_FILE" ]] || ARMBIAN_MODULES_FILE="/etc/modules"
+
+
+## Radxa rsetup deb package
+[[ -n "$ARMBIAN_RADXA_RSETUP_PKG" ]] || ARMBIAN_RADXA_RSETUP_PKG="https://github.com/radxa-pkg/rsetup/releases/download/0.3.12/rsetup_0.3.12_all.deb"
