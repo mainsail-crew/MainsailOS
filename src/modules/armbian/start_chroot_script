@@ -149,6 +149,8 @@ if [[ "$(is_board_type)" =~ "rock" ]]; then
     mkdir rsetup-tmp
         pushd "/home/${BASE_USER}/rsetup-tmp" &> /dev/null || exit 1
             wget -q --show-progress "${ARMBIAN_RADXA_RSETUP_PKG}"
+            wget -q --show-progress "${ARMBIAN_RADXA_DEP_YQ}"
+            sudo dpkg -i "yq_4.30.5_arm64.deb"
             # shellcheck disable=SC2086
             # We need word spliiting here
             apt-get install ${ARMBIAN_RADXA_RSETUP_PKG_DEPS}

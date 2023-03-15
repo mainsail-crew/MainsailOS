@@ -21,3 +21,5 @@ bash-completion"
 ## Radxa rsetup deb package
 [[ -n "$ARMBIAN_RADXA_RSETUP_PKG" ]] || ARMBIAN_RADXA_RSETUP_PKG="https://github.com/radxa-pkg/rsetup/releases/download/0.3.12/rsetup_0.3.12_all.deb"
 [[ -n "$ARMBIAN_RADXA_RSETUP_PKG_DEPS" ]] || ARMBIAN_RADXA_RSETUP_PKG_DEPS="gdisk yq"
+#### https://github.com/radxa-pkg/yq needed for rsetup (yaml parser)
+[[ -n "$ARMBIAN_RADXA_DEP_YQ" ]] || ARMBIAN_RADXA_DEP_YQ="https://github.com/radxa-pkg/yq/releases/download/4.30.5/yq_4.30.5_arm64.deb"
