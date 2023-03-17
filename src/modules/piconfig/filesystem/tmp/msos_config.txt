@@ -29,8 +29,8 @@ gpu_mem=256
 ## Use 256 if 1Gb Ram Model!
 gpu_mem=128
 # gpu_mem=256
-## BTT Pi TFT's touch don't work with FKMS on pi3, unlike pi4.
-dtoverlay=vc4-kms-v3d
+## BTT Pi TFT's touch don't work with FKMS or KMS on pi3.
+dtoverlay=rpi-ft5406
 
 [cm4]
 ## Enable DWC2 for usb on CM4
@@ -40,7 +40,7 @@ dtoverlay=vc4-fkms-v3d
 [pi4]
 ## Do not use more than 256Mb on Pi Model 4, it uses its own Management.
 gpu_mem=256
-## Unlike pi3, BTT Pi TFT's touch don't work with KMS on pi4
+## BTT Pi TFT's touch don't work with KMS on pi4 so we use FKMS for now.
 dtoverlay=vc4-fkms-v3d
 
 [all]
