@@ -1,5 +1,18 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Shebang for better file detection
+#### MainsailOS Specific Tweaks for armbian images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
 # shellcheck disable=all
 
-[ -n "$ARMBIAN_DEPS" ] || ARMBIAN_DEPS="armbian-config avahi-daemon iptables \
+[[ -n "$ARMBIAN_DEPS" ]] || ARMBIAN_DEPS="armbian-config avahi-daemon iptables \
 bash-completion"
+[[ -n "$ARMBIAN_CONFIG_TXT_FILE" ]] || ARMBIAN_CONFIG_TXT_FILE="/boot/armbianEnv.txt"
+[[ -n "$ARMBIAN_CONFIG_BAK_FILE" ]] || ARMBIAN_CONFIG_BAK_FILE="/boot/armbianEnv.txt.backup"
+[[ -n "$ARMBIAN_MODULES_FILE" ]] || ARMBIAN_MODULES_FILE="/etc/modules"

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+#### MainsailOS network configurator for armbian images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck disable=all
+
+[[ -n "$ARMBIAN_NET_FIRSTRUN_FILE" ]] || ARMBIAN_NET_FIRSTRUN_FILE="/boot/armbian_first_run.txt.template"
+[[ -n "$ARMBIAN_NET_FIRSTRUN_SCRIPT" ]] || ARMBIAN_NET_FIRSTRUN_SCRIPT="/usr/lib/armbian/armbian-firstrun-config"
+[[ -n "$ARMBIAN_NET_NC_PATH" ]] || ARMBIAN_NET_NC_PATH="/usr/local/bin/network-configurator"

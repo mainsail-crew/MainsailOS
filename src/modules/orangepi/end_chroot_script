@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#### MainsailOS Specific Tweaks for armbian images
+#### MainsailOS Specific Tweaks for orangepi images
 ####
 #### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
 #### Copyright 2023 - till today
@@ -17,20 +17,15 @@ set -Ee
 source /common.sh
 install_cleanup_trap
 
-## Helper functions
-gen_root_pw() {
-    tr -dc "[:alnum:]" < /dev/urandom | head -c 50
-}
-
 ## Clean up
 ## Step 1: Remove autologin and lock root account
-if [[ -f "/etc/systemd/system/getty@.service.d/override.conf" ]]; then
+if [ -f "/etc/systemd/system/getty@.service.d/override.conf" ]; then
     rm -f /etc/systemd/system/getty@.service.d/override.conf
 fi
 ## END
 
 ## Step 2: Disable autologin on serial console
-if [[ -f "/etc/systemd/system/serial-getty@.service.d/override.conf" ]]; then
+if [ -f "/etc/systemd/system/serial-getty@.service.d/override.conf" ]; then
     sed -i 's/--autologin root //' /etc/systemd/system/serial-getty@.service.d/override.conf
 fi
 ## END

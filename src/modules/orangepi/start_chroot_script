@@ -1,0 +1,194 @@
+#!/usr/bin/env bash
+#### MainsailOS Specific Tweaks for orangepi images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+#### NOTE: udev rules file is applied in Step 6!
+#### This is based on https://github.com/Arksine/moonraker/issues/562
+
+
+# shellcheck enable=require-variable-braces
+# Source error handling, leave this in place
+set -Ee
+
+## Uncomment for deeper debugging
+# set -x
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+# Helper func
+is_board_type() {
+    local board releasefile
+    board=""
+    releasefile="/etc/orangepi-release-info.txt"
+    if [[ -f "${releasefile}" ]]; then
+        board="$(grep "BOARD=" "${releasefile}" | cut -d'=' -f2)"
+    fi
+    echo "${board}"
+}
+
+# Base User groups
+# Shameless "stolen" from
+# https://github.com/guysoft/CustomPiOS/blob/devel/src/variants/armbian/pre_chroot_script
+
+if_group_exists_run() {
+    group=$1
+    if grep -q "${group}" /etc/group; then
+        "${@:2}"
+    fi
+}
+
+# passwordless sudo during install
+# Will be removed in cleanup
+echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+## Step 1: Install armbian specific packages
+apt update
+# shellcheck disable=SC2086
+check_install_pkgs ${ORANGEPI_DEPS}
+## END Step 1
+
+## Step 2: Manage groups and default user
+
+### Substep 1: Create group for gpio usage
+sudo groupadd gpio
+### END Substep 1
+
+### Substep 2: Set default groups
+if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
+usermod -aG video,audio,plugdev,games,netdev,sudo,systemd-journal,gpio "${BASE_USER}"
+### END Substep 2
+
+### Substep 3: Remove user "orangepi"
+sudo userdel orangepi
+sudo rm -rf /home/orangepi
+### END Substep 3
+## END Step 2
+
+## Step 3: Patch sshd_config (Limit retrys, disable root login via ssh)
+sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+sed -i 's/^X11Forwarding/#X11Forwarding/' /etc/ssh/sshd_config
+sed -i 's/^#MaxAuthTries 6/MaxAuthTries 3/' /etc/ssh/sshd_config
+## END Step 3
+
+## Step 4: Try patching first login in build stage
+if [ -f "/root/.not_logged_in_yet" ]; then
+    rm -f /root/.not_logged_in_yet
+fi
+## END Step 4
+
+## Step 5: Move armbian-release to display mainsailos-release
+if [[ -f "/etc/orangepi-release" ]]; then
+    echo_green "OrangePi release file found! moving to: 'orangepi-release-info.txt'"
+    mv /etc/orangepi-release /etc/orangepi-release-info.txt
+else
+    echo_red "OrangePi release file not found! [SKIPPED]"
+fi
+## END Step 5
+
+## Step 6: Patch dynamic motd
+echo_green "Patch dynamic motd ..."
+unpack /filesystem/root /
+chmod +x /etc/update-motd.d/*
+if [ -f "/etc/default/orangepi-motd" ]; then
+    sed -i 's/^MOTD_DISABLE=""/MOTD_DISABLE="header tips"/' /etc/default/orangepi-motd
+fi
+## END Step 6
+
+## Step 7: Enable SPI interface by default
+echo_green "Enable interfaces on Orange Pi SBC's ..."
+
+### Substep 1: Copy default config to backup file
+cp "${ORANGEPI_CONFIG_TXT_FILE}" "${ORANGEPI_CONFIG_BAK_FILE}"
+### END Substep 1
+
+### Substep 2: Enable SPI in armbianEnv.txt depending on device
+
+#### Orangepi Zero2
+if [[ "$(is_board_type)" == "orangepizero2" ]] &&
+[[ "${ORANGEPI_ENABLE_OVERLAYS_OPIZ2}" == "true" ]]; then
+
+    if [[ -n "${ORANGEPI_ADD_OVERLAYS_OPIZ2}" ]]; then
+        echo_green "Adding overlays '${ORANGEPI_ADD_OVERLAYS_OPIZ2}' to ${ORANGEPI_CONFIG_TXT_FILE} ..."
+        echo "overlays=${ORANGEPI_ADD_OVERLAYS_OPIZ2}" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+    fi
+
+    if [[ -n "${ORANGEPI_ADD_OVERLAYS_OPIZ2_PARAMS}" ]]; then
+        for param in ${ORANGEPI_ADD_OVERLAYS_OPIZ2_PARAMS}; do
+            echo_green "Add ${param} to ${ORANGEPI_CONFIG_TXT_FILE} ..."
+            echo "${param}" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+        done
+    fi
+fi
+#### END
+
+### END Substep 2
+
+# Substep 3: add spi-dev module to /etc/modules
+echo "spi-dev" >> "${ORANGEPI_MODULES_FILE}"
+
+echo_green "Enable SPI interface on Orange Pi SBC's ... DONE!"
+## END Step 7
+
+## Step 8: Install orangepi-config from git source repository
+if [[ "${ORANGEPI_INSTALL_OPI_CONFIG}" == "true" ]]; then
+    echo_green "Install orangepi-config from git sources ..."
+
+    ### Substep 1: Create temporary dir 'src/workspace/opi-config-src'
+    ORANGEPI_OPI_CONFIG_TEMP="src/workspace/opi-config-src"
+    if [[ ! -d "${ORANGEPI_OPI_CONFIG_TEMP}" ]]; then
+        mkdir -p "${ORANGEPI_OPI_CONFIG_TEMP}"
+    fi
+    ### END Substep 1
+
+    ### Substep 2: Create array from ORANGEPI_OPI_CONFIG_FILES
+    for name in ${ORANGEPI_OPI_CONFIG_FILES}; do
+        ORANGEPI_OPI_CONFIG_FILES_ARR+=("${name}")
+    done
+    ### END Substep 2
+
+    ### Substep 3: curl sources from git repo to src/workspace/opi-config
+    for file in "${ORANGEPI_OPI_CONFIG_FILES_ARR[@]}"; do
+        curl -sL "${ORANGEPI_OPI_CONFIG_URL}"/"${file}" --output "${ORANGEPI_OPI_CONFIG_TEMP}"/"${file}"
+    done
+    ### END Substep 3
+
+    ### Substep 4: Create subdir 'orangepi-config' in /usr/lib/
+    if [[ ! -d "/usr/lib/orangepi-config" ]]; then
+        mkdir -p "/usr/lib/orangepi-config"
+    fi
+    ### END Substep 4
+
+    ### Substep 5: Copy main script to /usr/sbin (orangepi-config)
+    cp -f "src/workspace/opi-config-src/${ORANGEPI_OPI_CONFIG_FILES_ARR[*]:0:1}" "/usr/sbin/orangepi-config"
+    ### END Substep 5
+
+    ### Substep 6: Add executable flag
+    if [[ ! -x "/usr/sbin/orangepi-config" ]]; then
+        chmod +x "/usr/sbin/orangepi-config"
+    fi
+    ### END Substep 6
+
+    ### Substep 7: Link main script to /usr/bin/orangepi-config
+    ln -sf "/usr/sbin/orangepi-config" "/usr/bin/orangepi-config"
+    ### END Substep 7
+
+    ### Substep 7: Install script librarys to /usr/lib/orangepi-config
+    for i in "${ORANGEPI_OPI_CONFIG_FILES_ARR[@]:1}"; do
+        stripped="${i##debian-config-}"
+        cp -f "${ORANGEPI_OPI_CONFIG_TEMP}/${i}" "/usr/lib/orangepi-config/${stripped}.sh"
+    done
+    ### END Substep 7
+
+else
+    echo_red "WARN: orangepi-config install not configured ... [SKIPPED]"
+fi
+## END Step 8

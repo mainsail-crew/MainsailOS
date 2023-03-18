@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+#### MainsailOS network configurator for orange images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck enable=require-variable-braces
+
+# Description:
+# This file installs a service based on armbians armbian_firstrun_config
+# The original work is done by the armbian developer's team
+# sources of files can be found here: https://github.com/armbian/build
+
+# Source error handling, leave this in place
+set -Ee
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+
+## Step 1: Install files
+unpack filesystem/root / root
+## END
+
+## Step 2: remove original template
+if [[ -f "${ORANGEPI_NET_FIRSTRUN_FILE}" ]]; then
+    sudo rm -rf "${ORANGEPI_NET_FIRSTRUN_FILE}"
+fi
+## END
+
+## Step 3: Disable first run service
+systemctl_if_exists disable orangepi-firstrun-config.service
+## END
+
+## Step 4: Copy original script to /usr/local/bin/network-configurator
+if [[ -f "${ORANGEPI_NET_FIRSTRUN_SCRIPT}" ]]; then
+    sudo cp -p "${ORANGEPI_NET_FIRSTRUN_SCRIPT}" "${ORANGEPI_NET_NC_PATH}"
+fi
+## END
+
+## Step 5: patch /usr/local/bin/network-configurator
+if [[ -f "${ORANGEPI_NET_NC_PATH}" ]]; then
+    ### Substep 1: replace any orangepi_first_run.txt with network_config.txt
+    sed -i 's|orangepi_first_run.txt|network_config.txt|g' "${ORANGEPI_NET_NC_PATH}"
+    ### Substep 2: replace any FR* Variable name with NC*
+    sed -i 's|FR|NC|g' "${ORANGEPI_NET_NC_PATH}"
+    ### Supstep 3: Rename function
+    sed -i 's|do_firstrun_automated_user_configuration|do_network_configuration|g' "${ORANGEPI_NET_NC_PATH}"
+    ### Substep 4: Add a patch note
+    sed -i '8 i \\n\# This is a patched version of orangepi-firstrun-config for MainsailOS' "${ORANGEPI_NET_NC_PATH}"
+    sed -i '10 i # Original located at /usr/lib/orangepi/orangepi-firstrun-config' "${ORANGEPI_NET_NC_PATH}"
+    sed -i '11 i # Changes made by https:\/\/github.com/mainsail-crew' "${ORANGEPI_NET_NC_PATH}"
+fi
+## END
+
+## Step 6: Enable systemd service
+systemctl_if_exists enable network-configurator.service
+## END

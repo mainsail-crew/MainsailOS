@@ -1,26 +1,32 @@
 #!/usr/bin/env bash
-# MainsailOS Specific Tweaks for armbian images
-# written by Stephan Wendel aka KwadFan
-# <me@stephanwe.de>
-# GPL V3
-########
+#### MainsailOS Specific Tweaks for armbian images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
 
+# shellcheck enable=require-variable-braces
 # Source error handling, leave this in place
-set -xe
+set -Ee
 
 # Source CustomPIOS common.sh
 # shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
 
-# Install armbian specific packages
-apt update
-# shellcheck disable=SC2086
-check_install_pkgs ${ARMBIAN_DEPS}
-
-# passwordless sudo during install
-# Will be removed in cleanup
-echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
+### Helper func
+is_board_type() {
+    local board releasefile
+    board=""
+    releasefile="/etc/armbian-release-info.txt"
+    if [[ -f "${releasefile}" ]]; then
+        board="$(grep "BOARD=" "${releasefile}" | cut -d'=' -f2)"
+    fi
+    echo "${board}"
+}
 
 # Base User groups
 # Shameless "stolen" from
@@ -33,26 +39,93 @@ if_group_exists_run() {
     fi
 }
 
-# set groups
-if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
-usermod -aG video,audio,plugdev,games,netdev,sudo "${BASE_USER}"
+# passwordless sudo during install
+# Will be removed in cleanup
+echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Patch sshd_config
+## Step 1: Install armbian specific packages
+apt update
+# shellcheck disable=SC2086
+check_install_pkgs ${ARMBIAN_DEPS}
+
+
+
+## Step 1: Manage groups
+### Substep 1: Create group for gpio usage
+sudo groupadd gpio
+### END Substep 1
+
+### Substep 2: Set default groups
+if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
+usermod -aG video,audio,plugdev,games,netdev,sudo,systemd-journal,gpio "${BASE_USER}"
+### END Substep 2
+
+## Step 2: patch sshd_config
 sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
 sed -i 's/^X11Forwarding/#X11Forwarding/' /etc/ssh/sshd_config
 sed -i 's/^#MaxAuthTries 6/MaxAuthTries 3/' /etc/ssh/sshd_config
+## END
 
-# Try patching first login in build stage
-if [ -f "/root/.not_logged_in_yet" ]; then
+## Step 4: Try patching first login in build stage
+if [[ -f "/root/.not_logged_in_yet" ]]; then
     rm -f /root/.not_logged_in_yet
 fi
+## END
 
-# Move armbian-release to display mainsailos-release
-mv /etc/armbian-release /etc/armbian-release-info.txt
+## Step 5: Move armbian-release to display mainsailos-release
+### Substep 1: Move armbian-release
+    if [[ -f "/etc/armbian-release" ]]; then
+        echo_green "Armbian release file found! moving to: 'armbian-release-info.txt'"
+        mv /etc/armbian-release /etc/armbian-release-info.txt
+    else
+        echo_red "Armbian release file not found! [SKIPPED]"
+    fi
+### END Substep 1
+### Substep 2: patch Armbian scripts to new file location
+    echo_green "Patching armbian scripts (release file path) ..."
+    pushd "/usr/lib/armbian" &> /dev/null || exit 1
+    files=()
+    while IFS='' read -r line; do
+        files+=("${line}")
+    done < <(grep -R "/etc/armbian-release" -- * | cut -d":" -f1)
+    for f in "${files[@]}"; do
+        sed -i "s|/etc/armbian-release|/etc/armbian-release-info.txt|g" "${f}"
+    done
+    popd &> /dev/null || exit 1
+## END
 
-# update motd
+## Step 6: Patch dynamic motd
+echo_green "Patch dynamic motd ..."
 unpack /filesystem/root /
 chmod +x /etc/update-motd.d/*
-if [ -f "/etc/default/armbian-motd" ]; then
+if [[ -f "/etc/default/armbian-motd" ]]; then
     sed -i 's/MOTD_DISABLE=""/MOTD_DISABLE="header"/' /etc/default/armbian-motd
 fi
+## END
+
+## Step 7: Enable SPI interface by default
+echo_green "Enable SPI interface on Orange Pi SBC's ..."
+
+### Substep 1: Copy default config to backup file
+cp "${ARMBIAN_CONFIG_TXT_FILE}" "${ARMBIAN_CONFIG_BAK_FILE}"
+### END Substep 1
+
+### Substep 2: Enable SPI in armbianEnv.txt depending on device
+#### OrangePi 3 LTS
+if [[ "$(is_board_type)" == "orangepi3-lts" ]]; then
+    echo "overlays=spi-spidev1" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+fi
+
+#### OrangePi 4 LTS
+if [[ "$(is_board_type)" == "orangepi4-lts" ]]; then
+    echo "overlays=spi-spidev" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+    echo "param_spidev_spi_bus=1" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+fi
+### END Substep 2:
+
+### Substep 3: add spi-dev module to /etc/modules
+echo "spi-dev" >> "${ARMBIAN_MODULES_FILE}"
+### END Substep 3
+
+echo_green "Enable SPI interface on Orange Pi SBC's ... DONE!"
+## END

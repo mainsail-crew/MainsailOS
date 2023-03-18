@@ -1,0 +1,49 @@
+#-----------------------------------------------------------------
+#
+# MainsailOS (armbian edition) Network Configuration
+# Set optional end user configuration
+#    - Rename this file from /boot/network_config.txt.template to /boot/network_config.txt
+#    - Settings below will be applied every time you reboot your machine.
+# Be aware, old configurations will be deleted!
+#
+# This file is based on work of the armbian developer team
+# https://github.com/armbian/build/blob/master/packages/bsp/armbian_first_run.txt.template
+#-----------------------------------------------------------------
+
+#-----------------------------------------------------------------
+# General:
+# 1 = delete this file, after first run setup is completed.
+
+NC_general_delete_this_file_after_completion=1
+
+#-----------------------------------------------------------------
+#Networking:
+# Change default network settings
+# Set to 1 to apply any network related settings below
+
+NC_net_change_defaults=0
+
+# Enable WiFi or Ethernet.
+# NB: If both are enabled, WiFi will take priority and Ethernet will be disabled.
+
+NC_net_ethernet_enabled=1
+NC_net_wifi_enabled=0
+
+#Enter your WiFi creds
+# SECURITY WARN: Your wifi keys will be stored in plaintext, no encryption.
+
+NC_net_wifi_ssid='MySSID'
+NC_net_wifi_key='MyWiFiKEY'
+
+# Country code to enable power ratings and channels for your country. eg: GB US DE | https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+
+NC_net_wifi_countrycode='GB'
+
+# If you want to use a static ip, set it here
+
+NC_net_use_static=0
+NC_net_static_ip='192.168.0.100'
+NC_net_static_mask='255.255.255.0'
+NC_net_static_gateway='192.168.0.1'
+NC_net_static_dns='8.8.8.8 8.8.4.4' # Two entries max, seperated by a space.
+#-----------------------------------------------------------------

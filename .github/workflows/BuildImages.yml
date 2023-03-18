@@ -54,8 +54,8 @@ jobs:
         with:
           config: ${{ matrix.config }}
 
-      - name: Copy output
-        id: copy-image
+      - name: Rename image file
+        id: move-image
         if: always()
         shell: bash
         run: |
@@ -63,7 +63,11 @@ jobs:
           NOW="$(date +"%Y-%m-%d")"
           IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
 
-          cp repository/src/workspace/*.img $IMAGE.img
+          WORKSPACE=$(echo ${{ github.workspace }})
+          sudo chown -R $USER:$USER $WORKSPACE/repository/src/workspace || true
+          sudo chmod 0775 -R $WORKSPACE/repository/src/workspace || true
+
+          mv repository/src/workspace/*.img $IMAGE.img
 
           echo "image=${IMAGE}" >> $GITHUB_OUTPUT
 
@@ -71,7 +75,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: failed-${{ steps.copy-image.outputs.image }}.log
+          name: failed-${{ steps.move-image.outputs.image }}.log
           path: repository/src/build.log
 
       - name: Compressing Image
@@ -79,28 +83,28 @@ jobs:
         run: |
           CPU_COUNT="$(nproc)"
           echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
-          xz -efkvz9T"${CPU_COUNT}" ${{ steps.copy-image.outputs.image }}.img
+          xz -efkvz9T"${CPU_COUNT}" ${{ steps.move-image.outputs.image }}.img || true
 
       - name: Calculating checksums
         shell: bash
         run: |
-          sha256sum ${{ steps.copy-image.outputs.image }}.img > ${{ steps.copy-image.outputs.image }}.img.sha256
-          sha256sum ${{ steps.copy-image.outputs.image }}.img.xz > ${{ steps.copy-image.outputs.image }}.img.xz.sha256
+          sha256sum ${{ steps.move-image.outputs.image }}.img > ${{ steps.move-image.outputs.image }}.img.sha256
+          sha256sum ${{ steps.move-image.outputs.image }}.img.xz > ${{ steps.move-image.outputs.image }}.img.xz.sha256
 
       - name: Upload Compressed Image
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ steps.copy-image.outputs.image }}.img.xz
-          path: ${{ steps.copy-image.outputs.image }}.img.xz
+          name: ${{ steps.move-image.outputs.image }}.img.xz
+          path: ${{ steps.move-image.outputs.image }}.img.xz
 
       - name: Upload Compressed Image Checksum
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ steps.copy-image.outputs.image }}.img.xz.sha256
-          path: ${{ steps.copy-image.outputs.image }}.img.xz.sha256
+          name: ${{ steps.move-image.outputs.image }}.img.xz.sha256
+          path: ${{ steps.move-image.outputs.image }}.img.xz.sha256
 
       - name: Upload Image Checksum
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ steps.copy-image.outputs.image }}.img.sha256
-          path: ${{ steps.copy-image.outputs.image }}.img.sha256
+          name: ${{ steps.move-image.outputs.image }}.img.sha256
+          path: ${{ steps.move-image.outputs.image }}.img.sha256
