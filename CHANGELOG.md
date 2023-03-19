@@ -19,12 +19,16 @@ All notable changes to Mainsail will be documented in this file.
 - Add python3-serial CanBoot dependency (#129) | [1f59f0f](1f59f0f0db4ef653dafec0e04f18b3b08b639606)
 - Add postrename module (#128) | [942896c](942896c8c9899763f64f6e58c00570584ab528e0)
 - Add timelapse module (#130) | [7b99d1f](7b99d1f02fdab98a3a314cb090c1f3de6c02a203)
+- Enable I2C by default (#196) | [9cebd0c](9cebd0c8545fa41a826112658dfe401b4306a2bd)
+- Add Orange Pi 3 and 4 LTS (#186) | [2f556c3](2f556c3232b3d01ac48d30e08ae230cd5fda13fe)
+- Add orange pi zero2 (#189) | [df2aa35](df2aa3528142f144b1c9928f90458c3a6d6c78c7)
 
 ### Bug Fixes and Improvements
 
 - **build**: Updated download paths (#65) | [0622a2f](0622a2f60a8e39237c1fd213d67932ae6c986e08)
 - **build**: Fixes error in Makefile (#76) | [0ff09b5](0ff09b5ac0503e8cee0c35a298a41a26344b57c8)
 - **build**: Updated torrent download url (#90) | [a16126c](a16126c08733f96f6db7b067e7fa12d12324569b)
+- **build**: Fix mv of image file (#204) | [dc8c588](dc8c588df649fd3dff86602d13d3ae3fbea31b66)
 - **config.txt**: Fix configuration errors with attached screens (#119) | [81c335e](81c335eb6cb7d54de2b5433611f13dfefff2f5d7)
 - **crowsnest**: Fix install of crowsnest (#111) | [e8eee5f](e8eee5fc07df000cebf3ff7379454a3efce0042b)
 - **lint**: Should fix shellcheck warnings (#160) | [2569dd2](2569dd25db5c719c3e55d299062c5664c3c038b0)
@@ -45,6 +49,9 @@ All notable changes to Mainsail will be documented in this file.
 - Fixes error setting link to macro (#175) | [d1ad3f8](d1ad3f8006ad7c9b84a9a34acc4798f15ab605e4)
 - Fix shellcheck errors (#185) | [efe1b68](efe1b68d0a8cd5ccf3238d280c83ae523c331688)
 - Fix syntax error in net module (#191) | [cb890af](cb890afafaa1ab6dc68fbfdc103ceca61432e064)
+- Fix compress step (#205) | [fec2432](fec24320ea4bdcf51c9430e89443035b4ade70f1)
+- Fix rpi-image.json workflow in Release.yml (#206) | [a03626a](a03626a54a21b1fa1175b458665ae14e9b755037)
+- Remove enduser support msg from zero2 images (#209) | [4231216](42312164336966b8fabf72618f60216b6a797f04)
 
 ### Refactor
 
@@ -55,6 +62,7 @@ All notable changes to Mainsail will be documented in this file.
 - Add `enable_auto_refresh: True` (#133) | [1b78efb](1b78efb963537a3a6dad5910ff201ba19cee2103)
 - Deactivate IPv6 in nginx per default (#157) | [40b3719](40b37192608e13b4f5e97b295840715a42974fb6)
 - Change behavior of piconfig module (#180) | [825af74](825af74061c48043c1ae8390c0825d2220bd623f)
+- Use mv to move the image from the workspace to the root (#203) | [b7acb1e](b7acb1e49c02d2d9f50dfdc3541c10f4f2b2becc)
 
 ### Documentation
 
