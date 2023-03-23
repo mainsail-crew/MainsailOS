@@ -247,9 +247,9 @@ jobs:
               icon,
               init_format,
               release_date,
-              extract_size,
+              extract_size: parseInt(extract_size),
               extract_sha256,
-              image_download_size,
+              image_download_size: parseInt(image_download_size),
               image_download_sha256
             })
 
