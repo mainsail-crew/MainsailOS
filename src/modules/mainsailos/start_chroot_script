@@ -33,6 +33,10 @@ function get_parent {
 echo "${DIST_NAME} release ${DIST_VERSION} ($(get_parent))" > /etc/"${DIST_NAME,,}"-release
 
 ### Install CANBoot Dependency
-apt update
+apt-get update --allow-releaseinfo-change
 # shellcheck disable=SC2086
 check_install_pkgs ${MAINSAILOS_DEPS}
+
+## Patch firstboot issue (https://github.com/mainsail-crew/MainsailOS/issues/213)
+echo_green "Patch firstboot issue..."
+unpack filesystem/root /
