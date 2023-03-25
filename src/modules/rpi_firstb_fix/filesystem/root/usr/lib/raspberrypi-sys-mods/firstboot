@@ -1,4 +1,6 @@
 #!/bin/bash
+# shellcheck disable=all
+
 
 reboot_pi () {
   umount /boot
