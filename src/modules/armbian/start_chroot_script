@@ -131,7 +131,7 @@ echo "spi-dev" >> "${ARMBIAN_MODULES_FILE}"
 echo_green "Enable SPI interface on Orange Pi SBC's ... DONE!"
 ## END Step 7
 
-## Step 8: Disable unattended-upgrades
-echo_green "Disable 'unattended-upgrades' service ..."
-systemctl_if_exists disable unattended-upgrades.service
+## Step 8: Remove unattended-upgrades
+echo_green "Remove 'unattended-upgrades' service ..."
+sudo apt-get remove --purge unattended-upgrades
 ## END Step 8
