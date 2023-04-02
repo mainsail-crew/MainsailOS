@@ -133,5 +133,5 @@ echo_green "Enable SPI interface on Orange Pi SBC's ... DONE!"
 
 ## Step 8: Remove unattended-upgrades
 echo_green "Remove 'unattended-upgrades' service ..."
-sudo apt-get remove --purge unattended-upgrades
+sudo apt-get remove --purge --yes --yunattended-upgrades
 ## END Step 8
