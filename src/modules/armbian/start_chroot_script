@@ -47,10 +47,10 @@ echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 apt update
 # shellcheck disable=SC2086
 check_install_pkgs ${ARMBIAN_DEPS}
+## END Step 1
 
 
-
-## Step 1: Manage groups
+## Step 2: Manage groups
 ### Substep 1: Create group for gpio usage
 sudo groupadd gpio
 ### END Substep 1
@@ -59,18 +59,19 @@ sudo groupadd gpio
 if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
 usermod -aG video,audio,plugdev,games,netdev,sudo,systemd-journal,gpio "${BASE_USER}"
 ### END Substep 2
+## END Step 2
 
-## Step 2: patch sshd_config
+## Step 3: patch sshd_config
 sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
 sed -i 's/^X11Forwarding/#X11Forwarding/' /etc/ssh/sshd_config
 sed -i 's/^#MaxAuthTries 6/MaxAuthTries 3/' /etc/ssh/sshd_config
-## END
+## END Step 3
 
 ## Step 4: Try patching first login in build stage
 if [[ -f "/root/.not_logged_in_yet" ]]; then
     rm -f /root/.not_logged_in_yet
 fi
-## END
+## END Step 4
 
 ## Step 5: Move armbian-release to display mainsailos-release
 ### Substep 1: Move armbian-release
@@ -92,7 +93,7 @@ fi
         sed -i "s|/etc/armbian-release|/etc/armbian-release-info.txt|g" "${f}"
     done
     popd &> /dev/null || exit 1
-## END
+## END Step 5
 
 ## Step 6: Patch dynamic motd
 echo_green "Patch dynamic motd ..."
@@ -101,7 +102,7 @@ chmod +x /etc/update-motd.d/*
 if [[ -f "/etc/default/armbian-motd" ]]; then
     sed -i 's/MOTD_DISABLE=""/MOTD_DISABLE="header"/' /etc/default/armbian-motd
 fi
-## END
+## END Step 6
 
 ## Step 7: Enable SPI interface by default
 echo_green "Enable SPI interface on Orange Pi SBC's ..."
@@ -128,4 +129,9 @@ echo "spi-dev" >> "${ARMBIAN_MODULES_FILE}"
 ### END Substep 3
 
 echo_green "Enable SPI interface on Orange Pi SBC's ... DONE!"
-## END
+## END Step 7
+
+## Step 8: Remove unattended-upgrades
+echo_green "Remove 'unattended-upgrades' service ..."
+sudo apt-get remove --purge --yes unattended-upgrades
+## END Step 8
