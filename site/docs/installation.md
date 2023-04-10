@@ -60,4 +60,4 @@ Now it's time to start wiring. Find your board under "Supported Boards" in the d
 
 ## Setup
 
-With the board flashed and everything wired up, you can now proceed to the [configuration guide](configuration).
+With the board flashed and everything wired up, you can now proceed to the [configuration guide](/docs/configuration).
