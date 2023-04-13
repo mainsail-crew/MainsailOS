@@ -18,4 +18,4 @@ Because we use USB we need to take extra care to secure our wiring, it is **impe
 
 # Toolboard accelerometer
 
-Just like all toolboard pins have their name prefixed by `toolboard:`, the onboard accelerometer has it's own name to. To reference it use `adxl345 toolboard`, for example in `MEASURE_AXIS_NOISE` you would add the chip name like this: `MEASURE_AXIS_NOISE CHIP="adxl345 toolboard"`.
+Just like all toolboard pins have their name prefixed by `toolboard:`, the onboard accelerometer has it's own name too. To reference it use `adxl345 toolboard` or `toolboard`, for example in `MEASURE_AXIS_NOISE` you would add the chip name like this: `MEASURE_AXIS_NOISE CHIP="toolboard"`.
