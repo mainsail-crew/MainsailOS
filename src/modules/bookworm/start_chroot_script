@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+#### crowsnest - A webcam Service for multiple Cams and Stream Services.
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2021
+#### https://github.com/mainsail-crew/crowsnest
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck enable=requires-variable-braces
+
+# Error handling
+set -Ee
+
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+echo_green "Switch to bookworm release ..."
+sed -i 's/bullseye/bookworm/g' /etc/apt/sources.list
+sed -i 's/bullseye/bookworm/g' /etc/apt/sources.list.d/raspi.list
