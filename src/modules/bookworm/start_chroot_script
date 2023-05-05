@@ -25,4 +25,4 @@ sed -i 's/bullseye/bookworm/g' /etc/apt/sources.list.d/raspi.list
 export DEBIAN_FRONTEND=noninteractive
 
 sudo apt-get update
-sudo apt-get full-upgrade --yes --assume-yes
+sudo apt-get full-upgrade --yes --force-yes
