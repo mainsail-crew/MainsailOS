@@ -64,7 +64,7 @@ check_install_pkgs i2c-tools
 echo_green "Disabling Bluetooth related services..."
 systemctl_if_exists disable hciuart.service
 systemctl_if_exists disable bluetooth.service
-if [[ $(grep -c "bookworm" /etc/os-release) != "0" ]]; then
+if [[ $(grep -c "bookworm" /etc/os-release) = "0" ]]; then
     systemctl_if_exists disable bluealsa.service
 fi
 
