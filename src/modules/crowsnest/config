@@ -2,7 +2,7 @@
 #### crowsnest - A webcam Service for multiple Cams and Stream Services.
 ####
 #### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
-#### Copyright 2021 - 2022
+#### Copyright 2021 - till today
 #### https://github.com/mainsail-crew/crowsnest
 ####
 #### This File is distributed under GPLv3
@@ -18,7 +18,6 @@
 [[ -n "$CROWSNEST_CONFIG_PATH" ]] || CROWSNEST_CONFIG_PATH="/home/${BASE_USER}/printer_data/config"
 [[ -n "$CROWSNEST_LOG_PATH" ]] || CROWSNEST_LOG_PATH="/home/${BASE_USER}/printer_data/logs"
 [[ -n "$CROWSNEST_ENV_PATH" ]] || CROWSNEST_ENV_PATH="/home/${BASE_USER}/printer_data/systemd"
-[[ -n "$CROWSNEST_RASPICAMFIX" ]] || CROWSNEST_RASPICAMFIX="1"
 [[ -n "$CROWSNEST_ADD_CROWSNEST_MOONRAKER" ]] || CROWSNEST_ADD_CROWSNEST_MOONRAKER="1"
 [[ -n "$CROWSNEST_MOONRAKER_CONF_PATH" ]] || CROWSNEST_MOONRAKER_CONF_PATH="/home/${BASE_USER}/printer_data/config/moonraker.conf"
 
@@ -26,6 +25,10 @@
 # ustreamer
 [[ -n "$CROWSNEST_USTREAMER_REPO_SHIP" ]] || CROWSNEST_USTREAMER_REPO_SHIP="https://github.com/pikvm/ustreamer.git"
 [[ -n "$CROWSNEST_USTREAMER_REPO_BRANCH" ]] || CROWSNEST_USTREAMER_REPO_BRANCH="master"
+
+# camera-streamer
+[[ -n "$CROWSNEST_CAMERA_STREAMER_REPO_SHIP" ]] || CROWSNEST_CAMERA_STREAMER_REPO_SHIP="https://github.com/ayufan/camera-streamer.git"
+[[ -n "$CROWSNEST_CAMERA_STREAMER_REPO_BRANCH" ]] || CROWSNEST_CAMERA_STREAMER_REPO_BRANCH="master"
 
 ###########################################################################
 ### DO NOT EDIT BELOW THIS LINE, UNLESS YOU KNOW EXACTLY WHAT HAPPENDS! ###
