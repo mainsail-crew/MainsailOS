@@ -24,5 +24,8 @@ sed -i 's/bullseye/bookworm/g' /etc/apt/sources.list.d/raspi.list
 
 export DEBIAN_FRONTEND=noninteractive
 
-sudo apt-get update
-sudo apt-get -o Dpkg::Options::="--force-confnew" full-upgrade --yes --force-yes
+apt-get update
+apt-get -o Dpkg::Options::="--force-confnew" full-upgrade --yes --force-yes
+
+apt-get autoremove --yes
+apt-get clean
