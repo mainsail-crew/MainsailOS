@@ -4,6 +4,8 @@
 # Declare Variables before exporting.
 # See https://www.shellcheck.net/wiki/SC2155
 
+BASE_ARCH="arm64"
+
 # Base User
 BASE_ADD_USER="yes"
 BASE_USER="pi"
