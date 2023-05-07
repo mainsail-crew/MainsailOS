@@ -4,6 +4,8 @@
 # Declare Variables before exporting.
 # See https://www.shellcheck.net/wiki/SC2155
 
+# shellcheck disable=all
+
 BASE_ARCH="arm64"
 
 # Base User
