@@ -15,7 +15,7 @@
 
 # shellcheck enable=require-variable-braces
 # Source error handling, leave this in place
-set -Eex
+set -Ee
 
 # Source CustomPIOS common.sh
 # shellcheck disable=SC1091
@@ -35,7 +35,7 @@ if [[ -f /etc/armbian.txt ]]; then
     apt-get --yes install --only-upgrade ${UDEV_FIX_PKGS}
 fi
 
-# Step : Fix broken udev (remove after debian releases patch)
+# Step 2: Fix broken udev (remove after debian releases patch)
 UDEV_PKG_VERSION="$(dpkg-query -s udev | grep "Version" | sed 's/Version\: //')"
 
 if [[ -n "${UDEV_PKG_VERSION}" ]] && [[ "${UDEV_PKG_VERSION}" = "247.3-7+deb11u2" ]]; then
