@@ -15,5 +15,6 @@
 
 #shellcheck disable=all
 
-UDEV_FIX_RAW_RULE_FILE="https://raw.githubusercontent.com/systemd/systemd/main/rules.d/60-serial.rules"
-UDEV_FIX_OUTPUT_FILE="/etc/udev/rules.d/61-serial.rules"
+[[ -n "${UDEV_FIX_RAW_RULE_FILE}" ]] || UDEV_FIX_RAW_RULE_FILE="https://raw.githubusercontent.com/systemd/systemd/main/rules.d/60-serial.rules"
+[[ -n "${UDEV_FIX_OUTPUT_FILE}" ]] || UDEV_FIX_OUTPUT_FILE="/etc/udev/rules.d/61-serial.rules"
+[[ -n "${UDEV_FIX_PKGS}" ]] || UDEV_FIX_PKGS="systemd udev"

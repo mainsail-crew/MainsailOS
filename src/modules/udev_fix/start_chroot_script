@@ -23,16 +23,20 @@ source /common.sh
 install_cleanup_trap
 
 
-# Ensure systemd, udev are up to date (armbian workaround)
+echo_green "Running 'udev' fix ..."
+
+# Step 1: Ensure systemd, udev are up to date (armbian workaround)
 if [[ -f /etc/armbian.txt ]]; then
+    echo_green "Armbian base image detected ..."
+    echo_green "Updating ${UDEV_FIX_PKGS} first ..."
     apt-get update
-    apt-get --yes upgrade systemd udev
+    # Disable shellcheck here, because we need 'word splitting'
+    # shellcheck disable=SC2086
+    apt-get --yes install --only-upgrades ${UDEV_FIX_PKGS}
 fi
 
-# Step 1: Fix broken udev (remove after debian releases patch)
+# Step : Fix broken udev (remove after debian releases patch)
 UDEV_PKG_VERSION="$(dpkg-query -s udev | grep "Version" | sed 's/Version\: //')"
-
-echo_green "Running 'udev' fix ..."
 
 if [[ -n "${UDEV_PKG_VERSION}" ]] && [[ "${UDEV_PKG_VERSION}" = "247.3-7+deb11u2" ]]; then
     echo_red "'udev' version: ${UDEV_PKG_VERSION}, is affected by bug ..."
