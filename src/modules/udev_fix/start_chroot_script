@@ -32,7 +32,7 @@ if [[ -f /etc/armbian.txt ]]; then
     apt-get update
     # Disable shellcheck here, because we need 'word splitting'
     # shellcheck disable=SC2086
-    apt-get --yes install --only-upgrades ${UDEV_FIX_PKGS}
+    apt-get --yes install --only-upgrade ${UDEV_FIX_PKGS}
 fi
 
 # Step : Fix broken udev (remove after debian releases patch)
