@@ -23,6 +23,12 @@ source /common.sh
 install_cleanup_trap
 
 
+# Ensure systemd, udev are up to date (armbian workaround)
+if [[ -f /etc/armbian.txt ]]; then
+    apt-get update
+    apt-get --yes upgrade systemd udev
+fi
+
 # Step 1: Fix broken udev (remove after debian releases patch)
 UDEV_PKG_VERSION="$(dpkg-query -s udev | grep "Version" | sed 's/Version\: //')"
 
