@@ -15,7 +15,7 @@
 
 # shellcheck enable=require-variable-braces
 # Source error handling, leave this in place
-set -Ee
+set -Eex
 
 # Source CustomPIOS common.sh
 # shellcheck disable=SC1091
@@ -23,8 +23,7 @@ source /common.sh
 install_cleanup_trap
 
 
-# Step 12: Fix broken udev (remove after debian releases patch)
-# This file will be overwritten if package will be updated!
+# Step 1: Fix broken udev (remove after debian releases patch)
 UDEV_PKG_VERSION="$(dpkg-query -s udev | grep "Version" | sed 's/Version\: //')"
 
 echo_green "Running 'udev' fix ..."
