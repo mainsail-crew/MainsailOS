@@ -72,12 +72,3 @@ if [[ -f "${PICONFIG_SWAP_CONF_FILE}" ]]; then
     sed -i 's/^CONF_SWAPSIZE.*/'CONF_SWAPSIZE="${PICONFIG_SWAP_SIZE}"'/' "${PICONFIG_SWAP_CONF_FILE}"
     sed -i 's/^#CONF_MAXSWAP.*/'CONF_MAXSWAP="${PICONFIG_SWAP_MAX}"'/' "${PICONFIG_SWAP_CONF_FILE}"
 fi
-
-# Step 12: Fix broken udev (remove after debian releases patch)
-# This file will be overwritten if package will be updated!
-UDEV_PKG_VERSION="$(dpkg-query -s udev | grep "Version" | sed 's/Version\: //')"
-
-if [[ -n "${UDEV_PKG_VERSION}" ]] && [[ "${UDEV_PKG_VERSION}" = "247.3-7+deb11u2" ]]; then
-    echo_green "Install patched udev rule ..."
-    unpack filesystem/root/usr/lib/udev/rules.d/ /usr/lib/udev/rules.d
-fi
