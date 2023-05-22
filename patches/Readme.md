@@ -10,7 +10,7 @@ _**DO NOT RUN THIS ON LATER VERSIONS!!!**_
 
 ### Usage:
 
-`curl -sSL https://raw.githubusercontent.com/mainsail-crew/MainsailOS/develop/patches/patch.sh | bash`
+`curl -sSL https://raw.githubusercontent.com/mainsail-crew/MainsailOS/develop/patches/patch101.sh | bash`
 
 This will ask you for sudo password!
 
@@ -18,7 +18,7 @@ In most cases a reboot is required!
 
 ## udev-fix.sh
 
-This is intended to patch udev rules which has a Bug in udev package (version: 247.3-7+deb11u2).
+This is intended to patch udev rules which has a Bug in udev package (version: 247.3-7+deb11u2 or 247.3-7+rpi1+deb11u2).
 Which does not create `/dev/serial/by-id` symlinks for your MCU.\
 For further details see:
 

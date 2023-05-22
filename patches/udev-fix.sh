@@ -74,7 +74,7 @@ print_footer(){
 # Patch Funcs
 
 patch_udev(){
-    if [[ -n "${UDEV_PKG_VERSION}" ]] && [[ "${UDEV_PKG_VERSION}" = "247.3-7+deb11u2" ]]; then
+    if [[ -n "${UDEV_PKG_VERSION}" ]] && [[ "${UDEV_PKG_VERSION}" =~ "deb11u2" ]]; then
         echo_red "'udev' version: ${UDEV_PKG_VERSION}, is affected by bug ..."
         echo_green "Install patched udev rule from systemd git repository ..."
         curl -sSL "${UDEV_FIX_RAW_RULE_FILE}" > "${UDEV_FIX_TMP_FILE}"
