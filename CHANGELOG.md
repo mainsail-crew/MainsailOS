@@ -52,6 +52,8 @@ All notable changes to Mainsail will be documented in this file.
 - Fix compress step (#205) | [fec2432](fec24320ea4bdcf51c9430e89443035b4ade70f1)
 - Fix rpi-image.json workflow in Release.yml (#206) | [a03626a](a03626a54a21b1fa1175b458665ae14e9b755037)
 - Remove enduser support msg from zero2 images (#209) | [4231216](42312164336966b8fabf72618f60216b6a797f04)
+- Fix rpi-imager json value format for extract_size & image_download_size (#212) | [b82137c](b82137c14ea09f784478687d32a042c825af8262)
+- Fix firstboot issue (#214) | [fae8b3f](fae8b3fd1f9f2b2cf2ca53e737f3862eddd62a36)
 
 ### Refactor
 
@@ -63,6 +65,7 @@ All notable changes to Mainsail will be documented in this file.
 - Deactivate IPv6 in nginx per default (#157) | [40b3719](40b37192608e13b4f5e97b295840715a42974fb6)
 - Change behavior of piconfig module (#180) | [825af74](825af74061c48043c1ae8390c0825d2220bd623f)
 - Use mv to move the image from the workspace to the root (#203) | [b7acb1e](b7acb1e49c02d2d9f50dfdc3541c10f4f2b2becc)
+- Drop armbian_pkgupgrade (#210) | [799a919](799a919c2c4f2f8bf46971de88a79ab7d0bea137)
 
 ### Documentation
 

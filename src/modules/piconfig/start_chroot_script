@@ -32,7 +32,7 @@ cp "${PICONFIG_CONFIG_TXT_FILE}" /tmp
 mv "${PICONFIG_CONFIG_TXT_FILE}" "${PICONFIG_CONFIG_BAK_FILE}"
 
 # Step 4: Concatenate files to config
-cat /tmp/config.txt /tmp/msos_config.txt > /tmp/config.new
+cat /tmp/config.txt /tmp/msos_config.txt >/tmp/config.new
 
 # Step 5: Copy new config to "/boot/config.txt"
 cp /tmp/config.new "${PICONFIG_CONFIG_TXT_FILE}"
@@ -47,13 +47,26 @@ cp "${PICONFIG_CMDLINE_TXT_FILE}" "${PICONFIG_CMDLINE_BAK_FILE}"
 echo_green "Disable Serial Linux console ..."
 sed -i 's/console=serial0,115200 //' "${PICONFIG_CMDLINE_TXT_FILE}"
 
-# Step 9: Disable bluetooth and related services
+# Step 9: Enable i2c modules
+# Also needs corresponding bits in config.txt (see #196)
+echo_green "Enabling i2c-dev"
+# Enable i2c_bcm2708 is disabled
+[[ -f /etc/modprobe.d/raspi-blacklist.conf ]] && sed /etc/modprobe.d/raspi-blacklist.conf -i -e "s/^\(blacklist[[:space:]]*i2c[-_]bcm2708\)/#\1/"
+[[ -f /etc/modules ]] || touch /etc/modules
+sed /etc/modules -i -e "s/^#[[:space:]]*\(i2c[-_]dev\)/\1/" # Uncomment i2c_dev
+if ! grep -q "^i2c[-_]dev" /etc/modules; then               # Add if doesn't exist
+    printf "i2c-dev\n" >>/etc/modules
+fi
+# install common i2c helpers
+check_install_pkgs i2c-tools
+
+# Step 10: Disable bluetooth and related services
 echo_green "Disabling Bluetooth related services..."
 systemctl_if_exists disable hciuart.service
 systemctl_if_exists disable bluetooth.service
 systemctl_if_exists disable bluealsa.service
 
-# Step 10: Increase swapfile size
+# Step 11: Increase swapfile size
 if [[ -f "${PICONFIG_SWAP_CONF_FILE}" ]]; then
     echo_green "Increasing swap file size to ${PICONFIG_SWAP_SIZE} Mb. Limit to ${PICONFIG_SWAP_MAX} Mb"
     sed -i 's/^CONF_SWAPSIZE.*/'CONF_SWAPSIZE="${PICONFIG_SWAP_SIZE}"'/' "${PICONFIG_SWAP_CONF_FILE}"
