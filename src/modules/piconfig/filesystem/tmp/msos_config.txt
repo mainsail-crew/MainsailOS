@@ -52,12 +52,6 @@ dtoverlay=disable-bt
 ## dtparam=i2c_arm=on,i2c_arm_baudrate=400000
 dtparam=i2c_arm=on
 
-## Disable libcamera (interferes with ustreamer, when using raspicams)
-camera_auto_detect=0
-
-## Enable VideoCore at boot, needed for Crowsnest (Raspicams and DSI devices).
-start_x=1
-
 
 ### EXPERIMENTAL - Enable 64bit Kernel
 ### The 64-bit kernel will only work on:
