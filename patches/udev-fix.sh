@@ -26,7 +26,6 @@ set -eo pipefail
 ### Variables
 DEBIAN_FRONTEND="noninteractive"
 TITLE="\e[31mMainsailOS Patcher\e[0m - udev rule fix"
-UDEV_PKG_VERSION="$(dpkg-query -s udev | grep "Version" | sed 's/Version\: //')"
 UDEV_FIX_RAW_RULE_FILE="https://raw.githubusercontent.com/systemd/systemd/main/rules.d/60-serial.rules"
 UDEV_FIX_TMP_FILE="/tmp/60-serial.rules"
 UDEV_FIX_OUTPUT_FILE="/etc/udev/rules.d/60-serial.rules"
@@ -74,14 +73,17 @@ print_footer(){
 # Patch Funcs
 
 patch_udev(){
-    if [[ -n "${UDEV_PKG_VERSION}" ]] && [[ "${UDEV_PKG_VERSION}" =~ "deb11u2" ]]; then
-        echo_red "'udev' version: ${UDEV_PKG_VERSION}, is affected by bug ..."
+    local udev_pkg_version
+    udev_pkg_version="$(dpkg-query -s udev | grep "Version" | sed 's/Version\: //')"
+
+    if [[ -n "${udev_pkg_version}" ]] && [[ "${udev_pkg_version}" =~ "deb11u2" ]]; then
+        echo_red "'udev' version: ${udev_pkg_version}, is affected by bug ..."
         echo_green "Install patched udev rule from systemd git repository ..."
         curl -sSL "${UDEV_FIX_RAW_RULE_FILE}" > "${UDEV_FIX_TMP_FILE}"
         sudo cp "${UDEV_FIX_TMP_FILE}" "${UDEV_FIX_OUTPUT_FILE}"
         rm -f "${UDEV_FIX_TMP_FILE}"
     else
-        echo_green "'udev' version: ${UDEV_PKG_VERSION}, is NOT affected by bug ... [SKIPPED]"
+        echo_green "'udev' version: ${udev_pkg_version}, is NOT affected by bug ... [SKIPPED]"
     fi
 }
 
