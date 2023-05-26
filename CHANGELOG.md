@@ -54,6 +54,9 @@ All notable changes to Mainsail will be documented in this file.
 - Remove enduser support msg from zero2 images (#209) | [4231216](42312164336966b8fabf72618f60216b6a797f04)
 - Fix rpi-imager json value format for extract_size & image_download_size (#212) | [b82137c](b82137c14ea09f784478687d32a042c825af8262)
 - Fix firstboot issue (#214) | [fae8b3f](fae8b3fd1f9f2b2cf2ca53e737f3862eddd62a36)
+- Load `i2c-dev` modules (#217) | [6846f82](6846f82ff311299928824c8bceb606b1db13a444)
+- Fix broken udev package (#224) | [b07d7a1](b07d7a103a2aad81045c26dc7223c26369ee1322)
+- Fix udev for version 'rp1+deb11u2' (#226) | [b0343d5](b0343d55ddb9db0126f4fb9759e050d5fbcbb10e)
 
 ### Refactor
 
@@ -115,4 +118,7 @@ All notable changes to Mainsail will be documented in this file.
 - Add "not-on-Github" bot for issues (#179) | [68520ce](68520ce40659e223d8c79820a7eda4923d9ae02d)
 - Fix changelog in release workflow (#182) | [32f9429](32f9429d49671e5657c7ed5143ca63e88046f364)
 - Removes fkms overlays (#183) | [999183b](999183bef6b290efcd8d4f2c8d708354152d411c)
+- Remove unattended-upgrades service (#215) | [9f09363](9f093631d22b4cb00cc57601ed55bc51e23e40e0)
+- Revert firstboot fix (#219) | [02e0100](02e01006c7d1d84efcaee6fb7a64045084ed8667)
+- Update crowsnest module (#221) | [726239c](726239ca7db82c3867af3c28785cae0ca7b2e3eb)
 
