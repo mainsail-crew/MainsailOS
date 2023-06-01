@@ -18,9 +18,9 @@ Learn more about:
 
 ## How to install MainsailOS ?
 
-You can find detailed instructions in our [documentation](https://docs.mainsail.xyz/setup/mainsail-os).
+You can find detailed instructions in our [documentation](https://docs-os.mainsail.xyz).
 
-We recommend the installation via [Raspberry Pi Imager](https://docs.mainsail.xyz/setup/mainsailos/pi-imager).
+We recommend the installation via [Raspberry Pi Imager](https://docs-os.mainsail.xyz/getting-started/raspberry-pi-os-based).
 
 ## How to get help?
 
@@ -34,9 +34,9 @@ Also see the [FAQ](#faq) section.
 
 Here a list of included and preinstalled Software:
 
--   [Klipper (3D Printer Firmware)](https://github.com/KevinOConnor/klipper)
+-   [Klipper (3D Printer Firmware)](https://github.com/Klipper3d/klipper)
 -   [Moonraker (API Web Server for Klipper)](https://github.com/Arksine/moonraker)
--   [Mainsail (Web interface for Klipper/Moonraker)](https://github.com/meteyou/mainsail)
+-   [Mainsail (Web interface for Klipper/Moonraker)](https://github.com/mainsail-crew/mainsail)
 -   [Crowsnest (Webcam streaming)](https://github.com/mainsail-crew/crowsnest)
 -   [Sonar (Keepalive daemon)](https://github.com/mainsail-crew/sonar)
 -   [Nginx (Webserver & Proxy)](https://nginx.org/en/)
