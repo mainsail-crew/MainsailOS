@@ -166,6 +166,13 @@ fix_mainsailcfg_links() {
     ln -sf "${src_dir}/mainsail.cfg" "${config_dir}/mainsail.cfg"
 }
 
+fix_cn_links() {
+    local tools_dir
+    tools_dir="/home/${DEFAULT_USER}/crowsnest/tools/"
+    sudo -u "${DEFAULT_USER}" \
+    ln -sf "${tools_dir}/libs/pkglist-rpi.sh" "${tools_dir}/pkglist.sh"
+}
+
 main() {
 local cmdltxt
 cmdltxt="/boot/cmdline.txt"
@@ -224,6 +231,7 @@ echo -en "${WHITE}Fix broken symlinks ...${NOC}\r"
 fix_broken_links
 fix_timelapse_links
 fix_mainsailcfg_links
+fix_cn_links
 echo -e "${WHITE}Fix broken symlinks ...${NOC}[${GRE}OK${NOC}]"
 ## do a short break
 sleep 2
