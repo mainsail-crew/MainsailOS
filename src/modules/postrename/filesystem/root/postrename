@@ -64,7 +64,6 @@ change_www_root() {
     "
 }
 
-
 ### change username in service files
 change_service_user() {
     ### Filter nginx service first!
@@ -119,6 +118,13 @@ patch_polkit_rules() {
     fi
 }
 
+patch_cn_logpath() {
+    bash -c "
+        sed -i 's|/home/pi/printer_data/logs/crowsnest.log|/home/${DEFAULT_USER}/printer_data/logs/crowsnest.log|g' \
+        /home/${DEFAULT_USER}/printer_data/config/crowsnest.conf
+    "
+}
+
 patch_cn_logrotate() {
     if [[ -f "/etc/logrotate.d/crowsnest" ]]; then
         sed -i 's/pi/'"${DEFAULT_USER}"'/g' "/etc/logrotate.d/crowsnest"
@@ -158,6 +164,13 @@ fix_mainsailcfg_links() {
     src_dir="/home/${DEFAULT_USER}/mainsail-config"
     sudo -u "${DEFAULT_USER}" \
     ln -sf "${src_dir}/mainsail.cfg" "${config_dir}/mainsail.cfg"
+}
+
+fix_cn_links() {
+    local tools_dir
+    tools_dir="/home/${DEFAULT_USER}/crowsnest/tools/"
+    sudo -u "${DEFAULT_USER}" \
+    ln -sf "${tools_dir}/libs/pkglist-rpi.sh" "${tools_dir}/pkglist.sh"
 }
 
 main() {
@@ -205,6 +218,10 @@ echo -e "${WHITE}Trying to relocate venv's ...${NOC}[${GRE}OK${NOC}]"
 echo -e "${WHITE}Patching moonraker's polkit rules ...${NOC}"
 patch_polkit_rules
 echo -e "${WHITE}Patching moonraker's polkit rules ...${NOC}[${GRE}OK${NOC}]"
+## patch crownsnest log path
+echo -en "${WHITE}Patching crowsnest logpath ...${NOC}\r"
+patch_cn_logpath
+echo -e "${WHITE}Patching crowsnest logpath ...${NOC}[${GRE}OK${NOC}]"
 ## patch crowsnest logrotate
 echo -e "${WHITE}Patching crowsnest logrotate ...${NOC}"
 patch_cn_logrotate
@@ -214,6 +231,7 @@ echo -en "${WHITE}Fix broken symlinks ...${NOC}\r"
 fix_broken_links
 fix_timelapse_links
 fix_mainsailcfg_links
+fix_cn_links
 echo -e "${WHITE}Fix broken symlinks ...${NOC}[${GRE}OK${NOC}]"
 ## do a short break
 sleep 2
