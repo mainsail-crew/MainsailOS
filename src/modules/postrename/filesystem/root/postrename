@@ -168,7 +168,7 @@ fix_mainsailcfg_links() {
 
 fix_cn_links() {
     local tools_dir
-    tools_dir="/home/${DEFAULT_USER}/crowsnest/tools/"
+    tools_dir="/home/${DEFAULT_USER}/crowsnest/tools"
     sudo -u "${DEFAULT_USER}" \
     ln -sf "${tools_dir}/libs/pkglist-rpi.sh" "${tools_dir}/pkglist.sh"
 }
