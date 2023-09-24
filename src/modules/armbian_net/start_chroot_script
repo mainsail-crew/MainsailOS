@@ -28,6 +28,11 @@ install_cleanup_trap
 unpack filesystem/root / root
 ## END
 
+## Step 1.1: Install Depedencies
+### Needed to patch 'network_configurator'
+# shellcheck disable=SC2086
+check_install_pkgs ${ARMBIAN_NET_DEPS}
+
 ## Step 2: remove original template
 if [[ -f "${ARMBIAN_NET_FIRSTRUN_FILE}" ]]; then
     sudo rm -rf "${ARMBIAN_NET_FIRSTRUN_FILE}"
