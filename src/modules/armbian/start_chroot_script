@@ -73,29 +73,16 @@ if [[ -f "/root/.not_logged_in_yet" ]]; then
 fi
 ## END Step 4
 
-## Step 5: Fake release file
-### NOTE: Turns out that the 'distro' python package,
-###       which is used by moonraker, uses the first file after sorting.
-###       Therefore we need a hacky solution, because armbian relies, on upgrades
-###       on the original armbian-release file.
-###       To get around that, we simple symlink mainsailos-release to
-###       aaaa-release, which is directly read by moonraker.
-if [[ -f "/etc/mainsailos-release" ]]; then
-    echo_green "Apply release file workaround ..."
-    ln -s /etc/aaaa-release /etc/mainsailos-release
-fi
-## END Step 5
-
-## Step 6: Patch dynamic motd
+## Step 5: Patch dynamic motd
 echo_green "Patch dynamic motd ..."
 unpack /filesystem/root /
 chmod +x /etc/update-motd.d/*
 if [[ -f "/etc/default/armbian-motd" ]]; then
     sed -i 's/MOTD_DISABLE=""/MOTD_DISABLE="header"/' /etc/default/armbian-motd
 fi
-## END Step 6
+## END Step 5
 
-## Step 7: Enable SPI interface by default
+## Step 6: Enable SPI interface by default
 echo_green "Enable SPI interface on Orange Pi SBC's ..."
 
 ### Substep 1: Copy default config to backup file
@@ -120,9 +107,9 @@ echo "spi-dev" >> "${ARMBIAN_MODULES_FILE}"
 ### END Substep 3
 
 echo_green "Enable SPI interface on Orange Pi SBC's ... DONE!"
-## END Step 7
+## END Step 6
 
-## Step 8: Remove unattended-upgrades
+## Step 7: Remove unattended-upgrades
 echo_green "Remove 'unattended-upgrades' service ..."
 sudo apt-get remove --purge --yes unattended-upgrades
-## END Step 8
+## END Step 7
