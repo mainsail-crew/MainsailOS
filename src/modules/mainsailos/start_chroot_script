@@ -42,7 +42,7 @@ echo "${DIST_NAME} release ${DIST_VERSION} ($(get_parent))" > /etc/"${DIST_NAME,
 ###       aaaa-release, which is directly read by moonraker.
 if [[ -f "/etc/armbian-release" ]]; then
     echo_green "Apply release file workaround ..."
-    ln -s /etc/aaaa-release /etc/"${DIST_NAME,,}"-release
+    ln -s /etc/"${DIST_NAME,,}"-release /etc/aaaa-release
 fi
 ## END Step 2
 
