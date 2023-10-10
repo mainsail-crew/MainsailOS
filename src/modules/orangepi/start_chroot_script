@@ -201,9 +201,6 @@ if [[ "${ORANGEPI_DISABLE_GETTY_AUTOLOGIN}" = "1" ]]; then
     done
     ### End Substep 1
 
-    echo_green "DEBUG: ls /etc/systemd/system"
-    ls /etc/systemd/system
-
     ### Substep 2: Modify 'override.conf', delete autologin
     for conf in $(get_gettyconf_dirs /etc/systemd/system); do
         if [[ -f "${conf}/override.conf" ]]; then
