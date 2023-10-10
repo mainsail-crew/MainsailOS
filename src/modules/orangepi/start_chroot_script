@@ -193,16 +193,22 @@ fi
 ###       the location of '/lib/systemd/system/[serial-]getty@.service.d'
 ###       instead the appropriate location in etc, we have to fix that.
 if [[ "${ORANGEPI_DISABLE_GETTY_AUTOLOGIN}" = "1" ]]; then
+    echo_green "Disable 'getty' autologin ..."
+
     ### Substep 1: copy '/lib/systemd/system/[serial-]getty@.service.d'
     for dir in $(get_gettyconf_dirs /usr/lib/systemd/system); do
-        cp -r "${dir}" /etc/systemd/system/
+        cp -R "${dir}" /etc/systemd/system
     done
     ### End Substep 1
 
+    echo_green "DEBUG: ls /etc/systemd/system"
+    ls /etc/systemd/system
+
     ### Substep 2: Modify 'override.conf', delete autologin
     for conf in $(get_gettyconf_dirs /etc/systemd/system); do
-        sed -i 's/--autologin orangepi//' "${conf}/override.conf"
+        sed -i 's/--autologin orangepi //' "${conf}/override.conf"
     done
     ### END Substep 2
+    echo_green "Disable 'getty' autologin ... DONE!"
 fi
 ## END Step 8
