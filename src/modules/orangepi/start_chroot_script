@@ -35,6 +35,10 @@ is_board_type() {
     echo "${board}"
 }
 
+get_gettyconf_dirs() {
+    find "${1}" -type d -name "*getty@*"
+}
+
 # Base User groups
 # Shameless "stolen" from
 # https://github.com/guysoft/CustomPiOS/blob/devel/src/variants/armbian/pre_chroot_script
@@ -85,11 +89,7 @@ if [ -f "/root/.not_logged_in_yet" ]; then
 fi
 ## END Step 4
 
-## Step 5: Patch dynamic motd and fix override.conf
-### NOTE: Since OrangePI OS uses for its getty override.conf files
-###       the location of '/lib/systemd/system/getty.service.d'
-###       instead the appropriate location in etc, we have to fix that.
-###       For simplicity we provide these files and unpack to '/etc/*'
+## Step 5: Patch dynamic motd
 echo_green "Patch dynamic motd ..."
 unpack /filesystem/root /
 chmod +x /etc/update-motd.d/*
@@ -187,3 +187,22 @@ else
     echo_red "WARN: orangepi-config install not configured ... [SKIPPED]"
 fi
 ## END Step 7
+
+## Step 8: Fix tty and serial-tty autologin
+### NOTE: Since OrangePI OS uses for its getty override.conf files
+###       the location of '/lib/systemd/system/[serial-]getty@.service.d'
+###       instead the appropriate location in etc, we have to fix that.
+if [[ "${ORANGEPI_DISABLE_GETTY_AUTOLOGIN}" = "1" ]]; then
+    ### Substep 1: copy '/lib/systemd/system/[serial-]getty@.service.d'
+    for dir in $(get_gettyconf_dirs /usr/lib/systemd/system); do
+        cp -r "${dir}" /etc/systemd/system/
+    done
+    ### End Substep 1
+
+    ### Substep 2: Modify 'override.conf', delete autologin
+    for conf in $(get_gettyconf_dirs /etc/systemd/system); do
+        sed -i 's/--autologin orangepi//' "${conf}/override.conf"
+    done
+    ### END Substep 2
+fi
+## END Step 8
