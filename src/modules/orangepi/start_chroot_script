@@ -206,7 +206,12 @@ if [[ "${ORANGEPI_DISABLE_GETTY_AUTOLOGIN}" = "1" ]]; then
 
     ### Substep 2: Modify 'override.conf', delete autologin
     for conf in $(get_gettyconf_dirs /etc/systemd/system); do
-        sed -i 's/--autologin orangepi //' "${conf}/override.conf"
+        if [[ -f "${conf}/override.conf" ]]; then
+            echo_green "Found '${conf}/override.conf', trying to modify ..."
+            sed -i 's/--autologin orangepi //' "${conf}/override.conf"
+        else
+            echo_green "No '${conf}/override.conf' found, modifying skipped!"
+        fi
     done
     ### END Substep 2
     echo_green "Disable 'getty' autologin ... DONE!"
