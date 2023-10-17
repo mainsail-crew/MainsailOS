@@ -21,7 +21,7 @@ install_cleanup_trap
 is_board_type() {
     local board releasefile
     board=""
-    releasefile="/etc/armbian-release-info.txt"
+    releasefile="/etc/armbian-release"
     if [[ -f "${releasefile}" ]]; then
         board="$(grep "BOARD=" "${releasefile}" | cut -d'=' -f2)"
     fi
