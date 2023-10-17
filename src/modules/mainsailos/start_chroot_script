@@ -40,8 +40,15 @@ echo "${DIST_NAME} release ${DIST_VERSION} ($(get_parent))" > /etc/"${DIST_NAME,
 ###       on the original armbian-release file.
 ###       To get around that, we simple symlink mainsailos-release to
 ###       aaaa-release, which is directly read by moonraker.
+### Substep 1: Do for armbian releases
 if [[ -f "/etc/armbian-release" ]]; then
-    echo_green "Apply release file workaround ..."
+    echo_green "Apply release file workaround (armbian based image) ..."
+    ln -s /etc/"${DIST_NAME,,}"-release /etc/aaaa-release
+fi
+### END Substep 1
+### Substep 2: Apply same for OrangePI bsed Images
+if [[ -f "/etc/orangepi-release" ]]; then
+    echo_green "Apply release file workaround (orangepi based image) ..."
     ln -s /etc/"${DIST_NAME,,}"-release /etc/aaaa-release
 fi
 ## END Step 2
