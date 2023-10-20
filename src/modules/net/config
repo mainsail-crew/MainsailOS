@@ -2,7 +2,7 @@
 # shellcheck disable=all
 
 # Use disable power save for wifi module
-[ -n "$NETWORK_DISABLE_PWRSAVE" ] || NETWORK_DISABLE_PWRSAVE=yes
+[ -n "$NET_DISABLE_PWRSAVE" ] || NET_DISABLE_PWRSAVE=yes
 
 # Type of power save rclocal/service/udev
 # rclocal - backwards compatibility, runs via rc.local
@@ -10,4 +10,4 @@
 # on reboots
 # udev - creates a udev rules that should affect all wifi devices.
 
-[ -n "$NETWORK_PWRSAVE_TYPE" ] || NETWORK_PWRSAVE_TYPE=udev
+[ -n "$NET_PWRSAVE_TYPE" ] || NET_PWRSAVE_TYPE=udev

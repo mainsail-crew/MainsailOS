@@ -120,7 +120,7 @@ jobs:
     needs: [ release, matrix ]
     runs-on: ubuntu-latest
     outputs:
-      base_name: ${{ steps.copy-image.outputs.base_name }}
+      base_name: ${{ steps.move-image.outputs.base_name }}
     strategy:
       fail-fast: false
       matrix:
@@ -133,35 +133,35 @@ jobs:
           config: ${{ matrix.config }}
           build-ref: master
 
-      - name: Copy output
-        id: copy-image
-        if: always()
-        shell: bash
-        run: |
-          source repository/src/config
-          base_name="${{ needs.release.outputs.date }}-${DIST_NAME}-${DIST_VERSION}"
-          image="${base_name}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
-          cp repository/src/workspace/*.img $image.img
-
-          echo "base_name=${base_name}" >> $GITHUB_OUTPUT
-          echo "image=${image}" >> $GITHUB_OUTPUT
-
       - name: Upload failed Logfile
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: failed-${{ steps.copy-image.outputs.image }}.log
+          name: failed-${{ steps.move-image.outputs.image }}.log
           path: repository/src/build.log
 
-      - name: Debug output
-        run: echo ${{ steps.copy-image.outputs.image }}
+      - name: Rename image file
+        id: move-image
+        shell: bash
+        run: |
+          WORKSPACE=$(echo ${{ github.workspace }})
+          sudo chown -R $USER:$USER $WORKSPACE/repository/src/workspace || true
+          sudo chmod 0775 -R $WORKSPACE/repository/src/workspace || true
+
+          source repository/src/config
+          base_name="${{ needs.release.outputs.date }}-${DIST_NAME}-${DIST_VERSION}"
+          image="${base_name}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
+          mv repository/src/workspace/*.img $image.img
+
+          echo "base_name=${base_name}" >> $GITHUB_OUTPUT
+          echo "image=${image}" >> $GITHUB_OUTPUT
 
       - name: Compressing Image
         shell: bash
         run: |
           CPU_COUNT="$(nproc)"
           echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
-          xz -efkvz9T"${CPU_COUNT}" ${{ steps.copy-image.outputs.image }}.img
+          xz -efkvz9T"${CPU_COUNT}" ${{ steps.move-image.outputs.image }}.img || true
 
       - name: Upload Compressing Image
         if: success()
@@ -170,18 +170,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           release_id: ${{ needs.release.outputs.id }}
-          file: ${{ steps.copy-image.outputs.image }}.img.xz
+          file: ${{ steps.move-image.outputs.image }}.img.xz
 
       - name: Calculating checksums
         id: checksums
         shell: bash
         run: |
-          sha256sum ${{ steps.copy-image.outputs.image }}.img > ${{ steps.copy-image.outputs.image }}.img.sha256
-          image_checksum=`cat ${{ steps.copy-image.outputs.image }}.img.sha256 | awk '{ print $1 }'`
+          sha256sum ${{ steps.move-image.outputs.image }}.img > ${{ steps.move-image.outputs.image }}.img.sha256
+          image_checksum=`cat ${{ steps.move-image.outputs.image }}.img.sha256 | awk '{ print $1 }'`
           echo "image=${image_checksum}" >> $GITHUB_OUTPUT
 
-          sha256sum ${{ steps.copy-image.outputs.image }}.img.xz > ${{ steps.copy-image.outputs.image }}.img.xz.sha256
-          zip_checksum=`cat ${{ steps.copy-image.outputs.image }}.img.xz.sha256 | awk '{ print $1 }'`
+          sha256sum ${{ steps.move-image.outputs.image }}.img.xz > ${{ steps.move-image.outputs.image }}.img.xz.sha256
+          zip_checksum=`cat ${{ steps.move-image.outputs.image }}.img.xz.sha256 | awk '{ print $1 }'`
           echo "zip=${zip_checksum}" >> $GITHUB_OUTPUT
 
       - name: Upload Checksums
@@ -191,65 +191,74 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           release_id: ${{ needs.release.outputs.id }}
-          file: ${{ steps.copy-image.outputs.image }}.img.sha256;${{ steps.copy-image.outputs.image }}.img.xz.sha256
+          file: ${{ steps.move-image.outputs.image }}.img.sha256;${{ steps.move-image.outputs.image }}.img.xz.sha256
 
       - name: Calculating filesizes
         id: filesizes
         shell: bash
         run: |
-          image_filesize=`wc -c ${{ steps.copy-image.outputs.image }}.img | awk '{print $1}'`
+          image_filesize=`wc -c ${{ steps.move-image.outputs.image }}.img | awk '{print $1}'`
           echo "image=${image_filesize}" >> $GITHUB_OUTPUT
 
-          zip_filesize=`wc -c ${{ steps.copy-image.outputs.image }}.img.xz | awk '{print $1}'`
+          zip_filesize=`wc -c ${{ steps.move-image.outputs.image }}.img.xz | awk '{print $1}'`
           echo "zip=${zip_filesize}" >> $GITHUB_OUTPUT
 
       - name: Debug output
         run: |
-          echo ${{ needs.release.outputs.id }}
-          echo ${{ needs.release.outputs.version }}
+          echo "release-id: ${{ needs.release.outputs.id }}"
+          echo "release-version: ${{ needs.release.outputs.version }}"
 
-          echo ${{ steps.copy-image.outputs.image }}
+          echo "image-name: ${{ steps.move-image.outputs.image }}"
 
-          echo ${{ steps.checksums.outputs.image }}
-          echo ${{ steps.checksums.outputs.zip }}
+          echo "checksum image: ${{ steps.checksums.outputs.image }}"
+          echo "checksum zip: ${{ steps.checksums.outputs.zip }}"
 
-          echo ${{ steps.filesizes.outputs.image }}
-          echo ${{ steps.filesizes.outputs.zip }}
+          echo "filesize-image: ${{ steps.filesizes.outputs.image }}"
+          echo "filesize-zip: ${{ steps.filesizes.outputs.zip }}"
 
       - name: Generate JSON
         id: json
         uses: actions/github-script@v6
         env:
-          name: '"Mainsail OS ${{ github.event.inputs.version }}"'
-          description: '"Type: ${{ steps.build.outputs.type }}, SBC: ${{ steps.build.outputs.sbc }}"'
-          url: '"https://github.com/mainsail-crew/MainsailOS/releases/download/${{ github.event.inputs.version }}/${{ steps.copy-image.outputs.image }}.img.xz"'
-          icon: '"https://os.mainsail.xyz/rpi-imager.png"'
-          init_format: '"systemd"'
-          release_date: '"${{ needs.release.outputs.date }}"'
+          name: "Mainsail OS ${{ github.event.inputs.version }}"
+          description: "Type: ${{ steps.build.outputs.type }}, SBC: ${{ steps.build.outputs.sbc }}"
+          type: "${{ steps.build.outputs.type }}"
+          sbc: "${{ steps.build.outputs.sbc }}"
+          url: "https://github.com/mainsail-crew/MainsailOS/releases/download/${{ github.event.inputs.version }}/${{ steps.move-image.outputs.image }}.img.xz"
+          icon: "https://os.mainsail.xyz/rpi-imager.png"
+          init_format: "systemd"
+          release_date: "${{ needs.release.outputs.date }}"
           extract_size: ${{ steps.filesizes.outputs.image }}
-          extract_sha256: '"${{ steps.checksums.outputs.image }}"'
+          extract_sha256: "${{ steps.checksums.outputs.image }}"
           image_download_size: ${{ steps.filesizes.outputs.zip }}
-          image_download_sha256: '"${{ steps.checksums.outputs.zip }}"'
+          image_download_sha256: "${{ steps.checksums.outputs.zip }}"
         with:
           result-encoding: string
           script: |
-            const { name, description, url, icon, init_format, release_date, extract_size, extract_sha256, image_download_size, image_download_sha256 } = process.env
+            const fs = require('fs')
+            let { name, description, type, sbc, url, icon, init_format, release_date, extract_size, extract_sha256, image_download_size, image_download_sha256 } = process.env
+            if (sbc === 'rpi32') name += ' 32-Bit (recommend)'
+            else if (sbc === 'rpi64') name += ' 64-Bit'
 
-            return JSON.stringify({
+            const json = JSON.stringify({
               name,
               description,
               url,
               icon,
               init_format,
               release_date,
-              extract_size,
+              extract_size: parseInt(extract_size),
               extract_sha256,
-              image_download_size,
+              image_download_size: parseInt(image_download_size),
               image_download_sha256
             })
 
-      - name: Write JSON
-        run: echo "${{steps.json.outputs.result}}" > "./${{ steps.copy-image.outputs.image }}.json"
+            fs.writeFileSync("./${{ steps.move-image.outputs.image }}.json", json)
+
+      - name: Debug output
+        shell: bash
+        run: |
+          cat "./${{ steps.move-image.outputs.image }}.json"
 
       - name: Upload JSON
         if: success()
@@ -258,7 +267,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           release_id: ${{ needs.release.outputs.id }}
-          file: ${{ steps.copy-image.outputs.image }}.json
+          file: ${{ steps.move-image.outputs.image }}.json
 
   finish:
     name: Finish Release
@@ -284,34 +293,27 @@ jobs:
           fileName: "${{ needs.build.outputs.base_name }}-raspberry-*.json"
           out-file-path: "downloads"
 
-      - name: Debug
-        run: |
-          ls ./downloads/*
-          touch rpi-imager.json
-
-      - name: setup python
-        uses: actions/setup-python@v2
+      - name: Combine JSON
+        id: json
+        uses: actions/github-script@v6
         with:
-          python-version: 3.8
-
-      - name: Run script
-        uses: jannekem/run-python-script-action@v1
-        with:
+          result-encoding: string
           script: |
-            import os, json, shutil
-            with open("rpi-imager.json", "r+") as t:
-              t.truncate(0)
-              t.write('{ "os_list": [')
-              for filename in os.scandir('downloads'):
-                print(filename)
-                with open(filename, "r") as f:
-                  content = f.read()
-                  t.write(content)
-                  t.write(',')
-              t.write('] }')
-            barak = open("rpi-imager.json", "r+")
-            contentb = barak.read()
-            print(contentb)
+            const downloadFolder = './downloads/'
+            const fs = require('fs')
+            const os_list = []
+
+            fs.readdirSync(downloadFolder).forEach(file => {
+              const raw = fs.readFileSync('./downloads/' + file, {encoding:'utf8', flag:'r'})
+              try {
+                os_list.push(JSON.parse(raw))
+              } catch (err) {
+                console.log("Error parsing JSON string:", err)
+              }
+            })
+
+            const json = JSON.stringify({os_list})
+            fs.writeFileSync('rpi-imager.json', json)
 
       - name: Upload JSON
         if: success()

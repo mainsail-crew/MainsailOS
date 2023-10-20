@@ -23,7 +23,6 @@ if [[ -f /etc/armbian-distribution-status ]]; then
     [[ -f /etc/lsb-release ]] && DISTRIBUTION_CODENAME=$(grep CODENAME /etc/lsb-release | cut -d"=" -f2)
     [[ -z "${DISTRIBUTION_CODENAME}" && -f /etc/os-release ]] && DISTRIBUTION_CODENAME=$(grep VERSION_CODENAME /etc/os-release | cut -d"=" -f2)
     [[ -z "${DISTRIBUTION_CODENAME}" && -x /usr/bin/lsb_release ]] && DISTRIBUTION_CODENAME=$(/usr/bin/lsb_release -c | cut -d":" -f2 | tr -d "\t")
-    DISTRIBUTION_STATUS=$(grep "${DISTRIBUTION_CODENAME}" /etc/armbian-distribution-status | cut -d"=" -f2)
 fi
 [[ -f /etc/default/armbian-motd ]] && . /etc/default/armbian-motd
 
@@ -44,23 +43,3 @@ echo -e "Version $(cut -d ' ' -f3 /etc/mainsailos-release), based on \
 \e[34mArmbian ${VERSION} ${DISTRIBUTION_CODENAME^}\e[0m $([[ ${BRANCH} == edge ]])"
 echo -e "Running on \e[34m$(echo "${BOARD_NAME}" | sed 's/Orange Pi/OPi/' | \
 sed 's/NanoPi/NPi/' | sed 's/Banana Pi/BPi/')\e[0m with \e[34mLinux ${KERNELID}\e[0m\n"
-
-# displaying status warnings
-
-if [[ "${IMAGE_TYPE}" != "stable" ]]; then
-    [[ "${IMAGE_TYPE}" == "user-built" ]] && UNSUPPORTED_TEXT="built from trunk"
-    [[ "${IMAGE_TYPE}" == "nightly" ]] && UNSUPPORTED_TEXT="untested automated build"
-else
-    [[ "${BOARD_TYPE}" == "csc" || "${BOARD_TYPE}" == "tvb" ]] && UNSUPPORTED_TEXT="community creations"
-    [[ "${BOARD_TYPE}" == "wip" ]] && UNSUPPORTED_TEXT="work in progress"
-    [[ "${BOARD_TYPE}" == "eos" ]] && UNSUPPORTED_TEXT="end of life"
-fi
-
-if [[ -n ${DISTRIBUTION_STATUS} && ${DISTRIBUTION_STATUS} != supported ]]; then
-    [[ -n ${UNSUPPORTED_TEXT} ]] && UNSUPPORTED_TEXT+=" & "
-    UNSUPPORTED_TEXT+="unsupported (${DISTRIBUTION_CODENAME}) userspace!"
-fi
-
-if [[ -n ${UNSUPPORTED_TEXT} ]]; then
-    echo -e "\e[0;91mNo end-user support: \x1B[0m${UNSUPPORTED_TEXT}\n"
-fi

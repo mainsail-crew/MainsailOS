@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+#### MainsailOS MainsailOS udev_fix
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+#### This should fix error in udev not creating symlinks fpr serial devices.
+#### For details see: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035094
+#### This is fixed by: https://github.com/systemd/systemd/pull/25246
+#### To fix this error in MainsailOS we implement that file as 'user rule'.
+
+# shellcheck enable=require-variable-braces
+# Source error handling, leave this in place
+set -Ee
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+
+echo_green "Running 'udev' fix ..."
+
+# Step 1: Ensure systemd, udev are up to date (armbian workaround)
+if [[ -f /etc/armbian.txt ]]; then
+    echo_green "Armbian base image detected ..."
+    echo_green "Updating ${UDEV_FIX_PKGS} first ..."
+    apt-get update
+    # Disable shellcheck here, because we need 'word splitting'
+    # shellcheck disable=SC2086
+    apt-get --yes install --only-upgrade ${UDEV_FIX_PKGS}
+fi
+
+# Step 2: Fix broken udev (remove after debian releases patch)
+UDEV_PKG_VERSION="$(dpkg-query -s udev | grep "Version" | sed 's/Version\: //')"
+
+if [[ -n "${UDEV_PKG_VERSION}" ]] && [[ "${UDEV_PKG_VERSION}" =~ "deb11u2" ]]; then
+    echo_red "'udev' version: ${UDEV_PKG_VERSION}, is affected by bug ..."
+    echo_green "Install patched udev rule from systemd git repository ..."
+    curl -sSL "${UDEV_FIX_RAW_RULE_FILE}" > "${UDEV_FIX_OUTPUT_FILE}"
+else
+    echo_green "'udev' version: ${UDEV_PKG_VERSION}, is NOT affected by bug ... [SKIPPED]"
+fi

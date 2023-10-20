@@ -9,8 +9,7 @@
 # Last modification: August/2022
 #
 ########
-set -x
-set -e
+set -Ee
 
 export LC_ALL=C
 
@@ -56,13 +55,13 @@ echo '/sbin/iptables -t mangle -I POSTROUTING 1 -o wlan0 -p udp --dport 123 -j T
 echo 'exit 0' >> /etc/rc.local
 
 # Install powersave option
-if [ "$NETWORK_DISABLE_PWRSAVE" == "yes" ]; then
+if [ "$NET_DISABLE_PWRSAVE" == "yes" ]; then
 
   # Copy pwrsave script
   unpack filesystem/usr/local/bin /usr/local/bin root
 
   # Use rc.local
-  if [ "$NETWORK_PWRSAVE_TYPE" == "rclocal" ]; then
+  if [ "$NET_PWRSAVE_TYPE" == "rclocal" ]; then
     echo_green "Modifying /etc/rc.local ..."
     sed -i 's@exit 0@@' /etc/rc.local
     (echo "# Disable WiFi Power Management"; \
@@ -70,18 +69,18 @@ if [ "$NETWORK_DISABLE_PWRSAVE" == "yes" ]; then
     echo "/usr/local/bin/pwrsave off"; echo "exit 0") >> /etc/rc.local
   fi
   # Use service
-  if [ "$NETWORK_PWRSAVE_TYPE" == "service" ]; then
+  if [ "$NET_PWRSAVE_TYPE" == "service" ]; then
     echo_green "Installing disable-wifi-pwr-mgmt service ..."
     unpack filesystem/etc/systemd/system /etc/systemd/system root
     systemctl_if_exists enable disable-wifi-pwr-mgmt.service
   fi
   # Use udev rule
-  if [ "$NETWORK_PWRSAVE_TYPE" == "udev" ]; then
+  if [ "$NET_PWRSAVE_TYPE" == "udev" ]; then
     echo_green "Installing WiFi Power Management udev rule ..."
     unpack filesystem/etc/udev/rules.d /etc/udev/rules.d root
   fi
   # strip out unneeded script, depending on choose
-  if [ "$NETWORK_PWRSAVE_TYPE" != "udev" ]; then
+  if [ "$NET_PWRSAVE_TYPE" != "udev" ]; then
     rm -f /usr/local/bin/pwrsave-udev
   else
     rm -f /usr/local/bin/pwrsave

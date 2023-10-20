@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#### MainsailOS udev_fix
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+#### This should fix error in udev not creating symlinks fpr serial devices.
+#### For details see: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1035094
+#### This is fixed by: https://github.com/systemd/systemd/pull/25246
+#### To fix this error in MainsailOS we implement that file as 'user rule'.
+
+#shellcheck disable=all
+
+[[ -n "${UDEV_FIX_RAW_RULE_FILE}" ]] || UDEV_FIX_RAW_RULE_FILE="https://raw.githubusercontent.com/systemd/systemd/main/rules.d/60-serial.rules"
+[[ -n "${UDEV_FIX_OUTPUT_FILE}" ]] || UDEV_FIX_OUTPUT_FILE="/etc/udev/rules.d/60-serial.rules"
+[[ -n "${UDEV_FIX_PKGS}" ]] || UDEV_FIX_PKGS="systemd udev"
