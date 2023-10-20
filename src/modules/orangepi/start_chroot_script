@@ -28,7 +28,7 @@ install_cleanup_trap
 is_board_type() {
     local board releasefile
     board=""
-    releasefile="/etc/orangepi-release-info.txt"
+    releasefile="/etc/orangepi-release"
     if [[ -f "${releasefile}" ]]; then
         board="$(grep "BOARD=" "${releasefile}" | cut -d'=' -f2)"
     fi
