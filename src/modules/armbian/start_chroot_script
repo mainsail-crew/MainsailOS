@@ -113,3 +113,16 @@ echo_green "Enable SPI interface on Orange Pi SBC's ... DONE!"
 echo_green "Remove 'unattended-upgrades' service ..."
 sudo apt-get remove --purge --yes unattended-upgrades
 ## END Step 7
+
+## Step 8: Disable OTG serial console on "bananapim2zero"
+if [[ "$(is_board_type)" == "bananapim2zero" ]]; then
+    echo_green "Disable OTG Serial console for 'bananapim2zero' SBC's ..."
+    if [[ ! -d /etc/modprobe.d ]]; then
+        mkdir -p /etc/modprobe.d
+    fi
+    if [[ -d /etc/modprobe.d ]]; then
+        echo "blacklist serial_g" >> /etc/modprobe.d/blacklist.conf
+    fi
+    echo_green "Disable OTG Serial console for 'bananapim2zero' SBC's ... [DONE]"
+fi
+## END Step 8
