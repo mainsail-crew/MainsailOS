@@ -16,3 +16,7 @@ bash-completion"
 [[ -n "$ARMBIAN_CONFIG_TXT_FILE" ]] || ARMBIAN_CONFIG_TXT_FILE="/boot/armbianEnv.txt"
 [[ -n "$ARMBIAN_CONFIG_BAK_FILE" ]] || ARMBIAN_CONFIG_BAK_FILE="/boot/armbianEnv.txt.backup"
 [[ -n "$ARMBIAN_MODULES_FILE" ]] || ARMBIAN_MODULES_FILE="/etc/modules"
+
+## BananaPi M2 Zero specific
+### Disable OTG Serial Interface? (true/false)
+[[ -n "$ARMBIAN_CONFIG_BPI2ZERO_OTG_SERIAL" ]] || ARMBIAN_CONFIG_BPI2ZERO_OTG_SERIAL="true"
