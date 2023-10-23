@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+# shellcheck enable=require-variable-braces
+
+# Image source
+DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}/armbian-bananapi_m2_zero_bullseye.img.xz.sha256"
+DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/armbian-bananapi_m2_zero_bullseye.img.xz"
+
+# export Variables
+export BASE_ARCH
+export DOWNLOAD_URL_CHECKSUM
+export DOWNLOAD_URL_IMAGE
