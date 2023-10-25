@@ -166,6 +166,15 @@ fix_mainsailcfg_links() {
     ln -sf "${src_dir}/mainsail.cfg" "${config_dir}/mainsail.cfg"
 }
 
+# Optional if kiauh module is used
+fix_kiauh_links() {
+    local src_dir target_dir
+    src_dir="/home/${DEFAULT_USER}/kiauh"
+    target_dir="/usr/local/bin"
+    ln -sf "${src_dir}/kiauh.sh" "${target_dir}/kiauh"
+}
+
+
 fix_cn_links() {
     local tools_dir
     tools_dir="/home/${DEFAULT_USER}/crowsnest/tools"
@@ -231,6 +240,10 @@ echo -en "${WHITE}Fix broken symlinks ...${NOC}\r"
 fix_broken_links
 fix_timelapse_links
 fix_mainsailcfg_links
+# Optional if kiauh module is used
+if [[ -d "/home/${DEFAULT_USER}/kiauh" ]]; then
+    fix_kiauh_links
+fi
 fix_cn_links
 echo -e "${WHITE}Fix broken symlinks ...${NOC}[${GRE}OK${NOC}]"
 ## do a short break
