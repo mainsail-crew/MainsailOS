@@ -8,7 +8,15 @@ BASE_ARCH="arm64"
 DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}/orangepi-orangepi_zero2_bullseye.img.xz.sha256"
 DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/orangepi-orangepi_zero2_bullseye.img.xz"
 
+# partition resizing
+BASE_ROOT_PARTITION="2"
+BASE_IMAGE_ENLARGEROOT=2500
+BASE_IMAGE_RESIZEROOT=600
+
 # export Variables
 export BASE_ARCH
 export DOWNLOAD_URL_CHECKSUM
 export DOWNLOAD_URL_IMAGE
+export BASE_ROOT_PARTITION
+export BASE_IMAGE_ENLARGEROOT
+export BASE_IMAGE_RESIZEROOT
