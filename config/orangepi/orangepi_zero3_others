@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+# shellcheck enable=require-variable-braces
+
+BASE_ARCH="arm64"
+
+# Image source
+DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}/orangepi-orangepi_zero3_others_bullseye.img.xz.sha256"
+DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/orangepi-orangepi_zero3_others_bullseye.img.xz"
+
+# partition resizing
+BASE_ROOT_PARTITION="1"
+BASE_IMAGE_ENLARGEROOT=2500
+BASE_IMAGE_RESIZEROOT=600
+
+# export Variables
+export BASE_ARCH
+export DOWNLOAD_URL_CHECKSUM
+export DOWNLOAD_URL_IMAGE
+export BASE_ROOT_PARTITION
+export BASE_IMAGE_ENLARGEROOT
+export BASE_IMAGE_RESIZEROOT

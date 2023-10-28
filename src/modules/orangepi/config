@@ -23,6 +23,13 @@ bash-completion"
 [[ -n "$ORANGEPI_ADD_OVERLAYS_OPIZ2" ]] || ORANGEPI_ADD_OVERLAYS_OPIZ2="i2c3 uart5 spi-spidev"
 [[ -n "$ORANGEPI_ADD_OVERLAYS_OPIZ2_PARAMS" ]] || ORANGEPI_ADD_OVERLAYS_OPIZ2_PARAMS="param_spidev_spi_bus=1 param_spidev_spi_cs=1"
 
+## Orange Pi Zero 3 additional configuration
+[[ -n "$ORANGEPI_ENABLE_OVERLAYS_OPIZ3" ]] || ORANGEPI_ENABLE_OVERLAYS_OPIZ3="true"
+# cs1 is PH9 for SPI1
+# cs0 is PH5 for SPI1
+[[ -n "$ORANGEPI_ADD_OVERLAYS_OPIZ3" ]] || ORANGEPI_ADD_OVERLAYS_OPIZ3="ph-i2c3 ph-uart5 spi1-cs1-spidev"
+[[ -n "$ORANGEPI_ADD_OVERLAYS_OPIZ3_PARAMS" ]] || ORANGEPI_ADD_OVERLAYS_OPIZ3_PARAMS=""
+
 ## Disable Autologin on gettys
 [[ -n "$ORANGEPI_DISABLE_GETTY_AUTOLOGIN" ]] || ORANGEPI_DISABLE_GETTY_AUTOLOGIN="1"
 

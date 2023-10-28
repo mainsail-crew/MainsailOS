@@ -125,6 +125,24 @@ if [[ "$(is_board_type)" == "orangepizero2" ]] &&
 fi
 #### END
 
+#### Orangepi Zero3
+if [[ "$(is_board_type)" == "orangepizero3" ]] &&
+[[ "${ORANGEPI_ENABLE_OVERLAYS_OPIZ3}" == "true" ]]; then
+
+    if [[ -n "${ORANGEPI_ADD_OVERLAYS_OPIZ3}" ]]; then
+        echo_green "Adding overlays '${ORANGEPI_ADD_OVERLAYS_OPIZ3}' to ${ORANGEPI_CONFIG_TXT_FILE} ..."
+        echo "overlays=${ORANGEPI_ADD_OVERLAYS_OPIZ3}" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+    fi
+
+    if [[ -n "${ORANGEPI_ADD_OVERLAYS_OPIZ3_PARAMS}" ]]; then
+        for param in ${ORANGEPI_ADD_OVERLAYS_OPIZ3_PARAMS}; do
+            echo_green "Add ${param} to ${ORANGEPI_CONFIG_TXT_FILE} ..."
+            echo "${param}" >> "${ORANGEPI_CONFIG_TXT_FILE}"
+        done
+    fi
+fi
+#### END
+
 ### END Substep 2
 
 # Substep 3: add spi-dev module to /etc/modules
