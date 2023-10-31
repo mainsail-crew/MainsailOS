@@ -14,7 +14,9 @@ install_cleanup_trap
 
 echo_red "Libre DEBUG script"
 
-cat /etc/apt/sources.lst
+cat /etc/apt/sources.list
+
+ls /etc/apt/sources.list.d
 
 
 ping -c1 deb.debian.org
