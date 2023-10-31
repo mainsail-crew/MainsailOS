@@ -3,6 +3,15 @@
 
 set -Eex
 
+
+## Set LC_ALL to prevent errors
+export LC_ALL=C
+
+## Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
 echo_red "Libre DEBUG script"
 
 cat /etc/apt/sources.lst
