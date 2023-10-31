@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+
+set -Eex
+
+echo_red "Libre DEBUG script"
+
+cat /etc/apt/sources.lst
+
+
+ping -c1 deb.debian.org
+
+cat /etc/resolv.conf
