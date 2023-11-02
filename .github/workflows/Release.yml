@@ -116,7 +116,7 @@ jobs:
           PY_INT=$(command -v python3)
           CONFIG="${{ github.workspace }}/.github/workflow_config.yml"
           GROUP="release"
-          $PY_INT ${{ github.workspace }}/scripts/setup_matrix.py -c $CONFIG -g $GROUP --git
+          $PY_INT ${{ github.workspace }}/.github/scripts/setup_matrix.py -c $CONFIG -g $GROUP --git
 
   build:
     needs: [release, matrix]
