@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone develop repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
-          ref: 'develop'
+          ref: "develop"
 
       - name: Get current version
         id: current-version
@@ -36,9 +36,9 @@ jobs:
         if: steps.current-version.outputs.version != github.event.inputs.version
         uses: EndBug/add-and-commit@v9
         with:
-          add: './src/version'
+          add: "./src/version"
           default_author: github_actions
-          message: 'chore: push version number to v${{ github.event.inputs.version }}'
+          message: "chore: push version number to v${{ github.event.inputs.version }}"
           push: true
 
   update-master-branch:
@@ -49,9 +49,9 @@ jobs:
       - uses: everlytic/branch-merge@1.1.5
         with:
           github_token: ${{ secrets.PAT }}
-          source_ref: 'develop'
-          target_branch: 'master'
-          commit_message_template: '[Automated] Merged {source_ref} into target {target_branch}'
+          source_ref: "develop"
+          target_branch: "master"
+          commit_message_template: "[Automated] Merged {source_ref} into target {target_branch}"
 
   release:
     name: Create Release
@@ -62,9 +62,9 @@ jobs:
       date: ${{ steps.base-name.outputs.date }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          ref: 'master'
+          ref: "master"
           fetch-depth: 0
 
       - name: Get latest tag
@@ -85,7 +85,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: 'MainsailOS ${{ github.event.inputs.version }}'
+          name: "MainsailOS ${{ github.event.inputs.version }}"
           tag_name: ${{ github.event.inputs.version }}
           body: ${{ steps.changelog.outputs.content }}
           draft: true
@@ -106,18 +106,20 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: master
 
       - name: Create Matrix
         id: set-matrix
         run: |
-          ARRAY=$(find ${{ github.workspace }}/config -type f -printf '%P\n' | sed '/default/d' | sort | jq -R -s -c 'split("\n")[:-1]')
-          echo "matrix=${ARRAY}" >> $GITHUB_OUTPUT
+          PY_INT=$(command -v python3)
+          CONFIG="${{ github.workspace }}/.github/workflow_config.yml"
+          GROUP="release"
+          $PY_INT ${{ github.workspace }}/scripts/setup_matrix.py -c $CONFIG -g $GROUP --git
 
   build:
-    needs: [ release, matrix ]
+    needs: [release, matrix]
     runs-on: ubuntu-latest
     outputs:
       base_name: ${{ steps.move-image.outputs.base_name }}
@@ -271,7 +273,7 @@ jobs:
 
   finish:
     name: Finish Release
-    needs: [ release, build ]
+    needs: [release, build]
     runs-on: ubuntu-latest
     steps:
       - name: Publish Release
@@ -283,7 +285,7 @@ jobs:
 
   update-rpi-imager:
     name: Update rpi-imager json
-    needs: [ release, build, finish ]
+    needs: [release, build, finish]
     runs-on: ubuntu-latest
     steps:
       - name: Download snipes
@@ -345,7 +347,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: 'develop'
+          ref: "develop"
           token: ${{ secrets.PAT }}
           fetch-depth: 0
 
@@ -369,5 +371,5 @@ jobs:
           cat CHANGELOG.md
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: 'docs(changelog): update changelog'
+          commit_message: "docs(changelog): update changelog"
           file_pattern: CHANGELOG.md
