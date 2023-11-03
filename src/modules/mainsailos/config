@@ -9,4 +9,8 @@
 #### This File is distributed under GPLv3
 ####
 
-[ -n "$MAINSAILOS_DEPS" ] || MAINSAILOS_DEPS="python3-serial"
+#### NOTE:
+#### python3-serial is needed later on for possible CAN adapters
+#### python3-opencv is needed for moonraker-obico by obico in version 2.0
+
+[ -n "$MAINSAILOS_DEPS" ] || MAINSAILOS_DEPS="python3-serial python3-opencv"
