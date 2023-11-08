@@ -29,4 +29,4 @@ echo_green "Trying to unpack vendor config files ..."
 unpack overlay/printer_data /home/"${BASE_USER}"/printer_data "${BASE_USER}"
 
 echo_green "DEBUG: Print 'printer_data' folder ..."
-ls -T /home/"${BASE_USER}"/printer_data/
+ls -T /home/"${BASE_USER}"/printer_data/config
