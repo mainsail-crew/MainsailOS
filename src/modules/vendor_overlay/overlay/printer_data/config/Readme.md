@@ -9,7 +9,7 @@
 -   Copy over the `config` file from `Firmware-config`
 
 ```bash
-cp -v ~/printer_data_config/Firmware-config/klipper-config ~/klipper/.config
+cp -v ~/printer_data_config/Firmware-config/btt-skrpico-v1.0 ~/klipper/.config
 ```
 
 -   Run firmware build process by
