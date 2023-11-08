@@ -1,0 +1,15 @@
+#!/bin/bash
+#### vendor_overlay module
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2021 - till today
+#### https://github.com/mainsail-crew/crowsnest
+####
+#### This File is other than usual licensed under the http://www.wtfpl.net/
+#### This means this is only an example on how to deliver your own configurations
+#### Feel free to modify to your needs.
+#### A short hint that it is based on my work would be nice but isnt crucial :)
+####
+# shellcheck disable=all
+
+# Intentionally left blank for later use ...
