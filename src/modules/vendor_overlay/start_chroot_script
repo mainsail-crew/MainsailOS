@@ -26,7 +26,7 @@ install_cleanup_trap
 echo_green "Trying to unpack vendor config files ..."
 
 ## unpack overlay
-unpack overlay/ /home/"${BASE_USER}" "${BASE_USER}"
+unpack overlay /home/"${BASE_USER}" "${BASE_USER}"
 
 echo_green "DEBUG: Print 'printer_data' folder ..."
 ls -T /home/"${BASE_USER}"/printer_data/config
