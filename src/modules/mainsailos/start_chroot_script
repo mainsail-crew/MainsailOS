@@ -31,6 +31,7 @@ function get_parent {
 }
 
 echo "${DIST_NAME} release ${DIST_VERSION} ($(get_parent))" > /etc/"${DIST_NAME,,}"-release
+echo "PRETTY_NAME="${DIST_NAME} release ${DIST_VERSION} ($(get_parent))" \nNAME="${DIST_NAME}" \nVERSION_ID="${DIST_VERSION}" \nVERSION="${DIST_VERSION} ($(get_parent)" \nVERSION_CODENAME=($(get_parent)) \nID=MainsailOS \nID_LIKE=debian  \nHOME_URL="https://www.debian.org/" \nSUPPORT_URL="https://www.debian.org/support" \nBUG_REPORT_URL="https://bugs.debian.org/" \nLOGO="MainsailOS-logo" \nANSI_COLOR="0;31" \nVENDOR_NAME="mainsail-crew" \nVENDOR_URL="https://docs.mainsail.xyz/" \nDEFAULT_HOSTNAME="mainsail"" > /etc/os-release
 ## END Step 1
 
 ## Step 2: Fake release file
