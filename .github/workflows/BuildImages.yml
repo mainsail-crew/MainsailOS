@@ -1,4 +1,4 @@
-name: Build MainsailOS
+name: Build OS image
 on:
   push:
     branches:
@@ -10,7 +10,7 @@ on:
       - "config/**"
       - ".github/workflows/BuildImages.yml"
       - ".github/workflow_config.yml"
-      - ".github/scripts/setup_matrix.py"
+      - ".github/scripts/**"
     tags-ignore:
       - "**"
   pull_request:
@@ -19,7 +19,7 @@ on:
       - "src/**"
       - "config/**"
       - ".github/workflows/BuildImages.yml"
-      - ".github/scripts/setup_matrix.py"
+      - ".github/scripts/**"
       - ".github/workflow_config.yml"
 
   workflow_dispatch:
@@ -31,6 +31,78 @@ concurrency:
 
 jobs:
   setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      date: ${{ steps.base-name.outputs.date }}
+      start_timestamp: ${{ steps.base-name.outputs.start_timestamp }}
+      start_realtime: ${{ steps.base-name.outputs.start_realtime }}
+      version: ${{ steps.current-version.outputs.version }}
+      name: ${{ steps.base-name.outputs.name }}
+      prefix: ${{ steps.gen-prefix.outputs.prefix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create Date and timestamp
+        id: base-name
+        shell: bash
+        run: |
+          # Create Date and timestamp
+          {
+            echo "date=$(date +"%Y-%m-%d")"
+            echo "start_timestamp=${EPOCHSECONDS}"
+            realtime="$(date -d@"${EPOCHSECONDS}" -u +"%Y-%m-%d %H:%M:%S UTC")"
+            echo "start_realtime=${realtime}"
+            echo "name=${{ github.event.repository.name }}"
+          } >> $GITHUB_OUTPUT
+
+      - name: Get current version
+        id: current-version
+        shell: bash
+        run: |
+          # Get current version
+          echo "version=$(cat ./src/version)" >> $GITHUB_OUTPUT
+
+      - name: Generate Name Prefix
+        id: gen-prefix
+        shell: bash
+        run: |
+          # Generate Name prefix
+          prefix="${{ steps.base-name.outputs.date }}"
+          prefix="${prefix}-${{ steps.base-name.outputs.name }}"
+          prefix="${prefix}-${{ steps.current-version.outputs.version }}"
+          echo "prefix=${prefix}" >> $GITHUB_OUTPUT
+
+      - name: Debug information
+        id: debug-info
+        shell: bash
+        run: |
+          # Print Debug informations
+          echo "Debug information:"
+          echo "Date: ${{ steps.base-name.outputs.date }}"
+          echo "Start Time: ${{ steps.base-name.outputs.start_realtime }}"
+          echo "Timestamp (sec): ${{ steps.base-name.outputs.start_timestamp }}"
+          echo "Name: ${{ steps.base-name.outputs.name }}"
+          echo "Version: ${{ steps.current-version.outputs.version }}"
+          echo "Prefix: ${{ steps.gen-prefix.outputs.prefix }}"
+
+      - name: Setup Summary
+        shell: bash
+        run: |
+          # Setup summary
+          {
+            echo -e "### Setup:\n"
+            echo -e "Date: ${{ steps.base-name.outputs.date }}"
+            echo -e "Name: ${{ steps.base-name.outputs.name }}"
+            echo -e "Version: ${{ steps.current-version.outputs.version }}"
+            echo -e "Prefix: ${{ steps.gen-prefix.outputs.prefix }}"
+            echo -e "Start Time: ${{ steps.base-name.outputs.start_realtime }}"
+          } >> $GITHUB_STEP_SUMMARY
+
+  matrix:
+    name: Create Matrix
+    needs: setup
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -41,18 +113,22 @@ jobs:
       - name: Create Matrix
         id: set-matrix
         run: |
+          # Create matrix using setup_matrix.py
           PY_INT=$(command -v python3)
+          APP="${{ github.workspace }}/.github/scripts/setup_matrix.py"
           CONFIG="${{ github.workspace }}/.github/workflow_config.yml"
           GROUP="buildtest"
-          $PY_INT ${{ github.workspace }}/.github/scripts/setup_matrix.py -c $CONFIG -g $GROUP --git
+          ${PY_INT} ${APP} -c ${CONFIG} -g ${GROUP} --git
 
   build:
-    needs: setup
+    needs: [setup, matrix]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        config: ${{ fromJson(needs.setup.outputs.matrix) }}
+        config: ${{ fromJson(needs.matrix.outputs.matrix) }}
+    outputs:
+      file-name: ${{ steps.move-image.outputs.file_name }}
     steps:
       - name: Build image
         id: build
@@ -60,42 +136,139 @@ jobs:
         with:
           config: ${{ matrix.config }}
 
-      - name: Rename image file
-        id: move-image
+      - name: Generate file name
         if: always()
         shell: bash
+        id: file-name
         run: |
-          source repository/src/config
-          NOW="$(date +"%Y-%m-%d")"
-          IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
+          # Generate file name
+          type="$(cut -d'/' -f1 <<< ${{ matrix.config }})"
+          sbc="$(cut -d'/' -f2 <<< ${{ matrix.config }})"
+          file_name="${{ needs.setup.outputs.prefix }}-${type}-${sbc}"
+          echo "file_name=${file_name}" >> $GITHUB_OUTPUT
+          echo "File name: ${file_name}"
+          ## Keep as Debug output.
+          # # Generate summary header
+          # {
+          #   echo "## Build creates following files:"
+          #   echo "- ${file_name}.img"
+          #   echo "- ${file_name}.img.xz"
+          #   echo "- ${file_name}.img.sha256"
+          #   echo "- ${file_name}.xz.img.sha256"
+          #   echo "- ${file_name}-build.log"
+          #   echo "**NOTE:** If image build fails it will only generate a log file"
+          # } >> $GITHUB_STEP_SUMMARY
 
-          WORKSPACE=$(echo ${{ github.workspace }})
-          sudo chown -R $USER:$USER $WORKSPACE/repository/src/workspace || true
-          sudo chmod 0775 -R $WORKSPACE/repository/src/workspace || true
-
-          mv repository/src/workspace/*.img $IMAGE.img
-
-          echo "image=${IMAGE}" >> $GITHUB_OUTPUT
-
-      - name: Upload failed Logfile
-        if: failure()
+      - name: Upload logfile
+        if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: failed-${{ steps.move-image.outputs.image }}.log
-          path: repository/src/build.log
+          name: ${{ steps.file-name.outputs.file_name }}-build.log
+          path: ${{ github.workspace }}/repository/src/build.log
+
+      - name: Cleanup workspace
+        shell: bash
+        run: |
+          # Clean up workspace
+          path="${{ github.workspace }}/repository/src/workspace"
+          sudo rm -rfv ${path}/aptcache
+          sudo rm -rfv ${path}/mount
+          sudo rm -rfv ${path}/chroot_script
+
+      - name: Set workspace permissions
+        if: success()
+        shell: bash
+        run: |
+          # Change owner and permissions
+          path="${{ github.workspace }}/repository/src/workspace"
+          sudo chown -v -R ${USER}:${USER} ${path}
+          sudo chmod 0775 -v -R ${path}
+
+      - name: Rename image file
+        id: move-image
+        if: success()
+        shell: bash
+        run: |
+          # Rename image
+          image="${{ steps.file-name.outputs.file_name }}"
+          mv -v repository/src/workspace/*.img ${image}.img
+          echo "image=${image}" >> $GITHUB_OUTPUT
 
       - name: Compressing Image
+        id: compress
         shell: bash
         run: |
-          CPU_COUNT="$(nproc)"
-          echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
-          xz -efkvz9T"${CPU_COUNT}" ${{ steps.move-image.outputs.image }}.img || true
+          # Compress image
+          # Outputs:
+          # "img_size=${size}"
+          # "img_size_hr=${size_hr}"
+          # "comp_img_size=${comp_size}"
+          # "comp_img_size_hr=${comp_size_hr}"
+          path="${{ github.workspace }}/repository"
+          APP="${path}/.github/scripts/compress.sh"
+          ${APP} ${{ steps.move-image.outputs.image }}
 
       - name: Calculating checksums
+        id: checksums
         shell: bash
         run: |
-          sha256sum ${{ steps.move-image.outputs.image }}.img > ${{ steps.move-image.outputs.image }}.img.sha256
-          sha256sum ${{ steps.move-image.outputs.image }}.img.xz > ${{ steps.move-image.outputs.image }}.img.xz.sha256
+          # Calculate checksums (sha256)
+          path="${{ github.workspace }}/repository"
+          APP="${path}/.github/scripts/checksums.sh"
+          ${APP} ${{ steps.move-image.outputs.image }}
+
+      - name: Export config
+        id: config
+        shell: bash
+        run: |
+          # Export configuration
+          cfg="${{ github.workspace }}/repository/src/config"
+          cfg_out="${{ steps.file-name.outputs.file_name }}-config"
+          cat ${cfg} | sed -n '/^[A-Z]/p' | sort > ${cfg_out}
+          echo "config_file=${cfg_out}" >> $GITHUB_OUTPUT
+          {
+            echo -e "## Configuration:"
+            echo -e "<details>\n<summary>Show configuration</summary>\n"
+            cat ${cfg_out}
+            echo -e "</details>\n"
+          } >> $GITHUB_STEP_SUMMARY
+
+      - name: Generate Build statistics
+        shell: bash
+        id: statistic
+        run: |
+          # Generate build statistics
+          start_realtime="${{ needs.setup.outputs.start_realtime }}"
+          start_timestamp="${{ needs.setup.outputs.start_timestamp }}"
+          finish_timestamp="${EPOCHSECONDS}"
+          finish_realtime="$(date -d@"${EPOCHSECONDS}" -u +"%Y-%m-%d %H:%M:%S UTC")"
+          duration="$((finish_timestamp-start_timestamp))"
+          # Human readable
+          duration_hr="$(date -d@"${duration}" -u +"[ %H:%M:%S ]")"
+          echo "duration=${duration}" >> $GITHUB_OUTPUT
+          echo "duration_hr=${duration_hr}" >> $GITHUB_OUTPUT
+          {
+            echo "## Build statistics:"
+            echo "Build start time: ${start_realtime}"
+            echo "Build finish time: ${finish_realtime}"
+            echo "Build duration: ${duration} seconds ${duration_hr}"
+          } >> $GITHUB_STEP_SUMMARY
+
+      - name: Generate summary column md file
+        env:
+          md_file: ${{ steps.move-image.outputs.image }}-col.md
+          image: ${{ steps.move-image.outputs.image }}.img.xz
+          raw_img_size: ${{ steps.compress.outputs.img_size }}
+          raw_img_size_hr: ${{ steps.compress.outputs.img_size_hr }}
+          comp_img_size: ${{ steps.compress.outputs.comp_img_size }}
+          comp_img_size_hr: ${{ steps.compress.outputs.comp_img_size_hr }}
+          duration: ${{ steps.statistic.outputs.duration }}
+          duration_hr: ${{ steps.statistic.outputs.duration_hr }}
+        run: |
+          # Generate table-column.md
+          path="${{ github.workspace }}/repository"
+          APP="${path}/.github/scripts/summary_column.sh"
+          ${APP} ${{ github.workspace }}
 
       - name: Upload Compressed Image
         uses: actions/upload-artifact@v3
@@ -114,3 +287,37 @@ jobs:
         with:
           name: ${{ steps.move-image.outputs.image }}.img.sha256
           path: ${{ steps.move-image.outputs.image }}.img.sha256
+
+      - name: Upload Configuration
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.config.outputs.config_file }}
+          path: ${{ steps.config.outputs.config_file }}
+
+      - name: Upload Summary table column file
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.move-image.outputs.image }}-col.md
+          path: ${{ steps.move-image.outputs.image }}-col.md
+
+  summary:
+    name: Build Summary
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: repository
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ${{ github.workspace }}
+
+      - name: Generate summary
+        run: |
+          # Generate summary
+          path="${{ github.workspace }}/repository"
+          APP="${path}/.github/scripts/generate_summary.sh"
+          ${APP} ${{ github.workspace }}
