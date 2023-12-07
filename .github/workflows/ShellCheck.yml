@@ -6,6 +6,7 @@ on:
     paths:
       - "config/**"
       - "src/**"
+      - ".github/scripts/*.sh"
       - "!src/version"
       # Add workflow itself for now
       - ".github/workflows/ShellCheck.yml"
@@ -17,6 +18,7 @@ on:
     paths:
       - "config/**"
       - "src/**"
+      - ".github/scripts/*.sh"
       - "!src/version"
 
   workflow_dispatch:
@@ -27,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
@@ -58,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get configs
         id: configs
@@ -74,6 +76,43 @@ jobs:
         with:
           scandir: "./config"
           additional_files: "${{ steps.configs.outputs.additional }}"
+          format: tty
+
+      - name: Failure Summary
+        if: failure()
+        run: |
+          echo "## Shellcheck failed! :no_entry:" >> $GITHUB_STEP_SUMMARY
+          echo "_Please check Annotations for details ..._ :point_up:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "These Errors have to be corrected, before the changes can be accepted :exclamation:" >> $GITHUB_STEP_SUMMARY
+
+      - name: Success Summary
+        if: success()
+        run: |
+          echo "## Shellcheck succeeded :tada:" >> $GITHUB_STEP_SUMMARY
+          echo "Well done .. :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+
+  lint_git_scripts:
+    name: Shellcheck (.github/scripts)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v4
+
+      - name: Get .github/scripts
+        id: git_scripts
+        run: |
+          SCANFILES="$(find ${{ github.workspace }}/.github/scripts -name '*.sh' -type f -printf "%f\n" | uniq | tr '\n' ' ')"
+          echo "additional=${SCANFILES}" >> $GITHUB_OUTPUT
+
+      - name: Run ShellCheck
+        id: sc-scripts
+        uses: ludeeus/action-shellcheck@master
+        env:
+          SHELLCHECK_OPTS: -ax -s bash
+        with:
+          scandir: "./.github/scripts"
+          additional_files: "${{ steps.git_scripts.outputs.additional }}"
           format: tty
 
       - name: Failure Summary
