@@ -1,0 +1,21 @@
+name: JSON Generator Check
+
+on:
+  workflow_dispatch:
+
+env:
+  JSON_URL: https://os.mainsail.xyz/rpi-imager.json
+
+jobs:
+  CheckJsonGenerator:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get JSON schema
+        shell: bash
+        run: |
+          cd ${{ github.workspace }}
+          curl -O ${{ env.JSON_URL }}
+
+      - name: Debug
+        shell: bash
+        run: ls -al
