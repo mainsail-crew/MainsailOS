@@ -1,0 +1,102 @@
+name: Configuration Check
+
+on:
+  push:
+    branches:
+      - "develop"
+    paths:
+      - "config/**"
+      - ".github/workflows/ConfigCheck.yml"
+      - ".github/scripts/config_check.sh"
+    tags-ignore:
+      - "**"
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+    paths:
+      - "config/**"
+      - ".github/workflows/ConfigCheck.yml"
+      - ".github/scripts/config_check.sh"
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create Matrix
+        id: set-matrix
+        run: |
+          PY_INT=$(command -v python3)
+          CONFIG="${{ github.workspace }}/.github/workflow_config.yml"
+          GROUP="buildtest"
+          $PY_INT ${{ github.workspace }}/.github/scripts/setup_matrix.py -c $CONFIG -g $GROUP --git
+
+  config:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config: ${{ fromJson(needs.setup.outputs.matrix) }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          path: repository
+          submodules: true
+
+      - name: Create board config
+        id: config
+        shell: bash
+        run: |
+          # Create board config
+          IFS='/' read -r -a array <<< "${{ matrix.config }}"
+          TYPE=${array[0]}
+          SBC=${array[1]}
+
+          echo "TYPE=${TYPE}" >> $GITHUB_OUTPUT
+          echo "SBC=${SBC}" >> $GITHUB_OUTPUT
+
+          GENERIC_FILE="./repository/config/default"
+          if [[ -f "$GENERIC_FILE" ]]; then
+            cat "${GENERIC_FILE}" >> ./repository/src/config
+          fi
+
+          TYPE_FILE="./repository/config/${TYPE}/default"
+          if [[ -f "$TYPE_FILE" ]]; then
+            cat "${TYPE_FILE}" >> ./repository/src/config
+          fi
+
+          SBC_FILE="./repository/config/${TYPE}/${SBC}"
+          if [[ -f "$SBC_FILE" ]]; then
+            cat "${SBC_FILE}" >> ./repository/src/config
+          fi
+          echo "Successful created config file!"
+
+      - name: Run Config Check
+        run: |
+          # Run Config Check
+          path="${{ github.workspace }}/repository"
+          config="${path}/src/config"
+          script="${path}/.github/scripts/config_check.sh"
+          $script $config ${{ matrix.config }}
+
+      - name: Push to Summary
+        if: always()
+        shell: bash
+        run: |
+          # Push summary (stepsum.md)
+          path="${{ github.workspace }}/repository"
+          cat ${path}/stepsum.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Cleanup
+        shell: bash
+        run: |
+          # Cleanup
+          file="${{ github.workspace }}/repository/stepsum.md"
+          rm -fv "${file}"

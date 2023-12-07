@@ -12,3 +12,8 @@ DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/orangepi-orangepi_zero2_bullseye.img.xz
 export BASE_ARCH
 export DOWNLOAD_URL_CHECKSUM
 export DOWNLOAD_URL_IMAGE
+
+### JSON snipplet Setup
+### NOTE: Please see all config files for setup variables!!!
+# shellcheck disable=SC2034
+JSON_SUPPORTED_SBC="orangepizero2-64bit"

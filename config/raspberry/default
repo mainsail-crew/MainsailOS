@@ -16,3 +16,8 @@ export BASE_IMAGE_ENLARGEROOT
 export BASE_IMAGE_RESIZEROOT
 export BASE_RELEASE_COMPRESS
 export MODULES
+
+### JSON snipplet Setup
+### NOTE: Please see all config files for setup variables!!!
+# shellcheck disable=SC2034
+JSON_DESCRIPTION="A port of Raspberry Pi OS with preinstalled Mainsail for 3D Printer's"
