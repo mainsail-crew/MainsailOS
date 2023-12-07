@@ -140,7 +140,7 @@ main() {
     } >> "${stepsum_md_file}"
     if [[ "${ERROR_COUNT}" -ne 0 ]]; then
         {
-            printf "## :no_entry_sign: Config Check failed! :no_entry_sign:\n"
+            echo -e "## :no_entry_sign: Config Check failed! :no_entry_sign:"
             printf "Your configuration contains at least %d error(s)! :warning:\n" "${ERROR_COUNT}"
             printf "Please check your configuration files and fix error(s)! :mag:\n"
         } >> "${stepsum_md_file}"
@@ -148,7 +148,7 @@ main() {
         attach_config "${stepsum_md_file}" "${config_file}"
         exit 1
     else
-        printf "## :white_check_mark: Config Check passed! :white_check_mark:\n" >> "${stepsum_md_file}"
+        echo -e "## :white_check_mark: Config Check passed! :white_check_mark:" >> "${stepsum_md_file}"
         attach_config "${stepsum_md_file}" "${config_file}"
     fi
 }
