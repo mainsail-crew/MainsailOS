@@ -41,4 +41,4 @@ export MODULES
 ### JSON snipplet Setup
 ### NOTE: Please see all config files for setup variables!!!
 # shellcheck disable=SC2034
-JSON_DESCRIPTION="A port of Orange Pi OS with preinstalled Mainsail for 3D Printer's"
+JSON_DESCRIPTION="A port of Orange Pi OS with preinstalled Mainsail for 3D printers"
