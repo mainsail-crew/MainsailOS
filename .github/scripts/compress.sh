@@ -38,11 +38,11 @@ main() {
     # echo stats to step output
     echo "${file}: ${comp}"
     {
-    echo "## Compression statistics:"
-    echo "Used flags: ${XZ_OPT}"
-    echo "xz statistics: ${comp}"
-    echo "Uncompressed image size: ${size} bytes (${size_hr})"
-    echo "Compressed image size: ${comp_size} bytes (${comp_size_hr})"
+        echo "## Compression statistics:"
+        echo "Used flags: ${XZ_OPT}"
+        echo "xz statistics: ${comp}"
+        echo "Uncompressed image size: ${size} bytes (${size_hr})"
+        echo "Compressed image size: ${comp_size} bytes (${comp_size_hr})"
     } >> "${GITHUB_STEP_SUMMARY}"
     {
         echo "img_size=${size}"
