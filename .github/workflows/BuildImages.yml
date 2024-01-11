@@ -54,9 +54,16 @@ jobs:
       matrix:
         config: ${{ fromJson(needs.setup.outputs.matrix) }}
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.build-ref }}
+          path: repository
+          submodules: true
+
       - name: Build image
         id: build
-        uses: ./.github/actions/build
+        uses: ./repository/.github/actions/build
         with:
           config: ${{ matrix.config }}
 

@@ -13,10 +13,6 @@ inputs:
     description: 'Branch / Tag / SHA to checkout CustomPiOS'
     required: false
     default: 'devel'
-  build-ref:
-    description: 'Branch / Tag / SHA to checkout Build repo'
-    required: false
-    default: ${{ github.ref }}
 outputs:
   type:
     description: SBC type (raspberry/armbian/...)
@@ -38,13 +34,6 @@ runs:
         repository: ${{ inputs.custompios-repository }}
         ref: ${{ inputs.custompios-ref }}
         path: CustomPiOS
-
-    - name: Checkout Repository
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ inputs.build-ref }}
-        path: repository
-        submodules: true
 
     - name: Read board config
       id: config
