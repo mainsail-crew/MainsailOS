@@ -56,7 +56,7 @@ jobs:
     steps:
       - name: Build image
         id: build
-        uses: mainsail-crew/MainsailOS-actions/build-image@master
+        uses: ./.github/actions/build
         with:
           config: ${{ matrix.config }}
 
