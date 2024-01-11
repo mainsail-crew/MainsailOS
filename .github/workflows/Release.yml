@@ -146,10 +146,6 @@ jobs:
         id: move-image
         shell: bash
         run: |
-          WORKSPACE=$(echo ${{ github.workspace }})
-          sudo chown -R $USER:$USER $WORKSPACE/repository/src/workspace || true
-          sudo chmod 0775 -R $WORKSPACE/repository/src/workspace || true
-
           source repository/src/config
           base_name="${{ needs.release.outputs.date }}-${DIST_NAME}-${DIST_VERSION}"
           image="${base_name}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
