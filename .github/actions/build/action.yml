@@ -29,7 +29,7 @@ runs:
       run: sudo apt update; sudo apt install --yes aria2 coreutils jq p7zip-full qemu-user-static zip
 
     - name: Checkout CustomPiOS
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: ${{ inputs.custompios-repository }}
         ref: ${{ inputs.custompios-ref }}
