@@ -19,3 +19,8 @@ DOWNLOAD_URL_IMAGE="https://downloads.raspberrypi.com/raspios_oldstable_lite_arm
 export BASE_ARCH
 export DOWNLOAD_URL_CHECKSUM
 export DOWNLOAD_URL_IMAGE
+
+### JSON snipplet Setup
+### NOTE: Please see all config files for setup variables!!!
+# shellcheck disable=SC2034
+JSON_SUPPORTED_SBC="pi3-64bit pi4-64bit"

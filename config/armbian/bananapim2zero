@@ -10,3 +10,8 @@ DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/armbian-bananapi_m2_zero_bullseye.img.x
 export BASE_ARCH
 export DOWNLOAD_URL_CHECKSUM
 export DOWNLOAD_URL_IMAGE
+
+### JSON snipplet Setup
+### NOTE: Please see all config files for setup variables!!!
+# shellcheck disable=SC2034
+JSON_SUPPORTED_SBC="bananapim2zero-64bit"

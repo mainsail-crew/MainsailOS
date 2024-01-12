@@ -219,41 +219,72 @@ jobs:
           echo "filesize-image: ${{ steps.filesizes.outputs.image }}"
           echo "filesize-zip: ${{ steps.filesizes.outputs.zip }}"
 
+      - name: Get JSON data
+        id: json-data
+        shell: bash
+        run: |
+          source repository/src/config
+
+          pretty_name=${JSON_PRETTY_NAME}
+          if [[ -n "${BASE_ARCH}" ]]; then
+            type="64bit"
+          else
+            type="32bit"
+          fi
+
+          name="${pretty_name}"
+          name="${name} ${{ github.event.inputs.version }}"
+          name="${name} ${type}"
+
+          echo "pretty_name=${name}" >> $GITHUB_OUTPUT
+          echo "description=${JSON_DESCRIPTION}" >> $GITHUB_OUTPUT
+
+          echo "icon_url=${JSON_ICON_URL}" >> $GITHUB_OUTPUT
+          echo "init_format=${JSON_INIT_FORMAT}" >> $GITHUB_OUTPUT
+
+          read -a SBC_ARRAY <<< "${JSON_SUPPORTED_SBC}"
+
+          json_array="["
+          for sbc in "${SBC_ARRAY[@]}""; do
+            json_array+="\"${sbc}\""
+            if [[ $sbc != ${SBC_ARRAY[-1]} ]]; then
+              json_array+=","
+            fi
+          done
+          json_array+="]"
+          echo "supported_sbc=${json_array}" >> $GITHUB_OUTPUT
+
       - name: Generate JSON
         id: json
         uses: actions/github-script@v6
         env:
-          name: "Mainsail OS ${{ github.event.inputs.version }}"
-          description: "Type: ${{ steps.build.outputs.type }}, SBC: ${{ steps.build.outputs.sbc }}"
-          type: "${{ steps.build.outputs.type }}"
-          sbc: "${{ steps.build.outputs.sbc }}"
+          name: "${{ steps.json-data.outputs.pretty_name }}"
+          description: "${{ steps.json-data.outputs.description }}"
+          icon: "${{ steps.json-data.outputs.icon_url }}"
           url: "https://github.com/mainsail-crew/MainsailOS/releases/download/${{ github.event.inputs.version }}/${{ steps.move-image.outputs.image }}.img.xz"
-          icon: "https://os.mainsail.xyz/rpi-imager.png"
-          init_format: "systemd"
-          release_date: "${{ needs.release.outputs.date }}"
           extract_size: ${{ steps.filesizes.outputs.image }}
           extract_sha256: "${{ steps.checksums.outputs.image }}"
           image_download_size: ${{ steps.filesizes.outputs.zip }}
-          image_download_sha256: "${{ steps.checksums.outputs.zip }}"
+          release_date: "${{ needs.release.outputs.date }}"
+          init_format: "${{ steps.json-data.outputs.init_format }}"
+          devices: "${{ steps.json-data.outputs.supported_sbc }}"
         with:
           result-encoding: string
           script: |
             const fs = require('fs')
-            let { name, description, type, sbc, url, icon, init_format, release_date, extract_size, extract_sha256, image_download_size, image_download_sha256 } = process.env
-            if (sbc === 'rpi32') name += ' 32-Bit (recommend)'
-            else if (sbc === 'rpi64') name += ' 64-Bit'
+            let { name, description, type, sbc, url, icon, init_format, release_date, extract_size, extract_sha256, image_download_size } = process.env
 
             const json = JSON.stringify({
               name,
               description,
-              url,
               icon,
-              init_format,
-              release_date,
+              url,
               extract_size: parseInt(extract_size),
               extract_sha256,
               image_download_size: parseInt(image_download_size),
-              image_download_sha256
+              release_date,
+              init_format,
+              devices
             })
 
             fs.writeFileSync("./${{ steps.move-image.outputs.image }}.json", json)
