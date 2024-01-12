@@ -1,0 +1,132 @@
+name: 'MainsailOS/build'
+author: 'Stefan Dej'
+description: 'Build MainsailOS images'
+inputs:
+  config:
+    description: 'Board config name'
+    required: true
+  custompios-repository:
+    description: 'Repository for CustomPiOS'
+    required: false
+    default: 'guysoft/CustomPiOS'
+  custompios-ref:
+    description: 'Branch / Tag / SHA to checkout CustomPiOS'
+    required: false
+    default: 'devel'
+outputs:
+  type:
+    description: SBC type (raspberry/armbian/...)
+    value: ${{ steps.config.outputs.TYPE }}
+  sbc:
+    description: SBC model (rpi32/orangepi4lts/...)
+    value: ${{ steps.config.outputs.SBC }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Dependencies
+      shell: bash
+      run: sudo apt update; sudo apt install --yes aria2 coreutils jq p7zip-full qemu-user-static zip
+
+    - name: Checkout CustomPiOS
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.custompios-repository }}
+        ref: ${{ inputs.custompios-ref }}
+        path: CustomPiOS
+
+    - name: Read board config
+      id: config
+      shell: bash
+      run: |
+        IFS='/' read -r -a array <<< "${{ inputs.config }}"
+        TYPE=${array[0]}
+        SBC=${array[1]}
+
+        echo "TYPE=${TYPE}" >> $GITHUB_OUTPUT
+        echo "SBC=${SBC}" >> $GITHUB_OUTPUT
+
+        GENERIC_FILE="./repository/config/default"
+        if [[ -f "$GENERIC_FILE" ]]; then
+          cat "${GENERIC_FILE}" >> ./repository/src/config
+        fi
+
+        TYPE_FILE="./repository/config/${TYPE}/default"
+        if [[ -f "$TYPE_FILE" ]]; then
+          cat "${TYPE_FILE}" >> ./repository/src/config
+        fi
+
+        SBC_FILE="./repository/config/${TYPE}/${SBC}"
+        if [[ -f "$SBC_FILE" ]]; then
+          cat "${SBC_FILE}" >> ./repository/src/config
+        fi
+
+        source ./repository/src/config
+
+        echo $DOWNLOAD_URL_CHECKSUM
+        echo $DOWNLOAD_URL_IMAGE
+        echo $MODULES
+        echo $(cat ./repository/src/config)
+
+        echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
+        echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
+        echo "MODULES=${MODULES}" >> $GITHUB_OUTPUT
+
+    - name: Base Image Checksum
+      id: checksum
+      shell: bash
+      run: |
+        cd repository/src/image
+        FILENAME=$(basename ${{ steps.config.outputs.DOWNLOAD_URL_CHECKSUM }})
+        wget -O ${FILENAME} ${{ steps.config.outputs.DOWNLOAD_URL_CHECKSUM }}
+        FILE_CONTENT=$(head -n 1 $FILENAME)
+        CHECKSUM=$(echo $FILE_CONTENT | cut -d' ' -f1)
+
+        echo "CHECKSUM=${CHECKSUM}" >> $GITHUB_OUTPUT
+        echo "FILENAME=${FILENAME}" >> $GITHUB_OUTPUT
+
+    - name: Cache Base Source Image
+      id: cache
+      uses: actions/cache@v3
+      with:
+        path: repository/src/image/*.img.xz
+        key: base-image-${{ steps.checksum.outputs.CHECKSUM }}
+
+    - name: Download Base Source Image via Torrent
+      if: steps.cache.outputs.cache-hit != 'true' && endswith(steps.config.outputs.DOWNLOAD_URL_IMAGE, '.torrent')
+      shell: bash
+      run: aria2c -d repository/src/image --seed-time=0 ${{ steps.config.outputs.DOWNLOAD_URL_IMAGE }}
+
+    - name: Download Base Source Image via wget
+      if: steps.cache.outputs.cache-hit != 'true' && !endswith(steps.config.outputs.DOWNLOAD_URL_IMAGE, '.torrent')
+      shell: bash
+      run: |
+        cd repository/src/image
+        wget ${{ steps.config.outputs.DOWNLOAD_URL_IMAGE }}
+
+    - name: Comparing Checksums
+      shell: bash
+      run: |
+        cd repository/src/image
+        sha256sum -b ${{ steps.checksum.outputs.FILENAME }}
+
+    - name: Update CustomPiOS Paths
+      shell: bash
+      run: cd repository/src && ../../CustomPiOS/src/update-custompios-paths
+
+    - name: Build Image
+      shell: bash
+      run: sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
+
+    - name: Cleanup workspace & fix permissions
+      if: success()
+      shell: bash
+      run: |
+        # Clean up workspace
+        path="${{ github.workspace }}/repository/src/workspace"
+        sudo rm -rfv ${path}/aptcache
+        sudo rm -rfv ${path}/mount
+        sudo rm -rfv ${path}/chroot_script
+
+        sudo chown -v -R ${USER}:${USER} ${path}
+        sudo chmod 0775 -v -R ${path}

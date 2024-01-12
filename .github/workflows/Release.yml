@@ -128,12 +128,17 @@ jobs:
       matrix:
         config: ${{ fromJson(needs.matrix.outputs.matrix) }}
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          path: repository
+          submodules: true
+
       - name: Build image
         id: build
-        uses: mainsail-crew/MainsailOS-actions/build-image@master
+        uses: ./repository/.github/actions/build
         with:
           config: ${{ matrix.config }}
-          build-ref: master
 
       - name: Upload failed Logfile
         if: failure()
@@ -146,10 +151,6 @@ jobs:
         id: move-image
         shell: bash
         run: |
-          WORKSPACE=$(echo ${{ github.workspace }})
-          sudo chown -R $USER:$USER $WORKSPACE/repository/src/workspace || true
-          sudo chmod 0775 -R $WORKSPACE/repository/src/workspace || true
-
           source repository/src/config
           base_name="${{ needs.release.outputs.date }}-${DIST_NAME}-${DIST_VERSION}"
           image="${base_name}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"

@@ -54,9 +54,15 @@ jobs:
       matrix:
         config: ${{ fromJson(needs.setup.outputs.matrix) }}
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          path: repository
+          submodules: true
+
       - name: Build image
         id: build
-        uses: mainsail-crew/MainsailOS-actions/build-image@master
+        uses: ./repository/.github/actions/build
         with:
           config: ${{ matrix.config }}
 
@@ -68,10 +74,6 @@ jobs:
           source repository/src/config
           NOW="$(date +"%Y-%m-%d")"
           IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
-
-          WORKSPACE=$(echo ${{ github.workspace }})
-          sudo chown -R $USER:$USER $WORKSPACE/repository/src/workspace || true
-          sudo chmod 0775 -R $WORKSPACE/repository/src/workspace || true
 
           mv repository/src/workspace/*.img $IMAGE.img
 
