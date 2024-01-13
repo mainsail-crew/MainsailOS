@@ -286,6 +286,7 @@ jobs:
 
   update-rpi-imager:
     name: Update rpi-imager json
+    if: ${{ github.repository_owner == 'Mainsail-Crew' }}
     needs: [release, build, finish]
     runs-on: ubuntu-latest
     steps:
@@ -341,7 +342,7 @@ jobs:
           local-dir: ./upload/
 
   update-changelog:
-    needs: update-rpi-imager
+    needs: finish
     name: Generate changelog
     runs-on: ubuntu-latest
     steps:
@@ -359,11 +360,22 @@ jobs:
           echo "TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
 
       - name: Generate a changelog
+        if: ${{ github.repository_owner == 'Mainsail-Crew' }}
         uses: orhun/git-cliff-action@v1
         id: git-cliff
         with:
           config: cliff.toml
           args: 0.5.0..${{ steps.latest_tag.outputs.TAG_NAME }}
+        env:
+          OUTPUT: ${{ github.workspace }}/CHANGELOG.md
+
+      - name: Generate a changelog
+        if: ${{ github.repository_owner != 'Mainsail-Crew' }}
+        uses: orhun/git-cliff-action@v1
+        id: git-cliff
+        with:
+          config: cliff.toml
+          args: 0.0.0..${{ steps.latest_tag.outputs.TAG_NAME }}
         env:
           OUTPUT: ${{ github.workspace }}/CHANGELOG.md
 
