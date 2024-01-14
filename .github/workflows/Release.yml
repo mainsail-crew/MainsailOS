@@ -286,7 +286,6 @@ jobs:
 
   update-rpi-imager:
     name: Update rpi-imager json
-    if: ${{ github.repository_owner == 'Mainsail-Crew' }}
     needs: [release, build, finish]
     runs-on: ubuntu-latest
     steps:
@@ -334,6 +333,7 @@ jobs:
           mv rpi-imager.json ./upload
 
       - name: Upload to remote server
+        if: ${{ github.repository_owner == 'Mainsail-Crew' }}
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
           server: ${{ secrets.OSHOST }}
