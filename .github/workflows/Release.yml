@@ -245,14 +245,15 @@ jobs:
           read -a SBC_ARRAY <<< "${JSON_SUPPORTED_SBC}"
 
           json_array="["
-          for sbc in "${SBC_ARRAY[@]}""; do
+          for sbc in "${SBC_ARRAY[@]}"; do
             json_array+="\"${sbc}\""
-            if [[ $sbc != ${SBC_ARRAY[-1]} ]]; then
+            if [[ "${sbc}" != "${SBC_ARRAY[-1]}" ]]; then
               json_array+=","
             fi
           done
           json_array+="]"
           echo "supported_sbc=${json_array}" >> $GITHUB_OUTPUT
+          echo "Debug: Output: ${json_array}"
 
       - name: Generate JSON
         id: json
