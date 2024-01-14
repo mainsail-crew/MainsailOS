@@ -353,17 +353,23 @@ jobs:
           fetch-depth: 0
 
       - name: Get latest tag
-        id: latest_tag
+        id: get_tags
         shell: bash
         run: |
-          echo "TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
+          echo "END_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
+
+          if [[ "${{ github.repository_owner }}" == "Mainsail-Crew" ]]; then
+            echo "START_TAG=0.5.0" >> $GITHUB_OUTPUT
+          else
+            echo "START_TAG=0.0.0" >> $GITHUB_OUTPUT
+          fi
 
       - name: Generate a changelog
         uses: orhun/git-cliff-action@v1
         id: git-cliff
         with:
           config: cliff.toml
-          args: 0.5.0..${{ steps.latest_tag.outputs.TAG_NAME }}
+          args: ${{ steps.get_tags.outputs.START_TAG }}..${{ steps.get_tags.outputs.END_TAG }}
         env:
           OUTPUT: ${{ github.workspace }}/CHANGELOG.md
 
