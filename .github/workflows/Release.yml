@@ -328,11 +328,13 @@ jobs:
           file: rpi-imager.json
 
       - name: Move in seperate dir
+        if: ${{ github.repository_owner == 'Mainsail-Crew' }}
         run: |
           mkdir upload
           mv rpi-imager.json ./upload
 
       - name: Upload to remote server
+        if: ${{ github.repository_owner == 'Mainsail-Crew' }}
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
           server: ${{ secrets.OSHOST }}
@@ -341,7 +343,7 @@ jobs:
           local-dir: ./upload/
 
   update-changelog:
-    needs: update-rpi-imager
+    needs: finish
     name: Generate changelog
     runs-on: ubuntu-latest
     steps:
