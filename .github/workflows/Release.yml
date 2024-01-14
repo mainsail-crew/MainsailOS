@@ -242,16 +242,8 @@ jobs:
           echo "icon_url=${JSON_ICON_URL}" >> $GITHUB_OUTPUT
           echo "init_format=${JSON_INIT_FORMAT}" >> $GITHUB_OUTPUT
 
-          read -a SBC_ARRAY <<< "${JSON_SUPPORTED_SBC}"
-
-          json_array="["
-          for sbc in "${SBC_ARRAY[@]}"; do
-            json_array+="\"${sbc}\""
-            if [[ "${sbc}" != "${SBC_ARRAY[-1]}" ]]; then
-              json_array+=","
-            fi
-          done
-          json_array+="]"
+          supported_sbc="$(echo "${JSON_SUPPORTED_SBC}" | tr ' ' '\n')"
+          supported_sbc="$(echo "${supported_sbc}" | jq -R . | jq -s .)"
           echo "supported_sbc=${json_array}" >> $GITHUB_OUTPUT
           echo "Debug: Output: ${json_array}"
 
@@ -268,7 +260,7 @@ jobs:
           image_download_size: ${{ steps.filesizes.outputs.zip }}
           release_date: "${{ needs.release.outputs.date }}"
           init_format: "${{ steps.json-data.outputs.init_format }}"
-          devices: "${{ steps.json-data.outputs.supported_sbc }}"
+          devices: ${{ steps.json-data.outputs.supported_sbc }}
         with:
           result-encoding: string
           script: |
