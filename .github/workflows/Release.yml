@@ -255,7 +255,7 @@ jobs:
           image_download_size: ${{ steps.filesizes.outputs.zip }}
           release_date: "${{ needs.release.outputs.date }}"
           init_format: "${{ steps.json-data.outputs.init_format }}"
-          devices: ${{ steps.json-data.outputs.supported_sbc }}
+          supported_sbc: ${{ steps.json-data.outputs.supported_sbc }}
         with:
           result-encoding: string
           script: |
@@ -272,7 +272,7 @@ jobs:
               image_download_size: parseInt(image_download_size),
               release_date,
               init_format,
-              devices.split(" ")
+              devices: supported_sbc.split(" ")
             })
 
             fs.writeFileSync("./${{ steps.move-image.outputs.image }}.json", json)
