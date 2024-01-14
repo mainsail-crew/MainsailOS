@@ -244,8 +244,8 @@ jobs:
 
           supported_sbc="$(echo "${JSON_SUPPORTED_SBC}" | tr ' ' '\n')"
           supported_sbc="$(echo "${supported_sbc}" | jq -R . | jq -s .)"
-          echo "supported_sbc=${json_array}" >> $GITHUB_OUTPUT
-          echo "Debug: Output: ${json_array}"
+          echo "supported_sbc=${supported_sbc}" >> $GITHUB_OUTPUT
+          echo "Debug: Output: ${supported_sbc}"
 
       - name: Generate JSON
         id: json
