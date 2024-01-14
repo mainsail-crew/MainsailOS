@@ -74,7 +74,7 @@ jobs:
           echo "TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
 
       - name: Generate a changelog
-        uses: orhun/git-cliff-action@v1
+        uses: orhun/git-cliff-action@v2
         id: changelog
         with:
           config: ./cliff-release.toml
@@ -363,11 +363,11 @@ jobs:
           if [[ "${{ github.repository_owner }}" == "Mainsail-Crew" ]]; then
             echo "START_TAG=0.5.0" >> $GITHUB_OUTPUT
           else
-            echo "START_TAG=0.0.0" >> $GITHUB_OUTPUT
+            echo "START_TAG=$(git for-each-ref --sort=creatordate --count=1 --format='%(refname:lstrip=2)')" >> $GITHUB_OUTPUT
           fi
 
       - name: Generate a changelog
-        uses: orhun/git-cliff-action@v1
+        uses: orhun/git-cliff-action@v2
         id: git-cliff
         with:
           config: cliff.toml
