@@ -238,15 +238,9 @@ jobs:
 
           echo "pretty_name=${name}" >> $GITHUB_OUTPUT
           echo "description=${JSON_DESCRIPTION}" >> $GITHUB_OUTPUT
-
           echo "icon_url=${JSON_ICON_URL}" >> $GITHUB_OUTPUT
           echo "init_format=${JSON_INIT_FORMAT}" >> $GITHUB_OUTPUT
-
-          supported_sbc="$(echo "${JSON_SUPPORTED_SBC}" | tr ' ' '\n')"
-          supported_sbc="$(echo "${supported_sbc}" | jq -R . | jq -s .)"
-          supported_sbc="$(echo "${supported_sbc}" | jq -c .)"
-          echo "supported_sbc=${supported_sbc}" >> $GITHUB_OUTPUT
-          echo "Debug: Output: ${supported_sbc}"
+          echo "supported_sbc=${JSON_SUPPORTED_SBC}" >> $GITHUB_OUTPUT
 
       - name: Generate JSON
         id: json
@@ -278,7 +272,7 @@ jobs:
               image_download_size: parseInt(image_download_size),
               release_date,
               init_format,
-              devices
+              devices.split(" ")
             })
 
             fs.writeFileSync("./${{ steps.move-image.outputs.image }}.json", json)
