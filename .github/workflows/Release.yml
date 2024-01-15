@@ -311,7 +311,7 @@ jobs:
         uses: robinraju/release-downloader@v1.6
         with:
           tag: ${{ github.event.inputs.version }}
-          fileName: "${{ needs.build.outputs.base_name }}-raspberry-*.json"
+          fileName: "${{ needs.build.outputs.base_name }}-*.json"
           out-file-path: "downloads"
 
       - name: Combine JSON
