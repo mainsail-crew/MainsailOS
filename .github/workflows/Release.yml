@@ -271,7 +271,7 @@ jobs:
               image_download_size: parseInt(image_download_size),
               release_date,
               init_format,
-              devices: supported_sbc.split(" ")
+              devices: supported_sbc.split(" ").filter((item) => item != '')
             })
 
             fs.writeFileSync("./${{ steps.move-image.outputs.image }}.json", json)
