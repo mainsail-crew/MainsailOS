@@ -16,7 +16,7 @@
 # shellcheck enable=require-variable-braces
 
 # shellcheck disable=SC1091
-[[ -f /etc/armbian-release-info.txt ]] && . /etc/armbian-release-info.txt
+[[ -f /etc/armbian-release ]] && . /etc/armbian-release
 
 if [[ -f /etc/armbian-distribution-status ]]; then
     . /etc/armbian-distribution-status
