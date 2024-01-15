@@ -259,7 +259,7 @@ jobs:
           result-encoding: string
           script: |
             const fs = require('fs')
-            const { name, description, icon, url, extract_size, extract_sha256, image_download_size, release_date, init_format, devices } = process.env
+            const { name, description, icon, url, extract_size, extract_sha256, image_download_size, release_date, init_format, supported_sbc } = process.env
 
             const json = JSON.stringify({
               name,
