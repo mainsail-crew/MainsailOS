@@ -72,19 +72,6 @@ jobs:
           prefix="${prefix}-${{ steps.current-version.outputs.version }}"
           echo "prefix=${prefix}" >> $GITHUB_OUTPUT
 
-      - name: Debug information
-        id: debug-info
-        shell: bash
-        run: |
-          # Print Debug informations
-          echo "Debug information:"
-          echo "Date: ${{ steps.base-name.outputs.date }}"
-          echo "Start Time: ${{ steps.base-name.outputs.start_realtime }}"
-          echo "Timestamp (sec): ${{ steps.base-name.outputs.start_timestamp }}"
-          echo "Name: ${{ steps.base-name.outputs.name }}"
-          echo "Version: ${{ steps.current-version.outputs.version }}"
-          echo "Prefix: ${{ steps.gen-prefix.outputs.prefix }}"
-
       - name: Setup Summary
         shell: bash
         run: |
