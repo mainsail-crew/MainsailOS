@@ -1,16 +1,14 @@
-name: Build MainsailOS
+name: Build OS image
 on:
   push:
     branches:
-      - "master"
       - "develop"
     paths:
-      - "src/modules/**"
-      - "src/build_dist"
+      - "src/**"
       - "config/**"
       - ".github/workflows/BuildImages.yml"
       - ".github/workflow_config.yml"
-      - ".github/scripts/setup_matrix.py"
+      - ".github/scripts/**"
     tags-ignore:
       - "**"
   pull_request:
@@ -19,8 +17,8 @@ on:
       - "src/**"
       - "config/**"
       - ".github/workflows/BuildImages.yml"
-      - ".github/scripts/setup_matrix.py"
       - ".github/workflow_config.yml"
+      - ".github/scripts/**"
 
   workflow_dispatch:
 
@@ -31,6 +29,78 @@ concurrency:
 
 jobs:
   setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      date: ${{ steps.base-name.outputs.date }}
+      start_timestamp: ${{ steps.base-name.outputs.start_timestamp }}
+      start_realtime: ${{ steps.base-name.outputs.start_realtime }}
+      version: ${{ steps.current-version.outputs.version }}
+      name: ${{ steps.base-name.outputs.name }}
+      prefix: ${{ steps.gen-prefix.outputs.prefix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create Date and timestamp
+        id: base-name
+        shell: bash
+        run: |
+          # Create Date and timestamp
+          {
+            echo "date=$(date +"%Y-%m-%d")"
+            echo "start_timestamp=${EPOCHSECONDS}"
+            realtime="$(date -d@"${EPOCHSECONDS}" -u +"%Y-%m-%d %H:%M:%S UTC")"
+            echo "start_realtime=${realtime}"
+            echo "name=${{ github.event.repository.name }}"
+          } >> $GITHUB_OUTPUT
+
+      - name: Get current version
+        id: current-version
+        shell: bash
+        run: |
+          # Get current version
+          echo "version=$(cat ./src/version)" >> $GITHUB_OUTPUT
+
+      - name: Generate Name Prefix
+        id: gen-prefix
+        shell: bash
+        run: |
+          # Generate Name prefix
+          prefix="${{ steps.base-name.outputs.date }}"
+          prefix="${prefix}-${{ steps.base-name.outputs.name }}"
+          prefix="${prefix}-${{ steps.current-version.outputs.version }}"
+          echo "prefix=${prefix}" >> $GITHUB_OUTPUT
+
+      - name: Debug information
+        id: debug-info
+        shell: bash
+        run: |
+          # Print Debug informations
+          echo "Debug information:"
+          echo "Date: ${{ steps.base-name.outputs.date }}"
+          echo "Start Time: ${{ steps.base-name.outputs.start_realtime }}"
+          echo "Timestamp (sec): ${{ steps.base-name.outputs.start_timestamp }}"
+          echo "Name: ${{ steps.base-name.outputs.name }}"
+          echo "Version: ${{ steps.current-version.outputs.version }}"
+          echo "Prefix: ${{ steps.gen-prefix.outputs.prefix }}"
+
+      - name: Setup Summary
+        shell: bash
+        run: |
+          # Setup summary
+          {
+            echo -e "### Setup:\n"
+            echo -e "Date: ${{ steps.base-name.outputs.date }}"
+            echo -e "Name: ${{ steps.base-name.outputs.name }}"
+            echo -e "Version: ${{ steps.current-version.outputs.version }}"
+            echo -e "Prefix: ${{ steps.gen-prefix.outputs.prefix }}"
+            echo -e "Start Time: ${{ steps.base-name.outputs.start_realtime }}"
+          } >> $GITHUB_STEP_SUMMARY
+
+  matrix:
+    name: Create Matrix
+    needs: setup
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -41,63 +111,256 @@ jobs:
       - name: Create Matrix
         id: set-matrix
         run: |
+          # Create matrix using setup_matrix.py
           PY_INT=$(command -v python3)
+          APP="${{ github.workspace }}/.github/scripts/setup_matrix.py"
           CONFIG="${{ github.workspace }}/.github/workflow_config.yml"
           GROUP="buildtest"
-          $PY_INT ${{ github.workspace }}/.github/scripts/setup_matrix.py -c $CONFIG -g $GROUP --git
+          ${PY_INT} ${APP} -c ${CONFIG} -g ${GROUP} --git
 
   build:
-    needs: setup
+    needs: [setup, matrix]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        config: ${{ fromJson(needs.setup.outputs.matrix) }}
+        config: ${{ fromJson(needs.matrix.outputs.matrix) }}
+    outputs:
+      file-name: ${{ steps.move-image.outputs.file_name }}
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          path: repository
-          submodules: true
-
       - name: Build image
         id: build
-        uses: ./repository/.github/actions/build
+        uses: mainsail-crew/MainsailOS-actions/build-image@master
         with:
           config: ${{ matrix.config }}
 
-      - name: Rename image file
-        id: move-image
+      - name: Generate file name
         if: always()
         shell: bash
+        id: file-name
         run: |
-          source repository/src/config
-          NOW="$(date +"%Y-%m-%d")"
-          IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
+          # Generate file name
+          type="$(cut -d'/' -f1 <<< ${{ matrix.config }})"
+          sbc="$(cut -d'/' -f2 <<< ${{ matrix.config }})"
+          file_name="${{ needs.setup.outputs.prefix }}-${type}-${sbc}"
+          echo "file_name=${file_name}" >> $GITHUB_OUTPUT
+          echo "File name: ${file_name}"
+          ## Keep as Debug output.
+          # # Generate summary header
+          # {
+          #   echo "## Build creates following files:"
+          #   echo "- ${file_name}.img"
+          #   echo "- ${file_name}.img.xz"
+          #   echo "- ${file_name}.img.sha256"
+          #   echo "- ${file_name}.xz.img.sha256"
+          #   echo "- ${file_name}-build.log"
+          #   echo "**NOTE:** If image build fails it will only generate a log file"
+          # } >> $GITHUB_STEP_SUMMARY
 
-          mv repository/src/workspace/*.img $IMAGE.img
-
-          echo "image=${IMAGE}" >> $GITHUB_OUTPUT
-
-      - name: Upload failed Logfile
-        if: failure()
+      - name: Upload logfile
+        if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: failed-${{ steps.move-image.outputs.image }}.log
-          path: repository/src/build.log
+          name: ${{ steps.file-name.outputs.file_name }}-build.log
+          path: ${{ github.workspace }}/repository/src/build.log
+
+      - name: Cleanup workspace
+        shell: bash
+        run: |
+          # Clean up workspace
+          path="${{ github.workspace }}/repository/src/workspace"
+          sudo rm -rfv ${path}/aptcache
+          sudo rm -rfv ${path}/mount
+          sudo rm -rfv ${path}/chroot_script
+
+      - name: Set workspace permissions
+        if: success()
+        shell: bash
+        run: |
+          # Change owner and permissions
+          path="${{ github.workspace }}/repository/src/workspace"
+          sudo chown -v -R ${USER}:${USER} ${path}
+          sudo chmod 0775 -v -R ${path}
+
+      - name: Rename image file
+        id: move-image
+        if: success()
+        shell: bash
+        run: |
+          # Rename image
+          image="${{ steps.file-name.outputs.file_name }}"
+          mv -v repository/src/workspace/*.img ${image}.img
+          echo "image=${image}" >> $GITHUB_OUTPUT
 
       - name: Compressing Image
+        id: compress
         shell: bash
         run: |
-          CPU_COUNT="$(nproc)"
-          echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
-          xz -efkvz9T"${CPU_COUNT}" ${{ steps.move-image.outputs.image }}.img || true
+          # Compress image
+          # Outputs:
+          # "img_size=${size}"
+          # "img_size_hr=${size_hr}"
+          # "comp_img_size=${comp_size}"
+          # "comp_img_size_hr=${comp_size_hr}"
+
+          # Exit upon errors
+          set -Ee
+
+          # Setup xz params
+          XZ_OPT="--compress --no-warn --keep --force --verbose"
+          XZ_OPT="${XZ_OPT} --format=xz --extreme -9 -T0"
+          export XZ_OPT
+
+          main() {
+              local comp comp_size comp_size_hr file size size_hr
+              file="${1}.img"
+              # Filter output (will be reused for summary)
+              comp="$(xz "${file}" 2>&1 | sed '/xz/d' | cut -f2- -d' ')"
+              size="$(du -b "${file}" | cut -f1)"
+              comp_size="$(du -b "${file}.xz" | cut -f1)"
+              # Human readable
+              size_hr="$(du -h "${file}" | cut -f1)"
+              comp_size_hr="$(du -h "${file}.xz" | cut -f1)"
+              # echo stats to step output
+              echo "${file}: ${comp}"
+              {
+                  echo "## Compression statistics:"
+                  echo "Used flags: ${XZ_OPT}"
+                  echo "xz statistics: ${comp}"
+                  echo "Uncompressed image size: ${size} bytes (${size_hr})"
+                  echo "Compressed image size: ${comp_size} bytes (${comp_size_hr})"
+              } >> "${GITHUB_STEP_SUMMARY}"
+              {
+                  echo "img_size=${size}"
+                  echo "img_size_hr=${size_hr}"
+                  echo "comp_img_size=${comp_size}"
+                  echo "comp_img_size_hr=${comp_size_hr}"
+              } >> "${GITHUB_OUTPUT}"
+              unset XZ_OPT
+          }
+
+          main ${{ steps.move-image.outputs.image }}
 
       - name: Calculating checksums
+        id: checksums
         shell: bash
         run: |
-          sha256sum ${{ steps.move-image.outputs.image }}.img > ${{ steps.move-image.outputs.image }}.img.sha256
-          sha256sum ${{ steps.move-image.outputs.image }}.img.xz > ${{ steps.move-image.outputs.image }}.img.xz.sha256
+          # Calculate checksums (sha256)
+          # Exit upon errors
+          set -Ee
+
+          # Setup
+          CHKSUM_DEBUG="false"
+
+          main() {
+              local comp_img_checksum file img_checksum
+              file="${1}.img"
+              img_checksum="$(sha256sum "${file}")"
+              comp_img_checksum="$(sha256sum "${file}".xz)"
+              echo "Successful generated checksums:"
+              echo "${img_checksum}"
+              echo "${comp_img_checksum}"
+              # Write to file
+              echo "${img_checksum}" > "${file}.sha256"
+              echo "${comp_img_checksum}" > "${file}.xz.sha256"
+              # transform checksum
+              img_checksum="$(cut -f1 -d' ' <<< "${img_checksum}")"
+              comp_img_checksum="$(cut -f1 -d' ' <<< "${comp_img_checksum}")"
+              if [[ "${CHKSUM_DEBUG}" = "true" ]]; then
+                  {
+                      echo "## Checksums:"
+                      echo "Image file: ${file}"
+                      echo "Image checksum (sha256): ${img_checksum}"
+                      echo "Compressed image file: ${file}.xz"
+                      echo "Compressed image checksum (sha256): ${img_checksum}"
+                  } >> "${GITHUB_STEP_SUMMARY}"
+              fi
+              # export to output
+              echo "img_checksum=${img_checksum}" >> "${GITHUB_OUTPUT}"
+              echo "comp_img_checksum=${comp_img_checksum}" >> "${GITHUB_OUTPUT}"
+          }
+
+          main ${{ steps.move-image.outputs.image }}
+
+      - name: Export config
+        id: config
+        shell: bash
+        run: |
+          # Export configuration
+          cfg="${{ github.workspace }}/repository/src/config"
+          cfg_out="${{ steps.file-name.outputs.file_name }}-config"
+          cat ${cfg} | sed -n '/^[A-Z]/p' | sort > ${cfg_out}
+          echo "config_file=${cfg_out}" >> $GITHUB_OUTPUT
+          {
+            echo -e "## Configuration:"
+            echo -e "<details>\n<summary>Show configuration</summary>\n"
+            cat ${cfg_out}
+            echo -e "</details>\n"
+          } >> $GITHUB_STEP_SUMMARY
+
+      - name: Generate Build statistics
+        shell: bash
+        id: statistic
+        run: |
+          # Generate build statistics
+          start_realtime="${{ needs.setup.outputs.start_realtime }}"
+          start_timestamp="${{ needs.setup.outputs.start_timestamp }}"
+          finish_timestamp="${EPOCHSECONDS}"
+          finish_realtime="$(date -d@"${EPOCHSECONDS}" -u +"%Y-%m-%d %H:%M:%S UTC")"
+          duration="$((finish_timestamp-start_timestamp))"
+          # Human readable
+          duration_hr="$(date -d@"${duration}" -u +"[ %H:%M:%S ]")"
+          echo "duration=${duration}" >> $GITHUB_OUTPUT
+          echo "duration_hr=${duration_hr}" >> $GITHUB_OUTPUT
+          {
+            echo "## Build statistics:"
+            echo "Build start time: ${start_realtime}"
+            echo "Build finish time: ${finish_realtime}"
+            echo "Build duration: ${duration} seconds ${duration_hr}"
+          } >> $GITHUB_STEP_SUMMARY
+
+      - name: Generate summary column md file
+        env:
+          md_file: ${{ steps.move-image.outputs.image }}-col.md
+          image: ${{ steps.move-image.outputs.image }}.img.xz
+          raw_img_size: ${{ steps.compress.outputs.img_size }}
+          raw_img_size_hr: ${{ steps.compress.outputs.img_size_hr }}
+          comp_img_size: ${{ steps.compress.outputs.comp_img_size }}
+          comp_img_size_hr: ${{ steps.compress.outputs.comp_img_size_hr }}
+          duration: ${{ steps.statistic.outputs.duration }}
+          duration_hr: ${{ steps.statistic.outputs.duration_hr }}
+        run: |
+          # Generate table-column.md
+          # Exit upon errors
+          set -Ee
+
+          # Debug
+          SUMCOL_DEBUG="false"
+
+          main() {
+              local column workspace
+              workspace="${1}"
+              #Debug Output
+              if [[ "${SUMCOL_DEBUG}" = "true" ]]; then
+                  {
+                      echo "## Debug summary table column:"
+                      echo "Image: ${image}"
+                      echo "Raw image size: ${raw_img_size} (${raw_img_size_hr})"
+                      echo "Compressed image size: ${comp_img_size} (${comp_img_size_hr})"
+                      echo "Build time: ${duration} seconds ${duration_hr}"
+                      echo "Output file: ${md_file}"
+                  } >> "${GITHUB_STEP_SUMMARY}"
+              fi
+              column="| ${image}"
+              column="${column} | ${raw_img_size} (${raw_img_size_hr})"
+              column="${column} | ${comp_img_size} (${comp_img_size_hr})"
+              column="${column} | ${duration}s ${duration_hr} |"
+              echo "${column}" > "${workspace}/${md_file}"
+
+              unset SUMCOL_DEBUG
+          }
+
+          main ${{ github.workspace }}
 
       - name: Upload Compressed Image
         uses: actions/upload-artifact@v3
@@ -116,3 +379,76 @@ jobs:
         with:
           name: ${{ steps.move-image.outputs.image }}.img.sha256
           path: ${{ steps.move-image.outputs.image }}.img.sha256
+
+      - name: Upload Configuration
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.config.outputs.config_file }}
+          path: ${{ steps.config.outputs.config_file }}
+
+      - name: Upload Summary table column file
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.move-image.outputs.image }}-col.md
+          path: ${{ steps.move-image.outputs.image }}-col.md
+
+  summary:
+    name: Build Summary
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: repository
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ${{ github.workspace }}
+
+      - name: Generate summary
+        run: |
+          # Generate summary
+          # Exit upon errors
+          set -Ee
+
+          # Debug
+          GENSUM_DEBUG="true"
+
+          gen_header() {
+          cat << EOF
+          ## Build summary:
+
+          | Image file | Image size | Compressed size | Build time |
+          | ---------- | ---------- | --------------- | ---------- |
+          EOF
+          }
+
+          get_md_files() {
+              local files
+              files="$(find "${1}" -type f -name "*MainsailOS*.md" -printf "%p\n")"
+              files="$(sort -u <<< "${files}")"
+              echo "${files}"
+          }
+
+          main() {
+              local md_files table_md workspace
+              workspace="${1}"
+              table_md="${workspace}/sum_table.md"
+              md_files="$(get_md_files "${workspace}")"
+              if [[ "${GENSUM_DEBUG}" = "true" ]]; then
+                  echo "${md_files}"
+              fi
+              gen_header | tee "${table_md}" &> /dev/null
+              for file in ${md_files}; do
+              # Ugly workaround due behaviour of actions/download-artifacts :facepalm:
+                  tee -a "${table_md}" &> /dev/null < "${file}"
+              done
+              if [[ "${GENSUM_DEBUG}" = "true" ]]; then
+                  cat "${table_md}"
+              fi
+              cat "${table_md}" >> "${GITHUB_STEP_SUMMARY}"
+          }
+
+          main ${{ github.workspace }}
