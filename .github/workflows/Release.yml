@@ -219,41 +219,59 @@ jobs:
           echo "filesize-image: ${{ steps.filesizes.outputs.image }}"
           echo "filesize-zip: ${{ steps.filesizes.outputs.zip }}"
 
+      - name: Get JSON data
+        id: json-data
+        shell: bash
+        run: |
+          source repository/src/config
+
+          if [[ -n "${BASE_ARCH}" ]]; then
+            type="64-bit"
+          else
+            type="32-bit"
+          fi
+
+          name="${JSON_PRETTY_NAME} ${{ github.event.inputs.version }}"
+          name="${name} - ${JSON_PRETTY_SBC_NAME}"
+          name="${name} (${type})"
+
+          echo "pretty_name=${name}" >> $GITHUB_OUTPUT
+          echo "description=${JSON_DESCRIPTION}" >> $GITHUB_OUTPUT
+          echo "icon_url=${JSON_ICON_URL}" >> $GITHUB_OUTPUT
+          echo "init_format=${JSON_INIT_FORMAT}" >> $GITHUB_OUTPUT
+          echo "supported_sbc=${JSON_SUPPORTED_SBC}" >> $GITHUB_OUTPUT
+
       - name: Generate JSON
         id: json
         uses: actions/github-script@v6
         env:
-          name: "Mainsail OS ${{ github.event.inputs.version }}"
-          description: "Type: ${{ steps.build.outputs.type }}, SBC: ${{ steps.build.outputs.sbc }}"
-          type: "${{ steps.build.outputs.type }}"
-          sbc: "${{ steps.build.outputs.sbc }}"
-          url: "https://github.com/mainsail-crew/MainsailOS/releases/download/${{ github.event.inputs.version }}/${{ steps.move-image.outputs.image }}.img.xz"
-          icon: "https://os.mainsail.xyz/rpi-imager.png"
-          init_format: "systemd"
-          release_date: "${{ needs.release.outputs.date }}"
+          name: "${{ steps.json-data.outputs.pretty_name }}"
+          description: "${{ steps.json-data.outputs.description }}"
+          icon: "${{ steps.json-data.outputs.icon_url }}"
+          url: "https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.version }}/${{ steps.move-image.outputs.image }}.img.xz"
           extract_size: ${{ steps.filesizes.outputs.image }}
           extract_sha256: "${{ steps.checksums.outputs.image }}"
           image_download_size: ${{ steps.filesizes.outputs.zip }}
-          image_download_sha256: "${{ steps.checksums.outputs.zip }}"
+          release_date: "${{ needs.release.outputs.date }}"
+          init_format: "${{ steps.json-data.outputs.init_format }}"
+          supported_sbc: ${{ steps.json-data.outputs.supported_sbc }}
         with:
           result-encoding: string
           script: |
             const fs = require('fs')
-            let { name, description, type, sbc, url, icon, init_format, release_date, extract_size, extract_sha256, image_download_size, image_download_sha256 } = process.env
-            if (sbc === 'rpi32') name += ' 32-Bit (recommend)'
-            else if (sbc === 'rpi64') name += ' 64-Bit'
+            const { name, description, icon, url, extract_size, extract_sha256, image_download_size, release_date, init_format, supported_sbc } = process.env
 
             const json = JSON.stringify({
               name,
               description,
-              url,
               icon,
-              init_format,
-              release_date,
+              url,
               extract_size: parseInt(extract_size),
               extract_sha256,
               image_download_size: parseInt(image_download_size),
-              image_download_sha256
+              release_date,
+              init_format,
+              devices: supported_sbc.split(" ").filter((item) => item != '')
             })
 
             fs.writeFileSync("./${{ steps.move-image.outputs.image }}.json", json)
@@ -293,7 +311,7 @@ jobs:
         uses: robinraju/release-downloader@v1.6
         with:
           tag: ${{ github.event.inputs.version }}
-          fileName: "${{ needs.build.outputs.base_name }}-raspberry-*.json"
+          fileName: "${{ needs.build.outputs.base_name }}-*.json"
           out-file-path: "downloads"
 
       - name: Combine JSON
