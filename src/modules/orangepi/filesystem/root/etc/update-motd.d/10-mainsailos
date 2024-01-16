@@ -16,7 +16,7 @@
 # shellcheck enable=require-variable-braces
 
 # shellcheck disable=SC1091
-[[ -f /etc/orangepi-release-info.txt ]] && . /etc/orangepi-release-info.txt
+[[ -f /etc/orangepi-release ]] && . /etc/orangepi-release
 
 if [[ -f /etc/orangepi-distribution-status ]]; then
     . /etc/orangepi-distribution-status
