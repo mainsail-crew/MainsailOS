@@ -38,6 +38,7 @@ jobs:
       version: ${{ steps.current-version.outputs.version }}
       name: ${{ steps.base-name.outputs.name }}
       prefix: ${{ steps.gen-prefix.outputs.prefix }}
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -85,16 +86,6 @@ jobs:
             echo -e "Start Time: ${{ steps.base-name.outputs.start_realtime }}"
           } >> $GITHUB_STEP_SUMMARY
 
-  matrix:
-    name: Create Matrix
-    needs: setup
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Create Matrix
         id: set-matrix
         run: |
@@ -106,12 +97,12 @@ jobs:
           ${PY_INT} ${APP} -c ${CONFIG} -g ${GROUP} --git
 
   build:
-    needs: [setup, matrix]
+    needs: setup
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        config: ${{ fromJson(needs.matrix.outputs.matrix) }}
+        config: ${{ fromJson(needs.setup.outputs.matrix) }}
     outputs:
       file-name: ${{ steps.move-image.outputs.file_name }}
     steps:
