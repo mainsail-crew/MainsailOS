@@ -278,11 +278,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Publish Release
-        uses: StuYarrow/publish-release@v1
+        uses: eregon/publish-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          id: ${{ needs.release.outputs.id }}
+          release_id: ${{ needs.release.outputs.id }}
 
   update-rpi-imager:
     name: Update rpi-imager json
