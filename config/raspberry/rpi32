@@ -18,4 +18,4 @@ export DOWNLOAD_URL_IMAGE
 ### JSON sniplet Setup
 ### NOTE: Please see all config files for setup variables!!!
 # shellcheck disable=SC2034
-JSON_SUPPORTED_SBC="pi1-32bit pi2-32bit pi3-32bit"
+JSON_SUPPORTED_SBC="pi1-32bit pi2-32bit"
