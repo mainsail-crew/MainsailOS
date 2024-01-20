@@ -4,6 +4,13 @@
 
 get_version() {
     local ver
+    ver="$(realpath "$( dirname -- "${BASH_SOURCE[0]}")"/../src/version)"
+
+    if [ -f "${ver}" ]; then
+        cat "${ver}"
+        return
+    fi
+
     ver="$(realpath "$( dirname -- "${BASH_SOURCE[0]}")"/version)"
     cat "${ver}"
 }
