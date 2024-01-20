@@ -64,7 +64,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: "master"
+          ref: master
           fetch-depth: 0
 
       - name: Get latest tag
@@ -131,6 +131,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
+          ref: master
           path: repository
           submodules: true
 
