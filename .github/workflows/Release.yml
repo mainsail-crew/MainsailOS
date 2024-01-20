@@ -64,7 +64,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: "master"
+          ref: master
           fetch-depth: 0
 
       - name: Get latest tag
