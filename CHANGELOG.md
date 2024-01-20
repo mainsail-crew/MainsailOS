@@ -57,6 +57,7 @@ All notable changes to Mainsail will be documented in this file.
 - Load `i2c-dev` modules (#217) | [6846f82](6846f82ff311299928824c8bceb606b1db13a444)
 - Fix broken udev package (#224) | [b07d7a1](b07d7a103a2aad81045c26dc7223c26369ee1322)
 - Fix udev for version 'rp1+deb11u2' (#226) | [b0343d5](b0343d55ddb9db0126f4fb9759e050d5fbcbb10e)
+- Remove legacy cam stack (#227) | [8c65ad7](8c65ad7045bf2ada360b0f1307f599aea73d7d4f)
 
 ### Refactor
 

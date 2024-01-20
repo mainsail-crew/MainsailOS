@@ -6,7 +6,6 @@ Before=moonraker.service
 Wants=udev.target
 
 [Install]
-Alias=klippy
 WantedBy=multi-user.target
 
 [Service]

@@ -18,27 +18,15 @@ source /common.sh
 install_cleanup_trap
 
 ## Clean up
-## Step 1: Remove autologin and lock root account
-if [ -f "/etc/systemd/system/getty@.service.d/override.conf" ]; then
-    rm -f /etc/systemd/system/getty@.service.d/override.conf
-fi
-## END
-
-## Step 2: Disable autologin on serial console
-if [ -f "/etc/systemd/system/serial-getty@.service.d/override.conf" ]; then
-    sed -i 's/--autologin root //' /etc/systemd/system/serial-getty@.service.d/override.conf
-fi
-## END
-
-## Step 3: Delete root passwd
+## Step 1: Delete root passwd (disables root login)
 ### Deleting root passwd doesn't let you unlock the account
 sudo passwd -d root
-## END
+## END Step 1
 
-## Step 4: Lock root account
+## Step 2: Lock root account (disables root login)
 sudo passwd -l root
-## END
+## END Step 2
 
-## Step 5: Remove passwdless sudo
+## Step 3: Remove passwdless sudo
 sed -i '/'"${BASE_USER}"' ALL=(ALL:ALL) NOPASSWD:ALL/d' /etc/sudoers
-## END
+## END Step 3

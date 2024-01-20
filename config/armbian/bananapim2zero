@@ -2,11 +2,9 @@
 # Shebang for better file detection
 # shellcheck enable=require-variable-braces
 
-BASE_ARCH="arm64"
-
 # Image source
-DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}/armbian-orangepi3_lts_bullseye.img.xz.sha256"
-DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/armbian-orangepi3_lts_bullseye.img.xz"
+DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}/armbian-bananapi_m2_zero_bullseye.img.xz.sha256"
+DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/armbian-bananapi_m2_zero_bullseye.img.xz"
 
 # export Variables
 export BASE_ARCH
@@ -16,4 +14,4 @@ export DOWNLOAD_URL_IMAGE
 ### JSON sniplet Setup
 ### NOTE: Please see all config files for setup variables!!!
 # shellcheck disable=SC2034
-JSON_PRETTY_SBC_NAME="Orange Pi 3 LTS"
+JSON_PRETTY_SBC_NAME="Banana Pi M2 Zero"

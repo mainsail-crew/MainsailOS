@@ -9,6 +9,8 @@ on:
       - "src/build_dist"
       - "config/**"
       - ".github/workflows/BuildImages.yml"
+      - ".github/workflow_config.yml"
+      - ".github/scripts/setup_matrix.py"
     tags-ignore:
       - "**"
   pull_request:
@@ -17,6 +19,8 @@ on:
       - "src/**"
       - "config/**"
       - ".github/workflows/BuildImages.yml"
+      - ".github/scripts/setup_matrix.py"
+      - ".github/workflow_config.yml"
 
   workflow_dispatch:
 
@@ -32,13 +36,15 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create Matrix
         id: set-matrix
         run: |
-          ARRAY=$(find ${{ github.workspace }}/config -type f -printf '%P\n' | sed '/default/d' | sort | jq -R -s -c 'split("\n")[:-1]')
-          echo "matrix=${ARRAY}" >> $GITHUB_OUTPUT
+          PY_INT=$(command -v python3)
+          CONFIG="${{ github.workspace }}/.github/workflow_config.yml"
+          GROUP="buildtest"
+          $PY_INT ${{ github.workspace }}/.github/scripts/setup_matrix.py -c $CONFIG -g $GROUP --git
 
   build:
     needs: setup
@@ -48,9 +54,15 @@ jobs:
       matrix:
         config: ${{ fromJson(needs.setup.outputs.matrix) }}
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          path: repository
+          submodules: true
+
       - name: Build image
         id: build
-        uses: mainsail-crew/MainsailOS-actions/build-image@master
+        uses: ./repository/.github/actions/build
         with:
           config: ${{ matrix.config }}
 
@@ -62,10 +74,6 @@ jobs:
           source repository/src/config
           NOW="$(date +"%Y-%m-%d")"
           IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
-
-          WORKSPACE=$(echo ${{ github.workspace }})
-          sudo chown -R $USER:$USER $WORKSPACE/repository/src/workspace || true
-          sudo chmod 0775 -R $WORKSPACE/repository/src/workspace || true
 
           mv repository/src/workspace/*.img $IMAGE.img
 

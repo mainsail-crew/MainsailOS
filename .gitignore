@@ -6,3 +6,7 @@ src/image/**
 
 # Ignore build.log
 src/build.log
+
+# Ignore vscode settings
+.vscode
+.vscode/**

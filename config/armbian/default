@@ -23,7 +23,7 @@ BASE_IMAGE_RESIZEROOT=600
 # Compress not needed due compression done in workflow
 BASE_RELEASE_COMPRESS=no
 # Modules are valid for 32bit and 64bit images
-MODULES="base,udev_fix,armbian(armbian_net,mainsailos,klipper,is_req_preinstall,moonraker,mainsail,timelapse,crowsnest,sonar)"
+MODULES="base,pkgupgrade,udev_fix,armbian(armbian_net,mainsailos,klipper,is_req_preinstall,moonraker,mainsail,timelapse,crowsnest,sonar)"
 
 # export Variables
 export DOWNLOAD_BASE_URL
@@ -37,3 +37,8 @@ export BASE_IMAGE_ENLARGEROOT
 export BASE_IMAGE_RESIZEROOT
 export BASE_RELEASE_COMPRESS
 export MODULES
+
+### JSON sniplet Setup
+### NOTE: Please see all config files for setup variables!!!
+# shellcheck disable=SC2034
+JSON_DESCRIPTION="A port of Armbian with preinstalled Klipper/Moonraker/Mainsail for 3D printers"

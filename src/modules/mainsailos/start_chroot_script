@@ -33,8 +33,28 @@ function get_parent {
 echo "${DIST_NAME} release ${DIST_VERSION} ($(get_parent))" > /etc/"${DIST_NAME,,}"-release
 ## END Step 1
 
-## Step 2: Install CANBoot Dependency
+## Step 2: Fake release file
+### NOTE: Turns out that the 'distro' python package,
+###       which is used by moonraker, uses the first file after sorting.
+###       Therefore we need a hacky solution, because armbian relies, on upgrades
+###       on the original armbian-release file.
+###       To get around that, we simple symlink mainsailos-release to
+###       aaaa-release, which is directly read by moonraker.
+### Substep 1: Do for armbian releases
+if [[ -f "/etc/armbian-release" ]]; then
+    echo_green "Apply release file workaround (armbian based image) ..."
+    ln -s /etc/"${DIST_NAME,,}"-release /etc/aaaa-release
+fi
+### END Substep 1
+### Substep 2: Apply same for OrangePI bsed Images
+if [[ -f "/etc/orangepi-release" ]]; then
+    echo_green "Apply release file workaround (orangepi based image) ..."
+    ln -s /etc/"${DIST_NAME,,}"-release /etc/aaaa-release
+fi
+## END Step 2
+
+## Step 3: Install CANBoot Dependency
 apt-get update --allow-releaseinfo-change
 # shellcheck disable=SC2086
 check_install_pkgs ${MAINSAILOS_DEPS}
-## END Step 2
+## END Step 3

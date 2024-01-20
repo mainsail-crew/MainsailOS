@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone develop repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
-          ref: 'develop'
+          ref: "develop"
 
       - name: Get current version
         id: current-version
@@ -36,9 +36,9 @@ jobs:
         if: steps.current-version.outputs.version != github.event.inputs.version
         uses: EndBug/add-and-commit@v9
         with:
-          add: './src/version'
+          add: "./src/version"
           default_author: github_actions
-          message: 'chore: push version number to v${{ github.event.inputs.version }}'
+          message: "chore: push version number to v${{ github.event.inputs.version }}"
           push: true
 
   update-master-branch:
@@ -49,9 +49,9 @@ jobs:
       - uses: everlytic/branch-merge@1.1.5
         with:
           github_token: ${{ secrets.PAT }}
-          source_ref: 'develop'
-          target_branch: 'master'
-          commit_message_template: '[Automated] Merged {source_ref} into target {target_branch}'
+          source_ref: "develop"
+          target_branch: "master"
+          commit_message_template: "[Automated] Merged {source_ref} into target {target_branch}"
 
   release:
     name: Create Release
@@ -62,9 +62,9 @@ jobs:
       date: ${{ steps.base-name.outputs.date }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          ref: 'master'
+          ref: "master"
           fetch-depth: 0
 
       - name: Get latest tag
@@ -74,7 +74,7 @@ jobs:
           echo "TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
 
       - name: Generate a changelog
-        uses: orhun/git-cliff-action@v1
+        uses: orhun/git-cliff-action@v2
         id: changelog
         with:
           config: ./cliff-release.toml
@@ -85,7 +85,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: 'MainsailOS ${{ github.event.inputs.version }}'
+          name: "MainsailOS ${{ github.event.inputs.version }}"
           tag_name: ${{ github.event.inputs.version }}
           body: ${{ steps.changelog.outputs.content }}
           draft: true
@@ -106,18 +106,20 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: master
 
       - name: Create Matrix
         id: set-matrix
         run: |
-          ARRAY=$(find ${{ github.workspace }}/config -type f -printf '%P\n' | sed '/default/d' | sort | jq -R -s -c 'split("\n")[:-1]')
-          echo "matrix=${ARRAY}" >> $GITHUB_OUTPUT
+          PY_INT=$(command -v python3)
+          CONFIG="${{ github.workspace }}/.github/workflow_config.yml"
+          GROUP="release"
+          $PY_INT ${{ github.workspace }}/.github/scripts/setup_matrix.py -c $CONFIG -g $GROUP --git
 
   build:
-    needs: [ release, matrix ]
+    needs: [release, matrix]
     runs-on: ubuntu-latest
     outputs:
       base_name: ${{ steps.move-image.outputs.base_name }}
@@ -126,12 +128,17 @@ jobs:
       matrix:
         config: ${{ fromJson(needs.matrix.outputs.matrix) }}
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          path: repository
+          submodules: true
+
       - name: Build image
         id: build
-        uses: mainsail-crew/MainsailOS-actions/build-image@master
+        uses: ./repository/.github/actions/build
         with:
           config: ${{ matrix.config }}
-          build-ref: master
 
       - name: Upload failed Logfile
         if: failure()
@@ -144,10 +151,6 @@ jobs:
         id: move-image
         shell: bash
         run: |
-          WORKSPACE=$(echo ${{ github.workspace }})
-          sudo chown -R $USER:$USER $WORKSPACE/repository/src/workspace || true
-          sudo chmod 0775 -R $WORKSPACE/repository/src/workspace || true
-
           source repository/src/config
           base_name="${{ needs.release.outputs.date }}-${DIST_NAME}-${DIST_VERSION}"
           image="${base_name}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
@@ -216,41 +219,59 @@ jobs:
           echo "filesize-image: ${{ steps.filesizes.outputs.image }}"
           echo "filesize-zip: ${{ steps.filesizes.outputs.zip }}"
 
+      - name: Get JSON data
+        id: json-data
+        shell: bash
+        run: |
+          source repository/src/config
+
+          if [[ -n "${BASE_ARCH}" ]]; then
+            type="64-bit"
+          else
+            type="32-bit"
+          fi
+
+          name="${JSON_PRETTY_NAME} ${{ github.event.inputs.version }}"
+          name="${name} - ${JSON_PRETTY_SBC_NAME}"
+          name="${name} (${type})"
+
+          echo "pretty_name=${name}" >> $GITHUB_OUTPUT
+          echo "description=${JSON_DESCRIPTION}" >> $GITHUB_OUTPUT
+          echo "icon_url=${JSON_ICON_URL}" >> $GITHUB_OUTPUT
+          echo "init_format=${JSON_INIT_FORMAT}" >> $GITHUB_OUTPUT
+          echo "supported_sbc=${JSON_SUPPORTED_SBC}" >> $GITHUB_OUTPUT
+
       - name: Generate JSON
         id: json
         uses: actions/github-script@v6
         env:
-          name: "Mainsail OS ${{ github.event.inputs.version }}"
-          description: "Type: ${{ steps.build.outputs.type }}, SBC: ${{ steps.build.outputs.sbc }}"
-          type: "${{ steps.build.outputs.type }}"
-          sbc: "${{ steps.build.outputs.sbc }}"
-          url: "https://github.com/mainsail-crew/MainsailOS/releases/download/${{ github.event.inputs.version }}/${{ steps.move-image.outputs.image }}.img.xz"
-          icon: "https://os.mainsail.xyz/rpi-imager.png"
-          init_format: "systemd"
-          release_date: "${{ needs.release.outputs.date }}"
+          name: "${{ steps.json-data.outputs.pretty_name }}"
+          description: "${{ steps.json-data.outputs.description }}"
+          icon: "${{ steps.json-data.outputs.icon_url }}"
+          url: "https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.version }}/${{ steps.move-image.outputs.image }}.img.xz"
           extract_size: ${{ steps.filesizes.outputs.image }}
           extract_sha256: "${{ steps.checksums.outputs.image }}"
           image_download_size: ${{ steps.filesizes.outputs.zip }}
-          image_download_sha256: "${{ steps.checksums.outputs.zip }}"
+          release_date: "${{ needs.release.outputs.date }}"
+          init_format: "${{ steps.json-data.outputs.init_format }}"
+          supported_sbc: ${{ steps.json-data.outputs.supported_sbc }}
         with:
           result-encoding: string
           script: |
             const fs = require('fs')
-            let { name, description, type, sbc, url, icon, init_format, release_date, extract_size, extract_sha256, image_download_size, image_download_sha256 } = process.env
-            if (sbc === 'rpi32') name += ' 32-Bit (recommend)'
-            else if (sbc === 'rpi64') name += ' 64-Bit'
+            const { name, description, icon, url, extract_size, extract_sha256, image_download_size, release_date, init_format, supported_sbc } = process.env
 
             const json = JSON.stringify({
               name,
               description,
-              url,
               icon,
-              init_format,
-              release_date,
+              url,
               extract_size: parseInt(extract_size),
               extract_sha256,
               image_download_size: parseInt(image_download_size),
-              image_download_sha256
+              release_date,
+              init_format,
+              devices: supported_sbc.split(" ").filter((item) => item != '')
             })
 
             fs.writeFileSync("./${{ steps.move-image.outputs.image }}.json", json)
@@ -271,26 +292,26 @@ jobs:
 
   finish:
     name: Finish Release
-    needs: [ release, build ]
+    needs: [release, build]
     runs-on: ubuntu-latest
     steps:
       - name: Publish Release
-        uses: StuYarrow/publish-release@v1
+        uses: eregon/publish-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          id: ${{ needs.release.outputs.id }}
+          release_id: ${{ needs.release.outputs.id }}
 
   update-rpi-imager:
     name: Update rpi-imager json
-    needs: [ release, build, finish ]
+    needs: [release, build, finish]
     runs-on: ubuntu-latest
     steps:
       - name: Download snipes
         uses: robinraju/release-downloader@v1.6
         with:
           tag: ${{ github.event.inputs.version }}
-          fileName: "${{ needs.build.outputs.base_name }}-raspberry-*.json"
+          fileName: "${{ needs.build.outputs.base_name }}-*.json"
           out-file-path: "downloads"
 
       - name: Combine JSON
@@ -325,11 +346,13 @@ jobs:
           file: rpi-imager.json
 
       - name: Move in seperate dir
+        if: ${{ github.repository_owner == 'Mainsail-Crew' }}
         run: |
           mkdir upload
           mv rpi-imager.json ./upload
 
       - name: Upload to remote server
+        if: ${{ github.repository_owner == 'Mainsail-Crew' }}
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
           server: ${{ secrets.OSHOST }}
@@ -338,29 +361,35 @@ jobs:
           local-dir: ./upload/
 
   update-changelog:
-    needs: update-rpi-imager
+    needs: finish
     name: Generate changelog
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: 'develop'
+          ref: "develop"
           token: ${{ secrets.PAT }}
           fetch-depth: 0
 
       - name: Get latest tag
-        id: latest_tag
+        id: get_tags
         shell: bash
         run: |
-          echo "TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
+          echo "END_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
+
+          if [[ "${{ github.repository_owner }}" == "Mainsail-Crew" ]]; then
+            echo "START_TAG=0.5.0" >> $GITHUB_OUTPUT
+          else
+            echo "START_TAG=$(git for-each-ref --sort=creatordate --count=1 --format='%(refname:lstrip=2)')" >> $GITHUB_OUTPUT
+          fi
 
       - name: Generate a changelog
-        uses: orhun/git-cliff-action@v1
+        uses: orhun/git-cliff-action@v2
         id: git-cliff
         with:
           config: cliff.toml
-          args: 0.5.0..${{ steps.latest_tag.outputs.TAG_NAME }}
+          args: ${{ steps.get_tags.outputs.START_TAG }}..${{ steps.get_tags.outputs.END_TAG }}
         env:
           OUTPUT: ${{ github.workspace }}/CHANGELOG.md
 
@@ -369,5 +398,5 @@ jobs:
           cat CHANGELOG.md
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: 'docs(changelog): update changelog'
+          commit_message: "docs(changelog): update changelog"
           file_pattern: CHANGELOG.md

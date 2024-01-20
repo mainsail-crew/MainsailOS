@@ -14,3 +14,4 @@
 [[ -n "$ARMBIAN_NET_FIRSTRUN_FILE" ]] || ARMBIAN_NET_FIRSTRUN_FILE="/boot/armbian_first_run.txt.template"
 [[ -n "$ARMBIAN_NET_FIRSTRUN_SCRIPT" ]] || ARMBIAN_NET_FIRSTRUN_SCRIPT="/usr/lib/armbian/armbian-firstrun-config"
 [[ -n "$ARMBIAN_NET_NC_PATH" ]] || ARMBIAN_NET_NC_PATH="/usr/local/bin/network-configurator"
+[[ -n "$ARMBIAN_NET_DEPS" ]] || ARMBIAN_NET_DEPS="net-tools"

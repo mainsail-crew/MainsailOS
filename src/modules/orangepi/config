@@ -23,6 +23,9 @@ bash-completion"
 [[ -n "$ORANGEPI_ADD_OVERLAYS_OPIZ2" ]] || ORANGEPI_ADD_OVERLAYS_OPIZ2="i2c3 uart5 spi-spidev"
 [[ -n "$ORANGEPI_ADD_OVERLAYS_OPIZ2_PARAMS" ]] || ORANGEPI_ADD_OVERLAYS_OPIZ2_PARAMS="param_spidev_spi_bus=1 param_spidev_spi_cs=1"
 
+## Disable Autologin on gettys
+[[ -n "$ORANGEPI_DISABLE_GETTY_AUTOLOGIN" ]] || ORANGEPI_DISABLE_GETTY_AUTOLOGIN="1"
+
 ### EXPERIMENTAL: Install orangepi-config from source git repo
 [[ -n "$ORANGEPI_INSTALL_OPI_CONFIG" ]] || ORANGEPI_INSTALL_OPI_CONFIG="true"
 [[ -n "$ORANGEPI_OPI_CONFIG_URL" ]] || ORANGEPI_OPI_CONFIG_URL="https://raw.githubusercontent.com/orangepi-xunlong/orangepi-build/next/external/cache/sources/orangepi-config/"

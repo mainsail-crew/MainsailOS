@@ -28,11 +28,15 @@ install_cleanup_trap
 is_board_type() {
     local board releasefile
     board=""
-    releasefile="/etc/orangepi-release-info.txt"
+    releasefile="/etc/orangepi-release"
     if [[ -f "${releasefile}" ]]; then
         board="$(grep "BOARD=" "${releasefile}" | cut -d'=' -f2)"
     fi
     echo "${board}"
+}
+
+get_gettyconf_dirs() {
+    find "${1}" -type d -name "*getty@*"
 }
 
 # Base User groups
@@ -85,25 +89,16 @@ if [ -f "/root/.not_logged_in_yet" ]; then
 fi
 ## END Step 4
 
-## Step 5: Move armbian-release to display mainsailos-release
-if [[ -f "/etc/orangepi-release" ]]; then
-    echo_green "OrangePi release file found! moving to: 'orangepi-release-info.txt'"
-    mv /etc/orangepi-release /etc/orangepi-release-info.txt
-else
-    echo_red "OrangePi release file not found! [SKIPPED]"
-fi
-## END Step 5
-
-## Step 6: Patch dynamic motd
+## Step 5: Patch dynamic motd
 echo_green "Patch dynamic motd ..."
 unpack /filesystem/root /
 chmod +x /etc/update-motd.d/*
 if [ -f "/etc/default/orangepi-motd" ]; then
     sed -i 's/^MOTD_DISABLE=""/MOTD_DISABLE="header tips"/' /etc/default/orangepi-motd
 fi
-## END Step 6
+## END Step 5
 
-## Step 7: Enable SPI interface by default
+## Step 6: Enable SPI interface by default
 echo_green "Enable interfaces on Orange Pi SBC's ..."
 
 ### Substep 1: Copy default config to backup file
@@ -136,9 +131,9 @@ fi
 echo "spi-dev" >> "${ORANGEPI_MODULES_FILE}"
 
 echo_green "Enable SPI interface on Orange Pi SBC's ... DONE!"
-## END Step 7
+## END Step 6
 
-## Step 8: Install orangepi-config from git source repository
+## Step 7: Install orangepi-config from git source repository
 if [[ "${ORANGEPI_INSTALL_OPI_CONFIG}" == "true" ]]; then
     echo_green "Install orangepi-config from git sources ..."
 
@@ -190,5 +185,32 @@ if [[ "${ORANGEPI_INSTALL_OPI_CONFIG}" == "true" ]]; then
 
 else
     echo_red "WARN: orangepi-config install not configured ... [SKIPPED]"
+fi
+## END Step 7
+
+## Step 8: Fix tty and serial-tty autologin
+### NOTE: Since OrangePI OS uses for its getty override.conf files
+###       the location of '/lib/systemd/system/[serial-]getty@.service.d'
+###       instead the appropriate location in etc, we have to fix that.
+if [[ "${ORANGEPI_DISABLE_GETTY_AUTOLOGIN}" = "1" ]]; then
+    echo_green "Disable 'getty' autologin ..."
+
+    ### Substep 1: copy '/lib/systemd/system/[serial-]getty@.service.d'
+    for dir in $(get_gettyconf_dirs /usr/lib/systemd/system); do
+        cp -R "${dir}" /etc/systemd/system
+    done
+    ### End Substep 1
+
+    ### Substep 2: Modify 'override.conf', delete autologin
+    for conf in $(get_gettyconf_dirs /etc/systemd/system); do
+        if [[ -f "${conf}/override.conf" ]]; then
+            echo_green "Found '${conf}/override.conf', trying to modify ..."
+            sed -i 's/--autologin orangepi //' "${conf}/override.conf"
+        else
+            echo_green "No '${conf}/override.conf' found, modifying skipped!"
+        fi
+    done
+    ### END Substep 2
+    echo_green "Disable 'getty' autologin ... DONE!"
 fi
 ## END Step 8

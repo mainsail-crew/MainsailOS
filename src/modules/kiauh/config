@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#### KIAUH Install Module
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2022 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+#### All Credits to th33xitus for his great tool
+#### https://github.com/th33xitus/kiauh
+
+# shellcheck disable=all
+
+# KIAUH repo
+[[ -n "$KIAUH_REPO_SHIP" ]] || KIAUH_REPO_SHIP="https://github.com/th33xitus/kiauh.git"
+[[ -n "$KIAUH_REPO_BRANCH" ]] || KIAUH_REPO_BRANCH="master"
+
+# Add to $PATH ? (1: yes, 0: no)
+[[ -n "$KIAUH_ADD_TO_PATH" ]] || KIAUH_ADD_TO_PATH="1"
