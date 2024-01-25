@@ -2,19 +2,6 @@
 # Shebang for better file detection
 # shellcheck enable=require-variable-braces
 
-get_version() {
-    local ver
-    ver="$(realpath "$( dirname -- "${BASH_SOURCE[0]}")"/../src/version)"
-
-    if [ -f "${ver}" ]; then
-        cat "${ver}"
-        return
-    fi
-
-    ver="$(realpath "$( dirname -- "${BASH_SOURCE[0]}")"/version)"
-    cat "${ver}"
-}
-
 get_img_name() {
     local -a types
     types=(zip 7z xz)
@@ -29,7 +16,7 @@ get_img_name() {
     fi
 }
 
-DIST_VERSION="$(get_version)"
+DIST_VERSION="1.3.2"
 BASE_ZIP_IMG="$(get_img_name)"
 DIST_NAME="MainsailOS"
 
