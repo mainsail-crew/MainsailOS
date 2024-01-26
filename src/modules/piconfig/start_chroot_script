@@ -64,7 +64,10 @@ check_install_pkgs i2c-tools
 echo_green "Disabling Bluetooth related services..."
 systemctl_if_exists disable hciuart.service
 systemctl_if_exists disable bluetooth.service
-systemctl_if_exists disable bluealsa.service
+# bookworm patch
+if ! grep "bookworm" /etc/os-release; then
+    systemctl_if_exists disable bluealsa.service
+fi
 
 # Step 11: Increase swapfile size
 if [[ -f "${PICONFIG_SWAP_CONF_FILE}" ]]; then
