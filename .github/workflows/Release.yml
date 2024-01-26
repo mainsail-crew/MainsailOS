@@ -30,7 +30,7 @@ jobs:
         if: steps.current-version.outputs.version != github.event.inputs.version
         shell: bash
         run: |
-          sed -i 's/[0-9].[0-9].[0-9]/${{ github.event.inputs.version }}/' ./config/default
+          sed -i "s|DIST_VERSION.*|DIST_VERSION=\"${{ github.event.inputs.version }}\"|" ./config/default
 
       - name: git add & commit & push
         if: steps.current-version.outputs.version != github.event.inputs.version
