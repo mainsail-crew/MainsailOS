@@ -16,6 +16,7 @@ DOWNLOAD_URL_IMAGE="https://downloads.raspberrypi.com/raspios_oldstable_lite_arm
 
 
 # Changed modules
+# shellcheck disable=SC2034
 MODULES="base,pkgupgrade,udev_fix,mainsailos(net,piconfig,klipper,is_req_preinstall,moonraker,timelapse,mainsail,klipperscreen,crowsnest,sonar,password-for-sudo),postrename"
 
 
