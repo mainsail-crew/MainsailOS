@@ -21,7 +21,7 @@ install_cleanup_trap
 KS_BUILD_INSTALL_SH="/home/${BASE_USER}/KlipperScreen/scripts/KlipperScreen-install.sh"
 KS_MOONRAKER_CONF_PATH="/home/${BASE_USER}/printer_data/config/moonraker.conf"
 
-echo_green "Installing KlipperScreen and enable Moonraker Service ..."
+echo_green "Installing KlipperScreen and enable KlipperScreen Service ..."
 
 ## Force apt update
 apt-get update
