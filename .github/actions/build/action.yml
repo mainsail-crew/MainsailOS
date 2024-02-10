@@ -101,7 +101,7 @@ runs:
 
     - name: Cache Base Source Image
       id: cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: repository/src/image/*.img.xz
         key: base-image-${{ steps.checksum.outputs.CHECKSUM }}
