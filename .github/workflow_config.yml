@@ -24,6 +24,8 @@ buildtest:
   # Raspberry Pi OS based images
   - raspberry/rpi32
   - raspberry/rpi64
+  # rpi 64 with KS
+  - raspberry/rpi64-ks
 
 # This is used to setup release build chain.
 # Each entry will be used in setup matrix for releases

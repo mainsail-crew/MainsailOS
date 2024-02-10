@@ -31,6 +31,11 @@ SERVICES=(moonraker klipper nginx sonar crowsnest)
 SYSTEMD_DIR="/etc/systemd/system"
 DEFAULT_USER="$(grep "1000" /etc/passwd | awk -F ':' '{print $1}')"
 
+### KlipperScreen workaround
+KS_INSTALLED="$(find /home/"${DEFAULT_USER}" -name "KlipperScreen" | wc -l)"
+if [[ "${KS_INSTALLED}" = "1" ]]; then
+    SERVICES+=(KlipperScreen)
+fi
 
 ## Helper funcs
 ### Mangle services
@@ -90,6 +95,11 @@ relocate_venv() {
     local -a venvs
     venvs=(klippy-env moonraker-env)
 
+    ### KlipperScreen workaround
+    if [[ "${KS_INSTALLED}" = "1" ]]; then
+        venvs+=(.KlipperScreen-env)
+    fi
+
     for venv in "${venvs[@]}"; do
         # Move venv
         # delete pycache (*.pyc files)
@@ -115,6 +125,15 @@ patch_polkit_rules() {
     fi
     if [[ -f "${polkit_legacy_dir}/10-moonraker.pkla" ]]; then
         sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_legacy_dir}/10-moonraker.pkla"
+    fi
+    if [[ -f "${polkit_dir}/KlipperScreen.rules" ]]; then
+        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_dir}/KlipperScreen.rules"
+    fi
+    if [[ -f "${polkit_usr_dir}/KlipperScreen.rules" ]]; then
+        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_usr_dir}/KlipperScreen.rules"
+    fi
+    if [[ -f "${polkit_legacy_dir}/20-klipperscreen.pkla" ]]; then
+        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_legacy_dir}/20-klipperscreen.pkla"
     fi
 }
 
@@ -173,7 +192,6 @@ fix_kiauh_links() {
     target_dir="/usr/local/bin"
     ln -sf "${src_dir}/kiauh.sh" "${target_dir}/kiauh"
 }
-
 
 fix_cn_links() {
     local tools_dir
