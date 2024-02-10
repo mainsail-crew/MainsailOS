@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+#Shebang for better file detection
+#### KlipperScreen install module
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2024 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+[ -n "$KLIPPERSCREEN_REPO_SHIP" ] || KLIPPERSCREEN_REPO_SHIP=https://github.com/KlipperScreen/KlipperScreen.git
+[ -n "$KLIPPERSCREEN_REPO_BRANCH" ] || KLIPPERSCREEN_REPO_BRANCH=master

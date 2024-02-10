@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+#### KlipperScreen install module
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2024 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+# shellcheck enable=require-variable-braces
+
+# Source error handling, leave this in place
+set -Ee
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+# Module only Variables
+KS_BUILD_INSTALL_SH="/home/${BASE_USER}/KlipperScreen/scripts/KlipperScreen-install.sh"
+KS_MOONRAKER_CONF_PATH="/home/${BASE_USER}/printer_data/config/moonraker.conf"
+
+echo_green "Installing KlipperScreen and enable KlipperScreen Service ..."
+
+## Force apt update
+apt-get update
+## Make sure 'git' is installed!
+check_install_pkgs git
+
+## Step 1: Move to Home Dir as WorkingDirectoy
+pushd "/home/${BASE_USER}" &> /dev/null || exit 1
+
+## Step 2: clone KlipperScreen repo
+gitclone KLIPPERSCREEN_REPO KlipperScreen
+
+## Step 3: Move to KlipperScreen as working directory
+pushd "/home/${BASE_USER}/KlipperScreen" &> /dev/null || exit 1
+
+## Step 4: Run KlipperScreen install routine
+echo_green "Launch KlipperScreen install routine ..."
+sudo -u "${BASE_USER}" "${KS_BUILD_INSTALL_SH}"
+
+## Step 5: Update moonraker.conf
+if [[ -f "${KS_MOONRAKER_CONF_PATH}" ]]; then
+    echo_green "Copying temporary file ..."
+    unpack /filesystem/tmp /tmp root
+    cat /tmp/ks_update_entry.txt >> "${KS_MOONRAKER_CONF_PATH}"
+else
+    echo_red "File moonraker.conf not found ... [SKIPPED]"
+fi
+
+## Step 6: Leave KlipperScreen
+popd &> /dev/null || exit 1
+
+## Step 7: leave home dir
+popd &> /dev/null || exit 1
+
+## Step 8: Enable service
+echo_green "Enable KlipperScreen.service ..."
+systemctl_if_exists enable KlipperScreen.service
+
+## Finish
+echo_green "Installing KlipperScreen and enable KlipperScreen Service ... DONE!"
