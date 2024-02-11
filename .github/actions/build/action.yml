@@ -1,18 +1,18 @@
-name: 'MainsailOS/build'
-author: 'Stefan Dej'
-description: 'Build MainsailOS images'
+name: "MainsailOS/build"
+author: "Stefan Dej"
+description: "Build MainsailOS images"
 inputs:
   config:
-    description: 'Board config name'
+    description: "Board config name"
     required: true
   custompios-repository:
-    description: 'Repository for CustomPiOS'
+    description: "Repository for CustomPiOS"
     required: false
-    default: 'guysoft/CustomPiOS'
+    default: "guysoft/CustomPiOS"
   custompios-ref:
-    description: 'Branch / Tag / SHA to checkout CustomPiOS'
+    description: "Branch / Tag / SHA to checkout CustomPiOS"
     required: false
-    default: 'devel'
+    default: "devel"
 outputs:
   type:
     description: SBC type (raspberry/armbian/...)
@@ -22,7 +22,7 @@ outputs:
     value: ${{ steps.config.outputs.SBC }}
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Install Dependencies
       shell: bash
@@ -87,7 +87,7 @@ runs:
 
     - name: Cache Base Source Image
       id: cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: repository/src/image/*.img.xz
         key: base-image-${{ steps.checksum.outputs.CHECKSUM }}
