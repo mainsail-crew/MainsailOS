@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+# shellcheck enable=require-variable-braces
+# shellcheck disable=SC2034
+
+
+
+# Image source
+DOWNLOAD_URL_CHECKSUM="https://github.com/KwadFan/SmartPi-armbian/releases/download/20240215-1515/Yumi-smartpi1-bookworm-server.img.xz"
+DOWNLOAD_URL_IMAGE="https://github.com/KwadFan/SmartPi-armbian/releases/download/20240215-1515/Yumi-smartpi1-bookworm-server.img.xz.sha256"
+
+
+BASE_USER="yumi"
+BASE_USER_PASSWORD="smartpi"
+
+MODULES="base(pkgupgrade,udev_fix,armbian(armbian_net,mainsailos,klipper,is_req_preinstall,moonraker,mainsail,timelapse,klipperscreen,crowsnest,sonar))"
+
+# export Variables
+export BASE_ARCH
+export DOWNLOAD_URL_CHECKSUM
+export DOWNLOAD_URL_IMAGE
+
+### JSON sniplet Setup
+### NOTE: Please see all config files for setup variables!!!
+# shellcheck disable=SC2034
+JSON_PRETTY_SBC_NAME="Yumi SmartPi"
+# shellcheck disable=SC2034
+JSON_SUPPORTED_SBC="smartpi-64bit"
