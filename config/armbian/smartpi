@@ -10,9 +10,6 @@ DOWNLOAD_URL_CHECKSUM="https://github.com/KwadFan/SmartPi-armbian/releases/downl
 DOWNLOAD_URL_IMAGE="https://github.com/KwadFan/SmartPi-armbian/releases/download/20240215-1515/Yumi-smartpi1-bookworm-server.img.xz.sha256"
 
 
-BASE_USER="yumi"
-BASE_USER_PASSWORD="smartpi"
-
 MODULES="base(pkgupgrade,udev_fix,armbian(armbian_net,mainsailos,klipper,is_req_preinstall,moonraker,mainsail,timelapse,klipperscreen,crowsnest,sonar))"
 
 # export Variables
