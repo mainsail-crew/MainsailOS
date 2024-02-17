@@ -65,9 +65,16 @@ jobs:
         with:
           config: ${{ matrix.config }}
 
+      - name: Upload failed Logfile
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failed-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}.log
+          path: repository/src/build.log
+
       - name: Rename image file
         id: move-image
-        if: always()
+        if: success()
         shell: bash
         run: |
           source repository/src/config
@@ -77,13 +84,6 @@ jobs:
           mv repository/src/workspace/*.img $IMAGE.img
 
           echo "image=${IMAGE}" >> $GITHUB_OUTPUT
-
-      - name: Upload failed Logfile
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: failed-${{ steps.move-image.outputs.image }}.log
-          path: repository/src/build.log
 
       - name: Compressing Image
         shell: bash
