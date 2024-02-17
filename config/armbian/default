@@ -5,10 +5,7 @@
 # See https://www.shellcheck.net/wiki/SC2155
 
 # Download Base Url
-#DOWNLOAD_BASE_URL="https://github.com/mainsail-crew/armbian-builds/releases/latest/download"
-
-# For test force error
-DOWNLOAD_BASE_URL="https://bla.foo"
+DOWNLOAD_BASE_URL="https://github.com/mainsail-crew/armbian-builds/releases/latest/download"
 
 # Base User
 BASE_ADD_USER="yes"
