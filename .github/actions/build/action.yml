@@ -74,8 +74,7 @@ runs:
         generate_base_img_name() {
           local img
           echo "::group:: Generate BASE_ZIP_IMG variable"
-          source "${TMP_CONFIG}"
-          img="$(basename ${DOWNLOAD_URL_IMAGE/.torrent/})"
+          img="$(ls *.img.xz)"
           echo "DEBUG: Image name: ${img}"
           echo "BASE_ZIP_IMG=${img}" >> "${TMP_CONFIG}"
         }
