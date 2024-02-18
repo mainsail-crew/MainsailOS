@@ -47,10 +47,9 @@ runs:
         IFS='/' read -r -a array <<< "${{ inputs.config }}"
         TYPE="${array[0]}"
         SBC="${array[1]}"
-        echo "${SBC}"
 
-        echo "TYPE=${TYPE}" >> $GITHUB_OUTPUT
-        echo "SBC=${SBC}" >> $GITHUB_OUTPUT
+        echo "TYPE=${TYPE}" | tee -a $GITHUB_OUTPUT
+        echo "SBC=${SBC}" | tee -a $GITHUB_OUTPUT
 
         echo "::endgroup::"
 
