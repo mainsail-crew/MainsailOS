@@ -60,58 +60,38 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Generate CustomPIOS config file"
-          CONFIG_BASE_DIR="./repository/config"
-          SBC_CONFIG="${CONFIG_BASE_DIR}/${TYPE}"
-          TMP_CONFIG="/tmp/config.tmp"
-          DEFAULT_CONF="./repository/config/config-defaults.conf"
+        CONFIG_BASE_DIR="./repository/config"
+        SBC_CONFIG="${CONFIG_BASE_DIR}/${TYPE}"
+        TMP_CONFIG="/tmp/config.tmp"
+        DEFAULT_CONF="./repository/config/config-defaults.conf"
 
-          generate_header() {
-            echo "#!/bin/bash" >> "${TMP_CONFIG}"
-            echo "# shellcheck enable=require-variable-braces" >> "${TMP_CONFIG}"
-          }
+        generate_header() {
+          echo "#!/bin/bash" >> "${TMP_CONFIG}"
+          echo "# shellcheck enable=require-variable-braces" >> "${TMP_CONFIG}"
+        }
 
-          concat_helper() {
-            local input_file
-            input_file="${1}"
-            echo "DEBUG: Using input file: ${input_file}"
-            if [[ -f "${input_file}" ]]; then
-              sed '/^#.*/d; /^$/d' "${input_file}" >> "${TMP_CONFIG}"
-            fi
-          }
+        concat_helper() {
+          local input_file
+          input_file="${1}"
+          echo "DEBUG: Using input file: ${input_file}"
+          if [[ -f "${input_file}" ]]; then
+            sed '/^#.*/d; /^$/d' "${input_file}" >> "${TMP_CONFIG}"
+          fi
+        }
 
-          main() {
-            generate_header
-            concat_helper "${DEFAULT_CONF}"
-            concat_helper "${SBC_CONFIG}/${TYPE_CONFIG}"
-            concat_helper "${SBC_CONFIG}/${BOARD_CONFIG}"
+        main() {
+          generate_header
+          concat_helper "${DEFAULT_CONF}"
+          concat_helper "${SBC_CONFIG}/${TYPE_CONFIG}"
+          concat_helper "${SBC_CONFIG}/${BOARD_CONFIG}"
+          # Write config to debug
+          echo "::group::Print config file"
+          cat "${TMP_CONFIG}"
+          echo "::endgroup::"
+        }
 
-            # Write config to debug
-            echo "::group::Print config file"
-            cat "${TMP_CONFIG}"
-            echo "::endgroup::"
-          }
-
-          ### MAIN
-          main
-
-        # sed '
-        # /^#/d
-        # /^[A-Z]/d
-        # /export*/d
-        # /^$/d
-        # ' ./repository/src/config.tmp >> ./repository/src/config
-
-        # sed -i '1i #!/usr/bin/env bash' ./repository/src/config
-        # sed -i '2i # shellcheck disable=SC2034' ./repository/src/config
-
-        # grep '^[A-Z]' ./repository/src/config.tmp | sort -d >> ./repository/src/config
-        # grep '^export' ./repository/src/config.tmp | sort -d >> ./repository/src/config
-
-        # rm -f ./repository/src/config.tmp
-
-        # echo "::group::Config"
-        # cat ./repository/src/config
-        # echo "::endgroup::"
+        # MAIN
+        main
 
         # source ./repository/src/config
 
