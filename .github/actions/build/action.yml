@@ -86,7 +86,7 @@ runs:
           concat_helper "${SBC_CONFIG}/${BOARD_CONFIG}"
           # Write config to debug
           echo "::group::Print config file"
-          cat "${TMP_CONFIG}"
+          cat "${TMP_CONFIG}" | sort | uniq
           echo "::endgroup::"
         }
 
