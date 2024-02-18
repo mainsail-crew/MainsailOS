@@ -46,7 +46,7 @@ runs:
         echo "::group::Get Matrix"
         IFS='/' read -r -a array <<< "${{ inputs.config }}"
         TYPE="${array[0]}"
-        SBC_CONF="${array[1]}"
+        SBC="${array[1]}"
         echo "TYPE=${TYPE}" | tee -a "$GITHUB_OUTPUT"
         echo "SBC=${SBC}" | tee -a "$GITHUB_OUTPUT"
         if [[ "${TYPE}" = "raspberry" ]]; then
