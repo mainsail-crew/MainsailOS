@@ -71,6 +71,15 @@ runs:
           echo "# shellcheck enable=require-variable-braces" >> "${TMP_CONFIG}"
         }
 
+        generate_base_img_name() {
+          local img
+          echo "::group:: Generate BASE_ZIP_IMG variable"
+          source "${TMP_CONFIG}"
+          img="$(basename ${DOWNLOAD_URL_IMAGE/.torrent/})"
+          echo "DEBUG: Image name: ${img}"
+          echo "BASE_ZIP_IMG=${img}" >> "${TMP_CONFIG}"
+        }
+
         concat_helper() {
           local input_file
           input_file="${1}"
@@ -95,6 +104,7 @@ runs:
           concat_helper "${DEFAULT_CONF}"
           concat_helper "${SBC_CONFIG}/${TYPE_CONFIG}"
           concat_helper "${SBC_CONFIG}/${BOARD_CONFIG}"
+          generate_base_img_name
           generate_exports
           copy_config
 
