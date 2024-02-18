@@ -61,7 +61,7 @@ runs:
 
         echo "::group::Generate CustomPIOS config file"
           CONFIG_BASE_DIR="./repository/config/"
-          CONFIG_TYPE_DIR="${CONFIG_BASE_DIR}/${TYPE}"
+          SBC_CONFIG="${CONFIG_BASE_DIR}/${TYPE}"
           TMP_CONFIG="/tmp/config.tmp"
           DEFAULT_CONF="./repository/config/config-defaults.conf"
 
@@ -81,6 +81,8 @@ runs:
           main() {
             generate_header
             concat_helper "${DEFAULT_CONF}"
+            concat_helper "${SBC_CONFIG}/${TYPE_CONFIG}"
+            concat_helper "${SBC_CONFIG}/${BOARD_CONFIG}"
           }
 
           ### MAIN
