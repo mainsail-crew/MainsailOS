@@ -63,7 +63,7 @@ runs:
           TMP_CONFIG="/tmp/config.tmp"
           DEFAULT_CONF="./repository/config/config-defaults.conf"
 
-          write_header() {
+          generate_header() {
             echo "#!/bin/bash" >> "${TMP_CONFIG}"
             echo "# shellcheck enable=require-variable-braces" >> "${TMP_CONFIG}"
           }
@@ -77,7 +77,7 @@ runs:
           }
 
           main() {
-            write_header
+            generate_header
             concat_helper "${DEFAULT_CONF}"
           }
 
