@@ -39,7 +39,7 @@ runs:
       id: config
       shell: bash
       run: |
-        echo "::group::Get Matrix"
+        echo "::set-group::Get Matrix"
         IFS='/' read -r -a array <<< "${{ inputs.config }}"
         TYPE="${array[0]}"
         SBC="${array[1]}"
