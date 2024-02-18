@@ -53,7 +53,7 @@ runs:
 
         echo "::endgroup::"
 
-        echo "::debug::${SBC}"
+        echo "${SBC}"
 
         # GENERIC_FILE="./repository/config/default"
         # if [[ -f "$GENERIC_FILE" ]]; then
