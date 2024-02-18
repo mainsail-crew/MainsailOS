@@ -35,56 +35,63 @@ runs:
         ref: ${{ inputs.custompios-ref }}
         path: CustomPiOS
 
-    - name: Read board config
+    - name: Generate board config
       id: config
       shell: bash
       run: |
+        echo "::group::Get Matrix"
         IFS='/' read -r -a array <<< "${{ inputs.config }}"
-        TYPE=${array[0]}
-        SBC=${array[1]}
+        TYPE="${array[0]}"
+        SBC="${array[1]}"
 
         echo "TYPE=${TYPE}" >> $GITHUB_OUTPUT
         echo "SBC=${SBC}" >> $GITHUB_OUTPUT
 
-        GENERIC_FILE="./repository/config/default"
-        if [[ -f "$GENERIC_FILE" ]]; then
-          cat "${GENERIC_FILE}" >> ./repository/src/config.tmp
-        fi
-
-        TYPE_FILE="./repository/config/${TYPE}/default"
-        if [[ -f "$TYPE_FILE" ]]; then
-          cat "${TYPE_FILE}" >> ./repository/src/config.tmp
-        fi
-
-        SBC_FILE="./repository/config/${TYPE}/${SBC}"
-        if [[ -f "$SBC_FILE" ]]; then
-          cat "${SBC_FILE}" >> ./repository/src/config.tmp
-        fi
-
-        sed '
-        /^#/d
-        /^[A-Z]/d
-        /export*/d
-        /^$/d
-        ' ./repository/src/config.tmp >> ./repository/src/config
-
-        sed -i '1i #!/usr/bin/env bash' ./repository/src/config
-        sed -i '2i # shellcheck disable=SC2034' ./repository/src/config
-
-        grep '^[A-Z]' ./repository/src/config.tmp | sort -d >> ./repository/src/config
-        grep '^export' ./repository/src/config.tmp | sort -d >> ./repository/src/config
-
-        rm -f ./repository/src/config.tmp
-
-        echo "::group::Config"
-        cat ./repository/src/config
         echo "::endgroup::"
 
-        source ./repository/src/config
 
-        echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
-        echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
-        echo "MODULES=${MODULES}" >> $GITHUB_OUTPUT
+
+        # GENERIC_FILE="./repository/config/default"
+        # if [[ -f "$GENERIC_FILE" ]]; then
+        #   cat "${GENERIC_FILE}" >> ./repository/src/config.tmp
+        # fi
+
+        # TYPE_FILE="./repository/config/${TYPE}/default"
+        # if [[ -f "$TYPE_FILE" ]]; then
+        #   cat "${TYPE_FILE}" >> ./repository/src/config.tmp
+        # fi
+
+        # SBC_FILE="./repository/config/${TYPE}/${SBC}"
+        # if [[ -f "$SBC_FILE" ]]; then
+        #   cat "${SBC_FILE}" >> ./repository/src/config.tmp
+        # fi
+
+        # sed '
+        # /^#/d
+        # /^[A-Z]/d
+        # /export*/d
+        # /^$/d
+        # ' ./repository/src/config.tmp >> ./repository/src/config
+
+        # sed -i '1i #!/usr/bin/env bash' ./repository/src/config
+        # sed -i '2i # shellcheck disable=SC2034' ./repository/src/config
+
+        # grep '^[A-Z]' ./repository/src/config.tmp | sort -d >> ./repository/src/config
+        # grep '^export' ./repository/src/config.tmp | sort -d >> ./repository/src/config
+
+        # rm -f ./repository/src/config.tmp
+
+        # echo "::group::Config"
+        # cat ./repository/src/config
+        # echo "::endgroup::"
+
+        # source ./repository/src/config
+
+        # echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
+        # echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
+        # echo "MODULES=${MODULES}" >> $GITHUB_OUTPUT
+
+        exit 1
 
     - name: Base Image Checksum
       id: checksum
