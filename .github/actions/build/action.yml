@@ -47,13 +47,13 @@ runs:
         IFS='/' read -r -a array <<< "${{ inputs.config }}"
         TYPE="${array[0]}"
         SBC="${array[1]}"
+        echo "${SBC}"
 
         echo "TYPE=${TYPE}" >> $GITHUB_OUTPUT
         echo "SBC=${SBC}" >> $GITHUB_OUTPUT
 
         echo "::endgroup::"
 
-        echo "${SBC}"
 
         # GENERIC_FILE="./repository/config/default"
         # if [[ -f "$GENERIC_FILE" ]]; then
