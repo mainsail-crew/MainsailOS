@@ -60,6 +60,8 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Generate CustomPIOS config file"
+          CONFIG_BASE_DIR="./repository/config/"
+          CONFIG_TYPE_DIR="${CONFIG_BASE_DIR}/${TYPE}"
           TMP_CONFIG="/tmp/config.tmp"
           DEFAULT_CONF="./repository/config/config-defaults.conf"
 
@@ -72,7 +74,7 @@ runs:
             local input_file
             input_file="${1}"
             if [[ -f "${input_file}" ]]; then
-              sed '/^#.*/d; /^$/d' "${inputfile}" >> "${TMP_CONFIG}"
+              sed '/^#.*/d; /^$/d' "${input_file}" >> "${TMP_CONFIG}"
             fi
           }
 
