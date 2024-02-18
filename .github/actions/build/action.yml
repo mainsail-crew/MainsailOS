@@ -72,7 +72,7 @@ runs:
         }
 
         add_base_zip_img_var() {
-          echo "BASE_ZIP_IMG=\$(ls src/image/*.img.xz 2> /dev/null || true)" >> "${TMP_CONFIG}"
+          echo "BASE_ZIP_IMG=\$(ls ${PWD}/src/image/*.img.xz 2> /dev/null || true)" >> "${TMP_CONFIG}"
         }
 
         concat_helper() {
