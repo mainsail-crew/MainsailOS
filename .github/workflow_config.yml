@@ -22,10 +22,10 @@ buildtest:
   # Orange Pi OS based images
   - orangepi/orangepi_zero2
   # Raspberry Pi OS based images
-  - raspberry/rpi32
-  - raspberry/rpi64
+  - raspberry/rpi-32bit
+  - raspberry/rpi-64bit
   # rpi 64 with KS
-  - raspberry/rpi64-ks
+  - raspberry/rpi64-klipperscreen
 
 # This is used to setup release build chain.
 # Each entry will be used in setup matrix for releases
