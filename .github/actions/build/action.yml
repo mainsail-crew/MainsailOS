@@ -60,7 +60,7 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Generate CustomPIOS config file"
-          CONFIG_BASE_DIR="./repository/config/"
+          CONFIG_BASE_DIR="./repository/config"
           SBC_CONFIG="${CONFIG_BASE_DIR}/${TYPE}"
           TMP_CONFIG="/tmp/config.tmp"
           DEFAULT_CONF="./repository/config/config-defaults.conf"
@@ -73,7 +73,7 @@ runs:
           concat_helper() {
             local input_file
             input_file="${1}"
-            echo "Using input file: ${input_file}"
+            echo "DEBUG: Using input file: ${input_file}"
             if [[ -f "${input_file}" ]]; then
               sed '/^#.*/d; /^$/d' "${input_file}" >> "${TMP_CONFIG}"
             fi
@@ -84,25 +84,15 @@ runs:
             concat_helper "${DEFAULT_CONF}"
             concat_helper "${SBC_CONFIG}/${TYPE_CONFIG}"
             concat_helper "${SBC_CONFIG}/${BOARD_CONFIG}"
+
+            # Write config to debug
+            echo "::group::Print config file"
+            cat "${TMP_CONFIG}"
+            echo "::endgroup::"
           }
 
           ### MAIN
           main
-
-        # GENERIC_FILE="./repository/config/default"
-        # if [[ -f "$GENERIC_FILE" ]]; then
-        #   cat "${GENERIC_FILE}" >> ./repository/src/config.tmp
-        # fi
-
-        # TYPE_FILE="./repository/config/${TYPE}/default"
-        # if [[ -f "$TYPE_FILE" ]]; then
-        #   cat "${TYPE_FILE}" >> ./repository/src/config.tmp
-        # fi
-
-        # SBC_FILE="./repository/config/${TYPE}/${SBC}"
-        # if [[ -f "$SBC_FILE" ]]; then
-        #   cat "${SBC_FILE}" >> ./repository/src/config.tmp
-        # fi
 
         # sed '
         # /^#/d
@@ -125,7 +115,6 @@ runs:
 
         # source ./repository/src/config
 
-        cat "${TMP_CONFIG}"
 
         echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
         echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
