@@ -25,7 +25,7 @@ buildtest:
   - raspberry/rpi-32bit
   - raspberry/rpi-64bit
   # rpi 64 with KS
-  - raspberry/rpi64-klipperscreen
+  - raspberry/rpi-64bit-klipperscreen
 
 # This is used to setup release build chain.
 # Each entry will be used in setup matrix for releases
