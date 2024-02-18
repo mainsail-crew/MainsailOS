@@ -47,11 +47,19 @@ runs:
         IFS='/' read -r -a array <<< "${{ inputs.config }}"
         TYPE="${array[0]}"
         SBC="${array[1]}"
-
-        echo "TYPE=${TYPE}" | tee -a $GITHUB_OUTPUT
-        echo "SBC=${SBC}" | tee -a $GITHUB_OUTPUT
-
+        echo "TYPE=${TYPE}" | tee -a "$GITHUB_OUTPUT"
+        echo "SBC=${SBC}" | tee -a "$GITHUB_OUTPUT"
+        if [[ "${TYPE}" = "raspberry" ]]; then
+          TYPE_CONFIG="rpi-defaults.conf"
+        else
+          TYPE_CONFIG="${TYPE}-defaults.conf"
+        fi
+        echo "DEBUG: TYPE_CONFIG=$TYPE_CONFIG"
+        BOARD_CONFIG=${SBC}.conf
+        echo "DEBUG: BOARD_CONFIG=${SBC}.conf"
         echo "::endgroup::"
+
+        echo "::group::Generate CustomPIOS config file"
 
 
         # GENERIC_FILE="./repository/config/default"
@@ -90,9 +98,9 @@ runs:
 
         # source ./repository/src/config
 
-        # echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
-        # echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
-        # echo "MODULES=${MODULES}" >> $GITHUB_OUTPUT
+        echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
+        echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
+        echo "MODULES=${MODULES}" >> $GITHUB_OUTPUT
 
         exit 1
 
