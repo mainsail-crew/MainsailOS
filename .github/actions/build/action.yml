@@ -73,6 +73,7 @@ runs:
           concat_helper() {
             local input_file
             input_file="${1}"
+            echo "Using input file: ${input_file}"
             if [[ -f "${input_file}" ]]; then
               sed '/^#.*/d; /^$/d' "${input_file}" >> "${TMP_CONFIG}"
             fi
