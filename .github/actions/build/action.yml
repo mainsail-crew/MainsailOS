@@ -61,9 +61,10 @@ runs:
 
         echo "::group::Generate CustomPIOS config file"
         CONFIG_BASE_DIR="./repository/config"
+        DEFAULT_CONF="./repository/config/config-defaults.conf"
         SBC_CONFIG="${CONFIG_BASE_DIR}/${TYPE}"
         TMP_CONFIG="/tmp/config.tmp"
-        DEFAULT_CONF="./repository/config/config-defaults.conf"
+        CONFIG_PATH="./repository/src/config"
 
         generate_header() {
           echo "#!/bin/bash" >> "${TMP_CONFIG}"
@@ -79,28 +80,38 @@ runs:
           fi
         }
 
+        generate_exports() {
+          for x in $(grep "^[A-Z]" ./out/config.tmp | cut -d'=' -f1 | sort); do
+            echo "export ${x}" >> "${TMP_CONFIG}"
+          done
+        }
+
+        copy_config() {
+          mv "${TMP_CONFIG}" "${CONFIG_PATH}"
+        }
+
         main() {
           generate_header
           concat_helper "${DEFAULT_CONF}"
           concat_helper "${SBC_CONFIG}/${TYPE_CONFIG}"
           concat_helper "${SBC_CONFIG}/${BOARD_CONFIG}"
+          generate_exports
+          copy_config
+
           # Write config to debug
           echo "::group::Print config file"
-          cat "${TMP_CONFIG}" | uniq -u
+          cat "${CONFIG_PATH}"
           echo "::endgroup::"
+
+          echo "::group::Generate Step output"
+          source ./repository/src/config
+          echo "DEBUG:"
+          echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" | tee -a "$GITHUB_OUTPUT"
+          echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" | tee -a "$GITHUB_OUTPUT"
         }
 
         # MAIN
         main
-
-        # source ./repository/src/config
-
-
-        echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
-        echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
-        echo "MODULES=${MODULES}" >> $GITHUB_OUTPUT
-
-        exit 1
 
     - name: Base Image Checksum
       id: checksum
