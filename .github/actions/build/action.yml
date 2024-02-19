@@ -104,12 +104,6 @@ runs:
           generate_exports
           copy_config
 
-          source "${CONFIG_PATH}"
-          echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
-          echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
-          if [[ "${TYPE}" != "raspberry" ]]; then
-            base_zip_img_helper
-          fi
           # Write config to debug
           echo "::group::Print config file"
           cat "${CONFIG_PATH}"
@@ -117,6 +111,12 @@ runs:
         }
 
         main
+        source "${CONFIG_PATH}"
+        echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
+        echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
+        if [[ "${TYPE}" != "raspberry" ]]; then
+          base_zip_img_helper
+        fi
         echo "::endgroup::"
 
     - name: Base Image Checksum
