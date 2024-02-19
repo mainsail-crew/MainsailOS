@@ -54,6 +54,7 @@ runs:
         else
           TYPE_CONFIG="${TYPE}-defaults.conf"
         fi
+        echo "::endgroup::"
 
         echo "::group::Generate CustomPIOS config file"
         CONFIG_BASE_DIR="./repository/config"
@@ -98,11 +99,11 @@ runs:
         }
 
         main() {
-          generate_header
+          # generate_header
           concat_helper "${DEFAULT_CONF}"
           concat_helper "${SBC_CONFIG}/${TYPE_CONFIG}"
           concat_helper "${SBC_CONFIG}/${BOARD_CONFIG}"
-          generate_exports
+          # generate_exports
           copy_config
 
           echo "::group::Generate Step output"
@@ -119,8 +120,8 @@ runs:
           echo "::endgroup::"
         }
 
-        # MAIN
         main
+        echo "::endgroup::"
 
     - name: Base Image Checksum
       id: checksum
