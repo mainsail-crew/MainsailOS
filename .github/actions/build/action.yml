@@ -56,7 +56,7 @@ runs:
 
         CONFIG_BASE_DIR="./repository/config"
         DEFAULT_CONF="./repository/config/config-defaults.conf"
-        SBC_CONFIG="${CONFIG_BASE_DIR}/${TYPE}"
+        SBC_CONFIG="${CONFIG_BASE_DIR}/${SBC}"
         TMP_CONFIG="/tmp/config.tmp"
         CONFIG_PATH="./repository/src/config"
 
