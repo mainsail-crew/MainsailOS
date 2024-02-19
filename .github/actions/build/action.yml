@@ -106,11 +106,9 @@ runs:
           generate_exports
           copy_config
 
-          echo "::group::Generate Step output"
           source "${CONFIG_PATH}"
           echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> "$GITHUB_OUTPUT"
           echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> "$GITHUB_OUTPUT"
-          echo "::endgroup::"
           if [[ "${TYPE}" != "raspberry" ]]; then
             base_zip_img_helper
           fi
