@@ -71,8 +71,23 @@ runs:
           echo "# shellcheck enable=require-variable-braces" >> "${TMP_CONFIG}"
         }
 
-        add_base_zip_img_var() {
-          echo "BASE_ZIP_IMG=\$(ls ${BASE_IMAGE_PATH}/*.img.xz || true)" >> "${TMP_CONFIG}"
+        base_zip_img_helper() {
+          cat < EOF >> "${TMP_CONFIG}"
+          get_img_name() {
+          local -a types
+          types=(zip 7z xz)
+          if [ -n "${DIST_PATH}" ]; then
+              for i in "${types[@]}"; do
+                  find "${DIST_PATH}/image/" -type f -name "*.${i}" -printf "%p\n"
+              done
+          fi
+
+          if [ -z "${DIST_PATH}" ]; then
+              echo ""
+          fi
+          BASE_ZIP_IMG="$(get_img_name)"
+          }
+          EOF
         }
 
         concat_helper() {
@@ -86,9 +101,7 @@ runs:
 
         generate_exports() {
           for x in $(grep "^[A-Z]" "${TMP_CONFIG}" | cut -d'=' -f1 | sort); do
-            if [[ ${x} != "BASE_ZIP_IMG" ]]; then
-              echo "export ${x}" >> "${TMP_CONFIG}"
-            fi
+            echo "export ${x}" >> "${TMP_CONFIG}"
           done
         }
 
@@ -98,10 +111,12 @@ runs:
 
         main() {
           generate_header
+          if [[ "${TYPE}" != "raspberry" ]]; then
+            base_zip_img_helper
+          fi
           concat_helper "${DEFAULT_CONF}"
           concat_helper "${SBC_CONFIG}/${TYPE_CONFIG}"
           concat_helper "${SBC_CONFIG}/${BOARD_CONFIG}"
-          add_base_zip_img_var
           generate_exports
           copy_config
 
