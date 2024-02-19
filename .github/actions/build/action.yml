@@ -47,8 +47,8 @@ runs:
         IFS='/' read -r -a array <<< "${{ inputs.config }}"
         TYPE="${array[0]}"
         SBC="${array[1]}"
-        echo "TYPE=${TYPE}" >> "$GITHUB_OUTPUT"
-        echo "SBC=${SBC}" >> "$GITHUB_OUTPUT"
+        echo "TYPE=${TYPE}" >> $GITHUB_OUTPUT
+        echo "SBC=${SBC}" >> $GITHUB_OUTPUT
         if [[ "${TYPE}" = "raspberry" ]]; then
           TYPE_CONFIG="rpi-defaults.conf"
         else
@@ -106,8 +106,8 @@ runs:
           copy_config
 
           source "${CONFIG_PATH}"
-          echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> "$GITHUB_OUTPUT"
-          echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> "$GITHUB_OUTPUT"
+          echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
+          echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
           if [[ "${TYPE}" != "raspberry" ]]; then
             base_zip_img_helper
           fi
@@ -118,6 +118,7 @@ runs:
         }
 
         main
+        echo "::endgroup::"
 
     - name: Base Image Checksum
       id: checksum
