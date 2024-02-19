@@ -104,7 +104,7 @@ runs:
           generate_exports
           copy_config
 
-          source "${CONFIG_PATH}"
+          source "${TMP_CONFIG}"
           echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
           echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
           if [[ "${TYPE}" != "raspberry" ]]; then
