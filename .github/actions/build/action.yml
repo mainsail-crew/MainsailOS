@@ -99,11 +99,11 @@ runs:
         }
 
         main() {
-          # generate_header
+          generate_header
           concat_helper "${DEFAULT_CONF}"
           concat_helper "${SBC_CONFIG}/${TYPE_CONFIG}"
           concat_helper "${SBC_CONFIG}/${BOARD_CONFIG}"
-          # generate_exports
+          generate_exports
           copy_config
 
           echo "::group::Generate Step output"
