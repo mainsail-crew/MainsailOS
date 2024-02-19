@@ -73,21 +73,20 @@ runs:
 
         base_zip_img_helper() {
           cat << EOF >> "${TMP_CONFIG}"
-          get_img_name() {
-          local -a types
-          types=(zip 7z xz)
-          if [ -n "${DIST_PATH}" ]; then
-              for i in "${types[@]}"; do
-                  find "${DIST_PATH}/image/" -type f -name "*.${i}" -printf "%p\n"
-              done
-          fi
-
-          if [ -z "${DIST_PATH}" ]; then
-              echo ""
-          fi
-          BASE_ZIP_IMG="$(get_img_name)"
-          }
-          EOF
+        get_img_name() {
+        local -a types
+        types=(zip 7z xz)
+        if [ -n "${DIST_PATH}" ]; then
+            for i in "${types[@]}"; do
+                find "${DIST_PATH}/image/" -type f -name "*.${i}" -printf "%p\n"
+            done
+        fi
+        if [ -z "${DIST_PATH}" ]; then
+            echo ""
+        fi
+        BASE_ZIP_IMG="$(get_img_name)"
+        }
+        EOF
         }
 
         concat_helper() {
