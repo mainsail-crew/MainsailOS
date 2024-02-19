@@ -85,7 +85,7 @@ runs:
             echo ""
         fi
         }
-        BASE_ZIP_IMG="$(get_img_name)"
+        BASE_ZIP_IMG="\$(get_img_name)"
         EOF
         }
 
