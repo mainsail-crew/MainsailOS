@@ -55,8 +55,7 @@ runs:
         fi
 
         CONFIG_BASE_DIR="./repository/config"
-        DEFAULT_CONF="./repository/config/config-defaults.conf"
-        SBC_CONFIG="${CONFIG_BASE_DIR}/${SBC}"
+        DEFAULT_CONF="${CONFIG_BASE_DIR}/config-defaults.conf"
         TMP_CONFIG="/tmp/config.tmp"
         CONFIG_PATH="./repository/src/config"
 
@@ -95,8 +94,8 @@ runs:
         main() {
           generate_header
           concat_helper "${DEFAULT_CONF}"
-          concat_helper "${SBC_CONFIG}/${TYPE_CONFIG}"
-          concat_helper "${SBC_CONFIG}/${BOARD_CONFIG}"
+          concat_helper "${CONFIG_BASE_DIR}/${TYPE_CONFIG}"
+          concat_helper "${CONFIG_BASE_DIR}/${TYPE}/${SBC}.conf"
           generate_exports
           copy_config
 
