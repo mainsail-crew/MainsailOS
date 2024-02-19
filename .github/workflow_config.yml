@@ -37,5 +37,5 @@ release:
   # Orange Pi OS based images
   - orangepi/orangepi_zero2
   # Raspberry Pi OS based images
-  - raspberry/rpi32
-  - raspberry/rpi64
+  - raspberry/rpi-32bit
+  - raspberry/rpi-64bit

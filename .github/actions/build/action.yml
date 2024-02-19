@@ -47,17 +47,13 @@ runs:
         IFS='/' read -r -a array <<< "${{ inputs.config }}"
         TYPE="${array[0]}"
         SBC="${array[1]}"
-        echo "TYPE=${TYPE}" | tee -a "$GITHUB_OUTPUT"
-        echo "SBC=${SBC}" | tee -a "$GITHUB_OUTPUT"
+        echo "TYPE=${TYPE}" >> "$GITHUB_OUTPUT"
+        echo "SBC=${SBC}" >> "$GITHUB_OUTPUT"
         if [[ "${TYPE}" = "raspberry" ]]; then
           TYPE_CONFIG="rpi-defaults.conf"
         else
           TYPE_CONFIG="${TYPE}-defaults.conf"
         fi
-        echo "DEBUG: TYPE_CONFIG=$TYPE_CONFIG"
-        BOARD_CONFIG=${SBC}.conf
-        echo "DEBUG: BOARD_CONFIG=${SBC}.conf"
-        echo "::endgroup::"
 
         echo "::group::Generate CustomPIOS config file"
         CONFIG_BASE_DIR="./repository/config"
@@ -111,9 +107,8 @@ runs:
 
           echo "::group::Generate Step output"
           source "${CONFIG_PATH}"
-          echo "DEBUG:"
-          echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" | tee -a "$GITHUB_OUTPUT"
-          echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" | tee -a "$GITHUB_OUTPUT"
+          echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> "$GITHUB_OUTPUT"
+          echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> "$GITHUB_OUTPUT"
           echo "::endgroup::"
           if [[ "${TYPE}" != "raspberry" ]]; then
             base_zip_img_helper
@@ -131,6 +126,7 @@ runs:
       id: checksum
       shell: bash
       run: |
+        echo "::group::Get base image checksum"
         cd repository/src/image
         FILENAME=$(basename ${{ steps.config.outputs.DOWNLOAD_URL_CHECKSUM }})
         wget -O ${FILENAME} ${{ steps.config.outputs.DOWNLOAD_URL_CHECKSUM }}
@@ -139,6 +135,7 @@ runs:
 
         echo "CHECKSUM=${CHECKSUM}" >> $GITHUB_OUTPUT
         echo "FILENAME=${FILENAME}" >> $GITHUB_OUTPUT
+        echo "::endgroup::"
 
     - name: Cache Base Source Image
       id: cache
@@ -171,7 +168,8 @@ runs:
 
     - name: Build Image
       shell: bash
-      run: sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
+      run: |
+        sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
 
     - name: Cleanup workspace & fix permissions
       if: success()
