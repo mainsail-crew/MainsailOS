@@ -72,21 +72,10 @@ runs:
         }
 
         base_zip_img_helper() {
-          cat << EOF >> "${TMP_CONFIG}"
-        get_img_name() {
-        local -a types
-        types=(zip 7z xz)
-        if [ -n "${DIST_PATH}" ]; then
-            for i in "${types[@]}"; do
-                find "${DIST_PATH}/image/" -type f -name "*.${i}" -printf "%p\n"
-            done
-        fi
-        if [ -z "${DIST_PATH}" ]; then
-            echo ""
-        fi
-        }
-        BASE_ZIP_IMG="\$(get_img_name)"
-        EOF
+          local img
+          img="${{ github.workspace }}/repository/src/image"
+          img="${img}/$(basename "${DOWNLOAD_URL_IMAGE}")"
+          echo "BASE_ZIP_IMG=${img}" >> "${CONFIG_PATH}"
         }
 
         concat_helper() {
@@ -107,30 +96,32 @@ runs:
         }
 
         copy_config() {
-          mv "${TMP_CONFIG}" "${CONFIG_PATH}"
+          echo "::group::Copy config"
+          mv -v "${TMP_CONFIG}" "${CONFIG_PATH}"
+          echo "::endgroup::"
         }
 
         main() {
           generate_header
-          if [[ "${TYPE}" != "raspberry" ]]; then
-            base_zip_img_helper
-          fi
           concat_helper "${DEFAULT_CONF}"
           concat_helper "${SBC_CONFIG}/${TYPE_CONFIG}"
           concat_helper "${SBC_CONFIG}/${BOARD_CONFIG}"
           generate_exports
-          copy_config
 
+          echo "::group::Generate Step output"
+          source "${CONFIG_PATH}"
+          echo "DEBUG:"
+          echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" | tee -a "$GITHUB_OUTPUT"
+          echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" | tee -a "$GITHUB_OUTPUT"
+          echo "::endgroup::"
+          if [[ "${TYPE}" != "raspberry" ]]; then
+            base_zip_img_helper
+          fi
+          copy_config
           # Write config to debug
           echo "::group::Print config file"
           cat "${CONFIG_PATH}"
           echo "::endgroup::"
-
-          echo "::group::Generate Step output"
-          source ./repository/src/config
-          echo "DEBUG:"
-          echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" | tee -a "$GITHUB_OUTPUT"
-          echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" | tee -a "$GITHUB_OUTPUT"
         }
 
         # MAIN
