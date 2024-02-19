@@ -92,10 +92,16 @@ runs:
         }
 
         main() {
+          local -a files
+          files=(
+                  ${DEFAULT_CONF}
+                  ${CONFIG_BASE_DIR}/${TYPE}/${TYPE_CONFIG}
+                  ${CONFIG_BASE_DIR}/${TYPE}/${SBC}.conf
+                )
           generate_header
-          concat_helper "${DEFAULT_CONF}"
-          concat_helper "${CONFIG_BASE_DIR}/${TYPE_CONFIG}"
-          concat_helper "${CONFIG_BASE_DIR}/${TYPE}/${SBC}.conf"
+          for file in "${files[@]}"; do
+            concat_helper "${file}"
+          done
           generate_exports
           copy_config
 
