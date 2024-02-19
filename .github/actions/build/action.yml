@@ -78,7 +78,6 @@ runs:
         concat_helper() {
           local input_file
           input_file="${1}"
-          echo "DEBUG: Using input file: ${input_file}"
           if [[ -f "${input_file}" ]]; then
             sed '/^#.*/d; /^$/d' "${input_file}" >> "${TMP_CONFIG}"
           fi
@@ -124,7 +123,6 @@ runs:
       id: checksum
       shell: bash
       run: |
-        echo "::group::Get base image checksum"
         cd repository/src/image
         FILENAME=$(basename ${{ steps.config.outputs.DOWNLOAD_URL_CHECKSUM }})
         wget -O ${FILENAME} ${{ steps.config.outputs.DOWNLOAD_URL_CHECKSUM }}
@@ -133,7 +131,6 @@ runs:
 
         echo "CHECKSUM=${CHECKSUM}" >> $GITHUB_OUTPUT
         echo "FILENAME=${FILENAME}" >> $GITHUB_OUTPUT
-        echo "::endgroup::"
 
     - name: Cache Base Source Image
       id: cache
