@@ -119,7 +119,6 @@ runs:
         }
 
         main
-        echo "::endgroup::"
 
     - name: Base Image Checksum
       id: checksum
