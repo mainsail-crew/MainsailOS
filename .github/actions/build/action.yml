@@ -72,7 +72,7 @@ runs:
         }
 
         base_zip_img_helper() {
-          cat < EOF >> "${TMP_CONFIG}"
+          cat << EOF >> "${TMP_CONFIG}"
           get_img_name() {
           local -a types
           types=(zip 7z xz)
