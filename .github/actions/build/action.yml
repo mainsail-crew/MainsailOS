@@ -54,7 +54,6 @@ runs:
         else
           TYPE_CONFIG="${TYPE}-defaults.conf"
         fi
-        echo "::endgroup::"
 
         echo "::group::Generate CustomPIOS config file"
         CONFIG_BASE_DIR="./repository/config"
