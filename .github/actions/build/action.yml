@@ -43,7 +43,6 @@ runs:
       id: config
       shell: bash
       run: |
-        echo "::group::Get Matrix"
         IFS='/' read -r -a array <<< "${{ inputs.config }}"
         TYPE="${array[0]}"
         SBC="${array[1]}"
@@ -55,7 +54,6 @@ runs:
           TYPE_CONFIG="${TYPE}-defaults.conf"
         fi
 
-        echo "::group::Generate CustomPIOS config file"
         CONFIG_BASE_DIR="./repository/config"
         DEFAULT_CONF="./repository/config/config-defaults.conf"
         SBC_CONFIG="${CONFIG_BASE_DIR}/${TYPE}"
@@ -91,9 +89,7 @@ runs:
         }
 
         copy_config() {
-          echo "::group::Copy config"
           mv -v "${TMP_CONFIG}" "${CONFIG_PATH}"
-          echo "::endgroup::"
         }
 
         main() {
@@ -117,7 +113,6 @@ runs:
         if [[ "${TYPE}" != "raspberry" ]]; then
           base_zip_img_helper
         fi
-        echo "::endgroup::"
 
     - name: Base Image Checksum
       id: checksum
