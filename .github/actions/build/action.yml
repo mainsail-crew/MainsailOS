@@ -107,6 +107,7 @@ runs:
           concat_helper "${SBC_CONFIG}/${TYPE_CONFIG}"
           concat_helper "${SBC_CONFIG}/${BOARD_CONFIG}"
           generate_exports
+          copy_config
 
           echo "::group::Generate Step output"
           source "${CONFIG_PATH}"
@@ -117,7 +118,6 @@ runs:
           if [[ "${TYPE}" != "raspberry" ]]; then
             base_zip_img_helper
           fi
-          copy_config
           # Write config to debug
           echo "::group::Print config file"
           cat "${CONFIG_PATH}"
