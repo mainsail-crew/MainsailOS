@@ -101,7 +101,8 @@ runs:
         generate_exports() {
           for x in $(grep "^[A-Z]" "${TMP_CONFIG}" | cut -d'=' -f1 | sort); do
             if [[ "${x}" != "BASE_ZIP_IMG" ]]
-            echo "export ${x}" >> "${TMP_CONFIG}"
+              echo "export ${x}" >> "${TMP_CONFIG}"
+            fi
           done
         }
 
