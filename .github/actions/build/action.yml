@@ -122,6 +122,13 @@ runs:
         main
         echo "::endgroup::"
 
+    - name: Run ShellCheck
+      uses: ludeeus/action-shellcheck@master
+      with:
+        scandir: "${{ github.workspace }}/repository/src"
+        ignore_paths: "${{ github.workspace }}/repository/src/modules/**"
+        additional_files: "config"
+
     - name: Base Image Checksum
       id: checksum
       shell: bash
