@@ -70,6 +70,7 @@ runs:
           img="${{ github.workspace }}/repository/src/image"
           img="${img}/$(basename "${DOWNLOAD_URL_IMAGE}")"
           echo "BASE_ZIP_IMG=${img}" >> "${CONFIG_PATH}"
+          echo "export BASE_ZIP_IMG" >> "${CONFIG_PATH}"
         }
 
         concat_helper() {
