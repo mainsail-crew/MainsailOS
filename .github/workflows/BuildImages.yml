@@ -1,17 +1,5 @@
 name: Build MainsailOS
 on:
-  push:
-    branches:
-      - "develop"
-    paths:
-      - "src/modules/**"
-      - "src/build_dist"
-      - "config/**"
-      - ".github/workflows/BuildImages.yml"
-      - ".github/workflow_config.yml"
-      - ".github/scripts/setup_matrix.py"
-    tags-ignore:
-      - "**"
   pull_request:
     types: [opened, edited, reopened, synchronize]
     paths:
