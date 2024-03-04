@@ -7,11 +7,11 @@
 A [Armbian](https://www.armbian.com) based distribution for Yumi Lab Smartpi and Smartpad.
 
 This repository is a modified version of [MainsailOS](https://github.com/mainsail-crew/MainsailOS).
-We need to clarify that these to projects are not connected in any kind or form.
+We need to clarify that these to projects are **not** connected in any kind or form.
 
 If you need any kind of support please contact [Yumi Lab](https://wiki.yumi-lab.com)
 
-Further more [mainsail-crew](https://github.com/mainsail-crew) will _**not**_ provide support for our YumiOS.
+Further more [mainsail-crew](https://github.com/mainsail-crew) will **not** provide support for our YumiOS.
 
 # What is YumiOS?
 
