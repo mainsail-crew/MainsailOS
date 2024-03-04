@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+#### Smartpad Specific Tweaks for armbian images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/KwadFan
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck disable=all
+
+### Intentionally left blank

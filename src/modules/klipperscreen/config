@@ -9,5 +9,7 @@
 #### This File is distributed under GPLv3
 ####
 
+[[ -n "$KLIPPERSCREEN_DEPS" ]] || KLIPPERSCREEN_DEPS="git"
+
 [ -n "$KLIPPERSCREEN_REPO_SHIP" ] || KLIPPERSCREEN_REPO_SHIP=https://github.com/KlipperScreen/KlipperScreen.git
 [ -n "$KLIPPERSCREEN_REPO_BRANCH" ] || KLIPPERSCREEN_REPO_BRANCH=master

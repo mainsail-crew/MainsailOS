@@ -5,12 +5,12 @@
 # See https://www.shellcheck.net/wiki/SC2155
 
 # Download Base Url
-DOWNLOAD_BASE_URL="https://github.com/mainsail-crew/armbian-builds/releases/latest/download"
+DOWNLOAD_BASE_URL="https://github.com/Yumi-Lab/SmartPi-armbian/releases/latest/download"
 
 # Base User
 BASE_ADD_USER="yes"
 BASE_USER="pi"
-BASE_USER_PASSWORD="armbian"
+BASE_USER_PASSWORD="yumi"
 
 # Needed while building for non rpi sbc
 BASE_DISTRO="armbian"
@@ -20,10 +20,12 @@ BASE_IMAGE_RASPBIAN="no"
 BASE_ROOT_PARTITION="2"
 BASE_IMAGE_ENLARGEROOT=2500
 BASE_IMAGE_RESIZEROOT=600
+# Set boot partition mountpoint
+BASE_BOOT_MOUNT_PATH="/boot/"
 # Compress not needed due compression done in workflow
 BASE_RELEASE_COMPRESS=no
 # Modules are valid for 32bit and 64bit images
-MODULES="base,pkgupgrade,udev_fix,armbian(armbian_net,mainsailos,klipper,is_req_preinstall,moonraker,mainsail,timelapse,crowsnest,sonar)"
+MODULES="base,pkgupgrade,udev_fix,armbian(armbian_net,yumios,klipper,is_req_preinstall,moonraker,mainsail,timelapse,crowsnest,sonar)"
 
 # export Variables
 export DOWNLOAD_BASE_URL
@@ -35,10 +37,6 @@ export BASE_IMAGE_RASPBIAN
 export BASE_ROOT_PARTITION
 export BASE_IMAGE_ENLARGEROOT
 export BASE_IMAGE_RESIZEROOT
+export BASE_BOOT_MOUNT_PATH
 export BASE_RELEASE_COMPRESS
 export MODULES
-
-### JSON sniplet Setup
-### NOTE: Please see all config files for setup variables!!!
-# shellcheck disable=SC2034
-JSON_DESCRIPTION="A port of Armbian with preinstalled Klipper/Moonraker/Mainsail for 3D printers"

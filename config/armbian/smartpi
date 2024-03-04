@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+# shellcheck enable=require-variable-braces
+# shellcheck disable=SC2034
+
+
+
+# Image source
+DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}/Yumi-smartpi1-bookworm-server.img.xz"
+DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/Yumi-smartpi1-bookworm-server.img.xz.sha256"
+
+# export Variables
+export BASE_ARCH
+export DOWNLOAD_URL_CHECKSUM
+export DOWNLOAD_URL_IMAGE

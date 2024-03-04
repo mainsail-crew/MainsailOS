@@ -1,10 +1,13 @@
 #-----------------------------------------------------------------
 #
-# MainsailOS (armbian edition) Network Configuration
+# YumiOS Network Configuration
 # Set optional end user configuration
 #    - Rename this file from /boot/network_config.txt.template to /boot/network_config.txt
 #    - Settings below will be applied every time you reboot your machine.
 # Be aware, old configurations will be deleted!
+#
+# This is originaly based on work of mainsail-crew/MainsailOS
+# ( https://github.com/mainsail-crew/MainsailOS )
 #
 # This file is based on work of the armbian developer team
 # https://github.com/armbian/build/blob/master/packages/bsp/armbian_first_run.txt.template

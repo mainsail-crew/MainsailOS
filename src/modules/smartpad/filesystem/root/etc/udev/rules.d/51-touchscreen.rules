@@ -1,0 +1,1 @@
+ACTION=="add", ATTRS{name}=="wch.cn CH57x", ENV{LIBINPUT_CALIBRATION_MATRIX}="-1 0 1 0 -1 1 0 0 1"

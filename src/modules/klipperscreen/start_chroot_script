@@ -25,8 +25,10 @@ echo_green "Installing KlipperScreen and enable KlipperScreen Service ..."
 
 ## Force apt update
 apt-get update
-## Make sure 'git' is installed!
-check_install_pkgs git
+
+## Install dependencies
+# shellcheck disable=SC2086
+check_install_pkgs ${KLIPPERSCREEN_DEPS}
 
 ## Step 1: Move to Home Dir as WorkingDirectoy
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
