@@ -1,36 +1,31 @@
-# Contributing to MainsailOS
+# Contributing to YumiOS
 
-If you are reading this document right now, you are probably considering contributing to Mainsail and making it better
+If you are reading this document right now, you are probably considering contributing to YumiOS and making it better
 than it is today. Thank you for taking that initiative! Before submitting your contribution, please take a moment and
 make sure to read through our contribution guidelines:
 
--   [Code of Conduct](https://github.com/mainsail-crew/MainsailOS/blob/develop/.github/CODE_OF_CONDUCT.md)
+-   [Code of Conduct](https://github.com/Yumi-Lab/YumiOS/blob/develop/.github/CODE_OF_CONDUCT.md)
 -   [Question or Problem?](#question)
 -   [Issues and Bugs](#issue)
 -   [Feature Requests](#feature)
 -   [Submission Guidelines](#submit)
     -   [Submit an Issue](#submit-issue)
     -   [Submit a Pull Request](#submit-pr)
--   [Financial Contributions](#financial)
--   [Credits](https://docs.mainsail.xyz/credits)
 
 ## <a name="question"></a> Got a Question or Problem?
 
 Please do not open issues for general support questions. We want to keep GitHub issues for bug reports and feature
-requests. Instead, please visit us on [Discord](https://discord.gg/mainsail) to ask support-related questions.
-
-Our Discord server is a much better place to ask general support questions. We take a right to close issues that are
-requests for generic support and redirect people to Discord.
+requests.
 
 ## <a name="issue"></a> Found a Bug?
 
 If you find a bug in the source code or think that Mainsail is behaving odd in specific situations, you can help us fix
-that issue by [submitting an issue](https://github.com/mainsail-crew/MainsailOS/issues/new?assignees=&labels=%E2%9A%A1+Type%3A+Bug&template=bug_report.yml).
+that issue by [submitting an issue](https://github.com/Yumi-Lab/YumiOS/issues/new?assignees=&labels=%E2%9A%A1+Type%3A+Bug&template=bug_report.yml).
 If you have already fixed that issue, you can [submit a Pull Request](#submit-pr) with that fix.
 
 ## <a name="feature"></a> Missing a Feature?
 
-You can request a new feature by [submitting a feature request](https://github.com/mainsail-crew/MainsailOS/issues/new?assignees=&labels=%F0%9F%92%A1+Type%3A+FR&template=feature_request.yml).
+You can request a new feature by [submitting a feature request](https://github.com/Yumi-Lab/YumiOS/issues/new?assignees=&labels=%F0%9F%92%A1+Type%3A+FR&template=feature_request.yml).
 If you would like to implement a new feature, please consider the scope of the change. For changes requiring a lot of
 work, it's best to outline a proposal first so it can be discussed. This allows us to prevent wasted time and effort and
 discuss how to bring your proposed feature into the project.
@@ -49,10 +44,10 @@ fix a possible bug.
 
 Before you work on a PR and submit it, please pay attention to the following guidelines:
 
-1. Search the [pull requests](https://github.com/mainsail-crew/MainsailOS/pulls) for an open or closed PR related to your submission.
+1. Search the [pull requests](https://github.com/Yumi-Lab/YumiOS/pulls) for an open or closed PR related to your submission.
     - You don't want to duplicate existing efforts or work on something unlikely to be merged into the project.
 2. Do not submit PRs against the `master` branch. PRs need to be submitted against the `develop` branch.
-3. Follow our Code Layout definded via [editorconfig](https://github.com/mainsail-crew/MainsailOS/blob/develop/.editorconfig).
+3. Follow our Code Layout definded via [editorconfig](https://github.com/Yumi-Lab/YumiOS/blob/develop/.editorconfig).
 4. If there is an issue describing the problem you're fixing or a discussion of a feature you are implementing, make sure to link it in the PRs body.
 
     - You can also add `fix #<id>` or `fixes #<id>` in the PR body where `<id>` is the issue id.
@@ -74,16 +69,8 @@ Before you work on a PR and submit it, please pay attention to the following gui
     - Upon merging, we will squash all commits of the PR into a single commit for a clean history and release changelogs.
 7. Please sign off each commit and your PR. It must contain your real name and a current email address (see example in item 4).
     - The sign-off should follow this pattern: `Signed-off-by: My Name <myemail@example.org>`
-    - The sign-off certifies that you agree with the [developer certificate of origin](https://github.com/mainsail-crew/MainsailOS/blob/develop/.github/DEVELOPER_CERTIFICATE_OF_ORIGIN.md).
+    - The sign-off certifies that you agree with the [developer certificate of origin](https://github.com/Yumi-Lab/YumiOS/blob/develop/.github/DEVELOPER_CERTIFICATE_OF_ORIGIN.md).
     - If you provide a translation, a sign-off is not necessarily required.
 8. When opening a pull request, keep `Allow edits and access to secrets by maintainers` **enabled**.
 9. Your pull request has to pass our automated Test Chain
 10. pull requests have to pass internal tests on bare metal hardware, therefor they could take time to be merged.
-
-## <a name="financial"></a> Financial Contribution
-
-As a community-driven project without primary corporate backing, we always welcome financial contributions. A list of
-options we offer to support us financially can be seen below.
-
--   [Become a supporter on Patreon](https://patreon.com/meteyou) (monthly recurring)
--   [Donation via Ko-Fi](https://ko-fi.com/mainsail) (one time / monthly recurring)
