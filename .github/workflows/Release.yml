@@ -85,7 +85,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: "MainsailOS ${{ github.event.inputs.version }}"
+          name: "YumiOS ${{ github.event.inputs.version }}"
           tag_name: ${{ github.event.inputs.version }}
           body: ${{ steps.changelog.outputs.content }}
           draft: true
@@ -250,8 +250,8 @@ jobs:
         run: |
           echo "END_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
 
-          if [[ "${{ github.repository_owner }}" == "Mainsail-Crew" ]]; then
-            echo "START_TAG=0.5.0" >> $GITHUB_OUTPUT
+          if [[ "${{ github.repository_owner }}" == "Yumi-Lab" ]]; then
+            echo "START_TAG=0.0.0" >> $GITHUB_OUTPUT
           else
             echo "START_TAG=$(git for-each-ref --sort=creatordate --count=1 --format='%(refname:lstrip=2)')" >> $GITHUB_OUTPUT
           fi
