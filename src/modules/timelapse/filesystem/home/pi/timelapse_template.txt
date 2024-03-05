@@ -11,7 +11,7 @@
 #origin: https://github.com/mainsail-crew/moonraker-timelapse.git
 #managed_services: klipper moonraker
 
-#[timelapse]
+[timelapse]
 ###   Directory where the generated video will be saved
 #output_path: ~/timelapse/
 ###   Directory where ffmpeg is installed
