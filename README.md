@@ -1,5 +1,5 @@
 <p align="center">
-<img src=".github/sdcard-logo.png" style="width:40%" >
+<img src="https://wiki.yumi-lab.com/img/YUMIOS/YUMIOS_LOGO.jpg" style="width:50%" >
 </p>
 
 # YumiOS
