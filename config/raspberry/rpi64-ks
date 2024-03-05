@@ -11,10 +11,8 @@ BASE_ARCH="arm64"
 # DOWNLOAD_URL_IMAGE="https://downloads.raspberrypi.org/raspios_lite_arm64_latest.torrent"
 
 # New locations after Bullseye turned into 'oldstable'
-DOWNLOAD_URL_ARCH="raspios_oldstable_lite_arm64/images/raspios_oldstable_lite_arm64-2023-12-06"
-DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}/${DOWNLOAD_URL_ARCH}/2023-12-05-raspios-bullseye-arm64-lite.img.xz.sha256"
-DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/${DOWNLOAD_URL_ARCH}/2023-12-05-raspios-bullseye-arm64-lite.img.xz.torrent"
-
+DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}/raspios_oldstable_lite_arm64/images/raspios_oldstable_lite_arm64-2023-12-06/2023-12-05-raspios-bullseye-arm64-lite.img.xz.sha256"
+DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/raspios_oldstable_lite_arm64/images/raspios_oldstable_lite_arm64-2023-12-06/2023-12-05-raspios-bullseye-arm64-lite.img.xz.torrent"
 # Changed modules
 # shellcheck disable=SC2034
 MODULES="base,pkgupgrade,udev_fix,mainsailos(net,piconfig,klipper,is_req_preinstall,moonraker,timelapse,mainsail,klipperscreen,crowsnest,sonar,password-for-sudo),postrename"
