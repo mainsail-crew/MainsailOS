@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Shebang for better file detection
-#### Smartpad Specific Tweaks for armbian images
+#### Smartpad Specific Tweaks for Yumi SmartPad images
 ####
 #### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
 #### Copyright 2023 - till today
@@ -11,4 +11,6 @@
 
 # shellcheck disable=all
 
-### Intentionally left blank
+[[ -n "$SMARTPAD_CONFIG_TXT_FILE" ]] || SMARTPAD_CONFIG_TXT_FILE="/boot/armbianEnv.txt"
+
+[ -n "$SMARTPAD_PLYMOUTH_REPO" ] || SMARTPAD_PLYMOUTH_REPO="https://github.com/Yumi-Lab/plymouth-themes.git"

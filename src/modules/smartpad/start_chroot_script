@@ -17,6 +17,17 @@ set -Ee
 source /common.sh
 install_cleanup_trap
 
+### Helper func
+is_board_type() {
+    local board releasefile
+    board=""
+    releasefile="/etc/armbian-release"
+    if [[ -f "${releasefile}" ]]; then
+        board="$(grep "BOARD=" "${releasefile}" | cut -d'=' -f2)"
+    fi
+    echo "${board}"
+}
+
 echo_green "Apply SmartPad specific patches..."
 unpack /filesystem/root /
 if [[ -f /etc/X11/xorg.conf.d/03-smartpad-rotate-touch.conf ]]; then
@@ -24,27 +35,34 @@ if [[ -f /etc/X11/xorg.conf.d/03-smartpad-rotate-touch.conf ]]; then
 fi
 
 echo_green "Apply SmartPad specific patches... [DONE]"
-# Keep for later use ...
-# ## Step 9: Enable spi and/or UART3 on BananaPi M2 Zero
-# ### Enable both
-# if [[ "$(is_board_type)" == "bananapim2zero" ]] \
-# && [[ "${ARMBIAN_CONFIG_BPI2ZERO_ENABLE_UART3}" == "true" ]] \
-# && [[ "${ARMBIAN_CONFIG_BPI2ZERO_ENABLE_SPI}" == "true" ]]; then
-#     echo_green "Enable UART3 and SPI for 'bananapim2zero' SBC ..."
-#     echo "overlays=uart3 spi-spidev" >> "${ARMBIAN_CONFIG_TXT_FILE}"
-# fi
-# ### UART3 only
-# if [[ "$(is_board_type)" == "bananapim2zero" ]] \
-# && [[ "${ARMBIAN_CONFIG_BPI2ZERO_ENABLE_UART3}" == "true" ]] \
-# && [[ "${ARMBIAN_CONFIG_BPI2ZERO_ENABLE_SPI}" != "true" ]]; then
-#     echo_green "Enable UART3 for 'bananapim2zero' SBC ..."
-#     echo "overlays=uart3" >> "${ARMBIAN_CONFIG_TXT_FILE}"
-# fi
-# ### SPI only
-# if [[ "$(is_board_type)" == "bananapim2zero" ]] \
-# && [[ "${ARMBIAN_CONFIG_BPI2ZERO_ENABLE_UART3}" == "true" ]] \
-# && [[ "${ARMBIAN_CONFIG_BPI2ZERO_ENABLE_SPI}" != "true" ]]; then
-#     echo_green "Enable SPI for 'bananapim2zero' SBC ..."
-#     echo "overlays=uart3" >> "${ARMBIAN_CONFIG_TXT_FILE}"
-# fi
-# ## END Step 9
+
+
+### Enable Serial and SPI connections by default
+if [[ "$(is_board_type)" == "SmartPad" ]]; then
+    echo_green "Enable Serial and SPI interface on SmartPad..."
+    echo "overlays=spi-spidev uart1 uart2" >> "${SMARTPAD_CONFIG_TXT_FILE}"
+    echo "param_spidev_spi_bus=1" >> "${SMARTPAD_CONFIG_TXT_FILE}"
+    echo_green "Enable Serial and SPI interface on SmartPad... DONE!"
+fi
+
+### Install plymouth theme and install yumi Plymouth repository
+echo_green "Install Yumi Lab Plymouth theme on SmartPad..."
+
+smartpad_install_theme() {
+    local src dest
+    dest="/usr/share/plymouth/themes/"
+    src="/home/${BASE_USER}/$(basename "${SMARTPAD_PLYMOUTH_REPO/.git/}")"
+    src="${src}/pack_2/hexagon_alt"
+    if [[ -d "${src}" ]]; then
+        sudo cp -vr "${src}" "${dest}"
+    fi
+    sudo plymouth-set-default-theme -R hexagon_alt
+    sudo sed -i 's/bootlogo=false/bootlogo=true' /boot/armbianEnv.txt
+}
+
+pushd "/home/${BASE_USER}" &>/dev/null
+git clone "${SMARTPAD_PLYMOUTH_REPO}"
+smartpad_install_theme
+popd &>/dev/null
+
+echo_green "Install Yumi Lab Plymouth theme on SmartPad..."
