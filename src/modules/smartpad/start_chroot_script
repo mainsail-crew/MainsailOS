@@ -38,7 +38,7 @@ echo_green "Apply SmartPad specific patches... [DONE]"
 
 
 ### Enable Serial and SPI connections by default
-if [[ "$(is_board_type)" == "SmartPad" ]]; then
+if [[ "$(is_board_type)" == "smartpad" ]]; then
     echo_green "Enable Serial and SPI interface on SmartPad..."
     echo "overlays=spi-spidev uart1 uart2" >> "${SMARTPAD_CONFIG_TXT_FILE}"
     echo "param_spidev_spi_bus=1" >> "${SMARTPAD_CONFIG_TXT_FILE}"
