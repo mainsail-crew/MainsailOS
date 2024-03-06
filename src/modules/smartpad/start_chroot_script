@@ -56,13 +56,13 @@ smartpad_install_theme() {
     if [[ -d "${src}" ]]; then
         sudo cp -vr "${src}" "${dest}"
     fi
-    sudo plymouth-set-default-theme -R hexagon_alt
     sudo sed -i 's/bootlogo=false/bootlogo=true/' /boot/armbianEnv.txt
 }
 
 pushd "/home/${BASE_USER}" &>/dev/null
 git clone "${SMARTPAD_PLYMOUTH_REPO}"
 smartpad_install_theme
+plymouth-set-default-theme -R hexagon_alt
 popd &>/dev/null
 
 echo_green "Install Yumi Lab Plymouth theme on SmartPad..."
