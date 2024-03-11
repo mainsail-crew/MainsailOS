@@ -14,4 +14,4 @@
 
 [ -n "$YUMIOS_DEPS" ] || YUMIOS_DEPS="python3-serial python3-opencv wavemon \
 hexedit tcpdump iptraf mc htop dcfldd nano usbutils ranger tldr ncdu \
-can-utils multitail fd-find lsof minicom"
+can-utils multitail fd-find lsof minicom janus"
