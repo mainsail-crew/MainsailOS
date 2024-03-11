@@ -72,3 +72,35 @@ smartpad_install_theme
 popd &>/dev/null
 
 echo_green "Install Yumi Lab Plymouth theme on SmartPad... [DONE]"
+
+echo_green "Install yumi-config smartpad_generic ..."
+pushd "/home/${BASE_USER}" &>/dev/null
+sudo -u "${BASE_USER}" git clone https://github.com/Yumi-Lab/yumi-config.git
+echo "DEBUG:"
+echo "----------------------------------------------------------"
+ls -al /home/"${BASE_USER}"
+echo "----------------------------------------------------------"
+sudo -u "${BASE_USER}" cp -R /home/"${BASE_USER}"/yumi-config/smartpad-generic/* /home/"${BASE_USER}"/printer_data/config/
+rm -rfv "/home/${BASE_USER}/yumi-config"
+popd &>/dev/null
+echo_green "Install yumi-config smartpad_generic ... [DONE]"
+
+echo_green "Install YUMI_SYNC ..."
+pushd "/home/${BASE_USER}" &>/dev/null
+sudo -u "${BASE_USER}" git clone https://github.com/Yumi-Lab/YUMI_SYNC.git
+cd YUMI_SYNC
+chmod +x ./install.sh
+./install.sh
+cd ..
+popd &>/dev/null
+echo_green "Install YUMI_SYNC ... [DONE]"
+
+# echo_green "Install moonraker-yumi-lab ..."
+# pushd "/home/${BASE_USER}" &>/dev/null
+# sudo -u "${BASE_USER}" git clone https://github.com/Yumi-Lab/moonraker-yumi-lab.git
+# cd moonraker-yumi-lab
+# chmod +x ./install.sh
+# ./install.sh
+# cd ..
+# popd &>/dev/null
+# echo_green "Install moonraker-yumi-lab ... [DONE]"
