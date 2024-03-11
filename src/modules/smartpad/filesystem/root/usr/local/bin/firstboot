@@ -13,6 +13,8 @@ set -e
 # Debug ...
 # set -x
 
+DIALOGRC=/.firstboot
+export DIALOGRC
 DIALOG="$(which dialog)"
 DIALOG=("${DIALOG}" --backtitle "YumiOS for Smartpad")
 RESOLUTION=(20 60)
