@@ -1,0 +1,16 @@
+[Unit]
+Description=Firstboot initialisation
+After=basic.target
+Before=multi-user.target
+ConditionPathExists=/.firstboot
+
+[Service]
+ExecStart=/usr/local/bin/firstboot
+StandardInput=tty
+TTYPath=/dev/tty2
+TTYReset=yes
+TTYVHangup=yes
+TimeoutSec=120
+
+[Install]
+WantedBy=multi-user.target
