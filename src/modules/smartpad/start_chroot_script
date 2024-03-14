@@ -84,7 +84,7 @@ pushd "/home/${BASE_USER}" &>/dev/null
 sudo -u "${BASE_USER}" git clone https://github.com/Yumi-Lab/YUMI_SYNC.git
 cd YUMI_SYNC
 chmod +x ./install.sh
-./install.sh
+sudo -u "${BASE_USER}" ./install.sh
 cd ..
 popd &>/dev/null
 echo_green "Install YUMI_SYNC ... [DONE]"
@@ -94,7 +94,7 @@ pushd "/home/${BASE_USER}" &>/dev/null
 sudo -u "${BASE_USER}" git clone https://github.com/Yumi-Lab/moonraker-yumi-lab.git
 cd moonraker-yumi-lab
 chmod +x ./install.sh
-./install.sh -C "/home/pi/printer_data/config/moonraker.conf"\
+sudo -u "${BASE_USER}" ./install.sh -C "/home/pi/printer_data/config/moonraker.conf"\
     -p 7125 -H 127.0.0.1 -l /home/pi/printer_data/logs \
     -L -S "https://app.yumi-lab.com"
 cd ..
