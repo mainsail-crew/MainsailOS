@@ -58,12 +58,6 @@ smartpad_install_theme() {
     fi
     echo_green "Set default theme to ${SMARTPAD_PLYMOUTH_THEME} ..."
     sudo plymouth-set-default-theme "${SMARTPAD_PLYMOUTH_THEME}"
-    echo_green "Enable Boot Logo ..."
-    sudo sed -i 's/bootlogo=false/bootlogo=true/' /boot/armbianEnv.txt
-    echo_green "Update initramfs ..."
-    if which update-initramfs >/dev/null 2>&1; then
-		update-initramfs -u
-	fi
 }
 
 pushd "/home/${BASE_USER}" &>/dev/null
@@ -104,3 +98,6 @@ echo_green "Install YUMI_SYNC ... [DONE]"
 # cd ..
 # popd &>/dev/null
 # echo_green "Install moonraker-yumi-lab ... [DONE]"
+
+echo_green "Disable KlipperScreen for first boot service..."
+systemctl_if_exists disable KlipperScreen.service

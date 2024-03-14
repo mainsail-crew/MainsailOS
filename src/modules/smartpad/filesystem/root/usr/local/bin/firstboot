@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+#### firstboot actions
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2024
+####
+#### This File is distributed under GPLv3
+####
+
+set -e
+
+# Debug ...
+# set -x
+
+DIALOGRC=/.firstboot
+export DIALOGRC
+DIALOG="$(which dialog)"
+DIALOG=("${DIALOG}" --backtitle "YumiOS for Smartpad")
+RESOLUTION=(20 60)
+
+#change active tty
+chvt 2
+
+if [[ "$(systemctl is-active KlipperScreen.service)" = "active" ]]; then
+    systemctl stop KlipperScreen.service &>/dev/null
+fi
+
+welcome_msg() {
+    cat << EOF
+Hello dear YUMI SmartPad One user,
+Please be patient, we have to prepare your first start of your Smartpad!
+
+    *** DO NOT UNPLUG DEVICE OR DISRUPT THIS PROCESS! ***
+    *** THIS WILL HARM YOUR OS! ***
+
+Some steps may take several minutes. Stay patient please.
+The device will reboot after exiting ...
+Continuing setup in ...
+EOF
+}
+
+reboot_msg() {
+    cat << EOF
+Your device will be restarted in 5 seconds...
+
+Thank you for being patient and have fun with your new
+    *** YUMI SmartPad One ***
+
+EOF
+}
+
+gen_initramfs() {
+    update-initramfs -u &>/dev/null
+}
+
+enable_ks() {
+    systemctl --quiet enable KlipperScreen.service &>/dev/null
+}
+
+disable_firstboot() {
+    systemctl --quiet disable firstboot.service &>/dev/null
+    rm -f /etc/systemd/system/firstboot.service &>/dev/null
+}
+
+# Welcome msg
+"${DIALOG[@]}" --clear --title "Firstboot preperation" \
+    --no-cancel --no-ok --pause "$(welcome_msg)" "${RESOLUTION[@]}" 15
+
+# Init gauge
+sleep 1 | "${DIALOG[@]}" --clear --gauge "Firstboot preperation ..." "${RESOLUTION[@]}" 0
+if [[ -f /boot/armbianEnv.txt ]]; then
+    sed -i 's/bootlogo=false/bootlogo=true/' /boot/armbianEnv.txt |
+    "${DIALOG[@]}" --clear --gauge "Firstboot preperation ..." "${RESOLUTION[@]}" 10
+fi
+
+# Update initramfs
+gen_initramfs | "${DIALOG[@]}" --clear --gauge "Generate Initial RAM filesystem ..." "${RESOLUTION[@]}" 20
+
+# enable KlipperScreen
+enable_ks | "${DIALOG[@]}" --clear --gauge "Enable KLipperScreen ..." "${RESOLUTION[@]}" 80
+
+# disable firstboot service
+disable_firstboot | "${DIALOG[@]}" --clear --gauge "Disable firstboot service ..." "${RESOLUTION[@]}" 90
+
+# Show fake finish
+rm -f /.firstboot | "${DIALOG[@]}" --clear --gauge "Finalize Firstboot ..." "${RESOLUTION[@]}" 100
+
+# Show reboot screen
+"${DIALOG[@]}" --clear --title "Firstboot preperation" \
+    --no-cancel --no-ok --pause "$(reboot_msg)" "${RESOLUTION[@]}" 5
+
+# reboot
+reboot
+
+exit 0
