@@ -61,7 +61,7 @@ smartpad_install_theme() {
 }
 
 pushd "/home/${BASE_USER}" &>/dev/null
-git clone "${SMARTPAD_PLYMOUTH_REPO}"
+sudo -u "${BASE_USER}" git clone "${SMARTPAD_PLYMOUTH_REPO}"
 smartpad_install_theme
 popd &>/dev/null
 
