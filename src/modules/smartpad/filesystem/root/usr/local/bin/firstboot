@@ -84,11 +84,14 @@ enable_ks | "${DIALOG[@]}" --clear --gauge "Enable KLipperScreen ..." "${RESOLUT
 disable_firstboot | "${DIALOG[@]}" --clear --gauge "Disable firstboot service ..." "${RESOLUTION[@]}" 90
 
 # Show fake finish
-rm -f /.firstboot | "${DIALOG[@]}" --clear --gauge "Finalize Firstboot ..." "${RESOLUTION[@]}" 100
+sleep 2 | "${DIALOG[@]}" --clear --gauge "Finalize Firstboot ..." "${RESOLUTION[@]}" 100
 
 # Show reboot screen
 "${DIALOG[@]}" --clear --title "Firstboot preperation" \
     --no-cancel --no-ok --pause "$(reboot_msg)" "${RESOLUTION[@]}" 5
+
+# Cleanup
+rm -f /.firstboot
 
 # reboot
 reboot

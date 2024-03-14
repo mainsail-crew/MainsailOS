@@ -106,3 +106,6 @@ unpack /filesystem/home/"${BASE_USER}" /home/"${BASE_USER}" "${BASE_USER}"
 
 echo_green "Disable KlipperScreen for first boot service..."
 systemctl_if_exists disable KlipperScreen.service
+
+echo_green "Enable first boot service..."
+systemctl_if_exists enable firstboot.service
