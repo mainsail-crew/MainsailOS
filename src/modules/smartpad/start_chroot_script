@@ -99,5 +99,8 @@ echo_green "Install YUMI_SYNC ... [DONE]"
 # popd &>/dev/null
 # echo_green "Install moonraker-yumi-lab ... [DONE]"
 
+echo_green "Install KlipperScreen preconfiguration..."
+unpack /filesystem/home/"${BASE_USER}" /home/"${BASE_USER}" "${BASE_USER}"
+
 echo_green "Disable KlipperScreen for first boot service..."
 systemctl_if_exists disable KlipperScreen.service
