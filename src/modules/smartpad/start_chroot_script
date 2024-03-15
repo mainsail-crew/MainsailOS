@@ -83,8 +83,7 @@ echo_green "Install YUMI_SYNC ..."
 pushd "/home/${BASE_USER}" &>/dev/null
 sudo -u "${BASE_USER}" git clone https://github.com/Yumi-Lab/YUMI_SYNC.git
 cd YUMI_SYNC
-chmod +x ./install.sh
-sudo -u "${BASE_USER}" ./install.sh
+make install
 cd ..
 popd &>/dev/null
 echo_green "Install YUMI_SYNC ... [DONE]"
