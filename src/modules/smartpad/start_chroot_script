@@ -75,7 +75,7 @@ echo "----------------------------------------------------------"
 ls -al /home/"${BASE_USER}"
 echo "----------------------------------------------------------"
 sudo -u "${BASE_USER}" cp -R /home/"${BASE_USER}"/yumi-config/smartpad-generic/* /home/"${BASE_USER}"/printer_data/config/
-rm -rfv "/home/${BASE_USER}/yumi-config"
+# rm -rfv "/home/${BASE_USER}/yumi-config"
 popd &>/dev/null
 echo_green "Install yumi-config smartpad_generic ... [DONE]"
 
@@ -109,3 +109,27 @@ systemctl_if_exists disable KlipperScreen.service
 
 echo_green "Enable first boot service..."
 systemctl_if_exists enable firstboot.service
+
+
+echo_green "Install klipper's linux_host_mcu ..."
+if [[ -d "/home/${BASE_USER}/yumi-config" ]]; then
+    echo "Copying config ..."
+    cp -v "/home/${BASE_USER}/yumi-config/mcu_linux/smart-pi-one/linux_mcu.kconfig" \
+        "/home/${BASE_USER}/klipper/.config"
+    pushd "/home/${BASE_USER}/klipper" &>/dev/null
+    echo "Compile linux_mcu ..."
+    sudo -u "${BASE_USER}" make -j"$(nproc)"
+    echo "Install linux_mcu ..."
+    sudo -u "${BASE_USER}" make flash
+    echo "Cleanup ..."
+    sudo -u "${BASE_USER}" make clean
+    sudo -u "${BASE_USER}" make distclean
+    echo "Copy service file ..."
+    cp -v "/home/${BASE_USER}/klipper/scripts/klipper-mcu.service" \
+        "/etc/systemd/system"
+    echo "Enable klipper-mcu.service ..."
+    systemctl_if_exists enable klipper-mcu.service
+    echo_green "Install klipper's linux_host_mcu ... [DONE]"
+else
+    echo_red "WARNING! yumi-config repository not found! Abort install..."
+fi
