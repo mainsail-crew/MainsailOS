@@ -9,6 +9,7 @@ DOWNLOAD_BASE_URL="https://downloads.raspberrypi.org/raspios_oldstable_lite_arm6
 DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}.sha256"
 DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}.torrent"
 
+BASE_BOOT_MOUNT_PATH=boot
 BASE_IMAGE_ENLARGEROOT=4500
 BASE_IMAGE_RESIZEROOT=600
 # Compress not needed due compression done in workflow
@@ -20,6 +21,7 @@ MODULES="base,pkgupgrade,udev_fix,mainsailos(net,piconfig,klipper,is_req_preinst
 export DOWNLOAD_BASE_URL
 export DOWNLOAD_URL_CHECKSUM
 export DOWNLOAD_URL_IMAGE
+export BASE_BOOT_MOUNT_PATH
 export BASE_IMAGE_ENLARGEROOT
 export BASE_IMAGE_RESIZEROOT
 export BASE_RELEASE_COMPRESS
