@@ -4,14 +4,12 @@
 # Declare Variables before exporting.
 # See https://www.shellcheck.net/wiki/SC2155
 
-# Keep for Bookworm template
-# DOWNLOAD_URL_CHECKSUM="https://downloads.raspberrypi.org/raspios_lite_armhf_latest.sha256"
-# DOWNLOAD_URL_IMAGE="https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent"
-
 # New locations after Bullseye turned into 'oldstable'
-DOWNLOAD_URL_CHECKSUM="https://downloads.raspberrypi.com/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2023-10-10/2023-05-03-raspios-bullseye-armhf-lite.img.xz.sha256"
-DOWNLOAD_URL_IMAGE="https://downloads.raspberrypi.com/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2023-10-10/2023-05-03-raspios-bullseye-armhf-lite.img.xz.torrent"
+DOWNLOAD_BASE_URL="https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2023-12-06/2023-12-05-raspios-bullseye-armhf-lite.img.xz"
+DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}.sha256"
+DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}.torrent"
 
+export DOWNLOAD_BASE_URL
 export DOWNLOAD_URL_CHECKSUM
 export DOWNLOAD_URL_IMAGE
 
