@@ -43,7 +43,13 @@ check_install_pkgs ${IS_REQ_PREINSTALL_DEPS}
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 if [[ -d "${IS_REQ_PREINSTALL_VENV_DIR}" ]] && [[ -x "${IS_REQ_PREINSTALL_VENV_DIR}/bin/pip" ]]; then
     echo_green "Installing numpy..."
-    sudo -u "${BASE_USER}" "${IS_REQ_PREINSTALL_VENV_DIR}"/bin/pip install -v "${IS_REQ_PREINSTALL_PIP}"
+    if [[ "$(uname -m)" =~ armv[67]l ]]; then
+        sudo -u "${BASE_USER}" \
+        "${IS_REQ_PREINSTALL_VENV_DIR}"/bin/pip install -v \
+        --extra-index-url https://www.piwheels.org/simple "${IS_REQ_PREINSTALL_PIP}"
+    else
+        sudo -u "${BASE_USER}" "${IS_REQ_PREINSTALL_VENV_DIR}"/bin/pip install -v"${IS_REQ_PREINSTALL_PIP}"
+    fi
 else
     echo_red "Klipper Venv not found!"
     return 1
