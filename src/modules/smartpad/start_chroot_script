@@ -132,3 +132,13 @@ if [[ -d "/home/${BASE_USER}/yumi-config" ]]; then
 else
     echo_red "WARNING! yumi-config repository not found! Abort install..."
 fi
+
+echo_green "Install YUMI_PLR ..."
+pushd "/home/${BASE_USER}" &>/dev/null
+sudo -u "${BASE_USER}" git clone https://github.com/Yumi-Lab/YUMI_PLR.git
+cd YUMI_PLR
+chmod +x ./install.sh
+./install.sh
+cd ..
+popd &>/dev/null
+echo_green "Install YUMI_PLR ... [DONE]"
