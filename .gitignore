@@ -10,3 +10,7 @@ src/build.log
 # Ignore vscode settings
 .vscode
 .vscode/**
+
+# Block Apple Files
+.DS_Store
+**/.DS_Store
