@@ -70,12 +70,10 @@ echo_green "Install Yumi Lab Plymouth theme on SmartPad... [DONE]"
 echo_green "Install yumi-config smartpad_generic ..."
 pushd "/home/${BASE_USER}" &>/dev/null
 sudo -u "${BASE_USER}" git clone https://github.com/Yumi-Lab/yumi-config.git
-echo "DEBUG:"
-echo "----------------------------------------------------------"
-ls -al /home/"${BASE_USER}"
-echo "----------------------------------------------------------"
-sudo -u "${BASE_USER}" cp -R /home/"${BASE_USER}"/yumi-config/smartpad-generic/* /home/"${BASE_USER}"/printer_data/config/
-# rm -rfv "/home/${BASE_USER}/yumi-config"
+cd yumi-config
+chmod +x ./install.sh
+./install.sh
+cd ..
 popd &>/dev/null
 echo_green "Install yumi-config smartpad_generic ... [DONE]"
 
