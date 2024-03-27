@@ -100,6 +100,25 @@ if [[ "$(is_board_type)" == "orangepi4-lts" ]]; then
     echo "overlays=spi-spidev" >> "${ARMBIAN_CONFIG_TXT_FILE}"
     echo "param_spidev_spi_bus=1" >> "${ARMBIAN_CONFIG_TXT_FILE}"
 fi
+
+
+#### Orangepi Zero2
+if [[ "$(is_board_type)" == "orangepizero2" ]] &&
+[[ "${ARMBIAN_ENABLE_OVERLAYS_OPIZ2}" == "true" ]]; then
+
+    if [[ -n "${ARMBIAN_ADD_OVERLAYS_OPIZ2}" ]]; then
+        echo_green "Adding overlays '${ARMBIAN_ADD_OVERLAYS_OPIZ2}' to ${ARMBIAN_CONFIG_TXT_FILE} ..."
+        echo "overlays=${ARMBIAN_ADD_OVERLAYS_OPIZ2}" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+    fi
+
+    if [[ -n "${ARMBIAN_ADD_OVERLAYS_OPIZ2_PARAMS}" ]]; then
+        for param in ${ARMBIAN_ADD_OVERLAYS_OPIZ2_PARAMS}; do
+            echo_green "Add ${param} to ${ARMBIAN_CONFIG_TXT_FILE} ..."
+            echo "${param}" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+        done
+    fi
+fi
+
 ### END Substep 2:
 
 ### Substep 3: add spi-dev module to /etc/modules
