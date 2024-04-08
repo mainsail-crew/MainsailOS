@@ -28,8 +28,8 @@ runs:
       shell: bash
       run: |
         echo "::group::Install dependencies"
-        sudo apt update
-        sudo apt install --yes aria2 coreutils jq p7zip-full qemu-user-static zip
+        sudo apt-get update
+        sudo apt-get install --yes aria2 coreutils jq p7zip-full qemu-user-static zip
         echo "::endgroup::"
 
     - name: Checkout CustomPiOS
