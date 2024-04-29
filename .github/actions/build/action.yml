@@ -49,11 +49,7 @@ runs:
         SBC="${array[1]}"
         echo "TYPE=${TYPE}" >> $GITHUB_OUTPUT
         echo "SBC=${SBC}" >> $GITHUB_OUTPUT
-        if [[ "${TYPE}" = "raspberry" ]]; then
-          TYPE_CONFIG="rpi-defaults.conf"
-        else
-          TYPE_CONFIG="${TYPE}-defaults.conf"
-        fi
+
 
         CONFIG_BASE_DIR="./repository/config"
         DEFAULT_CONF="${CONFIG_BASE_DIR}/config-defaults.conf"
