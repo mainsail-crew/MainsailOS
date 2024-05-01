@@ -17,6 +17,10 @@ set -Ee
 source /common.sh
 install_cleanup_trap
 
+# pip install
+sudo apt install -y python3-pip
+sudo apt install -y python3.11-venv
+
 # Module only Variables
 KS_BUILD_INSTALL_SH="/home/${BASE_USER}/KlipperScreen/scripts/KlipperScreen-install.sh"
 KS_MOONRAKER_CONF_PATH="/home/${BASE_USER}/printer_data/config/moonraker.conf"
