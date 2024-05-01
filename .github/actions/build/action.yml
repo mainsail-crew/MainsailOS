@@ -77,7 +77,7 @@ runs:
         echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
         echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
 
-        IMG_FILE_NAME="$(basename "${DOWNLOAD_URL_IMAGE}")"
+        IMG_FILE_NAME="$(basename "${DOWNLOAD_URL_IMAGE/.torrent/}")"
         echo "BASE_ZIP_IMG=\"${IMG_SRC_PATH}/${IMG_FILE_NAME}\"" | tee -a "${TMP_CONFIG}" >/dev/null
 
         while read -r vars; do
