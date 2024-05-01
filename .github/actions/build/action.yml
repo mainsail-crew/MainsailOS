@@ -57,6 +57,7 @@ runs:
         CONFIG_ARRAY=("${DEFAULT_CONF}" "${TYPE_CONF}" "${SBC_CONF}")
         TMP_CONFIG="/tmp/config.tmp"
         CONFIG_PATH="./repository/src/config"
+        IMG_SRC_PATH="./repository/src/image"
 
 
         printf "#!/bin/bash\n" | tee "${TMP_CONFIG}" >/dev/null
@@ -75,7 +76,9 @@ runs:
 
         echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
         echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
-        #echo "BASE_ZIP_IMG=\"$(basename "${DOWNLOAD_URL_IMAGE}")\"" | tee -a "${TMP_CONFIG}" >/dev/null
+
+        IMG_FILE_NAME="$(basename "${DOWNLOAD_URL_IMAGE}")"
+        echo "BASE_ZIP_IMG=\"${IMG_SRC_PATH}/${IMG_FILE_NAME}\"" | tee -a "${TMP_CONFIG}" >/dev/null
 
         while read -r vars; do
             printf "export %s\n" "${vars}" | tee -a "${TMP_CONFIG}" >/dev/null
