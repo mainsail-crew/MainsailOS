@@ -16,7 +16,6 @@ set -Ee
 # shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
-#
 
 # Module only Variables
 KS_BUILD_INSTALL_SH="/home/${BASE_USER}/KlipperScreen/scripts/KlipperScreen-install.sh"
