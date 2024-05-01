@@ -57,7 +57,7 @@ runs:
         CONFIG_ARRAY=("${DEFAULT_CONF}" "${TYPE_CONF}" "${SBC_CONF}")
         TMP_CONFIG="/tmp/config.tmp"
         CONFIG_PATH="./repository/src/config"
-        IMG_SRC_PATH="./repository/src/image"
+        IMG_SRC_PATH="${PWD}/repository/src/image"
 
 
         printf "#!/bin/bash\n" | tee "${TMP_CONFIG}" >/dev/null
