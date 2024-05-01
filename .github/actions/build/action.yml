@@ -50,73 +50,45 @@ runs:
         echo "TYPE=${TYPE}" >> $GITHUB_OUTPUT
         echo "SBC=${SBC}" >> $GITHUB_OUTPUT
 
-
         CONFIG_BASE_DIR="./repository/config"
         DEFAULT_CONF="${CONFIG_BASE_DIR}/config-defaults.conf"
+        TYPE_CONF="${CONFIG_BASE_DIR}/${TYPE}/type-defaults.conf"
+        SBC_CONF="${CONFIG_BASE_DIR}/${TYPE}/${SBC}.conf"
+        CONFIG_ARRAY=("${DEFAULT_CONF}" "${TYPE_CONF}" "${SBC_CONF}")
         TMP_CONFIG="/tmp/config.tmp"
         CONFIG_PATH="./repository/src/config"
 
-        generate_header() {
-          echo "#!/bin/bash" >> "${TMP_CONFIG}"
-          echo "# shellcheck enable=require-variable-braces" >> "${TMP_CONFIG}"
-        }
 
-        base_zip_img_helper() {
-          local img
-          img="${{ github.workspace }}/repository/src/image"
-          img="${img}/$(basename "${DOWNLOAD_URL_IMAGE}")"
-          echo "BASE_ZIP_IMG=${img}" >> "${CONFIG_PATH}"
-          echo "export BASE_ZIP_IMG" >> "${CONFIG_PATH}"
-        }
+        printf "#!/bin/bash\n" | tee "${TMP_CONFIG}" >/dev/null
+        printf "#shellcheck enable=require-variable-braces\n" | tee -a "${TMP_CONFIG}" >/dev/null
 
-        concat_helper() {
-          local input_file
-          input_file="${1}"
-          if [[ -f "${input_file}" ]]; then
-            sed '/^#.*/d; /^$/d' "${input_file}" >> "${TMP_CONFIG}"
-          fi
-        }
-
-        generate_exports() {
-          for x in $(grep "^[A-Z]" "${TMP_CONFIG}" | cut -d'=' -f1 | sort); do
-            if [[ "${x}" != "BASE_ZIP_IMG" ]]; then
-              echo "export ${x}" >> "${TMP_CONFIG}"
+        for conf in "${CONFIG_ARRAY[@]}"; do
+            if [[ -f "${conf}" ]]; then
+                sed '/^$/d; /^#/d' "${conf}" | tee -a "${TMP_CONFIG}" >/dev/null
+            else
+                echo "File '${conf}' not found!"
+                exit 1
             fi
-          done
-        }
+        done
 
-        copy_config() {
-          mv -v "${TMP_CONFIG}" "${CONFIG_PATH}"
-        }
+        source "${TMP_CONFIG}"
 
-        main() {
-          local -a files
-          files=(
-                  ${DEFAULT_CONF}
-                  ${CONFIG_BASE_DIR}/${TYPE}/${TYPE_CONFIG}
-                  ${CONFIG_BASE_DIR}/${TYPE}/${SBC}.conf
-                )
-          generate_header
-          for file in "${files[@]}"; do
-            concat_helper "${file}"
-          done
-          generate_exports
-          copy_config
+        echo "BASE_ZIP_IMG=\"$(basename "${DOWNLOAD_BASE_URL}")\"" | tee -a "${TMP_CONFIG}" >/dev/null
+        echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
+        echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
 
-          source "${CONFIG_PATH}"
-          echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
-          echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
-          if [[ "${TYPE}" != "raspberry" ]]; then
-            base_zip_img_helper
-          fi
+        while read -r vars; do
+            printf "export %s\n" "${vars}" | tee -a "${TMP_CONFIG}" >/dev/null
+        done < <(sed '/^#/d' "${TMP_CONFIG}" | cut -d"=" -f1)
 
-          # Write config to debug
-          echo "::group::Print config file"
-          cat "${CONFIG_PATH}"
-          echo "::endgroup::"
-        }
+        echo "::group::Move config file"
+        mv -v "${TMP_CONFIG}" "${CONFIG_PATH}"
+        echo "::endgroup::"
 
-        main
+        echo "::group::Print config file"
+        sed '/^export/d; /^#/d' "${CONFIG_PATH}" | sort
+        echo "::endgroup::"
+
         echo "::endgroup::"
 
     - name: Run ShellCheck
@@ -133,8 +105,8 @@ runs:
         cd repository/src/image
         FILENAME=$(basename ${{ steps.config.outputs.DOWNLOAD_URL_CHECKSUM }})
         wget -O ${FILENAME} ${{ steps.config.outputs.DOWNLOAD_URL_CHECKSUM }}
-        FILE_CONTENT=$(head -n 1 $FILENAME)
-        CHECKSUM=$(echo $FILE_CONTENT | cut -d' ' -f1)
+        FILE_CONTENT="$(head -n1 "${FILENAME}")"
+        CHECKSUM="$(echo "${FILE_CONTENT}" | cut -d' ' -f1)"
 
         echo "CHECKSUM=${CHECKSUM}" >> $GITHUB_OUTPUT
         echo "FILENAME=${FILENAME}" >> $GITHUB_OUTPUT
