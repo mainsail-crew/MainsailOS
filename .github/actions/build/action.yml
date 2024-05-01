@@ -75,7 +75,7 @@ runs:
 
         echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
         echo "DOWNLOAD_URL_IMAGE=${DOWNLOAD_URL_IMAGE}" >> $GITHUB_OUTPUT
-        echo "BASE_ZIP_IMG=\"$(basename "${DOWNLOAD_URL_IMAGE}")\"" | tee -a "${TMP_CONFIG}" >/dev/null
+        #echo "BASE_ZIP_IMG=\"$(basename "${DOWNLOAD_URL_IMAGE}")\"" | tee -a "${TMP_CONFIG}" >/dev/null
 
         while read -r vars; do
             printf "export %s\n" "${vars}" | tee -a "${TMP_CONFIG}" >/dev/null
