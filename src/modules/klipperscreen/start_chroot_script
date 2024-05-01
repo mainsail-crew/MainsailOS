@@ -17,7 +17,7 @@ set -Ee
 source /common.sh
 install_cleanup_trap
 
-# pip install
+# pip install for KlipperScreen 
 sudo apt install -y python3-pip
 sudo apt install -y python3.11-venv
 
