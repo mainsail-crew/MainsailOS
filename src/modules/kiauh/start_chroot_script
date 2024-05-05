@@ -7,8 +7,8 @@
 #### This File is distributed under GPLv3
 ####
 
-#### All Credits to th33xitus for his great tool
-#### https://github.com/th33xitus/kiauh
+#### All Credits to dw-0 (formerly known as th33xitus) for his great tool
+#### https://github.com/dw-0/kiauh
 
 # shellcheck enable=requires-variable-braces
 

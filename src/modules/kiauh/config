@@ -8,13 +8,13 @@
 #### This File is distributed under GPLv3
 ####
 
-#### All Credits to th33xitus for his great tool
-#### https://github.com/th33xitus/kiauh
+#### All Credits to dw-0 (formerly known as th33xitus) for his great tool
+#### https://github.com/dw-0/kiauh
 
 # shellcheck disable=all
 
 # KIAUH repo
-[[ -n "$KIAUH_REPO_SHIP" ]] || KIAUH_REPO_SHIP="https://github.com/th33xitus/kiauh.git"
+[[ -n "$KIAUH_REPO_SHIP" ]] || KIAUH_REPO_SHIP="https://github.com/dw-0/kiauh.git"
 [[ -n "$KIAUH_REPO_BRANCH" ]] || KIAUH_REPO_BRANCH="master"
 
 # Add to $PATH ? (1: yes, 0: no)
