@@ -23,20 +23,20 @@ jobs:
         id: current-version
         shell: bash
         run: |
-          version=$(cat ./src/version)
-          echo "version=${version}" >> $GITHUB_OUTPUT
+          source ./config/default
+          echo "version=${DIST_VERSION}" >> $GITHUB_OUTPUT
 
       - name: Push version number
         if: steps.current-version.outputs.version != github.event.inputs.version
         shell: bash
         run: |
-          echo ${{ github.event.inputs.version }} > ./src/version
+          sed -i "s|DIST_VERSION.*|DIST_VERSION=\"${{ github.event.inputs.version }}\"|" ./config/default
 
       - name: git add & commit & push
         if: steps.current-version.outputs.version != github.event.inputs.version
         uses: EndBug/add-and-commit@v9
         with:
-          add: "./src/version"
+          add: "./config/default"
           default_author: github_actions
           message: "chore: push version number to v${{ github.event.inputs.version }}"
           push: true
