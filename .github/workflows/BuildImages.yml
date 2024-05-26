@@ -82,7 +82,7 @@ jobs:
         if: ${{ failure() && steps.build.conclusion == 'failure' }}
         uses: actions/upload-artifact@v4
         with:
-          name: failed-${{ steps.move-image.outputs.image }}.log
+          name: failed-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}.log
           path: repository/src/build.log
 
       - name: Compressing Image
