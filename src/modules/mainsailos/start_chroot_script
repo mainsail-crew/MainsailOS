@@ -58,3 +58,10 @@ apt-get update --allow-releaseinfo-change
 # shellcheck disable=SC2086
 check_install_pkgs ${MAINSAILOS_DEPS}
 ## END Step 3
+
+## Step 4: Add piwheels to global pip resources
+if [[ ! -f /etc/pip.conf ]]; then
+    echo_green "Adding piwheels to pip.conf ..."
+    echo "[global]" > /etc/pip.conf
+    echo "extra-index-url=https://www.piwheels.org/simple" >> /etc/pip.conf
+fi
