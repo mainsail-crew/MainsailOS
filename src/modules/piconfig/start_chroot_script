@@ -25,7 +25,7 @@ install_cleanup_trap
 DISTS="bookworm bullseye"
 
 for dist in ${DISTS}; do
-    if [[ "$(grep -c "${dist}" ./os-release)" -gt 1 ]]; then
+    if [[ "$(grep -c "${dist}" /etc/os-release)" -gt 1 ]]; then
         printf "%s\n" "${dist}"
         PICONFIG_BASE_DIST="${dist}"
     fi
