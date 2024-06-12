@@ -13,6 +13,9 @@ BASE_RELEASE_COMPRESS=no
 # Disable pkgupgrade for now
 MODULES="base(udev_fix,mainsailos(net,piconfig,klipper,is_req_preinstall,moonraker,timelapse,mainsail,crowsnest,sonar,password-for-sudo),postrename)"
 
+DOWNLOAD_URL_CHECKSUM="https://downloads.raspberrypi.org/raspios_lite_arm64_latest.sha256"
+DOWNLOAD_URL_IMAGE="https://downloads.raspberrypi.org/raspios_lite_arm64_latest.torrent"
+
 # export Variables
 export DOWNLOAD_BASE_URL
 export DOWNLOAD_URL_CHECKSUM
