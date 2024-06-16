@@ -16,8 +16,6 @@ MODULES="base(pkgupgrade,udev_fix,mainsailos(net,piconfig,klipper,is_req_preinst
 DOWNLOAD_URL_CHECKSUM="https://downloads.raspberrypi.org/raspios_lite_arm64_latest.sha256"
 DOWNLOAD_URL_IMAGE="https://downloads.raspberrypi.org/raspios_lite_arm64_latest.torrent"
 
-BASE_BOOT_MOUNT_PATH=boot
-
 # export Variables
 export DOWNLOAD_BASE_URL
 export DOWNLOAD_URL_CHECKSUM
