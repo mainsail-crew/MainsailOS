@@ -20,41 +20,6 @@ fi
 source /common.sh
 install_cleanup_trap
 
-## Configuration helper
-
-DISTS="bookworm bullseye"
-
-for dist in ${DISTS}; do
-    if [[ "$(grep -c "${dist}" ./os-release)" -gt 1 ]]; then
-        printf "%s\n" "${dist}"
-        PICONFIG_BASE_DIST="${dist}"
-    fi
-done
-
-case "${PICONFIG_BASE_DIST}" in
-    "bullseye")
-        echo "Set to Dist: bullseye"
-        [ -n "$PICONFIG_CONFIG_TXT_FILE" ] || PICONFIG_CONFIG_TXT_FILE="/boot/config.txt"
-        [ -n "$PICONFIG_CMDLINE_TXT_FILE" ] || PICONFIG_CMDLINE_TXT_FILE="/boot/cmdline.txt"
-        [ -n "$PICONFIG_CONFIG_BAK_FILE" ] || PICONFIG_CONFIG_BAK_FILE="/boot/config.txt.backup"
-        [ -n "$PICONFIG_CMDLINE_BAK_FILE" ] || PICONFIG_CMDLINE_BAK_FILE="/boot/cmdline.txt.backup"
-        ;;
-
-    "bookworm")
-        echo "Set to Dist: bookworm"
-        [ -n "$PICONFIG_CONFIG_TXT_FILE" ] || PICONFIG_CONFIG_TXT_FILE="/boot/firmware/config.txt"
-        [ -n "$PICONFIG_CMDLINE_TXT_FILE" ] || PICONFIG_CMDLINE_TXT_FILE="/boot/firmware/cmdline.txt"
-        [ -n "$PICONFIG_CONFIG_BAK_FILE" ] || PICONFIG_CONFIG_BAK_FILE="/boot/firmware/config.txt.backup"
-        [ -n "$PICONFIG_CMDLINE_BAK_FILE" ] || PICONFIG_CMDLINE_BAK_FILE="/boot/firmware/cmdline.txt.backup"
-        ;;
-
-    *)
-        echo "Unkown dist type... Exiting!"
-        exit 1
-        ;;
-esac
-
-
 # Step 1: Copy msos_config.txt
 echo_green "Copying temporary file ..."
 unpack /filesystem/tmp /tmp root
