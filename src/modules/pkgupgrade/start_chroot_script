@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+#
+# Copyright 2021 by Stephan Wendel aka KwadFan
+# <me@stephanwe.de>
+# This file may distributed under GPLv3
+########
+
+## Source error handling, leave this in place
+set -xe
+
+# Source CustomPIOS common.sh
+source /common.sh
+install_cleanup_trap
+
+### noninteractive Check
+if [ -z "${DEBIAN_FRONTEND}" ]; then
+    export DEBIAN_FRONTEND=noninteractive
+fi
+
+
+## Fix initramfs-tools Error on RaspiOS
+
+if [[ -f /etc/rpi-issue ]] && [[ -f /etc/initramfs-tools/initramfs.conf ]]; then
+    sed -i 's/FSTYPE=auto/FSTYPE=ext4/' /etc/initramfs-tools/initramfs.conf
+fi
+
+## Force Update
+apt-get update --allow-releaseinfo-change
+
+### Pre Update Section
+if [ "${PKGUPGRADE_DISTUPGRADE}" = "y" ]; then
+  echo_green "Performing 'apt-get ${PKGUPGRADE_DISTUPGRADE_METHOD}' ... "
+  apt-get ${PKGUPGRADE_DISTUPGRADE_METHOD} -y
+else
+  echo_green "Skipping Dist Upgrade ['apt-get ${PKGUPGRADE_DISTUPGRADE_METHOD}']."
+fi
+
+### Pre Installer Section
+# Make sure Cache is fresh
+apt_update_skip
+if [ "${PKGUPGRADE_USE_PREINSTALLER}" = "y" ]; then
+  apt-get install --yes --no-install-recommends "${PKGUPGRADE_PRE_INSTALL_PKGS}"
+else
+  echo_red "PreInstall Mechanism not configured. [SKIPPED]"
+fi

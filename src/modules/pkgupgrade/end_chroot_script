@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# Copyright 2021 by Stephan Wendel aka KwadFan
+# <me@stephanwe.de>
+# This file may distributed under GPLv3
+########
+
+## Revert Fix initramfs-tools Error on RaspiOS
+if [[ -f /etc/rpi-issue ]] && [[ -f /etc/initramfs-tools/initramfs.conf ]]; then
+    sed -i 's/FSTYPE=ext4/FSTYPE=auto/' /etc/initramfs-tools/initramfs.conf
+fi
+
+### Cleanup
+if [ "${PKGUPGRADE_CLEANUP}" = "y" ]; then
+    apt-get clean -y
+    apt-get autoclean -y
+fi
+
