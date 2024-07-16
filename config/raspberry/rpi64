@@ -5,11 +5,9 @@
 # See https://www.shellcheck.net/wiki/SC2155
 
 BASE_ARCH="arm64"
-BASE_BOOT_MOUNT_PATH=boot
 
 # export variables
 export BASE_ARCH
-export BASE_BOOT_MOUNT_PATH
 
 ### JSON sniplet Setup
 ### NOTE: Please see all config files for setup variables!!!
