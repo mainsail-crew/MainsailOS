@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#Shebang for better file detection
+#### headless_nm install module
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2024 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck disable=all
+
+# Use disable power save for wifi module
+[ -n "$HEADLESS_NM_DISABLE_PWRSAVE" ] || HEADLESS_NM_DISABLE_PWRSAVE=yes
+
+# Type of power save rclocal/service/udev
+# rclocal - backwards compatibility, runs via rc.local
+# service - will add an systemd.service to enable or disable behavior
+# on reboots
+# udev - creates a udev rules that should affect all wifi devices.
+
+[ -n "$HEADLESS_NM_PWRSAVE_TYPE" ] || HEADLESS_NM_PWRSAVE_TYPE=udev

@@ -1,0 +1,15 @@
+#### Headless Wifi configuration
+
+# Your Wifis SSID
+SSID="<mySSID>"
+
+# Your Wifi password, remember it has to have at least 8 characters!
+# Otherwise a password hash can not be created!
+PASSWORD="<mySecretPasword>"
+
+# Is your SSID in hidden state? [true/false]
+HIDDEN="false"
+
+# Wifi Country code
+# See Wifi-README.txt for details!
+REGDOMAIN="US"
