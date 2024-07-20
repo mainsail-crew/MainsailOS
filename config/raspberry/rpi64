@@ -12,4 +12,4 @@ export BASE_ARCH
 ### JSON sniplet Setup
 ### NOTE: Please see all config files for setup variables!!!
 # shellcheck disable=SC2034
-JSON_SUPPORTED_SBC="pi3-64bit pi4-64bit"
+JSON_SUPPORTED_SBC="pi3-64bit pi4-64bit pi5-64bit"
