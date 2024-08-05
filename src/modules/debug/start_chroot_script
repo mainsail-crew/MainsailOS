@@ -31,3 +31,30 @@ echo_red "--------------------------------------------------------"
 ping -c 2 google.de || true
 
 echo_red "DEBUG: --------------------------------------------------"
+
+echo_green "Try to fix --------------------------------------------"
+
+cat <<- EOF > /etc/systemd/resolved.conf.d/chroot.conf
+[Resolve]
+DNS=manual
+ResolvConf=/etc/resolv.conf
+EOF
+
+systemctl start systemd-resolved
+
+echo_green "Try to fix --------------------------------------------"
+
+echo_red "DEBUG: -------------------------------------------------"
+cd /
+ls -al /run/systemd/resolve/stub-resolv.conf || true
+
+echo_red "--------------------------------------------------------"
+
+systemctl status systemd-resolved
+
+
+echo_red "--------------------------------------------------------"
+
+ping -c 2 google.de || true
+
+echo_red "DEBUG: --------------------------------------------------"
