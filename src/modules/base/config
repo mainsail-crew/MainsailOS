@@ -1,0 +1,113 @@
+#!/bin/bash
+###############################################################################
+# All our config settings must start with BASE_
+
+# CustomPiOS version
+BASE_VERSION=1.5.0
+
+[ -n "$BASE_PRESCRIPT" ] || BASE_PRESCRIPT=
+[ -n "$BASE_POSTSCRIPT" ] || BASE_POSTSCRIPT=
+
+#[ -n "$BASE_SCRIPT_PATH" ] || BASE_SCRIPT_PATH=$CONFIG_DIR
+[ -n "$BASE_IMAGE_PATH" ] || BASE_IMAGE_PATH=${DIST_PATH}/image
+[ -n "$BASE_IMAGE_RASPBIAN" ] || BASE_IMAGE_RASPBIAN=yes
+
+# Distro
+[ -n "$BASE_DISTRO" ] || BASE_DISTRO=raspbian
+
+# Note: Set BASE_ZIP_IMG relative to the distro/src/workspace directory to pass a custom named file or an already extracted '.img'-file.
+if [ "${BASE_DISTRO}" = "ubuntu" ]; then
+    # Default image ubuntu
+    [ -n "$BASE_ZIP_IMG" ] || BASE_ZIP_IMG=$(ls -t $BASE_IMAGE_PATH/ubuntu-*.xz | head -n 1)
+    # Default user ubuntu
+    [ -n "$BASE_USER" ] || BASE_USER=ubuntu
+    
+    # Add base user if does not exist
+    [ -n "$BASE_ADD_USER" ] || BASE_ADD_USER=yes
+    # When adding a base user which password to use
+    [ -n "$BASE_USER_PASSWORD" ] || BASE_USER_PASSWORD=ubuntu
+else
+    # Default image raspbian
+    if [ "${BASE_DISTRO}" = "raspios64" ]; then
+        [ -n "$BASE_ZIP_IMG" ] || BASE_ZIP_IMG=$(ls -t $BASE_IMAGE_PATH/*-{raspbian,raspios}-*-arm64-*.{zip,7z,xz} | head -n 1)
+    else
+        [ -n "$BASE_ZIP_IMG" ] || BASE_ZIP_IMG=$(ls -t $BASE_IMAGE_PATH/*-{raspbian,raspios}*.{zip,7z,xz} | head -n 1)
+    fi
+    # Default user raspbian
+    [ -n "$BASE_USER" ] || BASE_USER=pi
+    [ -n "$BASE_ADD_USER" ] || BASE_ADD_USER=yes
+    [ -n "$BASE_USER_PASSWORD" ] || BASE_USER_PASSWORD=raspberry
+fi
+
+# Release compression
+[ -n "$BASE_RELEASE_COMPRESS" ] || BASE_RELEASE_COMPRESS=yes
+
+[ -n "$BASE_RELEASE_IMG_NAME" ] || BASE_RELEASE_IMG_NAME=default
+[ -n "$BASE_RELEASE_ZIP_NAME" ] || BASE_RELEASE_ZIP_NAME=default
+
+[ -n "$BASE_WORKSPACE" ] || BASE_WORKSPACE=${DIST_PATH}/workspace$WORKSPACE_POSTFIX
+# [ -n "$BASE_CHROOT_SCRIPT_PATH" ] || BASE_CHROOT_SCRIPT_PATH=$BASE_SCRIPT_PATH/chroot_script
+[ -n "$BASE_MOUNT_PATH" ] || BASE_MOUNT_PATH=$BASE_WORKSPACE/mount
+
+[ -n "${BASE_BOOT_MOUNT_PATH}" ] || BASE_BOOT_MOUNT_PATH=boot/firmware
+
+# The root partition of the image filesystem, 2 for raspbian
+[ -n "$BASE_ROOT_PARTITION" ] || BASE_ROOT_PARTITION=2
+
+# if set will enlarge root partition prior to build by provided size in MB
+[ -n "$BASE_IMAGE_ENLARGEROOT" ] || BASE_IMAGE_ENLARGEROOT=200
+
+# if set will resize root partition on image after build to minimum size + 
+# provided size in MB
+[ -n "$BASE_IMAGE_RESIZEROOT" ] || BASE_IMAGE_RESIZEROOT=200
+
+# a local directory on the build server to bind mount under /var/cache/apt
+[ -n "$BASE_APT_CACHE" ] || BASE_APT_CACHE=$BASE_WORKSPACE/aptcache
+
+# a host:port combo for a apt-proxy (such as apt-cacher-ng) to use
+[ -n "$BASE_APT_PROXY" ] || BASE_APT_PROXY=
+
+[ -n "$BASE_APT_MIRROR" ] || BASE_APT_MIRROR=
+
+# an alternative pypi index url to use, e.g. a proxy such as devpi
+[ -n "$BASE_PYPI_INDEX" ] || BASE_PYPI_INDEX=
+
+[ -n "$BASE_OVERRIDE_HOSTNAME" ] || BASE_OVERRIDE_HOSTNAME=${DIST_NAME,,}
+
+# Alter DNS servers used during build (space seperated)
+# e.g. BASE_USE_ALT_DNS="1.1.1.1 8.8.8.8"
+[ -n "$BASE_USE_ALT_DNS" ] || BASE_USE_ALT_DNS=
+
+# a git mirror to use for git clones instead of original remotes
+[ -n "$BASE_BUILD_REPO_MIRROR" ] || BASE_BUILD_REPO_MIRROR=
+
+# Enable ssh daemon
+[ -n "$BASE_SSH_ENABLE" ] || BASE_SSH_ENABLE=yes
+
+#Store the commit used for CustomPiOS
+[ -n "$BASE_COMMIT" ] || BASE_COMMIT=$(git -C "${CUSTOM_PI_OS_PATH}" rev-parse HEAD) || true
+
+#Memory split
+[ -n "$BASE_CONFIG_MEMSPLIT" ] || BASE_CONFIG_MEMSPLIT=default
+
+#Timezone
+[ -n "$BASE_CONFIG_TIMEZONE" ] || BASE_CONFIG_TIMEZONE=default
+
+#Locale
+[ -n "$BASE_CONFIG_LOCALE" ] || BASE_CONFIG_LOCALE=default
+
+#Keyboard
+[ -n "$BASE_CONFIG_KEYBOARD" ] || BASE_CONFIG_KEYBOARD=default
+
+# Arch for now either armv7l, arm64 or aarch64
+[ -n "$BASE_ARCH" ] || BASE_ARCH=armv7l
+
+# If you want your variant not to have the name appending, enable this
+[ -n "$BASE_IGNORE_VARIANT_NAME" ] || BASE_IGNORE_VARIANT_NAME=no
+
+# Enable uart console on boot
+[ -n "$BASE_ENABLE_UART" ] || BASE_ENABLE_UART=no
+
+
+# Clean apt-cache after all the work is done
+: ${BASE_APT_CLEAN:=yes}

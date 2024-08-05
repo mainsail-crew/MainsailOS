@@ -1,0 +1,189 @@
+#!/usr/bin/env bash
+# Base script
+# Basic and manditory settings for the base of a CustomPiOS build
+# Written by Guy Sheffer <guysoft at gmail dot com>
+# GPL V3
+########
+set -x
+set -e
+
+export LC_ALL=C
+
+source /common.sh
+install_cleanup_trap
+if [ -n "${BASE_APT_MIRROR}" ]; then
+   echo "${BASE_APT_MIRROR}" | cat - /etc/apt/sources.list > /tmp/filename.tmp
+   mv /tmp/filename.tmp /etc/apt/sources.list
+fi
+
+if [ "${BASE_DISTRO}" == "ubuntu" ]; then
+  unpack /filesystem/ubuntu / root
+
+  mv /etc/resolv.conf /etc/resolv.conf.orig || true
+  if [ -z "${BASE_USE_ALT_DNS}" ]; then
+    echo "nameserver 8.8.8.8" > /etc/resolv.conf
+    echo "nameserver 8.8.4.4" >> /etc/resolv.conf
+    echo "nameserver 1.1.1.1" >> /etc/resolv.conf
+  else
+    touch /etc/resolv.conf
+    for dns in ${BASE_USE_ALT_DNS}; do
+      echo "nameserver ${dns}" >> /etc/resolv.conf
+    done
+  fi
+
+  
+  apt-get update --allow-releaseinfo-change
+  apt-get install -y net-tools wireless-tools dhcpcd5
+  if [ $( is_in_apt policykit-1 ) -eq 1 ]; then
+    apt-get -y install policykit-1
+  fi
+  
+  # prevent any installed services from automatically starting
+  echo exit 101 > /usr/sbin/policy-rc.d
+  chmod +x /usr/sbin/policy-rc.d
+  systemctl enable dhcpcd.service
+  
+  #Undo prevent any installed services from automatically starting
+  rm -r /usr/sbin/policy-rc.d || true
+  
+fi
+
+#Helper Function for create_userconf
+function get_os_version {
+  local os_version
+  grep -c "buster" /etc/os-release
+}
+
+if [ "${BASE_ADD_USER}" == "yes" ]; then
+    if [ "${BASE_DISTRO}" == "raspbian" ] || [ "${BASE_DISTRO}" == "raspios64" ] || [ "${BASE_DISTRO}" == "raspios" ]; then
+        # Setup first user, reference:
+        # https://www.raspberrypi.com/documentation/computers/configuration.html#configuring-a-user
+        echo_green "Setup default user and password ..."
+        function create_userconf {
+            local pw_encrypt
+            if [ -n "${BASE_USER}" ] || [ -n "${BASE_USER_PASSWORD}" ]; then
+                pw_encrypt="$(echo "${BASE_USER_PASSWORD}" | openssl passwd -6 -stdin)"
+                echo "${BASE_USER}:${pw_encrypt}" > /"${BASE_BOOT_MOUNT_PATH}"/userconf.txt
+
+                # Upgrade pkg first, make sure latest version will be patched
+                apt-get install --yes --only-upgrade userconf-pi
+
+                # Patch cancel-rename due to https://github.com/RPi-Distro/userconf-pi/issues/2
+                # And https://github.com/guysoft/CustomPiOS/issues/163
+                # Since the new version has changed an lead to Error described in
+                # https://github.com/guysoft/CustomPiOS/issues/176
+                # use a more generic way to patch the script.
+                if [[ -f "/usr/bin/cancel-rename" ]]; then
+                    sed -i 's|do_boot_behaviour B2|do_boot_behaviour B1|g' /usr/bin/cancel-rename
+                fi
+
+            else
+                echo_red "First user name and password not set! [FAILED]"
+                exit 1
+            fi
+        }
+        # Do not patch if raspian="buster"
+        if [ "$(get_os_version)" == "0" ]; then
+          create_userconf
+        else
+          echo "Base Image use Version 'buster' no patching of userconf-pi needed"
+        fi
+    else
+        if id -u "${BASE_USER}" >/dev/null 2>&1; then
+            echo "Base user exists, not adding"
+        else
+            echo "Adding base user ${BASE_USER}"
+            password=$(perl -e 'printf("%s\n", crypt($ARGV[0], "password"))' "${BASE_USER_PASSWORD}")
+            useradd -m -p "${password}" -s /bin/bash "${BASE_USER}"
+            usermod -a -G sudo "${BASE_USER}"
+        fi
+    fi
+fi
+
+if [ -n "$BASE_APT_PROXY" ]
+then
+  echo "Acquire::http { Proxy \"http://$BASE_APT_PROXY\"; };" > /etc/apt/apt.conf.d/02octopi_build_proxy
+fi
+
+if [ -n "$BASE_PYPI_INDEX" ]
+then
+  pip_index_config="[global]\nindex-url = $BASE_PYPI_INDEX"
+  easyinstall_index_config="[easy_install]\nindex-url = $BASE_PYPI_INDEX"
+
+  mkdir -p /root/.pip
+  echo -e "$pip_index_config" > /root/.pip/pip.conf
+  echo -e "$easyinstall_index_config" > /root/.pydistutils.cfg
+
+  mkdir -p /home/"${BASE_USER}"/.pip
+  sudo -u "${BASE_USER}" echo -e "$pip_index_config" > /home/pi/.pip/pip.conf
+  sudo -u "${BASE_USER}" echo -e "$easyinstall_index_config" > /home/pi/.pydistutils.cfg
+
+  echo "Configured pypi index url $BASE_PYPI_INDEX"
+  cat /home/"${BASE_USER}"/.pip/pip.conf
+  cat /home/"${BASE_USER}"/.pydistutils.cfg
+fi
+
+if [ "$BASE_SSH_ENABLE" == "yes" ]
+then
+  touch /"${BASE_BOOT_MOUNT_PATH}"/ssh
+  ### Fix SSH incoming
+  echo "IPQoS 0x00" >> /etc/ssh/sshd_config
+
+  ### Fix SSH outgoing
+  echo "IPQoS 0x00" >> /etc/ssh/ssh_config
+  
+  ### Try and fix https://github.com/guysoft/OctoPi/issues/424
+  if [ -f "/lib/systemd/system/regenerate_ssh_host_keys.service" ]; then
+    sed -i "s@ExecStart=/usr/bin/ssh-keygen -A -v@ExecStart=/bin/bash -c ' /usr/bin/ssh-keygen -A -v >> /var/log/regenerate_ssh_host_keys.log 2>\&1'@g" /lib/systemd/system/regenerate_ssh_host_keys.service
+    sed -i "s@ExecStartPost=/bin/systemctl disable regenerate_ssh_host_keys@ExecStartPost=/bin/bash -c 'for i in /etc/ssh/ssh_host_*_key*; do actualsize=\$(wc -c <\"\$i\") ;if [ \$actualsize -eq 0 ]; then echo size is 0 bytes ; exit 1 ; fi ; done ; /bin/systemctl disable regenerate_ssh_host_keys'@g" /lib/systemd/system/regenerate_ssh_host_keys.service
+  fi
+fi
+
+# Store version buildbase
+echo "$CUSTOM_PI_OS_BUILDBASE" > /etc/custompios_buildbase
+
+# Store dist version
+echo "$DIST_VERSION" > /etc/${DIST_NAME,,}_version
+
+# Store dist variant
+echo "$BUILD_VARIANT" > /etc/dist_variant
+
+##########################
+# Raspi-config stuff
+# https://github.com/RPi-Distro/raspi-config/blob/master/raspi-config
+
+# Memory split
+if [ $BASE_CONFIG_MEMSPLIT != 'default' ]
+then
+  echo "Configuring memory"
+  raspi-config nonint do_memory_split $BASE_CONFIG_MEMSPLIT
+fi
+
+# timezone
+if [ $BASE_CONFIG_TIMEZONE != 'default' ]
+then
+  echo "Configuring timezone"
+  raspi-config nonint do_change_timezone $BASE_CONFIG_TIMEZONE
+fi
+
+# locale
+if [ $BASE_CONFIG_LOCALE != 'default' ]
+then
+  echo "Configuring locales"
+  raspi-config nonint do_change_locale $BASE_CONFIG_LOCALE
+fi
+
+# keyboard
+if [ $BASE_CONFIG_KEYBOARD != 'default' ]
+then
+  echo "Configuring keyboard"
+  raspi-config nonint do_configure_keyboard $BASE_CONFIG_KEYBOARD
+fi
+
+# Enable uart on boot
+if [ ${BASE_ENABLE_UART} == "yes" ]
+then
+    if ! grep -q "^enable_uart=1" /"${BASE_BOOT_MOUNT_PATH}"/config.txt ; then
+      echo "enable_uart=1" >> /"${BASE_BOOT_MOUNT_PATH}"/config.txt
+    fi
+fi
