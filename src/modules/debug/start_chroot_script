@@ -40,6 +40,7 @@ echo_red "DEBUG: --------------------------------------------------"
 echo_green "Try to alter dns ---------------------------------------"
 
 echo "nameserver 1.1.1.1" > /etc/resolv.conf
+sudo systemctl restart systemd-resolved
 
 echo_green "Try to alter dns ---------------------------------------"
 
