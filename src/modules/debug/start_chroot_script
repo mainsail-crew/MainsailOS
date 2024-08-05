@@ -28,7 +28,7 @@ systemctl status systemd-resolved
 
 echo_red "--------------------------------------------------------"
 
-ip a || true
+resolvectl status
 
 echo_red "--------------------------------------------------------"
 
@@ -37,26 +37,6 @@ ping -c 2 google.de || true
 
 echo_red "DEBUG: --------------------------------------------------"
 
-echo_green "Try to fix --------------------------------------------"
-
-sudo systemd-resolve --interface eth0 --set-dns 1.1.1.1
-
-echo_green "Try to fix --------------------------------------------"
-
-echo_red "DEBUG: -------------------------------------------------"
-cd /
-ls -al /run/systemd/resolve/stub-resolv.conf || true
-
-echo_red "--------------------------------------------------------"
-
-systemctl status systemd-resolved
-
-
-echo_red "--------------------------------------------------------"
-
-ping -c 2 google.de || true
-
-echo_red "DEBUG: --------------------------------------------------"
 
 
 # Let it fail anyways!
