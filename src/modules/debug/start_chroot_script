@@ -39,7 +39,7 @@ echo_red "DEBUG: --------------------------------------------------"
 
 echo_green "Try to alter dns ---------------------------------------"
 
-ln -sf /etc/resolv.conf /run/systemd/resolve/stub-resolv.conf
+echo "nameserver 1.1.1.1" > /etc/resolv.conf
 
 echo_green "Try to alter dns ---------------------------------------"
 
