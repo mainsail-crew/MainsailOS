@@ -22,14 +22,11 @@ DIST_NAME="MainsailOS"
 
 BASE_BOOT_MOUNT_PATH=boot
 
-BASE_USE_ALT_DNS="1.0.0.1 1.1.1.1 8.8.8.8 8.8.4.4 9.9.9.9 149.112.112.112 208.67.222.222 208.67.220.220"
-
 # export Variables
 export BASE_BOOT_MOUNT_PATH
 export DIST_NAME
 export DIST_VERSION
 export BASE_ZIP_IMG
-export BASE_USE_ALT_DNS
 
 ### JSON sniplet Setup
 ### NOTE: Please see all config files for setup variables!!!
