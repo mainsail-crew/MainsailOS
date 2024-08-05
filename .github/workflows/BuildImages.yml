@@ -64,8 +64,6 @@ jobs:
         uses: ./repository/.github/actions/build
         with:
           config: ${{ matrix.config }}
-          custompios-repository: KwadFan/CustomPiOS
-          custompios-ref: "base/dnsresolv"
 
       - name: Rename image file
         id: move-image
