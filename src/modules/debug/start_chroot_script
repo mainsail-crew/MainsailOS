@@ -39,13 +39,7 @@ echo_red "DEBUG: --------------------------------------------------"
 
 echo_green "Try to fix --------------------------------------------"
 
-cat <<- EOF > /etc/systemd/resolved.conf.d/chroot.conf
-[Resolve]
-DNS=manual
-ResolvConf=/etc/resolv.conf
-EOF
-
-systemctl start systemd-resolved
+sudo systemd-resolve --interface eth0 --set-dns 1.1.1.1
 
 echo_green "Try to fix --------------------------------------------"
 
