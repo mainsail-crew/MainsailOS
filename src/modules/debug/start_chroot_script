@@ -19,7 +19,7 @@ install_cleanup_trap
 
 echo_red "DEBUG: -------------------------------------------------"
 cd /
-ls -al /run/systemd/resolve/stub-resolv.conf
+ls -al /run/systemd/resolve/stub-resolv.conf || true
 
 echo_red "--------------------------------------------------------"
 
