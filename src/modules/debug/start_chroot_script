@@ -20,10 +20,10 @@ install_cleanup_trap
 echo_red "DEBUG: -------------------------------------------------"
 cd /
 ls -al /run/systemd/resolve/stub-resolv.conf || true
+cat /run/systemd/resolve/stub-resolv.conf || true
 
 echo_red "--------------------------------------------------------"
 
-systemctl status systemd-resolved
 
 
 echo_red "--------------------------------------------------------"
@@ -37,7 +37,31 @@ ping -c 2 google.de || true
 
 echo_red "DEBUG: --------------------------------------------------"
 
+echo_green "Try to alter dns ---------------------------------------"
 
+ln -sf /etc/resolv.conf /run/systemd/resolve/stub-resolv.conf
+
+echo_green "Try to alter dns ---------------------------------------"
+
+echo_red "DEBUG: -------------------------------------------------"
+cd /
+ls -al /run/systemd/resolve/stub-resolv.conf || true
+cat /run/systemd/resolve/stub-resolv.conf || true
+
+echo_red "--------------------------------------------------------"
+
+
+
+echo_red "--------------------------------------------------------"
+
+resolvectl status
+
+echo_red "--------------------------------------------------------"
+
+
+ping -c 2 google.de || true
+
+echo_red "DEBUG: --------------------------------------------------"
 
 # Let it fail anyways!
 exit 1
