@@ -65,7 +65,7 @@ jobs:
         with:
           config: ${{ matrix.config }}
           custompios-repository: KwadFan/CustomPiOS
-          custompios-ref: fix/chrootmount
+          custompios-ref: fix/armbiandns
 
       - name: Rename image file
         id: move-image
