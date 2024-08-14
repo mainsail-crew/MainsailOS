@@ -17,25 +17,15 @@
 buildtest:
   # armbian based images
   - armbian/bananapim2zero
-  - armbian/orangepi3lts
-  - armbian/orangepi4lts
-  - armbian/orangepi_zero2
   # Orange Pi OS based images
   # Raspberry Pi OS based images
-  - raspberry/rpi32
-  - raspberry/rpi64
   # rpi 64 with KS
-  - raspberry/rpi64-ks
 
 # This is used to setup release build chain.
 # Each entry will be used in setup matrix for releases
 
 release:
   # armbian based images
-  - armbian/orangepi3lts
-  - armbian/orangepi4lts
-  - armbian/orangepi_zero2
+  - armbian/bananapicm4io
   # Orange Pi OS based images
   # Raspberry Pi OS based images
-  - raspberry/rpi32
-  - raspberry/rpi64
