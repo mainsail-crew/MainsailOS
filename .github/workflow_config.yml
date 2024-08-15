@@ -16,7 +16,7 @@
 
 buildtest:
   # armbian based images
-  - armbian/bananapim2zero
+  - armbian/bananapicm4io
   # Orange Pi OS based images
   # Raspberry Pi OS based images
   # rpi 64 with KS
