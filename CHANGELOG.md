@@ -1,6 +1,6 @@
 <!-- THIS FILE IS UPDATED AUTOMATICALLY, ANY CHANGES WILL BE OVERRIDDEN -->
 # Changelog
-All notable changes to MainsailOS will be documented in this file..
+All notable changes to MainsailOS will be documented in this file.
 
 ## [1.3.2](https://github.com/mainsail-crew/MainsailOS/releases/tag/1.3.2) - 2024-01-20
 ### Bug Fixes and Improvements
