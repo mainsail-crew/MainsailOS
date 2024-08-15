@@ -140,6 +140,8 @@ jobs:
         uses: ./repository/.github/actions/build
         with:
           config: ${{ matrix.config }}
+          custompios-repository: KwadFan/CustomPiOS
+          custompios-ref: fix/armbiandns
 
       - name: Upload failed Logfile
         if: failure()
