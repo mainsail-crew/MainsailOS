@@ -5,8 +5,8 @@
 BASE_ARCH="arm64"
 
 # Image source
-DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}/armbian-bananapicm4io_bookworm.img.xz.sha256"
-DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/armbian-bananapicm4io_bookworm.img.xz"
+DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}/armbian-bananapicm4io_bullseye.img.xz.sha256"
+DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/armbian-bananapicm4io_bullseye.img.xz"
 
 # export Variables
 export BASE_ARCH
