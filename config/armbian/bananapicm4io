@@ -18,4 +18,4 @@ export DOWNLOAD_URL_IMAGE
 # shellcheck disable=SC2034
 JSON_PRETTY_SBC_NAME="Banana Pi CM4"
 # shellcheck disable=SC2034
-JSON_SUPPORTED_SBC="bananapicm4-64bit"
+JSON_SUPPORTED_SBC="bananapicm4io-64bit"
