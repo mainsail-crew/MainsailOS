@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+#Shebang for better file detection
+#### headless_nm install module
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2024 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+set -Ee
+
+export LC_ALL=C
+
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+# Install dependencies
+apt-get update
+apt-get install -y uuid
+
+# Install scripts
+unpack filesystem/usr/local/bin /usr/local/bin root
+unpack filesystem/boot /boot root
+unpack filesystem/etc /etc root
+
+# Enable Service
+systemctl_if_exists enable headless_nm.service
+
+# set OS_NAME in Wifi-README.txt according to DIST_NAME
+if [ -f "/boot/WiFi-README.txt" ]; then
+    sed -i 's|OS_NAME|'"${DIST_NAME}"'|g' /boot/WiFi-README.txt
+fi
+
+# Install powersave option
+if [ "$HEADLESS_NM_DISABLE_PWRSAVE" == "yes" ]; then
+
+  # Use rc.local
+  if [ "$HEADLESS_NM_PWRSAVE_TYPE" == "rclocal" ]; then
+    echo_green "Modifying /etc/rc.local ..."
+    sed -i 's@exit 0@@' /etc/rc.local
+    (echo "# Disable WiFi Power Management"; \
+    echo 'echo "Disabling power management for wlan0 ..."' ; \
+    echo "/usr/local/bin/pwrsave off"; echo "exit 0") >> /etc/rc.local
+  fi
+  # Use service
+  if [ "$HEADLESS_NM_PWRSAVE_TYPE" == "service" ]; then
+    echo_green "Installing disable-wifi-pwr-mgmt service ..."
+    unpack filesystem/etc/systemd/system /etc/systemd/system root
+    systemctl_if_exists enable disable-wifi-pwr-mgmt.service
+  fi
+  # Use udev rule
+  if [ "$HEADLESS_NM_PWRSAVE_TYPE" == "udev" ]; then
+    echo_green "Installing WiFi Power Management udev rule ..."
+    unpack filesystem/etc/udev/rules.d /etc/udev/rules.d root
+  fi
+  # strip out unneeded script, depending on choose
+  if [ "$HEADLESS_NM_PWRSAVE_TYPE" != "udev" ]; then
+    rm -f /usr/local/bin/pwrsave-udev
+  else
+    rm -f /usr/local/bin/pwrsave
+  fi
+fi
+
+# Remove scripts if powersave option is not used.
+if [ "$HEADLESS_NM_DISABLE_PWRSAVE" == "no" ]; then
+    rm -f /usr/local/bin/pwrsave-udev
+    rm -f /usr/local/bin/pwrsave
+fi

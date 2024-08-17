@@ -1,0 +1,104 @@
+#!/bin/bash
+#### Disable wifi power_save
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2022
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+#### Note: This is based on:
+#### https://www.intel.com/content/www/us/en/support/articles/000006168/boards-and-kits.html
+
+
+## Error handling
+set -eou pipefail
+
+## Debug Mode
+#set -x
+
+### Message func
+function help_msg {
+    echo -e "Usage:\n"
+    echo -e "\tpwrsave-udev [ on | off | create ]"
+    echo -e "\t\ton\tEnables Power Management via udev rule"
+    echo -e "\t\toff\tDisables Power Management via udev rule"
+    echo -e "\t\tcreate\tCreate Power Management udev rule\n"
+    exit 1
+}
+
+
+### Check rule exist
+function check_rule {
+    if [ ! -f /etc/udev/rules.d/070-wifi-powersave.rules ]; then
+        echo -e "[  \e[31mERROR\e[0m  ] Udev Rule for WiFi Powermanagement not found!"
+        help_msg
+    fi
+}
+
+function disable_pwr_save {
+    sed -i 's/on/off/' /etc/udev/rules.d/070-wifi-powersave.rules
+    echo -e "[  \e[32mOK\e[0m  ] Disabled Power Management"
+}
+
+
+function enable_pwr_save {
+    sed -i 's/off/on/' /etc/udev/rules.d/070-wifi-powersave.rules
+    echo -e "[  \e[32mOK\e[0m  ] Enabled Power Management"
+}
+
+function create_rule {
+if [ -f /etc/udev/rules.d/070-wifi-powersave.rules ]; then
+    echo -e "[  \e[33mSKIPPED\e[0m  ] Udev rule already exists!"
+    exit 0
+fi
+
+cat << EOF > /etc/udev/rules.d/070-wifi-powersave.rules
+ACTION=="add", \
+SUBSYSTEM=="net", \
+KERNEL=="wlan*" \
+RUN+="/usr/sbin/iw %k set power_save off"
+EOF
+echo -e "[  \e[32mOK\e[0m  ] Created Udev rule ... \n"
+echo -e "Please 'reboot' to take changes effect.\n"
+}
+
+
+
+### MAIN
+function main {
+    local arg
+    if [ "$(id -u)" != "0" ]; then
+        echo -e "\n$(basename "${0}"): This script needs root priviledges!\n"
+        exit 1
+    fi
+    if [ "${#}" == "0" ]; then
+        echo -e "$(basename "${0}"): No argument set!"
+        help_msg
+    fi
+    if [ "${#}" -gt 1 ]; then
+        echo -e "$(basename "${0}"): Too many arguments set!"
+        help_msg
+    fi
+    arg="${1}"
+    if [ "${arg}" == "create" ]; then
+        create_rule
+        exit 0
+    fi
+    check_rule
+    case "${arg}" in
+        "on")
+            enable_pwr_save
+        ;;
+        "off")
+            disable_pwr_save
+        ;;
+        ?|*)
+            echo -e "$(basename "${0}"): Unknown argument '${arg}' !"
+            help_msg
+        ;;
+    esac
+}
+
+main "${@}"
+exit 0
