@@ -2,6 +2,7 @@
 # Shebang for better file detection
 # shellcheck enable=require-variable-braces
 
+
 BASE_ARCH="arm64"
 
 # Image source
