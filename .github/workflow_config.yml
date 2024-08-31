@@ -26,9 +26,6 @@ buildtest:
   - raspberry/rpi64
   # rpi 64 with KS
   - raspberry/rpi64-ks
-  # Control group
-  - raspberry/rpi64-bullseye
-  - armbian/orangepi4lts-bullseye
 
 # This is used to setup release build chain.
 # Each entry will be used in setup matrix for releases
