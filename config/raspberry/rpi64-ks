@@ -9,7 +9,7 @@ BASE_ARCH="arm64"
 BASE_IMAGE_ENLARGEROOT=6500
 
 # Changed modules
-MODULES="base(udev_fix,mainsailos(net,piconfig,klipper,is_req_preinstall,moonraker,timelapse,mainsail,klipperscreen,crowsnest,sonar,password-for-sudo),postrename)"
+MODULES="base(pkgupgrade,udev_fix,mainsailos(net,piconfig,klipper,is_req_preinstall,moonraker,timelapse,mainsail,klipperscreen,crowsnest,sonar,password-for-sudo),postrename)"
 
 # export variables
 export BASE_ARCH
