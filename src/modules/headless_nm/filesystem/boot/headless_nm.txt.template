@@ -3,8 +3,7 @@
 # Your Wifis SSID
 SSID="<mySSID>"
 
-# Your Wifi password, remember it has to have at least 8 characters!
-# Otherwise a password hash can not be created!
+# Your WiFis password
 PASSWORD="<mySecretPasword>"
 
 # Is your SSID in hidden state? [true/false]
