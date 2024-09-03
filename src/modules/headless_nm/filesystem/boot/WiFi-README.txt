@@ -20,16 +20,10 @@ Wifi-README.txt
 How do I setup a new network on my OS_NAME ?
 --------------------------------------------
 
-1.) If you haven't already done so, insert the SDCard into your computer.
-
-2.) Open the 'boot' partition.
-    This partition is FAT32 formatted and should be visible,
-    when you insert the SD Card into your computer.
-
-3.) Copy and paste the 'headless_nm.txt.template'.
+1.) Copy and paste the 'headless_nm.txt.template'.
     Rename this file to 'headless_nm.txt'
 
-4.) Now open the file with your favourite text editor.
+2.) Now open the file with your favourite text editor.
     Windows and MacOS users please read the note above!
 
     This file is pretty self explaining, just the 'REGDOMAIN'
@@ -45,9 +39,9 @@ How do I setup a new network on my OS_NAME ?
 
     For a complete list, please visit https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 
-5.) Remove the SD card afterwards.
+3.) Remove the SD card afterwards.
 
-6.) Almost done... Please put the SD card back into your SBC and wait for it to connect.
+4.) Almost done... Please put the SD card back into your SBC and wait for it to connect.
 
 NOTE:
 
@@ -62,4 +56,4 @@ If you did not change the hostname during the initial flash, you could use
 
     http://OS_NAME.local
 
-7.) Enjoy OS_NAME :)
+5.) Enjoy OS_NAME :)
