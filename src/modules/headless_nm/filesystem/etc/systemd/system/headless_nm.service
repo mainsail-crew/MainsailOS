@@ -1,0 +1,20 @@
+#### headless_nm service
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2024
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+[Unit]
+Description=Setup Wifi on headless machines using NetworkManager
+Before=network.target NetworkManager.service
+
+[Service]
+Type=oneshot
+StandardOutput=tty
+ExecStart=/usr/local/bin/headless_nm
+
+[Install]
+WantedBy=multi-user.target

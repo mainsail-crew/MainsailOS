@@ -1,0 +1,183 @@
+#!/usr/bin/env bash
+####  headless_nm
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2024 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+#### Description:
+#### This is a wrapper for network manager to be able to setup
+#### Wifi connections on headless SBC.
+#### Takes setup from a file in /boot (/boot/firmware) and recreates
+#### Raspberrys 'preconfigured.nmconnection'
+
+#### Copyright hint: This file contains code snippets from
+#### Raspberrys raspi-config therefore it applies also there license
+#### and copyrights!
+#### See https://github.com/RPi-Distro/raspi-config/blob/bookworm/LICENSE
+
+#### It also reuses parts of raspberry-sys-mods
+#### See https://github.com/RPi-Distro/raspberrypi-sys-mods/blob/bookworm/usr/lib/raspberrypi-sys-mods/imager_custom
+
+set -e
+
+# Global Vars
+DISTRO=""
+CMDLINE="/boot/firmware/cmdline.txt"
+ARMBIANENV="/boot/armbianEnv.txt"
+UUID=""
+PSK_HASH=""
+KEYMGMT="wpa-psk"
+CONNFILE=/etc/NetworkManager/system-connections/preconfigured.nmconnection
+SETUPFILE="$(find /boot -name "headless_nm.txt")"
+REGDOMAIN=""
+CFG80211="/etc/modprobe.d/cfg80211.conf"
+
+
+# functions
+log() {
+    local msg
+    msg="${1}"
+    logger -t headless_nm "${msg}"
+}
+
+get_distro() {
+    local armbian rpi
+    armbian="$(find /boot -name "$(basename ${ARMBIANENV})")"
+    rpi="$(find /boot -name "$(basename ${CMDLINE})")"
+    log "Determine distribution ..."
+    if [[ -n "${armbian}" ]]; then
+        DISTRO="armbian"
+    elif [[ -n "${rpi}" ]]; then
+        DISTRO="rpi"
+    else
+        DISTRO=""
+        log "Could not determine distribution ... Exiting!"
+        exit 1
+    fi
+    if [[ -n "${DISTRO}" ]]; then
+        log "Using setup profile: ${DISTRO} ..."
+    fi
+}
+
+get_config() {
+    # shellcheck disable=SC1090
+    source "${SETUPFILE}"
+}
+
+gen_uuid() {
+    log "Generating UUID for connection..."
+    UUID="$(uuid -v4)"
+    declare -r UUID
+}
+
+gen_nmconnection() {
+cat <<- EOF >"${CONNFILE}"
+[connection]
+id=preconfigured
+uuid=${UUID}
+type=wifi
+[wifi]
+mode=infrastructure
+ssid=${SSID}
+hidden=${HIDDEN,,}
+[ipv4]
+method=auto
+[ipv6]
+addr-gen-mode=default
+method=auto
+[proxy]
+EOF
+}
+
+gen_keymgmt() {
+    PSK_HASH="$(gen_psk)"
+    if [[ -n "${PASSWORD}" ]]; then
+    cat <<- EOF >>${CONNFILE}
+[wifi-security]
+key-mgmt=${KEYMGMT}
+psk=${PSK_HASH}
+EOF
+fi
+}
+
+gen_psk() {
+    wpa_passphrase "${SSID}" "${PASSWORD}" | sed -n "/^.*[ \t]psk.*/s/[ \t]psk=//p"
+}
+
+set_regdomain() {
+    log "Set registration domain to '${REGDOMAIN}' ..."
+    # Shameless borrowed from
+    # https://github.com/RPi-Distro/raspi-config/blob/d22643ade3851c42648f3676e577a622c34af49a/raspi-config#L830C3-L832C5
+    if ! ischroot; then
+        iw reg set "${REGDOMAIN}"
+    fi
+    # set permanent
+    case "${DISTRO}" in
+        "rpi")
+            # Shameless borrowed from
+            # https://github.com/RPi-Distro/raspi-config/blob/d22643ade3851c42648f3676e577a622c34af49a/raspi-config#L822C3-L825C15
+            sed -i \
+            -e "s/\s*cfg80211.ieee80211_regdom=\S*//" \
+            -e "s/\(.*\)/\1 cfg80211.ieee80211_regdom=$REGDOMAIN/" \
+            "${CMDLINE}"
+            ;;
+        "armbian")
+            if [[ -f "${CFG80211}" ]]; then
+                rm -f "${CFG80211}"
+            fi
+            echo "options cfg80211 ieee80211_regdom=${REGDOMAIN}" > "${CFG80211}"
+            ;;
+    esac
+}
+
+# MAIN
+main() {
+    # Determine base distribution
+    get_distro
+
+    # Check setup file is present
+    if [[ -f "${SETUPFILE}" ]]; then
+        log "Configuration file found in ${SETUPFILE}, continuing...\n"
+    else
+        log "Configuration file not found! Nothing to do, exiting...\n"
+        exit 0
+    fi
+
+    # Generate UUID
+    gen_uuid
+
+    # Remove preconfiguration if present
+    if [[ -f "${CONNFILE}" ]]; then
+        rm -f "${CONNFILE}"
+    fi
+
+    # Read config file
+    get_config
+
+    # Generate preconfigured.nmconnection file
+    gen_nmconnection
+
+    # Add key management and psk to preconfigured.nmconnection file
+    gen_keymgmt
+
+    # Set REGDOMAIN
+    set_regdomain
+
+    # NetworkManager only accepts 0600 permissions for configs
+    chmod 0600 "${CONNFILE}"
+
+    # Cleanup
+    PSK_HASH=""
+    PASSWORD=""
+    SSID=""
+    log "Configuration successful written ..."
+    rm -f "${SETUPFILE}"
+}
+
+if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
+    main
+fi

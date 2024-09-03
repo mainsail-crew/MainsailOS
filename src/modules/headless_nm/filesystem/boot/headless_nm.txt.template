@@ -1,0 +1,14 @@
+#### Headless Wifi configuration
+
+# Your Wifis SSID
+SSID="<mySSID>"
+
+# Your WiFis password
+PASSWORD="<mySecretPasword>"
+
+# Is your SSID in hidden state? [true/false]
+HIDDEN="false"
+
+# Wifi Country code
+# See Wifi-README.txt for details!
+REGDOMAIN="US"

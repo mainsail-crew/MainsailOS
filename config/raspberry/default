@@ -4,17 +4,15 @@
 # Declare Variables before exporting.
 # See https://www.shellcheck.net/wiki/SC2155
 
-# New locations after Bullseye turned into 'oldstable'
-DOWNLOAD_BASE_URL="https://downloads.raspberrypi.org/raspios_oldstable_lite_arm64/images/raspios_oldstable_lite_arm64-2023-12-06/2023-12-05-raspios-bullseye-arm64-lite.img.xz"
-DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}.sha256"
-DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}.torrent"
-
-BASE_IMAGE_ENLARGEROOT=4500
+BASE_IMAGE_ENLARGEROOT=5500
 BASE_IMAGE_RESIZEROOT=600
 # Compress not needed due compression done in workflow
 BASE_RELEASE_COMPRESS=no
 # Modules are valid for 32bit and 64bit images
-MODULES="base(pkgupgrade,udev_fix,mainsailos(net,piconfig,klipper,is_req_preinstall,moonraker,timelapse,mainsail,crowsnest,sonar,password-for-sudo),postrename)"
+MODULES="base(pkgupgrade,udev_fix,mainsailos(headless_nm,piconfig,klipper,is_req_preinstall,moonraker,timelapse,mainsail,crowsnest,sonar,password-for-sudo),postrename)"
+
+DOWNLOAD_URL_CHECKSUM="https://downloads.raspberrypi.org/raspios_lite_arm64_latest.sha256"
+DOWNLOAD_URL_IMAGE="https://downloads.raspberrypi.org/raspios_lite_arm64_latest.torrent"
 
 # export Variables
 export DOWNLOAD_BASE_URL

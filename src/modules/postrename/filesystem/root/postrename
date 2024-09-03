@@ -121,7 +121,7 @@ patch_polkit_rules() {
         sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_dir}/moonraker.rules"
     fi
     if [[ -f "${polkit_usr_dir}/moonraker.rules" ]]; then
-        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_usr_dir}/moonraker.rules"
+        sed -i 's/ "pi"/ \"'"${DEFAULT_USER}"'\"/g' "${polkit_usr_dir}/moonraker.rules"
     fi
     if [[ -f "${polkit_legacy_dir}/10-moonraker.pkla" ]]; then
         sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_legacy_dir}/10-moonraker.pkla"
