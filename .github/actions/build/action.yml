@@ -15,10 +15,10 @@ inputs:
     default: "devel"
 outputs:
   type:
-    description: SBC type (raspberry/armbian/...)
+    description: SBC type (raspberry/...)
     value: ${{ steps.config.outputs.TYPE }}
   sbc:
-    description: SBC model (rpi32/orangepi4lts/...)
+    description: SBC model (rpi32/...)
     value: ${{ steps.config.outputs.SBC }}
 
 runs:

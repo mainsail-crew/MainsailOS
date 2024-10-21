@@ -46,12 +46,6 @@ if [[ -f "/etc/armbian-release" ]]; then
     ln -s /etc/"${DIST_NAME,,}"-release /etc/aaaa-release
 fi
 ### END Substep 1
-### Substep 2: Apply same for OrangePI bsed Images
-if [[ -f "/etc/orangepi-release" ]]; then
-    echo_green "Apply release file workaround (orangepi based image) ..."
-    ln -s /etc/"${DIST_NAME,,}"-release /etc/aaaa-release
-fi
-## END Step 2
 
 ## Step 3: Install CANBoot Dependency
 apt-get update --allow-releaseinfo-change

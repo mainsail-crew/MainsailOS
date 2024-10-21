@@ -8,19 +8,13 @@
 ####
 
 #### NOTE: Use entries according to their directory/file structure in 'config'
-####       e.g. raspberry/rpi32 armbian/orangepi3lts ...
+####       e.g. raspberry ...
 
 # Use this categorie to configure behaviour on pushes/pull requests against
 # develop branch
 # Each entry will be used in setup matrix
 
 buildtest:
-  # armbian based images
-  # - armbian/bananapim2zero
-  # - armbian/orangepi3lts
-  # - armbian/orangepi4lts
-  # - armbian/orangepi_zero2
-  # Orange Pi OS based images
   # Raspberry Pi OS based images
   - raspberry/rpi32
   - raspberry/rpi64
@@ -31,11 +25,6 @@ buildtest:
 # Each entry will be used in setup matrix for releases
 
 release:
-  # armbian based images
-  # - armbian/orangepi3lts
-  # - armbian/orangepi4lts
-  # - armbian/orangepi_zero2
-  # Orange Pi OS based images
   # Raspberry Pi OS based images
   - raspberry/rpi32
   - raspberry/rpi64
