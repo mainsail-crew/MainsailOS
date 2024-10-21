@@ -34,7 +34,7 @@ Also see the [FAQ](#faq) section.
 
 Here a list of included and preinstalled Software:
 
--   [Klipper (3D Printer Firmware)](https://github.com/Klipper3d/klipper)
+-   [Klipper4pellet (3D Printer Firmware)](https://github.com/gingeradditive/klipper4pellet)
 -   [Moonraker (API Web Server for Klipper)](https://github.com/Arksine/moonraker)
 -   [Mainsail (Web interface for Klipper/Moonraker)](https://github.com/mainsail-crew/mainsail)
 -   [Crowsnest (Webcam streaming)](https://github.com/mainsail-crew/crowsnest)

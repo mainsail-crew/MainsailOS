@@ -16,7 +16,7 @@
 [ -n "$KLIPPER_SRC_DIR" ] || KLIPPER_SRC_DIR="/home/${BASE_USER}/klipper"
 [ -n "$KLIPPER_PYTHON_DIR" ] || KLIPPER_PYTHON_DIR="/home/${BASE_USER}/klippy-env"
 
-[ -n "$KLIPPER_REPO_SHIP" ] || KLIPPER_REPO_SHIP="https://github.com/Klipper3d/klipper.git"
+[ -n "$KLIPPER_REPO_SHIP" ] || KLIPPER_REPO_SHIP="https://github.com/gingeradditive/klipper4pellet.git"
 [ -n "$KLIPPER_REPO_BRANCH" ] || KLIPPER_REPO_BRANCH="master"
 [ -n "$KLIPPER_DEPS" ] || KLIPPER_DEPS="git virtualenv python3-dev \
 python3-matplotlib libffi-dev build-essential libncurses-dev libusb-dev \
