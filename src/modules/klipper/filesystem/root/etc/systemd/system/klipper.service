@@ -1,5 +1,5 @@
 [Unit]
-Description=Klipper 3D Printer Firmware SV1
+Description=klipper4pellet 3D Printer Firmware SV1
 Documentation=https://www.klipper3d.org/
 After=network-online.target
 Before=moonraker.service
