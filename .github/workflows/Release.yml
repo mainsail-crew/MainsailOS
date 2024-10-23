@@ -85,7 +85,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: "MainsailOS ${{ github.event.inputs.version }}"
+          name: "G1OS ${{ github.event.inputs.version }}"
           tag_name: ${{ github.event.inputs.version }}
           body: ${{ steps.changelog.outputs.content }}
           draft: true

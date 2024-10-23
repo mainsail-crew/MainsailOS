@@ -1,6 +1,6 @@
-name: "MainsailOS/build"
-author: "Stefan Dej"
-description: "Build MainsailOS images"
+name: "G1OS/build"
+author: "GIacomo Guaresi"
+description: "Build G1OS images"
 inputs:
   config:
     description: "Board config name"

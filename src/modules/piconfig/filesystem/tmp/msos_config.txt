@@ -1,6 +1,6 @@
 
 ####################################################
-####     MainsailOS specific configurations     ####
+####        G1OS specific configurations        ####
 ####################################################
 ####      DO NOT CHANGE SECTION BELOW !!!       ####
 ####   UNLESS YOU KNOW WHAT YOU ARE DOING !!!   ####

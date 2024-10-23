@@ -1,54 +1,45 @@
-![downloads](https://img.shields.io/github/downloads/mainsail-crew/MainsailOS/total)
-[![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/mainsail)
-
 <p align="center">
-<img src=".github/sdcard-logo.png" style="width:40%" >
+<img src=".github/sdcard-logo.png" style="width:40%">
 </p>
 
-# MainsailOS
+# G1OS
 
-A [Raspberry Pi OS](https://www.raspberrypi.org/software/) based distribution for 3D Printers. \
-It includes everything to get started with Klipper Firmware and Mainsail.
+A [Raspberry Pi OS](https://www.raspberrypi.org/software/) based distribution designed specifically for the **Ginger G1** 3D Printer. It includes all the necessary software and optimizations to get started with **Klipper Firmware** and **Mainsail** for 3D printing with **pellet extrusion** technology.
 
-Learn more about:
+This project is a **fork of [MainsailOS](https://github.com/mainsail-crew/MainsailOS)**, tailored for the unique requirements of pellet-based 3D printing with the Ginger G1.
 
--   [Klipper Firmware](https://www.klipper3d.org/)
--   [Moonraker](https://moonraker.readthedocs.io/en/latest/)
--   [Mainsail](https://docs.mainsail.xyz/)
+## Learn more about:
 
-## How to install MainsailOS ?
+-   [Klipper4Pellet (Firmware for Pellet 3D Printing)](https://github.com/gingeradditive/klipper4pellet)
+-   [Moonraker (API Web Server for Klipper)](https://github.com/Arksine/moonraker)
+-   [Mainsail (Web Interface for Klipper)](https://github.com/mainsail-crew/mainsail)
 
-You can find detailed instructions in our [documentation](https://docs-os.mainsail.xyz).
+<!-- ## How to install G1OS?
 
-We recommend the installation via [Raspberry Pi Imager](https://docs-os.mainsail.xyz/getting-started/raspberry-pi-os-based).
+Detailed installation instructions can be found in our [documentation](https://docs-os.mainsail.xyz), with a section dedicated to the **Ginger G1**. We recommend using the [Raspberry Pi Imager](https://docs-os.mainsail.xyz/getting-started/raspberry-pi-os-based) for installation. -->
+<!-- 
+## Need help?
 
-## How to get help?
-
-Please join us on [Discord](https://discord.gg/mainsail), if you need additional help.
+Join our community on [Discord](https://discord.gg/mainsail) for support. You can also check the FAQ below for common issues. -->
 
 [![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/mainsail)
 
-Also see the [FAQ](#faq) section.
+## What's included?
 
-## What is included?
+G1OS comes with the following pre-installed and configured software:
 
-Here a list of included and preinstalled Software:
+-   [Klipper4Pellet (Customized Klipper Firmware for Pellet 3D Printing)](https://github.com/gingeradditive/klipper4pellet)
+-   [Moonraker (API for Klipper)](https://github.com/Arksine/moonraker)
+-   [Mainsail (Klipper Web Interface)](https://github.com/mainsail-crew/mainsail)
+-   [Crowsnest (Webcam Streaming)](https://github.com/mainsail-crew/crowsnest)
+-   [Sonar (Keepalive Daemon)](https://github.com/mainsail-crew/sonar)
+-   [Nginx (Web Server & Proxy)](https://nginx.org/en/)
 
--   [Klipper4pellet (3D Printer Firmware)](https://github.com/gingeradditive/klipper4pellet)
--   [Moonraker (API Web Server for Klipper)](https://github.com/Arksine/moonraker)
--   [Mainsail (Web interface for Klipper/Moonraker)](https://github.com/mainsail-crew/mainsail)
--   [Crowsnest (Webcam streaming)](https://github.com/mainsail-crew/crowsnest)
--   [Sonar (Keepalive daemon)](https://github.com/mainsail-crew/sonar)
--   [Nginx (Webserver & Proxy)](https://nginx.org/en/)
+## G1OS also includes:
 
-## also includes
-
--   Enabled Serial Connection by default. \
-    Using Hardware UART (PL011) for Boards like BTT SKR Mini E3 V3
--   Preinstalled Dependencies for Klipper's Input Shaper. \
-    You only need to build the [klipper_mcu](https://www.klipper3d.org/RPi_microcontroller.html) and installing the service. \
-    See [Klipper documentation](https://www.klipper3d.org/Measuring_Resonances.html) for more information.
--   Preinstalled python3-serial package, needed for [CanBoot](https://github.com/Arksine/CanBoot)
+-   **Preconfigured Serial Connection** for the Ginger G1 using Hardware UART (PL011).
+-   **Preinstalled Dependencies** for Klipper's Input Shaper. Simply build the [klipper_mcu](https://www.klipper3d.org/RPi_microcontroller.html) and install the service. See [Klipper documentation](https://www.klipper3d.org/Measuring_Resonances.html) for more info.
+-   **Preinstalled Python3-serial package**, required for [CanBoot](https://github.com/Arksine/CanBoot).
 
 ## Screenshots
 
@@ -56,43 +47,24 @@ Here a list of included and preinstalled Software:
 
 # FAQ
 
-**Q:** How do I report a Bug?
-**A:** First of all make sure it is _not_ an misconfiguration of
+**Q:** How do I report a bug?  
+**A:** Please ensure it's not a configuration issue with:
 
--   moonraker
--   klipper
--   crowsnest
--   sonar
+-   Klipper
+-   Moonraker
+-   Crowsnest
+-   Sonar
 
-If there is a bug that belongs to the OS itself,
-please look first at the official Forum of Raspberry Pi OS.\
-MainsailOS is based on Raspberry Pi OS and is only slightly modified to\
-carry the basics to run Klipper on your 3D Printer.
-Most configuration of the single components is up to you.
-We only want to provide an Image as a starting point.
+If the issue is specific to the **G1OS** setup or the Ginger G1 printer, report it via the **G1OS** GitHub Issues section. Provide detailed information to help us resolve the problem quickly.
 
-If there is something that is a bug caused due to the misconfiguration of MainsailOS itself, please let us know, and we will take action as soon as possible.
-Please use the issue section for that.
-Please provide as much information as you can.
+**Q:** What is the philosophy behind G1OS?  
+**A:** We maintain a **KISS** principle—Keep It Simple and Straightforward. G1OS is built on the same foundation as **MainsailOS**, but optimized for pellet printing with the Ginger G1. We aim to keep things as close to the Raspberry Pi OS and MainsailOS documentation as possible, providing extra documentation only where needed.
 
-**Q:** What is the philosophy behind MainsailOS?
-**A:** KISS - Keep it simple and stupid.\
-We only do a bit of modification. All other documented things of the Raspberry Foundation apply.
+**Q:** How can I contribute?  
+**A:** Contributions are always welcome! Please check out the [CONTRIBUTING.md](https://github.com/mainsail-crew/MainsailOS/blob/develop/CONTRIBUTING.md) for ways to support the project or submit code.
 
-And that's our main goal of staying compatible with existing documentation.
-We will provide documentation if something is handled differently than the original documentation.
+# Build your own / Development
 
-**Q:** How do I contribute/support?
-**A:** There are several ways to contribute or support our work.
-Please take a closer look to [CONTRIBUTING.md](https://github.com/mainsail-crew/MainsailOS/blob/develop/CONTRIBUTING.md)
+To build your own version of **G1OS**, simply fork this repository, enable workflows, and each push will trigger an automated image build.
 
-# Build your own / Developing
-
-To prevent you have to deal with an entire build chain setup, \
-simply fork this repository.
-
-Enable the workflows in your fork and you are good to go. \
-On each push you make, an image is build and uploaded as an artifact.
-
-If you want or need to build locally please visit [CustomPiOS](https://github.com/guysoft/CustomPiOS). \
-Especially ["Build a Distro From within Raspbian / Debian / Ubuntu / CustomPiOS Distros"](https://github.com/guysoft/CustomPiOS#build-a-distro-from-within-raspbian--debian--ubuntu--custompios-distros)
+For more information on local builds, please refer to [CustomPiOS](https://github.com/guysoft/CustomPiOS) and the guide ["Build a Distro From within Raspbian/Debian/Ubuntu/CustomPiOS Distros"](https://github.com/guysoft/CustomPiOS#build-a-distro-from-within-raspbian--debian--ubuntu--custompios-distros).

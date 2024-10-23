@@ -1,4 +1,4 @@
-name: Build MainsailOS
+name: Build G1OS
 on:
   push:
     branches:

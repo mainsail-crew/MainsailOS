@@ -24,7 +24,7 @@ install_cleanup_trap
 echo_green "Copying temporary file ..."
 unpack /filesystem/tmp /tmp root
 
-echo_green "Merge MainsailOS configuration with default config.txt ..."
+echo_green "Merge G1OS configuration with default config.txt ..."
 # Step 2: Copy default config to "/tmp"
 cp "${PICONFIG_CONFIG_TXT_FILE}" /tmp
 
