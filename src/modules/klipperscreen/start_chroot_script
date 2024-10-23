@@ -28,6 +28,10 @@ apt-get update
 ## Make sure 'git' is installed!
 check_install_pkgs git
 
+echo_green "Install Xserver ..."
+apt-get install xinit xinput x11-xserver-utils xserver-xorg-input-evdev xserver-xorg-input-libinput xserver-xorg-legacy xserver-xorg-video-fbdev
+apt-get install -f
+
 ## Step 1: Move to Home Dir as WorkingDirectoy
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 
