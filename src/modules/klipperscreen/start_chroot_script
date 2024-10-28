@@ -43,7 +43,14 @@ pushd "/home/${BASE_USER}/KlipperScreen" &> /dev/null || exit 1
 
 ## Step 4: Run KlipperScreen install routine
 echo_green "Launch KlipperScreen install routine ..."
-sudo -u "${BASE_USER}" "${KS_BUILD_INSTALL_SH}"
+echo "${USER} ALL=(ALL) NOPASSWD: ${KS_BUILD_INSTALL_SH}" | sudo tee /etc/sudoers.d/klipperscreen
+sudo bash -c 'echo "127.0.0.1 fv-az1536-484" >> /etc/hosts'
+if ! apt-get install -y xinit xinput x11-xserver-utils xserver-xorg-input-evdev xserver-xorg-input-libinput xserver-xorg-legacy xserver-xorg-video-fbdev; then
+    echo "Failed to install X-server dependencies. Exiting..."
+    exit 1
+fi
+
+echo "${SUDO_PASSWORD}" | sudo -S -u "${BASE_USER}" "${KS_BUILD_INSTALL_SH}"
 
 ## Step 5: Update moonraker.conf
 if [[ -f "${KS_MOONRAKER_CONF_PATH}" ]]; then
