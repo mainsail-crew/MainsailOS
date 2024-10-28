@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#### Obico Install Module
+####
+#### Written by Giacomo Guaresi <guaresi.giacomo@gmail.com>
+#### Copyright 2022 - till today
+####
+#### This File is distributed under GPLv3
+####
+
+#### All Credits for his great tool
+#### https://github.com/TheSpaghettiDetective/moonraker-obico
+
+# shellcheck disable=all
+
+# OBICO repo
+[[ -n "$OBICO_REPO_SHIP" ]] || OBICO_REPO_SHIP="https://github.com/TheSpaghettiDetective/moonraker-obico"
+[[ -n "$OBICO_REPO_BRANCH" ]] || OBICO_REPO_BRANCH="master"
+
+# Add to $PATH ? (1: yes, 0: no)
+[[ -n "$OBICO_ADD_TO_PATH" ]] || OBICO_ADD_TO_PATH="1"
