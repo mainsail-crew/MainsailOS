@@ -37,7 +37,7 @@ pushd "/home/${BASE_USER}/moonraker-obico" &> /dev/null || exit 1
 
 ## Step 4: Run Moonraker Obico install routine
 echo_green "Launch Moonraker Obico install routine ..."
-yes "" | sudo -u "${BASE_USER}" ./install.sh
+yes "" | sudo -u "${BASE_USER}" ./install.sh -L -U
 
 ## Step 5: Leave Moonraker Obico
 popd &> /dev/null || exit 1
