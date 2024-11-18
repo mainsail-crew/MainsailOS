@@ -23,17 +23,17 @@ apt-get update
 ## Make sure 'pmount' is installed!
 check_install_pkgs pmount
 
-echo "debug list of files in /home/${BASE_USER}/printer_data/"
-ls "/home/${BASE_USER}/printer_data/"
+## Step 0: create Gcode folders
+mkdir -p "${ENABLEUSB_PRINTER_GCODE_FOLDER}"
 
-## Step 0: create rule file
+## Step 1: create rule file
 ln -s "${ENABLEUSB_MEDIA_FOLDER}" "${ENABLEUSB_PRINTER_GCODE_FOLDER}"
 echo "${ENABLEUSB_RULE}" | sudo -u "${BASE_USER}" tee -a "${ENABLEUSB_RULE_FILE}"
 echo "USB rule added to ${RULES_FILE}"
 sudo -u "${BASE_USER}" udevadm control --reload-rules && sudo -u "${BASE_USER}" udevadm trigger
 echo "udev rules reloaded"
 
-## Step 1: Create service file
+## Step 2: Create service file
 echo "${ENABLEUSB_SERVICE_CONTENT}" | sudo -u "${BASE_USER}" tee "${ENABLEUSB_SERVICE_FILE}" > /dev/null
 sudo -u "${BASE_USER}" chmod 644 "${ENABLEUSB_SERVICE_FILE}"
 sudo -u "${BASE_USER}" systemctl daemon-reload
