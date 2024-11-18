@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#### KAMP Install Module
+####
+#### Written by Giacomo Guaresi <guaresi.giacomo@gmail.com>
+#### Copyright 2022 - till today
+####
+#### This File is distributed under GPLv3
+####
+
+#### All Credits for his great tool
+#### https://github.com/kyleisah/Klipper-Adaptive-Meshing-Purging
+
+# shellcheck disable=all
+
+# KAMP repo
+[[ -n "$KAMP_REPO_SHIP" ]] || KAMP_REPO_SHIP="https://github.com/kyleisah/Klipper-Adaptive-Meshing-Purging"
+[[ -n "$KAMP_REPO_BRANCH" ]] || KAMP_REPO_BRANCH="main"
+
+# Add to $PATH ? (1: yes, 0: no)
+[[ -n "$KAMP_ADD_TO_PATH" ]] || KAMP_ADD_TO_PATH="1"
