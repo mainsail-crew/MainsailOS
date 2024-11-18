@@ -35,8 +35,8 @@ pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 gitclone KAMP_REPO Klipper-Adaptive-Meshing-Purging
 
 ## Step 3: install kyleisah KAMP
-ln -s /home/${BASE_USER}/Klipper-Adaptive-Meshing-Purging/Configuration printer_data/config/KAMP
-cp /home/${BASE_USER}/Klipper-Adaptive-Meshing-Purging/Configuration/KAMP_Settings.cfg /home/${BASE_USER}/printer_data/config/KAMP_Settings.cfg
+ln -s "/home/${BASE_USER}/Klipper-Adaptive-Meshing-Purging/Configuration printer_data/config/KAMP"
+cp "/home/${BASE_USER}/Klipper-Adaptive-Meshing-Purging/Configuration/KAMP_Settings.cfg" "/home/${BASE_USER}/printer_data/config/KAMP_Settings.cfg"
 
 ## Step 6: leave home dir
 popd &> /dev/null || exit 1
