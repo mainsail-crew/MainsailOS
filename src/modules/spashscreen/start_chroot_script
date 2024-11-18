@@ -29,8 +29,8 @@ sudo -u "${BASE_USER}" sed -i '1s/$/ logo.nologo consoleblank=0 loglevel=1 quiet
 echo "Boot configuration files modified successfully."
 
 ## Step 1: Create splashscreen service
-echo "$SPLASHSCREEN_SERVICE_CONTENT" | sudo -u "${BASE_USER}" tee "$SPLASHSCREEN_SERVICE_FILE" > /dev/null
-sudo -u "${BASE_USER}" chmod 644 "$SPLASHSCREEN_SERVICE_FILE"
+echo "${SPLASHSCREEN_SERVICE_CONTENT}" | sudo -u "${BASE_USER}" tee "${SPLASHSCREEN_SERVICE_FILE}" > /dev/null
+sudo -u "${BASE_USER}" chmod 644 "${SPLASHSCREEN_SERVICE_FILE}"
 sudo -u "${BASE_USER}" systemctl daemon-reload
 sudo -u "${BASE_USER}" systemctl enable splashscreen.service
 echo "Splashscreen service created and enabled"
