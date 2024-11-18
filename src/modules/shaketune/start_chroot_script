@@ -27,8 +27,6 @@ fi
 source /common.sh
 install_cleanup_trap
 
-unpack /filesystem/root /
-
 echo_green "Installing Klippain ShakeTune ..."
 
 ## Force apt update
