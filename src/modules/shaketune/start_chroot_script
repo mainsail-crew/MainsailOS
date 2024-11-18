@@ -35,6 +35,10 @@ gitclone SHAKETUNE_REPO klippain-shaketune
 ## Step 3: Move to Klippain ShakeTune as working directory
 pushd "/home/${BASE_USER}/klippain-shaketune" &> /dev/null || exit 1
 
+#DEBUG 
+echo_green "[DEBUG] Listing all service units ..."
+sudo systemctl list-units --full -all -t service --no-legend
+
 ## Step 4: Run Klippain ShakeTune install routine
 echo_green "Launch Klippain ShakeTune install routine ..."
 yes "" | sudo -u "${BASE_USER}" ./install.sh -L -U
