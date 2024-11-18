@@ -28,15 +28,15 @@ mkdir -p "${ENABLEUSB_PRINTER_GCODE_FOLDER}"
 
 ## Step 1: create rule file
 ln -s "${ENABLEUSB_MEDIA_FOLDER}" "${ENABLEUSB_PRINTER_GCODE_FOLDER}"
-echo "${ENABLEUSB_RULE}" | tee -a "${ENABLEUSB_RULE_FILE}"
+echo "${ENABLEUSB_RULE}" | sudo tee -a "${ENABLEUSB_RULE_FILE}"
 echo "USB rule added to ${RULES_FILE}"
-sudo -u "${BASE_USER}" udevadm control --reload-rules && sudo -u "${BASE_USER}" udevadm trigger
+sudo udevadm control --reload-rules && sudo udevadm trigger
 echo "udev rules reloaded"
 
 ## Step 2: Create service file
-echo "${ENABLEUSB_SERVICE_CONTENT}" | tee "${ENABLEUSB_SERVICE_FILE}" > /dev/null
-sudo -u "${BASE_USER}" chmod 644 "${ENABLEUSB_SERVICE_FILE}"
-sudo -u "${BASE_USER}" systemctl daemon-reload
+echo "${ENABLEUSB_SERVICE_CONTENT}" | sudo tee "${ENABLEUSB_SERVICE_FILE}" > /dev/null
+sudo chmod 644 "${ENABLEUSB_SERVICE_FILE}"
+sudo systemctl daemon-reload
 echo "USB handler service created and systemd daemons reloaded"
 
 ## Finish
