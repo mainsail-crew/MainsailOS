@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#### Powerbutton Install Module
+####
+#### Written by Giacomo Guaresi <guaresi.giacomo@gmail.com>
+#### Copyright 2022 - till today
+####
+#### This File is distributed under GPLv3
+####
+
+#### All Credits for his great tool
+#### https://github.com/Howchoo/pi-power-button
+
+# shellcheck disable=all
+
+# POWERBUTTON repo
+[[ -n "$POWERBUTTON_REPO_SHIP" ]] || POWERBUTTON_REPO_SHIP="https://github.com/Howchoo/pi-power-button"
+[[ -n "$POWERBUTTON_REPO_BRANCH" ]] || POWERBUTTON_REPO_BRANCH="master"
+
+# Add to $PATH ? (1: yes, 0: no)
+[[ -n "$POWERBUTTON_ADD_TO_PATH" ]] || POWERBUTTON_ADD_TO_PATH="1"
