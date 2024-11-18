@@ -28,8 +28,7 @@ echo_green "Installing Shake&Tune ..."
 pushd /home/"${BASE_USER}" &> /dev/null || exit 1
 
 echo "Cloning Shake&Tune repo ..."
-sudo -u "${BASE_USER}" wget /tmp/install.sh "${SHAKETUNE_INSTALL_SH}" | bash
-sudo -u "${BASE_USER}" bash /tmp/install.sh
+sudo -u "${BASE_USER}" wget - "${SHAKETUNE_INSTALL_SH}" | bash
 
 popd &> /dev/null || exit 1
 # Unpack root at the end, so files are modified before
