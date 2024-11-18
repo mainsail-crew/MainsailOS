@@ -18,6 +18,3 @@
 
 # Add to $PATH ? (1: yes, 0: no)
 [[ -n "$SHAKETUNE_ADD_TO_PATH" ]] || SHAKETUNE_ADD_TO_PATH="1"
-
-# SHAKETUNE install script
-[[ -n "$SHAKETUNE_INSTALL_SH" ]] || SHAKETUNE_INSTALL_SH="https://raw.githubusercontent.com/Frix-x/klippain-shaketune/main/install.sh"
