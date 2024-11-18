@@ -17,10 +17,17 @@ set -EeX
 ## Set LC_ALL to prevent errors
 export LC_ALL=C
 
+# Set DEBIAN_FRONTEND to noninteractive
+if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
+    export DEBIAN_FRONTEND=noninteractive
+fi
+
 # Source CustomPIOS common.sh
 # shellcheck disable=SC1091
 source /common.sh
 install_cleanup_trap
+
+unpack /filesystem/root /
 
 echo_green "Installing Klippain ShakeTune ..."
 
@@ -38,9 +45,15 @@ gitclone SHAKETUNE_REPO klippain-shaketune
 ## Step 3: Move to Klippain ShakeTune as working directory
 pushd "/home/${BASE_USER}/klippain-shaketune" &> /dev/null || exit 1
 
+echo "check if kliiper service is available"
+ls /etc/systemd/system/
+sudo -u "${BASE_USER}" systemctl daemon-reload
+
 ## Step 4: Run Klippain ShakeTune install routine
 echo_green "Launch Klippain ShakeTune install routine ..."
 yes "" | sudo -u "${BASE_USER}" ./install.sh -L -U
+
+
 
 ## Step 5: Leave Klippain ShakeTune
 popd &> /dev/null || exit 1
