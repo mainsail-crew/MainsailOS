@@ -23,6 +23,9 @@ apt-get update
 ## Make sure 'pmount' is installed!
 check_install_pkgs pmount
 
+echo "debug list of files in /home/${BASE_USER}/printer_data/"
+ls "/home/${BASE_USER}/printer_data/"
+
 ## Step 0: create rule file
 ln -s "${ENABLEUSB_MEDIA_FOLDER}" "${ENABLEUSB_PRINTER_GCODE_FOLDER}"
 echo "${ENABLEUSB_RULE}" | sudo -u "${BASE_USER}" tee -a "${ENABLEUSB_RULE_FILE}"

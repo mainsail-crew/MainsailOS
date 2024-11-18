@@ -11,7 +11,7 @@
 # POWERBUTTON repo
 
 [[ -n "$ENABLEUSB_MEDIA_FOLDER" ]] || ENABLEUSB_MEDIA_FOLDER="/media"
-[[ -n "$ENABLEUSB_PRINTER_GCODE_FOLDER" ]] || ENABLEUSB_PRINTER_GCODE_FOLDER="/home/pi/printer_data/gcodes/"
+[[ -n "$ENABLEUSB_PRINTER_GCODE_FOLDER" ]] || ENABLEUSB_PRINTER_GCODE_FOLDER="/home/${BASE_USER}/printer_data/gcodes/"
 [[ -n "$ENABLEUSB_RULE_FILE" ]] || ENABLEUSB_RULE_FILE="/etc/udev/rules.d/usbstick.rules"
 [[ -n "$ENABLEUSB_RULE" ]] || ENABLEUSB_RULE='ACTION=="add", KERNEL=="sd[a-z][0-9]", TAG+="systemd", ENV{SYSTEMD_WANTS}="usbstick-handler@%k"'
 [[ -n "$ENABLEUSB_SERVICE_FILE" ]] || SPLASHSCREEN_SERVICE_FILE="/lib/systemd/system/usbstick-handler@.service"
