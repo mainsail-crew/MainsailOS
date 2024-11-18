@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#### Shake&Tune Install Module
+####
+#### Written by Giacomo Guaresi <guaresi.giacomo@gmail.com>
+#### Copyright 2022 - till today
+####
+#### This File is distributed under GPLv3
+####
+
+#### All Credits for his great tool
+#### https://github.com/Frix-x/klippain-shaketune
+
+# shellcheck disable=all
+
+# SHAKETUNE repo
+[[ -n "$SHAKETUNE_REPO_SHIP" ]] || SHAKETUNE_REPO_SHIP="https://github.com/Frix-x/klippain-shaketune"
+[[ -n "$SHAKETUNE_REPO_BRANCH" ]] || SHAKETUNE_REPO_BRANCH="main"
+
+# Add to $PATH ? (1: yes, 0: no)
+[[ -n "$SHAKETUNE_ADD_TO_PATH" ]] || SHAKETUNE_ADD_TO_PATH="1"
+
+# SHAKETUNE install script
+[[ -n "$SHAKETUNE_INSTALL_SH" ]] || SHAKETUNE_INSTALL_SH="https://raw.githubusercontent.com/Frix-x/klippain-shaketune/main/install.sh"

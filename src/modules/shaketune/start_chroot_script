@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+#### Shake&Tune Install Module
+####
+#### Written by Giacomo Guaresi <guaresi.giacomo@gmail.com>
+#### Copyright 2022 - till today
+####
+#### This File is distributed under GPLv3
+####
+
+#### All Credits for his great tool
+#### https://github.com/Frix-x/klippain-shaketune
+
+# shellcheck enable=require-variable-braces
+
+# Source error handling, leave this in place
+set -Ee
+
+# Set LC_ALL to prevent errors
+export LC_ALL=C
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+### Download and Install Shake&Tune
+echo_green "Installing Shake&Tune ..."
+pushd /home/"${BASE_USER}" &> /dev/null || exit 1
+sudo -u "${BASE_USER}" wget -q --show-progress -O "${SHAKETUNE_INSTALL_SH}" | bash
+
+popd &> /dev/null || exit 1
+# Unpack root at the end, so files are modified before
+unpack /filesystem/root /
