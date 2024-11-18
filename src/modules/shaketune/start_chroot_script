@@ -12,7 +12,7 @@
 # shellcheck enable=require-variable-braces
 
 # Source error handling, leave this in place
-set -Ee
+set -EeX
 
 ## Set LC_ALL to prevent errors
 export LC_ALL=C
@@ -37,10 +37,6 @@ gitclone SHAKETUNE_REPO klippain-shaketune
 
 ## Step 3: Move to Klippain ShakeTune as working directory
 pushd "/home/${BASE_USER}/klippain-shaketune" &> /dev/null || exit 1
-
-#DEBUG 
-echo_green "[DEBUG] Listing all service units ..."
-sudo -u "${BASE_USER}" systemctl list-units --full -all -t service --no-legend
 
 ## Step 4: Run Klippain ShakeTune install routine
 echo_green "Launch Klippain ShakeTune install routine ..."
