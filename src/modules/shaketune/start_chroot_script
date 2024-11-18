@@ -48,7 +48,7 @@ bash -c "$(sed 's|if \[.*klipper\.service.*\]; then|if true; then|' install.sh)"
 
 ## Step 5: Run Klippain ShakeTune install routine
 echo_green "Launch Klippain ShakeTune install routine ..."
-yes "" | sudo -u "${BASE_USER}" ./install.sh -L -U
+yes "" | ./install.sh -L -U
 
 
 
