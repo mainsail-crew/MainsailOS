@@ -12,7 +12,10 @@
 # shellcheck enable=require-variable-braces
 
 # Source error handling, leave this in place
-set -Ee
+set -Eex
+
+## Set LC_ALL to prevent errors
+export LC_ALL=C
 
 # Source CustomPIOS common.sh
 # shellcheck disable=SC1091
@@ -37,7 +40,7 @@ pushd "/home/${BASE_USER}/klippain-shaketune" &> /dev/null || exit 1
 
 #DEBUG 
 echo_green "[DEBUG] Listing all service units ..."
-sudo systemctl list-units --full -all -t service --no-legend
+sudo -u "${BASE_USER}" systemctl list-units --full -all -t service --no-legend
 
 ## Step 4: Run Klippain ShakeTune install routine
 echo_green "Launch Klippain ShakeTune install routine ..."
