@@ -14,8 +14,8 @@
 [[ -n "$ENABLEUSB_PRINTER_GCODE_FOLDER" ]] || ENABLEUSB_PRINTER_GCODE_FOLDER="/home/${BASE_USER}/printer_data/gcodes/"
 [[ -n "$ENABLEUSB_RULE_FILE" ]] || ENABLEUSB_RULE_FILE="/etc/udev/rules.d/usbstick.rules"
 [[ -n "$ENABLEUSB_RULE" ]] || ENABLEUSB_RULE='ACTION=="add", KERNEL=="sd[a-z][0-9]", TAG+="systemd", ENV{SYSTEMD_WANTS}="usbstick-handler@%k"'
-[[ -n "$ENABLEUSB_SERVICE_FILE" ]] || SPLASHSCREEN_SERVICE_FILE="/lib/systemd/system/usbstick-handler@.service"
-[[ -n "$ENABLEUSB_SERVICE_CONTENT" ]] || SPLASHSCREEN_SERVICE_CONTENT="[Unit]
+[[ -n "$ENABLEUSB_SERVICE_FILE" ]] || ENABLEUSB_SERVICE_FILE="/lib/systemd/system/usbstick-handler@.service"
+[[ -n "$ENABLEUSB_SERVICE_CONTENT" ]] || ENABLEUSB_SERVICE_CONTENT="[Unit]
 Description=Mount USB sticks
 BindsTo=dev-%i.device
 After=dev-%i.device
