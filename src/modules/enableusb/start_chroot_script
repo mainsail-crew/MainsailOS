@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#### Enable usb Install Module
+####
+#### Written by Giacomo Guaresi <guaresi.giacomo@gmail.com>
+#### Copyright 2022 - till today
+####
+#### This File is distributed under GPLv3
+
+# shellcheck enable=require-variable-braces
+
+# Source error handling, leave this in place
+set -Ee
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+echo_green "Installing Ginger Enable usb ..."
+
+## Force apt update
+apt-get update
+## Make sure 'pmount' is installed!
+check_install_pkgs pmount
+
+## Step 0: create rule file
+ln -s $ENABLEUSB_MEDIA_FOLDER $ENABLEUSB_PRINTER_GCODE_FOLDER
+echo "$RULE" | sudo -u "${BASE_USER}" tee -a "$RULES_FILE"
+echo "USB rule added to $RULES_FILE"
+sudo -u "${BASE_USER}" udevadm control --reload-rules && sudo -u "${BASE_USER}" udevadm trigger
+echo "udev rules reloaded"
+
+## Step 1: Create service file
+echo "$ENABLEUSB_SERVICE_CONTENT" | sudo -u "${BASE_USER}" tee "$ENABLEUSB_SERVICE_FILE" > /dev/null
+sudo -u "${BASE_USER}" chmod 644 "$ENABLEUSB_SERVICE_FILE"
+sudo -u "${BASE_USER}" systemctl daemon-reload
+echo "USB handler service created and systemd daemons reloaded"
+
+## Finish
+echo_green "Installing Ginger Enable usb ... DONE!"

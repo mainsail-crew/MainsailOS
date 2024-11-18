@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#### Enable usb Install Module
+####
+#### Written by Giacomo Guaresi <guaresi.giacomo@gmail.com>
+#### Copyright 2022 - till today
+####
+#### This File is distributed under GPLv3
+
+# shellcheck disable=all
+
+# POWERBUTTON repo
+
+[[ -n "$ENABLEUSB_MEDIA_FOLDER" ]] || SPLASHSCREEN_MEDIA_FOLDER="/media"
+[[ -n "$ENABLEUSB_PRINTER_GCODE_FOLDER" ]] || ENABLEUSB_PRINTER_GCODE_FOLDER="/home/pi/printer_data/gcodes/"
+[[ -n "$ENABLEUSB_RULE_FILE" ]] || ENABLEUSB_RULE_FILE="/etc/udev/rules.d/usbstick.rules"
+[[ -n "$ENABLEUSB_RULE" ]] || ENABLEUSB_RULE='ACTION=="add", KERNEL=="sd[a-z][0-9]", TAG+="systemd", ENV{SYSTEMD_WANTS}="usbstick-handler@%k"'
+[[ -n "$ENABLEUSB_SERVICE_FILE" ]] || SPLASHSCREEN_SERVICE_FILE="/lib/systemd/system/usbstick-handler@.service"
+[[ -n "$ENABLEUSB_SERVICE_CONTENT" ]] || SPLASHSCREEN_SERVICE_CONTENT="[Unit]
+Description=Mount USB sticks
+BindsTo=dev-%i.device
+After=dev-%i.device
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/pmount --umask 000 --noatime -r --sync %I .
+ExecStop=/usr/bin/pumount /dev/%I
+"
+
+# Add to $PATH ? (1: yes, 0: no)
+[[ -n "$POWERBUTTON_ADD_TO_PATH" ]] || POWERBUTTON_ADD_TO_PATH="1"
