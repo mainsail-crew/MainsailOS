@@ -25,17 +25,11 @@ install_cleanup_trap
 
 ### Download and Install Shake&Tune
 echo_green "Installing Shake&Tune ..."
-
-# Check if SHAKETUNE_INSTALL_SH is set
-if [ -z "${SHAKETUNE_INSTALL_SH}" ]; then
-  echo "Error: SHAKETUNE_INSTALL_SH is not set or is empty."
-  exit 1
-fi
-
-echo "${SHAKETUNE_INSTALL_SH}"
-
 pushd /home/"${BASE_USER}" &> /dev/null || exit 1
-sudo -u "${BASE_USER}" wget -q --show-progress -O "${SHAKETUNE_INSTALL_SH}" | bash
+
+echo "Cloning Shake&Tune repo ..."
+sudo -u "${BASE_USER}" wget /tmp/install.sh - "${SHAKETUNE_INSTALL_SH}" | bash
+sudo -u "${BASE_USER}" bash /tmp/install.sh
 
 popd &> /dev/null || exit 1
 # Unpack root at the end, so files are modified before
