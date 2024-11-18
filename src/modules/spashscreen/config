@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#### Splashscreen Install Module
+####
+#### Written by Giacomo Guaresi <guaresi.giacomo@gmail.com>
+#### Copyright 2022 - till today
+####
+#### This File is distributed under GPLv3
+
+# shellcheck disable=all
+
+# POWERBUTTON repo
+
+[[ -n "$SPLASHSCREEN_BOOT_CONFIG" ]] || SPLASHSCREEN_BOOT_CONFIG="/boot/config.txt"
+[[ -n "$SPLASHSCREEN_CMDLINE_CONFIG" ]] || SPLASHSCREEN_CMDLINE_CONFIG="/boot/cmdline.txt"
+
+[[ -n "$SPLASHSCREEN_SERVICE_FILE" ]] || SPLASHSCREEN_SERVICE_FILE="/etc/systemd/system/splashscreen.service"
+[[ -n "$SPLASHSCREEN_SERVICE_CONTENT" ]] || SPLASHSCREEN_SERVICE_CONTENT="[Unit]
+Description=Splash screen
+DefaultDependencies=no
+After=local-fs.target
+
+[Service]
+ExecStart=/usr/bin/fbi -d /dev/fb0 --noverbose -a /home/pi/printer_data/config/splash.png
+StandardInput=tty
+StandardOutput=tty
+
+[Install]
+WantedBy=sysinit.target"
+
+# Add to $PATH ? (1: yes, 0: no)
+[[ -n "$POWERBUTTON_ADD_TO_PATH" ]] || POWERBUTTON_ADD_TO_PATH="1"
