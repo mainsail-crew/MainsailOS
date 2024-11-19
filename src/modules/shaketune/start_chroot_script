@@ -45,6 +45,7 @@ pushd "/home/${BASE_USER}/klippain-shaketune" &> /dev/null || exit 1
 
 ## Step 4: Patch install.sh to skip klipper.service check
 bash -c "$(sed 's|if \[.*klipper\.service.*\]; then|if true; then|' install.sh)"
+# shellcheck disable=SC2016
 bash -c "$(sed 's|if \[ "$EUID" -eq 0 \]; then|if false; then|' install.sh)"
 
 ## Step 5: Run Klippain ShakeTune install routine
