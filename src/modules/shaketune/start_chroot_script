@@ -50,9 +50,6 @@ sed \
   -e 's|if ! command -v python3 &> /dev/null; then|if false; then|' \
   -e 's|if \[.*klipper.service.*\]; then|if true; then|' \
   < install.sh > temp_install.sh
-
-sed -i '/^\(USER_CONFIG_PATH\|MOONRAKER_CONFIG\|KLIPPER_PATH\|KLIPPER_VENV_PATH\|OLD_K_SHAKETUNE_VENV\|K_SHAKETUNE_PATH\)/a echo "&"' temp_install.sh
-
 chmod +x temp_install.sh
 
 #auto select answer
