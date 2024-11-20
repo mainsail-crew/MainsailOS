@@ -43,29 +43,20 @@ gitclone SHAKETUNE_REPO klippain
 ## Step 3: Move to Klippain ShakeTune as working directory
 pushd "/home/${BASE_USER}/klippain" &> /dev/null || exit 1
 
-## Step 5: Set HOME if not set
-[[ -n "$HOME" ]] || HOME="/home/${BASE_USER}"
-
-## Step 6: Run Klippain ShakeTune install routine bypassing user interaction and security checks
+## Step 5: Run Klippain ShakeTune install routine bypassing user interaction and security checks
 # shellcheck disable=SC2016
 sed \
   -e 's|if \[ "$EUID" -eq 0 \]; then|if false; then|' \
   -e 's|if ! command -v python3 &> /dev/null; then|if false; then|' \
   -e 's|if \[.*klipper.service.*\]; then|if true; then|' \
   < install.sh > temp_install.sh
+
+sed -i '/^\(USER_CONFIG_PATH\|MOONRAKER_CONFIG\|KLIPPER_PATH\|KLIPPER_VENV_PATH\|OLD_K_SHAKETUNE_VENV\|K_SHAKETUNE_PATH\)/a echo "&"' temp_install.sh
+
 chmod +x temp_install.sh
 
-echo_green "DEBUG, print all variables"
-echo "HOME: ${HOME}"
-echo "USER_CONFIG_PATH: ${USER_CONFIG_PATH}"
-echo "MOONRAKER_CONFIG: ${MOONRAKER_CONFIG}"
-echo "KLIPPER_PATH: ${KLIPPER_PATH}"
-echo "KLIPPER_VENV_PATH: ${KLIPPER_VENV_PATH}"
-echo "OLD_K_SHAKETUNE_VENV: ${OLD_K_SHAKETUNE_VENV}"
-echo "K_SHAKETUNE_PATH: ${K_SHAKETUNE_PATH}"
-
 #auto select answer
-bash ./temp_install.sh
+sudo -u "${BASE_USER}" ./temp_install.sh
 
 ## Step 7: remove temp_install.sh
 rm temp_install.sh
