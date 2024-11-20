@@ -37,7 +37,7 @@ pushd "/home/${BASE_USER}/G1-Configs" &> /dev/null || exit 1
 
 ## Step 4: Run Ginger Config install routine
 echo_green "Launch Ginger Config install routine ..."
-sudo -u "${BASE_USER}" ./install.sh
+sudo -u "${BASE_USER}" bash ./install.sh
 
 ## Step 5: Leave Ginger Config
 popd &> /dev/null || exit 1

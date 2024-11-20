@@ -14,7 +14,8 @@ BASE_IMAGE_RESIZEROOT=600
 # Compress not needed due compression done in workflow
 BASE_RELEASE_COMPRESS=no
 # Modules are valid for 32bit and 64bit images
-MODULES="base(pkgupgrade,udev_fix,mainsailos(net,piconfig,klipper,is_req_preinstall,moonraker,kiauh,obico,shaketune,kamp,enableusb,powerbutton,splashscreen,klipperscreen,timelapse,mainsail,crowsnest,sonar,gingerconfig,password-for-sudo),postrename)"
+# MODULES="base(pkgupgrade,udev_fix,mainsailos(net,piconfig,klipper,is_req_preinstall,moonraker,kiauh,obico,shaketune,kamp,enableusb,powerbutton,splashscreen,klipperscreen,timelapse,mainsail,crowsnest,sonar,gingerconfig,password-for-sudo),postrename)"
+MODULES="base(pkgupgrade,udev_fix,mainsailos(net,piconfig,klipper,is_req_preinstall,gingerconfig,password-for-sudo),postrename)"
 
 # export Variables
 export DOWNLOAD_BASE_URL
