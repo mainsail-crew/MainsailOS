@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#### Ginger config Install Module
+####
+#### Written by Giacomo Guaresi <guaresi.giacomo@gmail.com>
+#### Copyright 2022 - till today
+####
+#### This File is distributed under GPLv3
+####
+
+#### All Credits for his great tool
+#### https://github.com/gingeradditive/G1-Configs
+
+# shellcheck disable=all
+
+# GINGERCONFIG repo
+[[ -n "$GINGERCONFIG_REPO_SHIP" ]] || GINGERCONFIG_REPO_SHIP="https://github.com/gingeradditive/G1-Configs"
+[[ -n "$GINGERCONFIG_REPO_BRANCH" ]] || GINGERCONFIG_REPO_BRANCH="main"
+
+# Add to $PATH ? (1: yes, 0: no)
+[[ -n "$GINGERCONFIG_ADD_TO_PATH" ]] || GINGERCONFIG_ADD_TO_PATH="1"
