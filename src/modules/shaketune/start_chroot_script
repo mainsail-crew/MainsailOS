@@ -38,10 +38,10 @@ check_install_pkgs git
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 
 ## Step 2: clone Klippain ShakeTune repo
-gitclone SHAKETUNE_REPO klippain
+gitclone SHAKETUNE_REPO klippain_installer
 
 ## Step 3: Move to Klippain ShakeTune as working directory
-pushd "/home/${BASE_USER}/klippain" &> /dev/null || exit 1
+pushd "/home/${BASE_USER}/klippain_installer" &> /dev/null || exit 1
 
 ## Step 5: Run Klippain ShakeTune install routine bypassing user interaction and security checks
 # shellcheck disable=SC2016
@@ -61,8 +61,14 @@ rm temp_install.sh
 ## Step 8: Leave Klippain ShakeTune
 popd &> /dev/null || exit 1
 
-## Step 9: leave home dir
+## Step 9: remove Klippain installer folder
+rm -rf klippain_installer
+
+## Step 10: leave home dir
 popd &> /dev/null || exit 1
+
+echo_green "FIX: virtual env path"
+sed -i 's|virtualenv: ~/klippain_shaketune-env|virtualenv: ~/klippy-env|' /home/${BASE_USER}/printer_data/config/moonraker.conf
 
 ## Finish
 echo_green "Installing Klippain ShakeTune ... DONE!"
