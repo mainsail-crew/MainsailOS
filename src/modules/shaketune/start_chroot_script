@@ -68,7 +68,7 @@ rm -rf klippain_installer
 popd &> /dev/null || exit 1
 
 echo_green "FIX: virtual env path"
-sudo sed -i 's|virtualenv: ~/klippain_shaketune-env|virtualenv: ~/klippy-env|' "/home/${BASE_USER}/printer_data/config/moonraker.conf"
+sed -i 's|virtualenv: ~/klippain_shaketune-env|virtualenv: ~/klippy-env|' "/home/${BASE_USER}/printer_data/config/moonraker.conf"
 
 ## Finish
 echo_green "Installing Klippain ShakeTune ... DONE!"
