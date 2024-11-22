@@ -24,19 +24,19 @@ apt-get update
 check_install_pkgs fbi
 
 ## Step 0: Modify boot configuration files
-echo "disable_splash=1" | sudo -u "${BASE_USER}" tee -a "${SPLASHSCREEN_BOOT_CONFIG}"
-sudo -u "${BASE_USER}" sed -i '1s/$/ logo.nologo consoleblank=0 loglevel=1 quiet/' "${SPLASHSCREEN_CMDLINE_CONFIG}"
+echo "disable_splash=1" | sudo tee -a "${SPLASHSCREEN_BOOT_CONFIG}"
+sudo sed -i '1s/$/ logo.nologo consoleblank=0 loglevel=1 quiet/' "${SPLASHSCREEN_CMDLINE_CONFIG}"
 echo "Boot configuration files modified successfully."
 
 ## Step 1: Create splashscreen service
-echo "${SPLASHSCREEN_SERVICE_CONTENT}" | sudo -u "${BASE_USER}" tee "${SPLASHSCREEN_SERVICE_FILE}" > /dev/null
-sudo -u "${BASE_USER}" chmod 644 "${SPLASHSCREEN_SERVICE_FILE}"
-sudo -u "${BASE_USER}" systemctl daemon-reload
-sudo -u "${BASE_USER}" systemctl enable splashscreen.service
+echo "${SPLASHSCREEN_SERVICE_CONTENT}" | sudo tee "${SPLASHSCREEN_SERVICE_FILE}" > /dev/null
+sudo chmod 644 "${SPLASHSCREEN_SERVICE_FILE}"
+sudo systemctl daemon-reload
+sudo systemctl enable splashscreen.service
 echo "Splashscreen service created and enabled"
 
 ### Step 2: Enable splashscreen service
-sudo -u "${BASE_USER}" systemctl enable splashscreen
+sudo systemctl enable splashscreen
 
 ## Finish
 echo_green "Installing Ginger Splashscreen ... DONE!"
