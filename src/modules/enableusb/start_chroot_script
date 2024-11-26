@@ -24,10 +24,10 @@ apt-get update
 check_install_pkgs pmount
 
 ## Step 0: create Gcode folders
-mkdir -p "${ENABLEUSB_PRINTER_GCODE_FOLDER}"
+sudo -u "${BASE_USER}" mkdir -p "${ENABLEUSB_PRINTER_GCODE_FOLDER}"
 
 ## Step 1: create rule file
-ln -s "${ENABLEUSB_MEDIA_FOLDER}" "${ENABLEUSB_PRINTER_GCODE_FOLDER}"
+sudo -u "${BASE_USER}" ln -s "${ENABLEUSB_MEDIA_FOLDER}" "${ENABLEUSB_PRINTER_GCODE_FOLDER}"
 echo "${ENABLEUSB_RULE}" | sudo tee -a "${ENABLEUSB_RULE_FILE}"
 echo "USB rule added to ${RULES_FILE}"
 sudo udevadm control --reload-rules && sudo udevadm trigger
