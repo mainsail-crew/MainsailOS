@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#### Ginger config Install Module
+#### G1 Config Install Module
 ####
 #### Written by Giacomo Guaresi <guaresi.giacomo@gmail.com>
 #### Copyright 2022 - till today
@@ -12,9 +12,9 @@
 
 # shellcheck disable=all
 
-# GINGERCONFIG repo
-[[ -n "$GINGERCONFIG_REPO_SHIP" ]] || GINGERCONFIG_REPO_SHIP="https://github.com/gingeradditive/G1-Configs"
-[[ -n "$GINGERCONFIG_REPO_BRANCH" ]] || GINGERCONFIG_REPO_BRANCH="main"
+# G1CONFIG repo
+[[ -n "$G1CONFIG_REPO_SHIP" ]] || G1CONFIG_REPO_SHIP="https://github.com/gingeradditive/G1-Configs"
+[[ -n "$G1CONFIG_REPO_BRANCH" ]] || G1CONFIG_REPO_BRANCH="newConfigOrganizzation+"
 
 # Add to $PATH ? (1: yes, 0: no)
-[[ -n "$GINGERCONFIG_ADD_TO_PATH" ]] || GINGERCONFIG_ADD_TO_PATH="1"
+[[ -n "$G1CONFIG_ADD_TO_PATH" ]] || G1CONFIG_ADD_TO_PATH="1"
