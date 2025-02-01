@@ -20,6 +20,7 @@ buildtest:
   - armbian/orangepi3lts
   - armbian/orangepi4lts
   - armbian/orangepi_zero2
+  - armbian/orangepi_zero2w
   # Orange Pi OS based images
   # Raspberry Pi OS based images
   - raspberry/rpi32
