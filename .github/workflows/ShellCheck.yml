@@ -24,7 +24,7 @@ on:
 jobs:
   lint_modules:
     name: Shellcheck (modules)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Fetch Repository
         uses: actions/checkout@v3
@@ -55,7 +55,7 @@ jobs:
 
   lint_configs:
     name: Shellcheck (configs)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Fetch Repository
         uses: actions/checkout@v3

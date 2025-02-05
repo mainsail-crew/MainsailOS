@@ -30,7 +30,7 @@ concurrency:
 
 jobs:
   setup:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -47,7 +47,7 @@ jobs:
 
   build:
     needs: setup
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -58,13 +58,19 @@ jobs:
         with:
           path: repository
           submodules: true
-
+  
       - name: Rimuovere QEMU esistente
         run: sudo apt-get remove --purge -y qemu-user qemu-user-static
-  
+      
+      - name: Verificare le versioni di QEMU disponibili
+        run: apt-cache policy qemu-user-static
+      
       - name: Installare QEMU versione stabile
         run: sudo apt-get install -y qemu-user-static=1:5.2+dfsg-9+deb11u2
-
+  
+      - name: Bloccare aggiornamenti di libc6
+        run: sudo apt-mark hold libc6
+  
       - name: Continuare con la build
         run: |
           sudo apt-get update
