@@ -59,6 +59,17 @@ jobs:
           path: repository
           submodules: true
 
+      - name: Rimuovere QEMU esistente
+        run: sudo apt-get remove --purge -y qemu-user qemu-user-static
+  
+      - name: Installare QEMU versione stabile
+        run: sudo apt-get install -y qemu-user-static=1:5.2+dfsg-9+deb11u2
+
+      - name: Continuare con la build
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade -y
+
       - name: Build image
         id: build
         uses: ./repository/.github/actions/build
