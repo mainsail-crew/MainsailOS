@@ -59,17 +59,17 @@ jobs:
           path: repository
           submodules: true
   
-      - name: Rimuovere QEMU esistente
-        run: sudo apt-get remove --purge -y qemu-user qemu-user-static
+      # - name: Rimuovere QEMU esistente
+      #   run: sudo apt-get remove --purge -y qemu-user qemu-user-static
       
-      - name: Verificare le versioni di QEMU disponibili
-        run: apt-cache policy qemu-user-static
+      # - name: Verificare le versioni di QEMU disponibili
+      #   run: apt-cache policy qemu-user-static
       
-      - name: Installare QEMU versione stabile
-        run: sudo apt-get install -y qemu-user-static=1:6.2+dfsg-2ubuntu6
+      # - name: Installare QEMU versione stabile
+      #   run: sudo apt-get install -y qemu-user-static=1:6.2+dfsg-2ubuntu6
   
-      - name: Bloccare aggiornamenti di libc6
-        run: sudo apt-mark hold libc6
+      # - name: Bloccare aggiornamenti di libc6
+      #   run: sudo apt-mark hold libc6
   
       - name: Continuare con la build
         run: |
