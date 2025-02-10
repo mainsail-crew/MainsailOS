@@ -7,6 +7,9 @@
 DOWNLOAD_URL_CHECKSUM="https://downloads.raspberrypi.org/raspios_lite_armhf_latest.sha256"
 DOWNLOAD_URL_IMAGE="https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent"
 
+BASE_BOARD="raspberrypiarmhf"
+
+export BASE_BOARD
 export DOWNLOAD_BASE_URL
 export DOWNLOAD_URL_CHECKSUM
 export DOWNLOAD_URL_IMAGE

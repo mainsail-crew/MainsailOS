@@ -4,10 +4,11 @@
 # Declare Variables before exporting.
 # See https://www.shellcheck.net/wiki/SC2155
 
-BASE_ARCH="arm64"
+BASE_BOARD="raspberrypiarm64"
 
 # export variables
 export BASE_ARCH
+export BASE_BOARD
 
 ### JSON sniplet Setup
 ### NOTE: Please see all config files for setup variables!!!

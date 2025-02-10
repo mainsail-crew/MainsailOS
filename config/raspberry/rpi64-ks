@@ -5,6 +5,7 @@
 # See https://www.shellcheck.net/wiki/SC2155
 
 BASE_ARCH="arm64"
+BASE_BOARD="raspberrypiarm64"
 
 BASE_IMAGE_ENLARGEROOT=6500
 
@@ -13,6 +14,7 @@ MODULES="base(pkgupgrade,udev_fix,mainsailos(net,piconfig,klipper,is_req_preinst
 
 # export variables
 export BASE_ARCH
+export BASE_BOARD
 export MODULES
 export BASE_IMAGE_ENLARGEROOT
 
