@@ -26,7 +26,7 @@ runs:
   steps:
     - name: Install Dependencies
       shell: bash
-      run: sudo apt update; sudo apt install --yes aria2 coreutils jq p7zip-full qemu-user-static zip
+      run: sudo apt update; sudo apt install --yes aria2 coreutils jq p7zip-full python3-git qemu-user-static zip
 
     - name: Checkout CustomPiOS
       uses: actions/checkout@v4
