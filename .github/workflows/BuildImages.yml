@@ -64,6 +64,7 @@ jobs:
         uses: ./repository/.github/actions/build
         with:
           config: ${{ matrix.config }}
+          custompios-repository: "meteyou/CustomPiOS"
 
       - name: Rename image file
         id: move-image
