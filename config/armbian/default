@@ -11,7 +11,6 @@ DOWNLOAD_BASE_URL="https://github.com/mainsail-crew/armbian-builds/releases/late
 BASE_ADD_USER="yes"
 BASE_USER="pi"
 BASE_USER_PASSWORD="armbian"
-BASE_IMAGE_PATH=${DIST_PATH}/image
 
 # Needed while building for non rpi sbc
 BASE_DISTRO="armbian"
@@ -32,7 +31,6 @@ export BASE_ADD_USER
 export BASE_USER
 export BASE_USER_PASSWORD
 export BASE_DISTRO
-export BASE_IMAGE_PATH
 export BASE_IMAGE_RASPBIAN
 export BASE_ROOT_PARTITION
 export BASE_IMAGE_ENLARGEROOT

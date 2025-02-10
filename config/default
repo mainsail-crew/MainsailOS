@@ -21,12 +21,14 @@ BASE_ZIP_IMG="$(get_img_name)"
 DIST_NAME="MainsailOS"
 
 BASE_BOOT_MOUNT_PATH=boot
+BASE_IMAGE_PATH=${DIST_PATH}/image
 
 # export Variables
 export BASE_BOOT_MOUNT_PATH
 export DIST_NAME
 export DIST_VERSION
 export BASE_ZIP_IMG
+export BASE_IMAGE_PATH
 
 ### JSON sniplet Setup
 ### NOTE: Please see all config files for setup variables!!!
