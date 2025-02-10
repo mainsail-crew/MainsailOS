@@ -2,8 +2,8 @@
 # Shebang for better file detection
 # shellcheck enable=require-variable-braces
 
-BASE_ARCH="arm64"
-BASE_BOARD="armbian_orangepi4lts"
+BASE_ARCH=arm64
+BASE_BOARD=armbian_orangepi4lts
 
 # Image source
 DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}/armbian-orangepi4_lts_bookworm.img.xz.sha256"
