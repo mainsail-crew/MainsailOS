@@ -2,12 +2,14 @@
 # Shebang for better file detection
 # shellcheck enable=require-variable-braces
 
+BASE_BOARD="armbian_bananapim2zero"
+
 # Image source
 DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}/armbian-bananapi_m2_zero_bookworm.img.xz.sha256"
 DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/armbian-bananapi_m2_zero_bookworm.img.xz"
 
 # export Variables
-export BASE_ARCH
+export BASE_BOARD
 export DOWNLOAD_URL_CHECKSUM
 export DOWNLOAD_URL_IMAGE
 

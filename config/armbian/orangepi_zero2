@@ -3,6 +3,7 @@
 # shellcheck enable=require-variable-braces
 
 BASE_ARCH="arm64"
+BASE_BOARD="orangepi_orangepi_zero2"
 
 # Image source
 DOWNLOAD_URL_CHECKSUM="${DOWNLOAD_BASE_URL}/armbian-orangepi_zero2_bookworm.img.xz.sha256"
@@ -10,6 +11,7 @@ DOWNLOAD_URL_IMAGE="${DOWNLOAD_BASE_URL}/armbian-orangepi_zero2_bookworm.img.xz"
 
 # export Variables
 export BASE_ARCH
+export BASE_BOARD
 export DOWNLOAD_URL_CHECKSUM
 export DOWNLOAD_URL_IMAGE
 
