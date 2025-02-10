@@ -2,22 +2,7 @@
 # Shebang for better file detection
 # shellcheck enable=require-variable-braces
 
-get_img_name() {
-    local -a types
-    types=(zip 7z xz)
-    if [ -n "${DIST_PATH}" ]; then
-        for i in "${types[@]}"; do
-            find "${DIST_PATH}/image/" -type f -name "*.${i}" -printf "%p\n"
-        done
-    fi
-
-    if [ -z "${DIST_PATH}" ]; then
-        echo ""
-    fi
-}
-
 DIST_VERSION="1.3.2"
-BASE_ZIP_IMG="$(get_img_name)"
 DIST_NAME="MainsailOS"
 
 BASE_BOOT_MOUNT_PATH=boot

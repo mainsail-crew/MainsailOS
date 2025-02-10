@@ -7,7 +7,6 @@
 BASE_BOARD="raspberrypiarm64"
 
 # export variables
-export BASE_ARCH
 export BASE_BOARD
 
 ### JSON sniplet Setup

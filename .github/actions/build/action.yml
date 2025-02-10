@@ -116,9 +116,7 @@ runs:
 
     - name: Build Image
       shell: bash
-      run: |
-        source repository/src/config
-        sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
+      run: sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
 
     - name: Cleanup workspace & fix permissions
       if: success()
