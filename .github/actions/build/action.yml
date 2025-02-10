@@ -66,8 +66,6 @@ runs:
         echo $DOWNLOAD_URL_CHECKSUM
         echo $DOWNLOAD_URL_IMAGE
         echo $MODULES
-        echo $BASE_BOARD
-        export BASE_BOARD
         echo $(cat ./repository/src/config)
 
         echo "DOWNLOAD_URL_CHECKSUM=${DOWNLOAD_URL_CHECKSUM}" >> $GITHUB_OUTPUT
@@ -118,7 +116,9 @@ runs:
 
     - name: Build Image
       shell: bash
-      run: sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
+      run: |
+        source repository/src/config
+        sudo modprobe loop && cd repository/src && sudo bash -x ./build_dist
 
     - name: Cleanup workspace & fix permissions
       if: success()
