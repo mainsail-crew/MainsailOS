@@ -97,9 +97,6 @@ jobs:
           # rename the image file
           mv "${DECOMPRESSED_FILE}" input.img
 
-          # delete the compressed image file
-          rm -f "${IMG_FILE}"
-
       - name: "DEBUG"
         run: |
           cd build
