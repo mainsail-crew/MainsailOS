@@ -113,6 +113,21 @@ jobs:
           cp -r modules/generic/* scripts/
           cp -r modules/${{ matrix.type }}/* scripts/
 
+      - name: "Generate config.local"
+        run: |
+          echo "Generating config.local file..."
+          python3 - <<'EOF'
+          import os, json
+          env_vars = json.loads(os.environ.get("MATRIX_ENV", "{}"))
+          with open("config.local", "w") as f:
+              for key, value in env_vars.items():
+                  if not key.startswith("EDITBASE_"):
+                      key = "EDITBASE_" + key
+                  f.write(f"{key}={value}\n")
+          EOF
+        env:
+          MATRIX_ENV: ${{ toJson(matrix.env) }}
+
       - name: "Show scripts"
         run: |
           cd scripts
@@ -123,6 +138,7 @@ jobs:
         with:
           workspace: "${{ github.workspace }}/build"
           scripts:  "${{ github.workspace }}/modules"
+          config: "${{ github.workspace }}/config.local"
           environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}", "EDITABLE_ARCH": "${{ matrix.env.ARCH }}" }'
 
       - name: "✏ Rename image"
