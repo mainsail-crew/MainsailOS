@@ -35,10 +35,10 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
-      - name: "Checkout"
+      - name: "📥 Checkout"
         uses: actions/checkout@v4
 
-      - name: Create directories
+      - name: "🛠 Create directories"
         run: |
           mkdir -p build
           mkdir -p scripts
@@ -74,7 +74,7 @@ jobs:
           cd build
           ls -la
 
-      - name: ":closed_lock_with_key: Verify image"
+      - name: "🔐 Verify image"
         run: |
           cd build
           sha256sum -b ${{ steps.hash.outputs.FILENAME }}
