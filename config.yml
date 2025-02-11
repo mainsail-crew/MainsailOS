@@ -1,8 +1,8 @@
 - name: raspberry_pi
   type: raspberry
-  img_download_url: "https://example.com/raspberry.img"
-  img_hash_url: "https://example.com/raspberry.img.sha256"
+  img_download_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.torrent"
+  img_hash_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.sha256"
 - name: armbian_board
   type: armbian
-  img_download_url: "https://example.com/armbian.img"
-  img_hash_url: "https://example.com/armbian.img.sha256"
+  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_bookworm.img.xz"
+  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_bookworm.img.xz.sha256"
