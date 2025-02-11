@@ -58,7 +58,8 @@ jobs:
       - name: "⬇ Download Image via Torrent"
         if: endswith(matrix.img_download_url, '.torrent')
         shell: bash
-        run: aria2c -d build --seed-time=0 ${{ matrix.img_download_url }}
+        run: |
+          aria2c -d build --seed-time=0 ${{ matrix.img_download_url }}
 
       - name: "⬇ Download Image via wget"
         if: !endswith(matrix.img_download_url, '.torrent')
