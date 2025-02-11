@@ -1,4 +1,4 @@
-name: Build und Customizer Workflow
+name: "Build Images"
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
-      - name: ":zap: Checkout"
+      - name: "Checkout"
         uses: actions/checkout@v4
 
       - name: Create directories
@@ -44,16 +44,17 @@ jobs:
           mkdir -p scripts
 
       - name: "⬇ Download hash"
-        id: checksum
+        id: hash
         shell: bash
         run: |
           cd build
-          wget -O image.hash "${{ matrix.img_hash_url }}"
-          FILE_CONTENT=$(head -n 1 image.hash)
+          FILENAME=$(basename ${{ matrix.img_hash_url }})
+          wget -O ${FILENAME} ${{  matrix.img_hash_url }}
+          FILE_CONTENT=$(head -n 1 $FILENAME)
           CHECKSUM=$(echo "$FILE_CONTENT" | cut -d' ' -f1)
 
-          echo "CHECKSUM=${CHECKSUM}" >> "$GITHUB_OUTPUT"
-          echo "FILENAME=image.hash" >> "$GITHUB_OUTPUT"
+          echo "CHECKSUM=${CHECKSUM}" >> $GITHUB_OUTPUT
+          echo "FILENAME=${FILENAME}" >> $GITHUB_OUTPUT
 
       - name: "⬇ Download Image via Torrent"
         if: ${{ endsWith(matrix.img_download_url, '.torrent') }}
@@ -66,7 +67,7 @@ jobs:
         shell: bash
         run: |
           cd build
-          wget -O image.img "${{ matrix.img_download_url }}"
+          wget ${{ matrix.img_download_url }}
 
       - name: "DEBUG"
         run: |
@@ -76,7 +77,7 @@ jobs:
       - name: ":closed_lock_with_key: Verify image"
         run: |
           cd build
-          sha256sum -c image.hash
+          sha256sum -b ${{ steps.hash.outputs.FILENAME }}
 
       - name: ":heavy_plus_sign: Copy generic and type scripts"
         run: |
