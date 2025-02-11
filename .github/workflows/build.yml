@@ -163,8 +163,8 @@ jobs:
         shell: bash
         run: |
           cd build
-          sha256sum ${{ env.IMAGE }}.img > ${{ env.IMAGE }}.sha256
-          sha256sum ${{ env.IMAGE }}.img.xz > ${{ env.IMAGE }}.xz.sha256
+          sha256sum ${{ env.IMAGE }} > ${{ env.IMAGE }}.sha256
+          sha256sum ${{ env.IMAGE }}.xz > ${{ env.IMAGE }}.xz.sha256
 
       - name: "📋 Upload Compressed Image"
         uses: actions/upload-artifact@v4
