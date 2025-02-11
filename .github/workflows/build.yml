@@ -100,7 +100,7 @@ jobs:
           echo "Image file: ${DECOMPRESSED_FILE}"
 
           # rename the image file
-          mv "${DECOMPRESSED_FILE}" input.img
+          mv *.img input.img
 
       - name: "DEBUG"
         run: |
