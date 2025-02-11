@@ -65,6 +65,7 @@ jobs:
         with:
           config: ${{ matrix.config }}
           custompios-repository: "meteyou/CustomPiOS"
+          custompios-ref: "fix/get-base-board-before-generate-config"
 
       - name: Rename image file
         id: move-image
