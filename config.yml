@@ -11,3 +11,4 @@
   img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_bookworm.img.xz.sha256"
   env:
     ARCH: arm64
+    DISTRO: armbian
