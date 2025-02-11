@@ -1,0 +1,8 @@
+- name: raspberry_pi
+  type: raspberry
+  img_download_url: "https://example.com/raspberry.img"
+  img_hash_url: "https://example.com/raspberry.img.sha256"
+- name: armbian_board
+  type: armbian
+  img_download_url: "https://example.com/armbian.img"
+  img_hash_url: "https://example.com/armbian.img.sha256"

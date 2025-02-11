@@ -1,0 +1,90 @@
+name: Build und Customizer Workflow
+
+on:
+  push:
+    branches:
+      - "develop"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-build-${{ github.ref }}-1
+  cancel-in-progress: true
+
+jobs:
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.create-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate matrix from config.yml
+        id: create-matrix
+        run: |
+          python3 - <<'EOF'
+          import yaml, json
+          with open("config.yml", "r") as f:
+              config = yaml.safe_load(f)
+          matrix = {"include": config}
+          print("matrix=" + json.dumps(matrix)+" >> $GITHUB_ENV")
+          EOF
+
+  build:
+    needs: generate-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+    steps:
+      - name: ":zap: Checkout"
+        uses: actions/checkout@v4
+
+      - name: Create directories
+        run: |
+          mkdir -p build
+          mkdir -p scripts
+
+      - name: "⬇ Download hash"
+        id: checksum
+        shell: bash
+        run: |
+          cd build
+          FILENAME=$(basename ${{ matrix.img_hash_url }})
+          wget -O ${FILENAME} ${{ matrix.img_hash_url }}
+          FILE_CONTENT=$(head -n 1 $FILENAME)
+          CHECKSUM=$(echo $FILE_CONTENT | cut -d' ' -f1)
+
+          echo "CHECKSUM=${CHECKSUM}" >> $GITHUB_OUTPUT
+          echo "FILENAME=${FILENAME}" >> $GITHUB_OUTPUT
+
+      - name: "⬇ Download Image via Torrent"
+        if: endswith(matrix.img_download_url, '.torrent')
+        shell: bash
+        run: aria2c -d build --seed-time=0 ${{ matrix.img_download_url }}
+
+      - name: "⬇ Download Image via wget"
+        if: !endswith(matrix.img_download_url, '.torrent')
+        shell: bash
+        run: |
+          cd build
+          wget -O image.img "${{ matrix.img_download_url }}"
+
+      - name: "DEBUG"
+        run: |
+          cd build
+          ls -la
+
+      - name: ":closed_lock_with_key: Verify image"
+        run: |
+          cd build
+          sha256sum -c image.hash
+
+      - name: ":heavy_plus_sign: Copy generic and type scripts"
+        run: |
+          cp -r scripts/generic/* scripts/
+          cp -r scripts/${{ matrix.type }}/* scripts/
+
+      - name: "🏗 Run CustoPiZer"
+        uses: OctoPrint/CustoPiZer@main
+        with:
+          workspace: "${{ github.workspace }}/build"
+          scripts:  "${{ github.workspace }}/scripts"
+          environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}" }'
