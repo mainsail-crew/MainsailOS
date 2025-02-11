@@ -139,7 +139,7 @@ jobs:
           workspace: "${{ github.workspace }}/build"
           scripts:  "${{ github.workspace }}/modules"
           config: "${{ github.workspace }}/config.local"
-          environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}", "dns": "8.8.8.8" }'
+          environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}"}'
 
       - name: "✏ Rename image"
         shell: bash
