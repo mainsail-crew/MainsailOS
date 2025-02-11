@@ -52,7 +52,7 @@ check_install_pkgs ${ARMBIAN_DEPS}
 
 ## Step 2: Manage groups
 ### Substep 1: Create group for gpio usage
-sudo groupadd gpio
+getent group gpio > /dev/null || sudo groupadd gpio
 ### END Substep 1
 
 ### Substep 2: Set default groups
