@@ -79,7 +79,33 @@ jobs:
           cd build
           sha256sum -b ${{ steps.hash.outputs.FILENAME }}
 
-      - name: ":heavy_plus_sign: Copy generic and type scripts"
+      - name: "🛠 Unpack and rename image"
+        run: |
+          cd build
+          rm -f *.sha256
+
+          # search for the image file in the build directory
+          IMG_FILE=$(ls *.img.xz | head -n 1)
+          echo "Found compressed Image file: ${IMG_FILE}"
+
+          # extract the image file
+          xz -d "${IMG_FILE}"
+
+          DECOMPRESSED_FILE="${IMG_FILE%.xz}"
+          echo "Image file: ${DECOMPRESSED_FILE}"
+
+          # rename the image file
+          mv "${DECOMPRESSED_FILE}" input.img
+
+          # delete the compressed image file
+          rm -f "${IMG_FILE}"
+
+      - name: "DEBUG"
+        run: |
+          cd build
+          ls -la
+
+      - name: "📋 Copy generic and type scripts"
         run: |
           cp -r scripts/generic/* scripts/
           cp -r scripts/${{ matrix.type }}/* scripts/
