@@ -101,7 +101,7 @@ jobs:
           echo "Image file: ${DECOMPRESSED_FILE}"
 
           # rename the image file
-          mv *.img input.img
+          mv "${DECOMPRESSED_FILE}" input.img
 
       - name: "DEBUG"
         run: |
@@ -123,7 +123,7 @@ jobs:
         with:
           workspace: "${{ github.workspace }}/build"
           scripts:  "${{ github.workspace }}/modules"
-          environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}" }'
+          environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}", "EDITABLE_ARCH": "${{ matrix.env.ARCH }}" }'
 
       - name: "✏ Rename image"
         shell: bash
