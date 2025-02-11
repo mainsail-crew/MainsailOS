@@ -27,7 +27,7 @@
 [[ -n "$CROWSNEST_USTREAMER_REPO_BRANCH" ]] || CROWSNEST_USTREAMER_REPO_BRANCH="master"
 
 # camera-streamer
-[[ -n "$CROWSNEST_CAMERA_STREAMER_REPO_SHIP" ]] || CROWSNEST_CAMERA_STREAMER_REPO_SHIP="https://github.com/ayufan/camera-streamer.git"
+[[ -n "$CROWSNEST_CAMERA_STREAMER_REPO_SHIP" ]] || CROWSNEST_CAMERA_STREAMER_REPO_SHIP="https://github.com/mryel00/camera-streamer.git"
 [[ -n "$CROWSNEST_CAMERA_STREAMER_REPO_BRANCH" ]] || CROWSNEST_CAMERA_STREAMER_REPO_BRANCH="master"
 
 ###########################################################################
