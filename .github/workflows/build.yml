@@ -21,11 +21,12 @@ jobs:
         id: create-matrix
         run: |
           python3 - <<'EOF'
-          import yaml, json
+          import os, yaml, json
           with open("config.yml", "r") as f:
               config = yaml.safe_load(f)
           matrix = {"include": config}
-          print("matrix=" + json.dumps(matrix)+" >> $GITHUB_ENV")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+              print(f"matrix={json.dumps(matrix)}", file=fh)
           EOF
 
   build:
@@ -47,22 +48,21 @@ jobs:
         shell: bash
         run: |
           cd build
-          FILENAME=$(basename ${{ matrix.img_hash_url }})
-          wget -O ${FILENAME} ${{ matrix.img_hash_url }}
-          FILE_CONTENT=$(head -n 1 $FILENAME)
-          CHECKSUM=$(echo $FILE_CONTENT | cut -d' ' -f1)
+          wget -O image.hash "${{ matrix.img_hash_url }}"
+          FILE_CONTENT=$(head -n 1 image.hash)
+          CHECKSUM=$(echo "$FILE_CONTENT" | cut -d' ' -f1)
 
-          echo "CHECKSUM=${CHECKSUM}" >> $GITHUB_OUTPUT
-          echo "FILENAME=${FILENAME}" >> $GITHUB_OUTPUT
+          echo "CHECKSUM=${CHECKSUM}" >> "$GITHUB_OUTPUT"
+          echo "FILENAME=image.hash" >> "$GITHUB_OUTPUT"
 
       - name: "⬇ Download Image via Torrent"
-        if: endswith(matrix.img_download_url, '.torrent')
+        if: ${{ endsWith(matrix.img_download_url, '.torrent') }}
         shell: bash
         run: |
-          aria2c -d build --seed-time=0 ${{ matrix.img_download_url }}
+          aria2c -d build --seed-time=0 "${{ matrix.img_download_url }}"
 
       - name: "⬇ Download Image via wget"
-        if: !endswith(matrix.img_download_url, '.torrent')
+        if: ${{ !endsWith(matrix.img_download_url, '.torrent') }}
         shell: bash
         run: |
           cd build
