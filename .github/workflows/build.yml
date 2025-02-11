@@ -150,7 +150,9 @@ jobs:
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
           cd build
-          mv output.img $IMAGE
+          ls -la
+          mv output.img "${IMAGE}"
+          ls -la
 
       - name: "🛠 Compressing Image"
         shell: bash
