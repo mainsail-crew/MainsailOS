@@ -4,7 +4,7 @@
   img_hash_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.sha256"
   env:
     ARCH: arm64
-    IMAGE_ENLARGEROOT: 3500
+    IMAGE_ENLARGEROOT: 5000
 - name: armbian-orangepi4_lts-bookworm
   type: armbian
   img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_bookworm.img.xz"
@@ -12,4 +12,4 @@
   env:
     ARCH: arm64
     DISTRO: armbian
-    IMAGE_ENLARGEROOT: 3500
+    IMAGE_ENLARGEROOT: 5000
