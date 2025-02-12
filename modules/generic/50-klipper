@@ -38,6 +38,7 @@ pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 git clone ${KLIPPER_REPO_SHIP} klipper
 
 echo_green "Creating Virtualenv for Klipper (klippy-env) ..."
+sudo -u pi mkdir -p /home/pi/.local/tmp
 sudo -u "${BASE_USER}" virtualenv -p python3 "${KLIPPER_PYTHON_DIR}"
 echo_green "Installing klippy Python Dependencies ..."
 sudo -u "${BASE_USER}" "${KLIPPER_PYTHON_DIR}"/bin/pip install -r "${KLIPPER_SRC_DIR}"/"${KLIPPER_PYENV_REQ}"
