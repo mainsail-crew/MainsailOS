@@ -9,7 +9,7 @@ source /common.sh
 install_cleanup_trap
 
 # hold linux kernel updates
-apt-mark hold linux-image-* linux-headers-* linux-kbuild-* raspi-firmware linux-dtb-*
+apt-mark hold linux-image-* linux-headers-* linux-kbuild-* raspi-firmware linux-dtb-* > /dev/null 2>&1
 
 # update and upgrade
 apt-get update --allow-releaseinfo-change
@@ -20,4 +20,4 @@ apt-get -y autoremove
 apt-get clean
 
 # unhold linux kernel updates
-apt-mark hold linux-image-* linux-headers-* linux-kbuild-* raspi-firmware linux-dtb-*
+apt-mark unhold linux-image-* linux-headers-* linux-kbuild-* raspi-firmware linux-dtb-* > /dev/null 2>&1
