@@ -157,6 +157,7 @@ jobs:
       - name: "🛠 Compressing Image"
         shell: bash
         run: |
+          cd build
           CPU_COUNT="$(nproc)"
           echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
           xz -efkvz9T"${CPU_COUNT}" ${{ env.IMAGE }} || true
@@ -172,17 +173,17 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.IMAGE }}.xz
-          path: ${{ env.IMAGE }}.xz
+          path: build/${{ env.IMAGE }}.xz
 
       - name: "📋 Upload Compressed Image Checksum"
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.IMAGE }}.xz.sha256
-          path: ${{ env.IMAGE }}.xz.sha256
+          path: build/${{ env.IMAGE }}.xz.sha256
 
       - name: "📋 Upload Image Checksum"
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.IMAGE }}.sha256
-          path: ${{ env.IMAGE }}.sha256
+          path: build/${{ env.IMAGE }}.sha256
 
