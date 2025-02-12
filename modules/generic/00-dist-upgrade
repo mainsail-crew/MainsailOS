@@ -8,6 +8,9 @@ export DEBIAN_FRONTEND=noninteractive
 source /common.sh
 install_cleanup_trap
 
+# hold linux kernel updates
+apt-mark hold linux-image-* linux-headers-* linux-kbuild-*
+
 # update and upgrade
 apt-get update --allow-releaseinfo-change
 apt-get -y dist-upgrade
@@ -15,3 +18,6 @@ apt-get -y dist-upgrade
 # clean up
 apt-get -y autoremove
 apt-get clean
+
+# unhold linux kernel updates
+apt-mark hold linux-image-* linux-headers-* linux-kbuild-*
