@@ -1,0 +1,2 @@
+# list from all packages which should be hold during the upgrade process
+export PKGS=( "linux-image-*" "linux-headers-*" "linux-kbuild-*" "armbian-firmware" "raspi-firmware" "linux-dtb-*" )
