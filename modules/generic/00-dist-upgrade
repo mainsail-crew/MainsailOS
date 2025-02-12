@@ -10,9 +10,6 @@ install_cleanup_trap
 
 source /files/00-hold-packages-config
 
-# update package manager
-apt-get update --allow-releaseinfo-change
-
 # hold linux kernel updates
 apt-mark hold "${PKGS[@]}" > /dev/null 2>&1 || true
 
