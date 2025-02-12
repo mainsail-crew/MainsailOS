@@ -39,12 +39,12 @@ jobs:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
 
-      - name: "🛠 Set RELEASE_TAG from VERSION file"
+      - name: "#️Set RELEASE_TAG from VERSION file"
         run: |
           RELEASE_TAG=$(cat VERSION | tr -d '\n')
           echo "RELEASE_TAG=${RELEASE_TAG}" >> $GITHUB_ENV
 
-      - name: "🛠 Create directories"
+      - name: "📁 Create directories"
         run: |
           mkdir -p build
           mkdir -p scripts
@@ -113,7 +113,7 @@ jobs:
           cp -r modules/generic/* scripts/
           cp -r modules/${{ matrix.type }}/* scripts/
 
-      - name: "Generate config.local"
+      - name: "📇 Generate config.local"
         run: |
           echo "Generating config.local file..."
           python3 - <<'EOF'
@@ -128,7 +128,7 @@ jobs:
         env:
           MATRIX_ENV: ${{ toJson(matrix.env) }}
 
-      - name: "Show scripts"
+      - name: "🔎 Show scripts"
         run: |
           cd scripts
           ls -la
