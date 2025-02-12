@@ -8,42 +8,52 @@ export DEBIAN_FRONTEND=noninteractive
 source /common.sh
 install_cleanup_trap
 
+echo_green "Installing Klipper and enable klippy Service ..."
+
 BASE_USER=pi
 KLIPPER_SRC_DIR="/home/${BASE_USER}/klipper"
 KLIPPER_PYTHON_DIR="/home/${BASE_USER}/klippy-env"
 
 KLIPPER_REPO_SHIP="https://github.com/Klipper3d/klipper.git"
-KLIPPER_REPO_BRANCH="master"
 KLIPPER_DEPS="git virtualenv python3-dev \
     python3-matplotlib libffi-dev build-essential libncurses-dev libusb-dev \
     avrdude gcc-avr binutils-avr avr-libc stm32flash dfu-util libnewlib-arm-none-eabi \
     gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0-0 libusb-1.0-0-dev pkg-config"
-
-KLIPPER_USER_GROUPS="tty,dialout"
 
 KLIPPER_USER_DIRS="printer_data printer_data/config \
 printer_data/comms printer_data/logs"
 
 KLIPPER_PYENV_REQ="scripts/klippy-requirements.txt"
 
-echo_green "Installing Klipper and enable klippy Service ..."
 echo_green "Installing Klipper Dependencies ..."
 apt-get install --yes ${KLIPPER_DEPS}
 
 ## Make sure user pi has access to serial ports
-usermod -a -G "${KLIPPER_USER_GROUPS}" "${BASE_USER}"
+usermod -a -G "tty,dialout" "${BASE_USER}"
 
 echo_green "Cloning Klipper repo ..."
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 git clone ${KLIPPER_REPO_SHIP} klipper
 
+echo_green "Creating Klipper User Directories ..."
+for dir in ${KLIPPER_USER_DIRS}; do
+    if [[ -d "/home/${BASE_USER}/${dir}" ]]; then
+        echo_green "${dir} already exists!"
+    else
+        echo_green "Creating ${dir}"
+        mkdir -p "/home/${BASE_USER}/${dir}"
+        chown -R "${BASE_USER}:${BASE_USER}" "/home/${BASE_USER}/${dir}"
+    fi
+done
+
 echo_green "Creating Virtualenv for Klipper (klippy-env) ..."
-sudo -u pi mkdir -p /home/pi/.local/tmp
 sudo -u "${BASE_USER}" virtualenv -p python3 "${KLIPPER_PYTHON_DIR}"
 echo_green "Installing klippy Python Dependencies ..."
 sudo -u "${BASE_USER}" "${KLIPPER_PYTHON_DIR}"/bin/pip install -r "${KLIPPER_SRC_DIR}"/"${KLIPPER_PYENV_REQ}"
 popd &> /dev/null || exit 1
 
-# copy and enable service
+echo_green "Copy Klipper Service and enable it"
 cp /files/klipper.service /etc/systemd/system/klipper.service
+cp /files/klipper.env /home/${BASE_USER}/printer_data/systemd/klipper.env
+chown -R ${BASE_USER}:${BASE_USER} /home/${BASE_USER}/printer_data/systemd/klipper.env
 systemctl_if_exists enable klipper.service
