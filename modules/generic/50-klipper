@@ -22,8 +22,8 @@ KLIPPER_DEPS="git virtualenv python3-dev \
     avrdude gcc-avr binutils-avr avr-libc stm32flash dfu-util libnewlib-arm-none-eabi \
     gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0-0 libusb-1.0-0-dev pkg-config"
 
-KLIPPER_USER_DIRS="printer_data printer_data/config \
-printer_data/comms printer_data/logs"
+KLIPPER_USER_DIRS="printer_data printer_data/config printer_data/comms  \
+printer_data/logs printer_data/systemd"
 
 KLIPPER_PYENV_REQ="scripts/klippy-requirements.txt"
 
