@@ -31,7 +31,7 @@ jobs:
 
   build:
     needs: generate-matrix
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04-arm64
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
