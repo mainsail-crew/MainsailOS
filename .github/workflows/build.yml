@@ -75,11 +75,6 @@ jobs:
           cd build
           wget ${{ matrix.img_download_url }}
 
-      - name: "DEBUG"
-        run: |
-          cd build
-          ls -la
-
       - name: "🔐 Verify image"
         run: |
           cd build
@@ -102,11 +97,6 @@ jobs:
 
           # rename the image file
           mv "${DECOMPRESSED_FILE}" input.img
-
-      - name: "DEBUG"
-        run: |
-          cd build
-          ls -la
 
       - name: "📋 Copy generic and type scripts"
         run: |
@@ -150,9 +140,7 @@ jobs:
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
           cd build
-          ls -la
           mv output.img "${IMAGE}"
-          ls -la
 
       - name: "🛠 Compressing Image"
         shell: bash
