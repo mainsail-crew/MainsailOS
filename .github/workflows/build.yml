@@ -127,7 +127,7 @@ jobs:
         uses: meteyou/CustoPiZer-dev@main
         with:
           workspace: "${{ github.workspace }}/build"
-          scripts:  "${{ github.workspace }}/modules"
+          scripts:  "${{ github.workspace }}/scripts"
           config: "${{ github.workspace }}/config.local"
           environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}"}'
 
