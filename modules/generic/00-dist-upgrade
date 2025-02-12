@@ -15,7 +15,7 @@ PKGS="linux-image-* linux-headers-* linux-kbuild-* armbian-firmware raspi-firmwa
 apt-get update --allow-releaseinfo-change
 
 # hold linux kernel updates
-apt-mark hold $PKGS > /dev/null 2>&1
+apt-mark hold $PKGS
 
 # execute update
 apt-get -y dist-upgrade
