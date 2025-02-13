@@ -15,16 +15,16 @@ SRC_DIR="/home/${BASE_USER}/klipper"
 ENV_DIR="/home/${BASE_USER}/klippy-env"
 
 REPO="https://github.com/Klipper3d/klipper.git"
-DEPS="git virtualenv python3-dev \
-    python3-matplotlib libffi-dev build-essential libncurses-dev libusb-dev \
-    avrdude gcc-avr binutils-avr avr-libc stm32flash dfu-util libnewlib-arm-none-eabi \
-    gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0-0 libusb-1.0-0-dev pkg-config"
+DEPS=(git virtualenv python3-dev \
+      python3-matplotlib libffi-dev build-essential libncurses-dev libusb-dev \
+      avrdude gcc-avr binutils-avr avr-libc stm32flash dfu-util libnewlib-arm-none-eabi \
+      gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0-0 libusb-1.0-0-dev pkg-config)
 
 DIRS="printer_data printer_data/config printer_data/comms  \
 printer_data/logs printer_data/systemd"
 
 echo "Installing Dependencies ..."
-apt-get install --yes "${DEPS}"
+apt-get install --yes "${DEPS[@]}"
 
 ## Make sure user pi has access to serial ports
 usermod -a -G "tty,dialout" "${BASE_USER}"
