@@ -1,0 +1,63 @@
+#!/bin/bash
+
+set -x
+set -e
+
+export LC_ALL=C
+
+# load common functions
+source /common.sh
+install_cleanup_trap
+
+source /files/00-config
+
+DOWNLOAD_URL="https://github.com/mainsail-crew/mainsail/releases/latest/download/mainsail.zip"
+CONFIG_REPO="https://github.com/mainsail-crew/mainsail-config.git"
+DEPS="git nginx unzip"
+
+DIRS="printer_data printer_data/config printer_data/comms printer_data/logs \
+      printer_data/systemd"
+
+apt-get install --yes "${DEPS}"
+
+echo "Configure nginx webserver"
+
+echo "Remove the default site"
+rm /etc/nginx/sites-enabled/default
+
+echo "Copy the nginx configurations"
+cp /files/mainsail-nginx/mainsail /etc/nginx/sites-available/mainsail
+cp /files/mainsail-nginx/common_vars.conf /etc/nginx/conf.d/common_vars.conf
+cp /files/mainsail-nginx/upstreams.conf /etc/nginx/conf.d/upstreams.conf
+
+echo "Enable the site"
+ln -s /etc/nginx/sites-available/mainsail /etc/nginx/sites-enabled/
+
+echo "Modify logrotate cycle from 14d to 2d"
+sudo sed -i 's/rotate 14/rotate 2/' /etc/logrotate.d/nginx
+
+echo "Creating Directories "
+for tmp in ${DIRS}; do
+    if [[ ! -d "/home/${BASE_USER}/${tmp}" ]]; then
+        echo "Creating ${tmp}"
+        mkdir -p "/home/${BASE_USER}/${tmp}"
+        chown -R "${BASE_USER}:${BASE_USER}" "/home/${BASE_USER}/${tmp}"
+    fi
+done
+
+echo "Linking log files"
+ln -s /var/log/nginx/mainsail-access.log /home/"${BASE_USER}"/printer_data/logs/mainsail-access.log
+ln -s /var/log/nginx/mainsail-error.log /home/"${BASE_USER}"/printer_data/logs/mainsail-error.log
+
+echo "Downloading Mainsail"
+pushd /home/"${BASE_USER}" &> /dev/null || exit 1
+sudo -u "${BASE_USER}" wget -q --show-progress -O mainsail.zip "${DOWNLOAD_URL}"
+sudo -u "${BASE_USER}" unzip mainsail.zip -d /home/"${BASE_USER}"/mainsail
+## cleanup
+rm /home/"${BASE_USER}"/mainsail.zip
+
+echo "Installing mainsail.cfg"
+git clone ${CONFIG_REPO} mainsail-config
+ln -sf /home/"${BASE_USER}"/mainsail-config/mainsail.cfg /home/"${BASE_USER}"/printer_data/config/mainsail.cfg
+
+popd &> /dev/null || exit 1
