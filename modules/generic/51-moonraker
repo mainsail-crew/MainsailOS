@@ -17,23 +17,13 @@ SRC_DIR="/home/${BASE_USER}/${DIR}"
 REPO="https://github.com/Arksine/moonraker.git"
 DEPS="git"
 
-DIRS="printer_data printer_data/config printer_data/comms printer_data/logs \
-      printer_data/systemd"
-
 apt-get install --yes "${DEPS}"
 
 echo "Cloning Repository"
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 git clone ${REPO} ${DIR}
 
-echo "Creating Directories "
-for tmp in ${DIRS}; do
-    if [[ ! -d "/home/${BASE_USER}/${tmp}" ]]; then
-        echo "Creating ${tmp}"
-        mkdir -p "/home/${BASE_USER}/${tmp}"
-        chown -R "${BASE_USER}:${BASE_USER}" "/home/${BASE_USER}/${tmp}"
-    fi
-done
+create_user_directories
 
 echo_green "Execute installer"
 pushd "$SRC_DIR" &> /dev/null || exit 1

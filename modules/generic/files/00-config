@@ -4,3 +4,16 @@
 export HOLD_PKGS=( "linux-image-*" "linux-headers-*" "linux-kbuild-*" "armbian-firmware" "raspi-firmware" "linux-dtb-*" "rpi-eeprom" )
 
 export BASE_USER=pi
+
+export PRINTER_DATA_DIRS="printer_data printer_data/config printer_data/comms printer_data/logs printer_data/systemd"
+
+function create_user_directories() {
+    echo "Creating Directories "
+    for tmp in ${PRINTER_DATA_DIRS}; do
+        if [[ ! -d "/home/${BASE_USER}/${tmp}" ]]; then
+            echo "Creating ${tmp}"
+            mkdir -p "/home/${BASE_USER}/${tmp}"
+            chown -R "${BASE_USER}:${BASE_USER}" "/home/${BASE_USER}/${tmp}"
+        fi
+    done
+}
