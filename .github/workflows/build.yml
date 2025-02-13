@@ -39,7 +39,7 @@ jobs:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
 
-      - name: "#️Set RELEASE_TAG from VERSION file"
+      - name: "#️⃣️ Set RELEASE_TAG from VERSION file"
         run: |
           RELEASE_TAG=$(cat VERSION | tr -d '\n')
           echo "RELEASE_TAG=${RELEASE_TAG}" >> $GITHUB_ENV
