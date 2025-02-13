@@ -17,12 +17,12 @@ DIR="moonraker"
 SRC_DIR="/home/${BASE_USER}/${DIR}"
 
 REPO="https://github.com/Arksine/moonraker.git"
-DEPS="git jq"
+DEPS="git"
 
 DIRS="printer_data printer_data/config printer_data/comms printer_data/logs \
       printer_data/systemd"
 
-apt-get install --yes ${DEPS}
+apt-get install --yes "${DEPS}"
 
 echo_green "Cloning Repository"
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
@@ -37,19 +37,9 @@ for tmp in ${DIRS}; do
     fi
 done
 
-#echo_green "Installing Dependencies"
-
-#DEPS_PATH="/home/${BASE_USER}/${DIR}/scripts/system-dependencies.json"
-#DEBIAN_DEPS=$(jq -r '.debian | join(" ")' "$DEPS_PATH")
-
-#apt-get install --yes $DEBIAN_DEPS
-
 echo_green "Execute installer"
 pushd $SRC_DIR &> /dev/null || exit 1
-sudo -u "${BASE_USER}" ./scripts/install-moonraker.sh -s -x -z
-
-echo_green "Install PolicyKit Rules ..."
-sudo -u "${BASE_USER}" ./scripts/set-policykit-rules.sh -r -z
+sudo -u "${BASE_USER}" ./scripts/install-moonraker.sh -s -z
 
 popd &> /dev/null || exit 1
 
