@@ -4,41 +4,37 @@ set -x
 set -e
 
 export LC_ALL=C
-export DEBIAN_FRONTEND=noninteractive
 
 # load common functions
 source /common.sh
 install_cleanup_trap
 
-echo_green "Installing Klipper and enable klippy Service ..."
+source /files/00-config
 
-BASE_USER=pi
-KLIPPER_SRC_DIR="/home/${BASE_USER}/klipper"
-KLIPPER_PYTHON_DIR="/home/${BASE_USER}/klippy-env"
+SRC_DIR="/home/${BASE_USER}/klipper"
+ENV_DIR="/home/${BASE_USER}/klippy-env"
 
-KLIPPER_REPO_SHIP="https://github.com/Klipper3d/klipper.git"
-KLIPPER_DEPS="git virtualenv python3-dev \
+REPO="https://github.com/Klipper3d/klipper.git"
+DEPS="git virtualenv python3-dev \
     python3-matplotlib libffi-dev build-essential libncurses-dev libusb-dev \
     avrdude gcc-avr binutils-avr avr-libc stm32flash dfu-util libnewlib-arm-none-eabi \
     gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0-0 libusb-1.0-0-dev pkg-config"
 
-KLIPPER_USER_DIRS="printer_data printer_data/config printer_data/comms  \
+DIRS="printer_data printer_data/config printer_data/comms  \
 printer_data/logs printer_data/systemd"
 
-KLIPPER_PYENV_REQ="scripts/klippy-requirements.txt"
-
-echo_green "Installing Klipper Dependencies ..."
-apt-get install --yes ${KLIPPER_DEPS}
+echo "Installing Dependencies ..."
+apt-get install --yes "${DEPS}"
 
 ## Make sure user pi has access to serial ports
 usermod -a -G "tty,dialout" "${BASE_USER}"
 
-echo_green "Cloning repo ..."
+echo "Cloning repo ..."
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
-git clone ${KLIPPER_REPO_SHIP} klipper
+git clone ${REPO} klipper
 
-echo_green "Creating User Directories ..."
-for dir in ${KLIPPER_USER_DIRS}; do
+echo "Creating User Directories ..."
+for dir in ${DIRS}; do
     if [[ ! -d "/home/${BASE_USER}/${dir}" ]]; then
         echo "Creating ${dir}"
         mkdir -p "/home/${BASE_USER}/${dir}"
@@ -46,14 +42,14 @@ for dir in ${KLIPPER_USER_DIRS}; do
     fi
 done
 
-echo_green "Creating Virtualenv (klippy-env) ..."
-sudo -u "${BASE_USER}" virtualenv -p python3 "${KLIPPER_PYTHON_DIR}"
-echo_green "Installing klippy Python Dependencies ..."
-sudo -u "${BASE_USER}" "${KLIPPER_PYTHON_DIR}"/bin/pip install -r "${KLIPPER_SRC_DIR}"/"${KLIPPER_PYENV_REQ}"
+echo "Creating Virtualenv (klippy-env) ..."
+sudo -u "${BASE_USER}" virtualenv -p python3 "${ENV_DIR}"
+echo "Installing Python Dependencies ..."
+sudo -u "${BASE_USER}" "${ENV_DIR}"/bin/pip install -r "${SRC_DIR}"/scripts/klippy-requirements.txt
 popd &> /dev/null || exit 1
 
-echo_green "Copy Service and enable it"
+echo "Copy Service and enable it"
 cp /files/klipper.service /etc/systemd/system/klipper.service
-cp /files/klipper.env /home/${BASE_USER}/printer_data/systemd/klipper.env
-chown -R ${BASE_USER}:${BASE_USER} /home/${BASE_USER}/printer_data/systemd/klipper.env
+cp /files/klipper.env /home/"${BASE_USER}"/printer_data/systemd/klipper.env
+chown -R "${BASE_USER}":"${BASE_USER}" /home/"${BASE_USER}"/printer_data/systemd/klipper.env
 systemctl_if_exists enable klipper.service

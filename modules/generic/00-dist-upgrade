@@ -10,7 +10,7 @@ export DEBIAN_FRONTEND=noninteractive
 source /common.sh
 install_cleanup_trap
 
-source /files/00-hold-packages-config
+source 00-config
 
 # hold linux kernel updates
 apt-mark hold "${PKGS[@]}" > /dev/null 2>&1 || true
