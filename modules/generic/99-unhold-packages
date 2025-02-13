@@ -9,7 +9,7 @@ export LC_ALL=C
 source /common.sh
 install_cleanup_trap
 
-source 00-config
+source /files/00-config
 
 # unhold linux kernel updates
 apt-mark unhold "${PKGS[@]}" > /dev/null 2>&1 || true
