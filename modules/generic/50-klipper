@@ -33,28 +33,26 @@ apt-get install --yes ${KLIPPER_DEPS}
 ## Make sure user pi has access to serial ports
 usermod -a -G "tty,dialout" "${BASE_USER}"
 
-echo_green "Cloning Klipper repo ..."
+echo_green "Cloning repo ..."
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 git clone ${KLIPPER_REPO_SHIP} klipper
 
-echo_green "Creating Klipper User Directories ..."
+echo_green "Creating User Directories ..."
 for dir in ${KLIPPER_USER_DIRS}; do
-    if [[ -d "/home/${BASE_USER}/${dir}" ]]; then
-        echo_green "${dir} already exists!"
-    else
-        echo_green "Creating ${dir}"
+    if [[ ! -d "/home/${BASE_USER}/${dir}" ]]; then
+        echo "Creating ${dir}"
         mkdir -p "/home/${BASE_USER}/${dir}"
         chown -R "${BASE_USER}:${BASE_USER}" "/home/${BASE_USER}/${dir}"
     fi
 done
 
-echo_green "Creating Virtualenv for Klipper (klippy-env) ..."
+echo_green "Creating Virtualenv (klippy-env) ..."
 sudo -u "${BASE_USER}" virtualenv -p python3 "${KLIPPER_PYTHON_DIR}"
 echo_green "Installing klippy Python Dependencies ..."
 sudo -u "${BASE_USER}" "${KLIPPER_PYTHON_DIR}"/bin/pip install -r "${KLIPPER_SRC_DIR}"/"${KLIPPER_PYENV_REQ}"
 popd &> /dev/null || exit 1
 
-echo_green "Copy Klipper Service and enable it"
+echo_green "Copy Service and enable it"
 cp /files/klipper.service /etc/systemd/system/klipper.service
 cp /files/klipper.env /home/${BASE_USER}/printer_data/systemd/klipper.env
 chown -R ${BASE_USER}:${BASE_USER} /home/${BASE_USER}/printer_data/systemd/klipper.env

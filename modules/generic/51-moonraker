@@ -30,10 +30,8 @@ git clone ${REPO} ${DIR}
 
 echo_green "Creating Directories "
 for tmp in ${DIRS}; do
-    if [[ -d "/home/${BASE_USER}/${tmp}" ]]; then
-        echo_green "${tmp} already exists!"
-    else
-        echo_green "Creating ${tmp}"
+    if [[ ! -d "/home/${BASE_USER}/${tmp}" ]]; then
+        echo "Creating ${tmp}"
         mkdir -p "/home/${BASE_USER}/${tmp}"
         chown -R "${BASE_USER}:${BASE_USER}" "/home/${BASE_USER}/${tmp}"
     fi
