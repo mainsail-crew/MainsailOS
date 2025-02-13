@@ -4,7 +4,6 @@ set -x
 set -e
 
 export LC_ALL=C
-export DEBIAN_FRONTEND=noninteractive
 
 # load common functions
 source /common.sh
