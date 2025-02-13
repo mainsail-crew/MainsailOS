@@ -16,7 +16,7 @@ source /files/00-hold-packages-config
 apt-mark hold "${PKGS[@]}" > /dev/null 2>&1 || true
 
 # execute update
-apt-get -y dist-upgrade
+#apt-get -y dist-upgrade
 
 # clean up
 apt-get -y autoremove
