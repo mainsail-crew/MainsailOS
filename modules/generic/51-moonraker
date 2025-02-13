@@ -39,9 +39,19 @@ done
 
 echo_green "Installing Dependencies"
 
-# Use the SCRIPTS_PATH from the Bash environment to locate the system-dependencies.json file
-SCRIPTS_PATH="/home/${BASE_USER}/${DIR}/scripts"
-DEBIAN_DEPS=$(jq -r '.debian | join(" ")' "$SCRIPTS_PATH/system-dependencies.json")
+DEPS_PATH="/home/${BASE_USER}/${DIR}/scripts/system-dependencies.json"
+DEBIAN_DEPS=$(jq -r '.debian | join(" ")' "$DEPS_PATH")
 
-# Now you can use the SYSDEPS variable in your Bash script
-echo "Debian dependencies: $DEBIAN_DEPS"
+apt-get install --yes $DEBIAN_DEPS
+
+echo_green "Execute installer"
+pushd $SRC_DIR &> /dev/null || exit 1
+sudo -u "${BASE_USER}" ./scripts/install-moonraker.sh -s -x -z
+
+echo_green "Install PolicyKit Rules ..."
+sudo -u "${BASE_USER}" ./scripts/set-policykit-rules.sh --root
+
+popd &> /dev/null || exit 1
+
+cp /files/moonraker.conf /home/${BASE_USER}/printer_data/config/moonraker.conf
+systemctl_if_exists enable moonraker.service
