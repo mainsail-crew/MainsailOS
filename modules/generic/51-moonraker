@@ -10,9 +10,8 @@ export DEBIAN_FRONTEND=noninteractive
 source /common.sh
 install_cleanup_trap
 
-echo_green "Installing Moonraker and enable Service ..."
+source /files/00-config
 
-BASE_USER=pi
 DIR="moonraker"
 SRC_DIR="/home/${BASE_USER}/${DIR}"
 
@@ -24,11 +23,11 @@ DIRS="printer_data printer_data/config printer_data/comms printer_data/logs \
 
 apt-get install --yes "${DEPS}"
 
-echo_green "Cloning Repository"
+echo "Cloning Repository"
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 git clone ${REPO} ${DIR}
 
-echo_green "Creating Directories "
+echo "Creating Directories "
 for tmp in ${DIRS}; do
     if [[ ! -d "/home/${BASE_USER}/${tmp}" ]]; then
         echo "Creating ${tmp}"
@@ -38,10 +37,10 @@ for tmp in ${DIRS}; do
 done
 
 echo_green "Execute installer"
-pushd $SRC_DIR &> /dev/null || exit 1
+pushd "$SRC_DIR" &> /dev/null || exit 1
 sudo -u "${BASE_USER}" ./scripts/install-moonraker.sh -s -z
 
 popd &> /dev/null || exit 1
 
-cp /files/moonraker.conf /home/${BASE_USER}/printer_data/config/moonraker.conf
+cp /files/moonraker.conf /home/"${BASE_USER}"/printer_data/config/moonraker.conf
 systemctl_if_exists enable moonraker.service
