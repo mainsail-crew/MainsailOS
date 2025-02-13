@@ -13,9 +13,9 @@ source /files/00-config
 
 DOWNLOAD_URL="https://github.com/mainsail-crew/mainsail/releases/latest/download/mainsail.zip"
 CONFIG_REPO="https://github.com/mainsail-crew/mainsail-config.git"
-DEPS="git nginx unzip"
+DEPS=(git nginx unzip)
 
-apt-get install --yes "${DEPS}"
+apt-get install --yes "${DEPS[@]}"
 
 echo "Configure nginx webserver"
 
