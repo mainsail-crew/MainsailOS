@@ -17,7 +17,7 @@ DIR="moonraker"
 SRC_DIR="/home/${BASE_USER}/${DIR}"
 
 REPO="https://github.com/Arksine/moonraker.git"
-DEPS="git"
+DEPS="git jq"
 
 DIRS="printer_data printer_data/config printer_data/comms printer_data/logs \
       printer_data/systemd"
@@ -42,45 +42,8 @@ done
 echo_green "Installing Dependencies"
 
 # Use the SCRIPTS_PATH from the Bash environment to locate the system-dependencies.json file
-export SCRIPTS_PATH="/home/${BASE_USER}/${DIR}/scripts"
-
-SYSDEPS=$(python3 <<'EOF'
-import json
-import re
-from pathlib import Path
-from typing import Dict, List, Tuple
-
-scripts_path = os.environ.get("SCRIPTS_PATH")
-if not scripts_path:
-    raise EnvironmentError("SCRIPTS_PATH is not set in the environment.")
-SCRIPTS_PATH = Path(scripts_path)
-
-def parse_sysdeps_file() -> Dict[str, List[Tuple[str, str, str]]]:
-    sys_deps_file = SCRIPTS_PATH.joinpath("system-dependencies.json")
-    base_deps: Dict[str, List[str]] = json.loads(sys_deps_file.read_bytes())
-    parsed_deps: Dict[str, List[Tuple[str, str, str]]] = {}
-    for distro, pkgs in base_deps.items():
-        parsed_deps[distro] = []
-        for dep in pkgs:
-            parts = dep.split(";", maxsplit=1)
-            if len(parts) == 1:
-                parsed_deps[distro].append((dep.strip(), "", ""))
-            else:
-                pkg_name = parts[0].strip()
-                dep_parts = re.split(r"(==|!=|<=|>=|<|>)", parts[1].strip())
-                comp_var = dep_parts[0].strip().lower()
-                if len(dep_parts) != 3 or comp_var != "distro_version":
-                    continue
-                operator = dep_parts[1].strip()
-                req_version = dep_parts[2].strip()
-                parsed_deps[distro].append((pkg_name, operator, req_version))
-    return parsed_deps
-
-# Print the JSON output so that Bash can capture it
-print(json.dumps(parse_sysdeps_file()))
-EOF
-)
+SCRIPTS_PATH="/home/${BASE_USER}/${DIR}/scripts"
+DEBIAN_DEPS=$(jq -r '.debian | join(" ")' "$SCRIPTS_PATH/system-dependencies.json")
 
 # Now you can use the SYSDEPS variable in your Bash script
-echo "Parsed system dependencies:"
-echo "$SYSDEPS"
+echo "Debian dependencies: $DEBIAN_DEPS"
