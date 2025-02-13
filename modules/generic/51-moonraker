@@ -1,0 +1,86 @@
+#!/bin/bash
+
+set -x
+set -e
+
+export LC_ALL=C
+export DEBIAN_FRONTEND=noninteractive
+
+# load common functions
+source /common.sh
+install_cleanup_trap
+
+echo_green "Installing Moonraker and enable Service ..."
+
+BASE_USER=pi
+DIR="moonraker"
+SRC_DIR="/home/${BASE_USER}/${DIR}"
+
+REPO="https://github.com/Arksine/moonraker.git"
+DEPS="git"
+
+DIRS="printer_data printer_data/config printer_data/comms printer_data/logs \
+      printer_data/systemd"
+
+apt-get install --yes ${DEPS}
+
+echo_green "Cloning Repository"
+pushd "/home/${BASE_USER}" &> /dev/null || exit 1
+git clone ${REPO} ${DIR}
+
+echo_green "Creating Directories "
+for tmp in ${DIRS}; do
+    if [[ -d "/home/${BASE_USER}/${tmp}" ]]; then
+        echo_green "${tmp} already exists!"
+    else
+        echo_green "Creating ${tmp}"
+        mkdir -p "/home/${BASE_USER}/${tmp}"
+        chown -R "${BASE_USER}:${BASE_USER}" "/home/${BASE_USER}/${tmp}"
+    fi
+done
+
+echo_green "Installing Dependencies"
+
+# Use the SCRIPTS_PATH from the Bash environment to locate the system-dependencies.json file
+export SCRIPTS_PATH="/home/${BASE_USER}/${DIR}/scripts"
+
+SYSDEPS=$(python3 <<'EOF'
+import json
+import re
+from pathlib import Path
+from typing import Dict, List, Tuple
+
+scripts_path = os.environ.get("SCRIPTS_PATH")
+if not scripts_path:
+    raise EnvironmentError("SCRIPTS_PATH is not set in the environment.")
+SCRIPTS_PATH = Path(scripts_path)
+
+def parse_sysdeps_file() -> Dict[str, List[Tuple[str, str, str]]]:
+    sys_deps_file = SCRIPTS_PATH.joinpath("system-dependencies.json")
+    base_deps: Dict[str, List[str]] = json.loads(sys_deps_file.read_bytes())
+    parsed_deps: Dict[str, List[Tuple[str, str, str]]] = {}
+    for distro, pkgs in base_deps.items():
+        parsed_deps[distro] = []
+        for dep in pkgs:
+            parts = dep.split(";", maxsplit=1)
+            if len(parts) == 1:
+                parsed_deps[distro].append((dep.strip(), "", ""))
+            else:
+                pkg_name = parts[0].strip()
+                dep_parts = re.split(r"(==|!=|<=|>=|<|>)", parts[1].strip())
+                comp_var = dep_parts[0].strip().lower()
+                if len(dep_parts) != 3 or comp_var != "distro_version":
+                    continue
+                operator = dep_parts[1].strip()
+                req_version = dep_parts[2].strip()
+                parsed_deps[distro].append((pkg_name, operator, req_version))
+    return parsed_deps
+
+# Print the JSON output so that Bash can capture it
+print(json.dumps(parse_sysdeps_file()))
+EOF
+)
+
+# Now you can use the SYSDEPS variable in your Bash script
+echo "Parsed system dependencies:"
+echo "$SYSDEPS"
