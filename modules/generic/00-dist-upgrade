@@ -20,3 +20,10 @@ apt-mark hold "${HOLD_PKGS[@]}" > /dev/null 2>&1 || true
 # clean up
 apt-get -y autoremove
 apt-get clean
+
+# Add piwheels to global pip resources
+if [[ ! -f /etc/pip.conf ]]; then
+    echo "Adding piwheels to pip.conf"
+    echo "[global]" > /etc/pip.conf
+    echo "extra-index-url=https://www.piwheels.org/simple" >> /etc/pip.conf
+fi
