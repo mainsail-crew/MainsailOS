@@ -4,6 +4,7 @@
 export HOLD_PKGS=( "linux-image-*" "linux-headers-*" "linux-kbuild-*" "armbian-firmware" "raspi-firmware" "linux-dtb-*" "rpi-eeprom" )
 
 export BASE_USER=pi
+export DIST_NAME=MainsailOS
 
 export PRINTER_DATA_DIRS="printer_data printer_data/config printer_data/comms printer_data/logs printer_data/systemd"
 

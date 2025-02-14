@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -x
+set -e
+
+export LC_ALL=C
+
+# load common functions
+source /common.sh
+install_cleanup_trap
+
+source /files/00-config
+
+function get_parent {
+    grep VERSION_CODENAME /etc/os-release | cut -d '=' -f2
+}
+
+echo "Create ${DIST_NAME} release file"
+echo "${DIST_NAME} release ${RELEASE_TAG} ($(get_parent))" > /etc/"${DIST_NAME,,}"-release
+
+### NOTE: The 'distro' Python package used by Moonraker picks the first file after sorting.
+###       This hack is necessary because Armbian relies on upgrades to the original release file.
+###       To work around this, we symlink mainsailos-release to aaaa-release, which Moonraker reads.
+if [[ -f "/etc/armbian-release" || -f "/etc/orangepi-release" ]]; then
+    echo "Applying release file workaround"
+    ln -sf /etc/"${DIST_NAME,,}"-release /etc/aaaa-release
+fi
+
+echo "Install dependencies for other projects"
+DEPS=( \
+    # python3-serial is needed later on for possible CAN adapters
+    python3-serial \
+    # python3-opencv is needed for moonraker-obico by obico in version 2.0
+    python3-opencv \
+)
+apt-get install -y "${DEPS[@]}"
