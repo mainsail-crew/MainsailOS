@@ -11,6 +11,11 @@ install_cleanup_trap
 
 source /files/00-config
 
+# Set DEBIAN_FRONTEND to noninteractive
+if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
+    export DEBIAN_FRONTEND=noninteractive
+fi
+
 # hold linux kernel updates
 apt-mark hold "${HOLD_PKGS[@]}" > /dev/null 2>&1 || true
 
