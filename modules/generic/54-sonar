@@ -53,7 +53,7 @@ apt-get install --yes "${PKGARRAY[@]}"
 # Run Sonar Installation               #
 ########################################
 pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
-make install -s -x -d /home/"${BASE_USER}"/printer_data
+make --install -s -x -d /home/"${BASE_USER}"/printer_data
 popd &> /dev/null || exit 1
 
 ########################################
