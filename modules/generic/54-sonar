@@ -18,7 +18,7 @@ source /files/00-config
 ########################################
 
 # General settings
-readonly REPO="https://github.com/mainsail-crew/sonar.git"
+readonly REPO="https://github.com/meteyou/sonar-dev.git"
 readonly DEPS=(git)
 
 # Sonar-specific settings
