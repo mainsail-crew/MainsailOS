@@ -11,7 +11,7 @@ install_cleanup_trap
 
 source /files/00-config
 
-REPO="https://github.com/mainsail-crew/mainsail-config.git"
+REPO="https://github.com/mainsail-crew/crowsnest.git"
 DEPS=(git)
 
 INSTALL_SCRIPT="/home/${BASE_USER}/crowsnest/tools/libs/pkglist-generic.sh"
