@@ -47,7 +47,7 @@ sudo -u "${BASE_USER}" unzip mainsail.zip -d /home/"${BASE_USER}"/mainsail
 rm /home/"${BASE_USER}"/mainsail.zip
 
 echo "Installing mainsail.cfg"
-git clone ${CONFIG_REPO} mainsail-config
+sudo -u "${BASE_USER}" git clone ${CONFIG_REPO} mainsail-config
 ln -sf /home/"${BASE_USER}"/mainsail-config/mainsail.cfg /home/"${BASE_USER}"/printer_data/config/mainsail.cfg
 
 popd &> /dev/null || exit 1

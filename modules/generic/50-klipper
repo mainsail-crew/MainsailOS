@@ -40,7 +40,7 @@ usermod -a -G "tty,dialout" "${BASE_USER}"
 
 echo "Cloning repo ..."
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
-git clone ${REPO} klipper
+sudo -u "${BASE_USER}" git clone ${REPO} klipper
 
 create_user_directories
 

@@ -21,7 +21,7 @@ apt-get install --yes "${DEPS}"
 
 echo "Cloning Repository"
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
-git clone ${REPO} ${DIR}
+sudo -u "${BASE_USER}" git clone ${REPO} ${DIR}
 
 create_user_directories
 
