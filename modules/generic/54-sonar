@@ -42,12 +42,9 @@ popd &> /dev/null || exit 1
 # Installation script from the cloned repository
 INSTALL_SCRIPT="/home/${BASE_USER}/sonar/tools/install.sh"
 
-# Read the package list from the installation script
-PKGLIST=$(
-    # shellcheck disable=SC1090
-    source "$INSTALL_SCRIPT"
-    echo "$PKGLIST"
-)
+# Extract the package list from the installation script using grep and sed
+PKGLIST=$(grep -m 1 'PKGLIST=' "$INSTALL_SCRIPT" | sed 's/.*PKGLIST="\([^"]*\)".*/\1/')
+
 # Convert string to array
 read -ra PKGARRAY <<< "$PKGLIST"
 apt-get install --yes "${PKGARRAY[@]}"
