@@ -22,11 +22,12 @@ readonly REPO="https://github.com/mainsail-crew/sonar.git"
 readonly DEPS=(git)
 
 # Sonar-specific settings
-readonly SONAR_UNATTENDED="1"  # Enable unattended installation (needed for custoPiZer)
-readonly SONAR_CONFIG_PATH="/home/${BASE_USER}/printer_data/config"
-readonly SONAR_LOG_PATH="/home/${BASE_USER}/printer_data/logs"
-readonly SONAR_ADD_SONAR_MOONRAKER="1"  # Add update_manager section to moonraker.conf
-readonly SONAR_MOONRAKER_CONF_PATH="${SONAR_CONFIG_PATH}/moonraker.conf"
+SONAR_UNATTENDED="1"  # Enable unattended installation (needed for custoPiZer)
+SONAR_DEFAULT_CONF="/home/${BASE_USER}/sonar/resources/sonar.conf"
+SONAR_CONFIG_PATH="/home/${BASE_USER}/printer_data/config"
+SONAR_LOG_PATH="/home/${BASE_USER}/printer_data/logs"
+SONAR_ADD_SONAR_MOONRAKER="1"  # Add update_manager section to moonraker.conf
+SONAR_MOONRAKER_CONF_PATH="${SONAR_CONFIG_PATH}/moonraker.conf"
 
 ########################################
 # Install System Packages              #
