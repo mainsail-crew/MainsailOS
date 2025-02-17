@@ -35,7 +35,7 @@ read -ra PKGARRAY <<< "$PKGLIST"
 apt-get install --yes "${PKGARRAY[@]}"
 
 pushd "/home/${BASE_USER}/crowsnest" &> /dev/null || exit 1
-make install
+sudo -u "${BASE_USER}" sudo make install
 popd &> /dev/null || exit 1
 
 popd &> /dev/null || exit 1
