@@ -39,7 +39,7 @@ apt-get install --yes "${DEPS[@]}"
 ########################################
 
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
-sudo -u "${BASE_USER}" git clone "${REPO}" crowsnest
+sudo -u "${BASE_USER}" git clone "${REPO}" sonar
 popd &> /dev/null || exit 1
 
 ########################################
