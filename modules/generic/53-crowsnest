@@ -30,8 +30,9 @@ PKGLIST=$(
     source "$INSTALL_SCRIPT"
     echo "$PKGLIST"
 )
-
-apt-get install --yes "$PKGLIST"
+# convert string to array
+read -ra PKGARRAY <<< "$PKGLIST"
+apt-get install --yes "${PKGARRAY[@]}"
 
 pushd "/home/${BASE_USER}/crowsnest" &> /dev/null || exit 1
 make install
