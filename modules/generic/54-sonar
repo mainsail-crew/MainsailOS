@@ -36,20 +36,6 @@ sudo -u "${BASE_USER}" git clone "${REPO}" sonar
 popd &> /dev/null || exit 1
 
 ########################################
-# Packages from Install Script         #
-########################################
-
-# Installation script from the cloned repository
-INSTALL_SCRIPT="/home/${BASE_USER}/sonar/tools/install.sh"
-
-# Extract the package list from the installation script using grep and sed
-PKGLIST=$(grep -m 1 'PKGLIST=' "$INSTALL_SCRIPT" | sed 's/.*PKGLIST="\([^"]*\)".*/\1/')
-
-# Convert string to array
-read -ra PKGARRAY <<< "$PKGLIST"
-apt-get install --yes "${PKGARRAY[@]}"
-
-########################################
 # Run Sonar Installation               #
 ########################################
 pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
