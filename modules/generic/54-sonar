@@ -1,0 +1,74 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Configuration                        #
+########################################
+
+# General settings
+readonly REPO="https://github.com/mainsail-crew/sonar.git"
+readonly DEPS=(git)
+
+# Sonar-specific settings
+readonly SONAR_UNATTENDED="1"  # Enable unattended installation (needed for custoPiZer)
+readonly SONAR_CONFIG_PATH="/home/${BASE_USER}/printer_data/config"
+readonly SONAR_LOG_PATH="/home/${BASE_USER}/printer_data/logs"
+readonly SONAR_ADD_SONAR_MOONRAKER="1"  # Add update_manager section to moonraker.conf
+readonly SONAR_MOONRAKER_CONF_PATH="${SONAR_CONFIG_PATH}/moonraker.conf"
+
+########################################
+# Install System Packages              #
+########################################
+
+apt-get install --yes "${DEPS[@]}"
+
+########################################
+# Clone Repository                     #
+########################################
+
+pushd "/home/${BASE_USER}" &> /dev/null || exit 1
+sudo -u "${BASE_USER}" git clone "${REPO}" crowsnest
+popd &> /dev/null || exit 1
+
+########################################
+# Packages from Install Script         #
+########################################
+
+# Installation script from the cloned repository
+INSTALL_SCRIPT="/home/${BASE_USER}/sonar/tools/install.sh"
+
+# Read the package list from the installation script
+PKGLIST=$(
+    # shellcheck disable=SC1090
+    source "$INSTALL_SCRIPT"
+    echo "$PKGLIST"
+)
+# Convert string to array
+read -ra PKGARRAY <<< "$PKGLIST"
+apt-get install --yes "${PKGARRAY[@]}"
+
+########################################
+# Run Sonar Installation               #
+########################################
+
+pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
+make install
+popd &> /dev/null || exit 1
+
+########################################
+# Enable Service                       #
+########################################
+
+systemctl_if_exists enable sonar.service
