@@ -22,8 +22,8 @@ fi
 apt-get install --yes "${DEPS[@]}"
 
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
-
 sudo -u "${BASE_USER}" git clone ${REPO} crowsnest
+popd &> /dev/null || exit 1
 
 PKGLIST=$(
     # shellcheck disable=SC1090
@@ -35,9 +35,8 @@ read -ra PKGARRAY <<< "$PKGLIST"
 apt-get install --yes "${PKGARRAY[@]}"
 
 pushd "/home/${BASE_USER}/crowsnest" &> /dev/null || exit 1
-sudo -u "${BASE_USER}" sudo make install
-popd &> /dev/null || exit 1
-
+export CROWSNEST_UNATTENDED=1
+make install
 popd &> /dev/null || exit 1
 
 systemctl_if_exists enable crowsnest.service
