@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -x
+set -e
+
+export LC_ALL=C
+
+# load common functions
+source /common.sh
+install_cleanup_trap
+
+source /files/00-config
+
+REPO="https://github.com/mainsail-crew/mainsail-config.git"
+DEPS=(git)
+
+INSTALL_SCRIPT="/home/${BASE_USER}/crowsnest/tools/libs/pkglist-generic.sh"
+if [[ "$(is_raspbian)" = "1" ]]; then
+    INSTALL_SCRIPT="/home/${BASE_USER}/crowsnest/tools/libs/pkglist-rpi.sh"
+fi
+
+apt-get install --yes "${DEPS[@]}"
+
+pushd "/home/${BASE_USER}" &> /dev/null || exit 1
+
+sudo -u "${BASE_USER}" git clone ${REPO} crowsnest
+
+PKGLIST=$(
+    # shellcheck disable=SC1090
+    source "$INSTALL_SCRIPT"
+    echo "$PKGLIST"
+)
+
+apt-get install --yes "$PKGLIST"
+
+pushd "/home/${BASE_USER}/crowsnest" &> /dev/null || exit 1
+make install
+popd &> /dev/null || exit 1
+
+popd &> /dev/null || exit 1
+
+systemctl_if_exists enable crowsnest.service
