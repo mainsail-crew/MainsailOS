@@ -63,10 +63,8 @@ apt-get install --yes "${PKGARRAY[@]}"
 ########################################
 # Run Sonar Installation               #
 ########################################
-
 pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
-# shellcheck disable=SC2155
-export PWD="$(pwd)"
+pwd
 make install
 popd &> /dev/null || exit 1
 
