@@ -1,15 +1,21 @@
 #!/bin/bash
-
-set -x
-set -e
-
+set -xe
 export LC_ALL=C
 
-# load common functions
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
 source /common.sh
 install_cleanup_trap
 
+# Load additional configuration (e.g., BASE_USER)
 source /files/00-config
+
+########################################
+# Configuration                        #
+########################################
 
 DOWNLOAD_URL="https://github.com/mainsail-crew/mainsail/releases/latest/download/mainsail.zip"
 CONFIG_REPO="https://github.com/mainsail-crew/mainsail-config.git"
@@ -17,7 +23,9 @@ DEPS=(git nginx unzip)
 
 apt-get install --yes "${DEPS[@]}"
 
-echo "Configure nginx webserver"
+########################################
+# Config Webserver                     #
+########################################
 
 echo "Remove the default site"
 rm /etc/nginx/sites-enabled/default
@@ -30,6 +38,10 @@ cp /files/mainsail-nginx/upstreams.conf /etc/nginx/conf.d/upstreams.conf
 echo "Enable the site"
 ln -s /etc/nginx/sites-available/mainsail /etc/nginx/sites-enabled/
 
+########################################
+# Modify Logrotate for nginx           #
+########################################
+
 echo "Modify logrotate cycle from 14d to 2d"
 sudo sed -i 's/rotate 14/rotate 2/' /etc/logrotate.d/nginx
 
@@ -39,15 +51,32 @@ echo "Linking log files"
 ln -s /var/log/nginx/mainsail-access.log /home/"${BASE_USER}"/printer_data/logs/mainsail-access.log
 ln -s /var/log/nginx/mainsail-error.log /home/"${BASE_USER}"/printer_data/logs/mainsail-error.log
 
-echo "Downloading Mainsail"
+########################################
+# Switch to BASE_USER home directory   #
+########################################
+
 pushd /home/"${BASE_USER}" &> /dev/null || exit 1
+
+########################################
+# Download latest release              #
+########################################
+
+echo "Downloading Mainsail"
 sudo -u "${BASE_USER}" wget -q --show-progress -O mainsail.zip "${DOWNLOAD_URL}"
 sudo -u "${BASE_USER}" unzip mainsail.zip -d /home/"${BASE_USER}"/mainsail
 ## cleanup
 rm /home/"${BASE_USER}"/mainsail.zip
 
+########################################
+# Setup mainsail.cfg                   #
+########################################
+
 echo "Installing mainsail.cfg"
 sudo -u "${BASE_USER}" git clone ${CONFIG_REPO} mainsail-config
 ln -sf /home/"${BASE_USER}"/mainsail-config/mainsail.cfg /home/"${BASE_USER}"/printer_data/config/mainsail.cfg
+
+########################################
+# Return to last directory             #
+########################################
 
 popd &> /dev/null || exit 1
