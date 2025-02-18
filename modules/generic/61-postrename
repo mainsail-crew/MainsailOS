@@ -1,0 +1,28 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Copy script & set user rights        #
+########################################
+
+cp /files/postrename /postrename
+sudo chmod 0755 /postrename
+
+########################################
+# Add postrename to rc.local           #
+########################################
+
+sed -i 's@exit 0@@' /etc/rc.local
+echo -e "/postrename\nexit 0\n" | tee -a /etc/rc.local
