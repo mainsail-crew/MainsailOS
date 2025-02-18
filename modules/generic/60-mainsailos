@@ -1,22 +1,36 @@
 #!/bin/bash
-
-set -x
-set -e
-
+set -xe
 export LC_ALL=C
 
-# load common functions
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
 source /common.sh
 install_cleanup_trap
 
+# Load additional configuration (e.g., BASE_USER)
 source /files/00-config
+
+########################################
+# Configuration                        #
+########################################
 
 function get_parent {
     grep VERSION_CODENAME /etc/os-release | cut -d '=' -f2
 }
 
+########################################
+# Create <DIST_NAME>-release file      #
+########################################
+
 echo "Create ${DIST_NAME} release file"
 echo "${DIST_NAME} release ${RELEASE_TAG} ($(get_parent))" > /etc/"${DIST_NAME,,}"-release
+
+########################################
+# Workaround for Armbian based OS      #
+########################################
 
 ### NOTE: The 'distro' Python package used by Moonraker picks the first file after sorting.
 ###       This hack is necessary because Armbian relies on upgrades to the original release file.
@@ -25,6 +39,11 @@ if [[ -f "/etc/armbian-release" || -f "/etc/orangepi-release" ]]; then
     echo "Applying release file workaround"
     ln -sf /etc/"${DIST_NAME,,}"-release /etc/aaaa-release
 fi
+
+########################################
+# Install dependencies for other       #
+# Projects                             #
+########################################
 
 echo "Install dependencies for other projects"
 DEPS=( \
