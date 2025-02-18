@@ -1,35 +1,74 @@
 #!/bin/bash
-
-set -x
-set -e
-
+set -xe
 export LC_ALL=C
 
-# load common functions
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
 source /common.sh
 install_cleanup_trap
 
+# Load additional configuration (e.g., BASE_USER)
 source /files/00-config
 
-DIR="moonraker"
-SRC_DIR="/home/${BASE_USER}/${DIR}"
+########################################
+# Configuration                        #
+########################################
 
 REPO="https://github.com/Arksine/moonraker.git"
 DEPS="git"
 
+########################################
+# Install dependencies                 #
+########################################
+
 apt-get install --yes "${DEPS}"
 
-echo "Cloning Repository"
+########################################
+# Save current dir and switch to home  #
+########################################
+
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
-sudo -u "${BASE_USER}" git clone ${REPO} ${DIR}
+
+########################################
+# Clone repository                     #
+########################################
+
+echo "Cloning Repository"
+sudo -u "${BASE_USER}" git clone ${REPO} moonraker
+
+########################################
+# Create printer_data directories      #
+########################################
 
 create_user_directories
 
-echo_green "Execute installer"
-pushd "$SRC_DIR" &> /dev/null || exit 1
+########################################
+# Jump into moonraker, run installer   #
+# and go back to home                  #
+########################################
+
+echo "Execute installer"
+pushd "moonraker" &> /dev/null || exit 1
 sudo -u "${BASE_USER}" ./scripts/install-moonraker.sh -s -z
+popd &> /dev/null || exit 1
+
+########################################
+# Return to saved directory            #
+########################################
 
 popd &> /dev/null || exit 1
 
+########################################
+# Copy moonraker.conf to config dir    #
+########################################
+
 cp /files/moonraker.conf /home/"${BASE_USER}"/printer_data/config/moonraker.conf
+
+########################################
+# Enable service                       #
+########################################
+
 systemctl_if_exists enable moonraker.service

@@ -1,15 +1,21 @@
 #!/bin/bash
-
-set -x
-set -e
-
+set -xe
 export LC_ALL=C
 
-# load common functions
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
 source /common.sh
 install_cleanup_trap
 
+# Load additional configuration (e.g., BASE_USER)
 source /files/00-config
+
+########################################
+# Configuration                        #
+########################################
 
 SRC_DIR="/home/${BASE_USER}/klipper"
 ENV_DIR="/home/${BASE_USER}/klippy-env"
@@ -32,17 +38,43 @@ DEPS=(git \
       python3-numpy python3-matplotlib libatlas-base-dev libopenblas-dev \
       )
 
-echo "Installing Dependencies ..."
+########################################
+# Install Dependencies                 #
+########################################
+
+echo "Installing Dependencies"
 apt-get install --yes "${DEPS[@]}"
+
+########################################
+# Add user to groups                   #
+########################################
 
 ## Make sure user pi has access to serial ports
 usermod -a -G "tty,dialout" "${BASE_USER}"
 
-echo "Cloning repo ..."
+########################################
+# Switch into home dir                 #
+########################################
+
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
+
+########################################
+# Clone repository                     #
+########################################
+
+echo "Cloning repo ..."
 sudo -u "${BASE_USER}" git clone ${REPO} klipper
 
+########################################
+# Create printer_data directories      #
+########################################
+
 create_user_directories
+
+########################################
+# Create Virtualenv and install        #
+# dependencies                         #
+########################################
 
 echo "Creating Virtualenv (klippy-env) ..."
 sudo -u "${BASE_USER}" virtualenv -p python3 "${ENV_DIR}"
@@ -50,7 +82,16 @@ echo "Installing Python Dependencies ..."
 sudo -u "${BASE_USER}" "${ENV_DIR}"/bin/pip install -r "${SRC_DIR}"/scripts/klippy-requirements.txt
 echo "Installing NumPy in Virtualenv"
 sudo -u "${BASE_USER}" "${ENV_DIR}"/bin/pip install "numpy<1.26"
+
+########################################
+# Return to saved directory            #
+########################################
+
 popd &> /dev/null || exit 1
+
+########################################
+# Copy and enable service              #
+########################################
 
 echo "Copy Service and enable it"
 cp /files/klipper.service /etc/systemd/system/klipper.service
