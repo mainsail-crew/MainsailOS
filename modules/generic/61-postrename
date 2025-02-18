@@ -21,6 +21,20 @@ cp /files/postrename /postrename
 sudo chmod 0755 /postrename
 
 ########################################
+# Create rc.local, if it doesnt exists #
+########################################
+
+if [ ! -f /etc/rc.local ]; then
+    cat <<'EOF' | sudo tee /etc/rc.local
+#!/bin/sh -e
+# rc.local
+
+exit 0
+EOF
+    sudo chmod +x /etc/rc.local
+fi
+
+########################################
 # Add postrename to rc.local           #
 ########################################
 
