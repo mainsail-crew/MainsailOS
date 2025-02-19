@@ -18,20 +18,20 @@ source /files/00-config
 ########################################
 
 cp /files/postrename /postrename
-sudo chmod 0755 /postrename
+chmod 0755 /postrename
 
 ########################################
 # Create rc.local, if it doesnt exists #
 ########################################
 
 if [ ! -f /etc/rc.local ]; then
-    cat <<'EOF' | sudo tee /etc/rc.local
+    cat <<'EOF' | tee /etc/rc.local
 #!/bin/sh -e
 # rc.local
 
 exit 0
 EOF
-    sudo chmod +x /etc/rc.local
+    chmod +x /etc/rc.local
 fi
 
 ########################################
