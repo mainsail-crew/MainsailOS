@@ -68,6 +68,12 @@ sudo -u "${BASE_USER}" unzip mainsail.zip -d /home/"${BASE_USER}"/mainsail
 rm /home/"${BASE_USER}"/mainsail.zip
 
 ########################################
+# Fix userrights                       #
+########################################
+
+gpasswd -a www-data "${BASE_USER}"
+
+########################################
 # Setup mainsail.cfg                   #
 ########################################
 
