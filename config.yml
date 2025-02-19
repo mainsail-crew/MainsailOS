@@ -1,7 +1,7 @@
 - name: raspberry_pi-arm64-bookworm
   type: raspberry
   img_download_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.torrent"
-  img_hash_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.sha256"
+  img_hash_url: "https://downloads.raspberrypi.org/raspios_arm64_latest.sha256"
   env:
     ARCH: arm64
     IMAGE_ENLARGEROOT: 5000
