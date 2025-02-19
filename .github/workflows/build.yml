@@ -49,19 +49,6 @@ jobs:
           mkdir -p build
           mkdir -p scripts
 
-      - name: "⬇ Download hash"
-        id: hash
-        shell: bash
-        run: |
-          cd build
-          FILENAME=$(basename ${{ matrix.img_hash_url }})
-          wget -O ${FILENAME} ${{  matrix.img_hash_url }}
-          FILE_CONTENT=$(head -n 1 $FILENAME)
-          CHECKSUM=$(echo "$FILE_CONTENT" | cut -d' ' -f1)
-
-          echo "CHECKSUM=${CHECKSUM}" >> $GITHUB_OUTPUT
-          echo "FILENAME=${FILENAME}" >> $GITHUB_OUTPUT
-
       - name: "⬇ Download Image via Torrent"
         if: ${{ endsWith(matrix.img_download_url, '.torrent') }}
         shell: bash
@@ -78,7 +65,7 @@ jobs:
       - name: "🔐 Verify image"
         run: |
           cd build
-          sha256sum -b ${{ steps.hash.outputs.FILENAME }}
+          curl -Ls ${{  matrix.img_hash_url }} | sha256sum -c
 
       - name: "🛠 Unpack and rename image"
         run: |
