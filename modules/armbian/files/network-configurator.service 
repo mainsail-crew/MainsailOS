@@ -1,0 +1,20 @@
+# MainsailOS network-configurator
+# This service will run in parallel with other services
+# This is based on
+# https://github.com/armbian/build/blob/master/packages/bsp/common/lib/systemd/system/armbian-firstrun-config.service
+
+
+[Unit]
+Description=MainsailOS network configurator
+Wants=network-online.target
+After=network.target network-online.target
+ConditionPathExists=/boot/network_config.txt
+
+[Service]
+Type=idle
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/network-configurator
+TimeoutStartSec=2min
+
+[Install]
+WantedBy=multi-user.target
