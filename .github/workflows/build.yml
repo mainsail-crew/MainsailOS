@@ -83,7 +83,9 @@ jobs:
           cp -r modules/generic/* scripts/
           cp -r modules/${{ matrix.type }}/* scripts/
           for file in scripts/*.disabled; do
-            rm "$file"
+            if [ -e "$file" ]; then
+              rm "$file"
+            fi
           done
 
       - name: "📇 Generate config.local"
