@@ -1,0 +1,37 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Configuration                        #
+########################################
+
+DEPS=(uuid)
+
+apt-get install --yes "${DEPS[@]}"
+
+########################################
+# Copy & modify WiFi-README.txt        #
+########################################
+
+cp /files/headless-nm/WiFi-README.txt /boot/WiFi-README.txt
+sed -i 's|OS_NAME|'"${DIST_NAME}"'|g' /boot/WiFi-README.txt
+
+########################################
+# Copy & enable service                #
+########################################
+
+cp /files/headless-nm/headless_nm.service /etc/systemd/system/headless_nm.service
+cp /files/headless-nm/headless_nm /usr/local/bin/headless_nm
+systemctl_if_exists enable headless_nm
