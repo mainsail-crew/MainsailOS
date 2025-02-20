@@ -51,26 +51,20 @@ jobs:
 
       - name: "⬇ Download Image via Torrent"
         if: ${{ endsWith(matrix.img_download_url, '.torrent') }}
-        shell: bash
-        run: |
-          aria2c -d build --seed-time=0 "${{ matrix.img_download_url }}"
+        run: aria2c -d build --seed-time=0 "${{ matrix.img_download_url }}"
 
       - name: "⬇ Download Image via wget"
         if: ${{ !endsWith(matrix.img_download_url, '.torrent') }}
-        shell: bash
-        run: |
-          cd build
-          wget ${{ matrix.img_download_url }}
+        working-directory: ./build
+        run: wget ${{ matrix.img_download_url }}
 
       - name: "🔐 Verify image"
-        run: |
-          cd build
-          curl -Ls ${{  matrix.img_hash_url }} | sha256sum -c
+        working-directory: ./build
+        run: curl -Ls ${{  matrix.img_hash_url }} | sha256sum -c
 
       - name: "🛠 Unpack and rename image"
+        working-directory: ./build
         run: |
-          cd build
-
           # search for the image file in the build directory
           IMG_FILE=$(ls *.img.xz | head -n 1)
           echo "Found compressed Image file: ${IMG_FILE}"
@@ -105,9 +99,8 @@ jobs:
           MATRIX_ENV: ${{ toJson(matrix.env) }}
 
       - name: "🔎 Show scripts"
-        run: |
-          cd scripts
-          ls -la
+        working-directory: ./scripts
+        run: ls -la
 
       - name: "🏗 Run CustoPiZer"
         uses: meteyou/CustoPiZer-dev@main
@@ -118,28 +111,25 @@ jobs:
           environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}"}'
 
       - name: "✏ Rename image"
-        shell: bash
+        working-directory: ./build
         run: |
           RELEASE_TAG="${{ env.RELEASE_TAG }}"
 
           IMAGE="MainsailOS-${{ matrix.name }}-${RELEASE_TAG}.img"
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
-          cd build
           mv output.img "${IMAGE}"
 
       - name: "🛠 Compressing Image"
-        shell: bash
+        working-directory: ./build
         run: |
-          cd build
           CPU_COUNT="$(nproc)"
           echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
           xz -efkvz9T"${CPU_COUNT}" ${{ env.IMAGE }} || true
 
       - name: "🔐 Create hash"
-        shell: bash
+        working-directory: ./build
         run: |
-          cd build
           sha256sum ${{ env.IMAGE }} > ${{ env.IMAGE }}.sha256
           sha256sum ${{ env.IMAGE }}.xz > ${{ env.IMAGE }}.xz.sha256
 
