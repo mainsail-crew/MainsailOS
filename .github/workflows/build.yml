@@ -82,7 +82,9 @@ jobs:
         run: |
           cp -r modules/generic/* scripts/
           cp -r modules/${{ matrix.type }}/* scripts/
-          rm scripts/*.disabled
+          for file in scripts/*.disabled; do
+            rm "$file"
+          done
 
       - name: "📇 Generate config.local"
         run: |
