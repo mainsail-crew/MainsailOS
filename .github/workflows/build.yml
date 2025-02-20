@@ -70,7 +70,6 @@ jobs:
       - name: "🛠 Unpack and rename image"
         run: |
           cd build
-          rm -f *.sha256
 
           # search for the image file in the build directory
           IMG_FILE=$(ls *.img.xz | head -n 1)
