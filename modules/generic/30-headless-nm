@@ -22,9 +22,10 @@ DEPS=(uuid)
 apt-get install --yes "${DEPS[@]}"
 
 ########################################
-# Copy & modify WiFi-README.txt        #
+# Copy & modify files to /boot         #
 ########################################
 
+cp /files/headless-nm/headless_nm.txt.template /boot/headless_nm.txt.template
 cp /files/headless-nm/WiFi-README.txt /boot/WiFi-README.txt
 sed -i 's|OS_NAME|'"${DIST_NAME}"'|g' /boot/WiFi-README.txt
 
