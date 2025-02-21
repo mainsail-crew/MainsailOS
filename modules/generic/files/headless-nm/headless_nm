@@ -144,8 +144,10 @@ main() {
     # NetworkManager only accepts 0600 permissions for configs
     chmod 0600 "${CONNFILE}"
 
-    # Reload NetworkManager to apply changes
-    nmcli connection reload
+    # Reload NetworkManager to apply changes, if it is active
+    if systemctl is-active --quiet NetworkManager; then
+        nmcli connection reload
+    fi
 
     # Cleanup
     unset PSK_HASH PASSWORD SSID
