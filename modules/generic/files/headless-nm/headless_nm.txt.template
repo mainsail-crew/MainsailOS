@@ -1,14 +1,19 @@
-#### Headless Wifi configuration
+# This configuration file is used to set up a WiFi connection on headless devices
+# using NetworkManager. Please enter the appropriate values for your environment.
 
-# Your Wifis SSID
+# Enter the SSID (network name) of the WiFi network that the device should connect to.
 SSID="<mySSID>"
 
-# Your WiFis password
+# Enter the password for the WiFi network.
 PASSWORD="<mySecretPassword>"
 
-# Is your SSID in hidden state? [true/false]
+# Specify whether the WiFi network is hidden (SSID broadcast disabled).
+# Use "true" if the network is hidden, or "false" if the network is visible.
+# Accepted values: "true" or "false"
 HIDDEN="false"
 
-# Wifi Country code
-# See Wifi-README.txt for details!
+# Specify the country code (ISO 3166-1 alpha-2) for the WiFi network.
+# This setting ensures that the regulatory requirements for the respective country
+# (e.g., frequency ranges, transmission power) are applied correctly.
+# For additional details, please refer to the WiFi-README.txt file.
 REGDOMAIN="GB"
