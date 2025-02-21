@@ -1,0 +1,20 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Copy rule                            #
+########################################
+
+cp /files/070-wifi-powersave.rules /etc/udev/rules.d/070-wifi-powersave.rules
