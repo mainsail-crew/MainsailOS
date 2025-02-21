@@ -111,9 +111,9 @@ set_regdomain() {
 # MAIN
 main() {
     if [[ -f "${SETUPFILE}" ]]; then
-        log "Configuration file found in ${SETUPFILE}, continuing\n"
+        log "Configuration file found in ${SETUPFILE}, continuing"
     else
-        log "Configuration file not found! Nothing to do, exiting\n"
+        log "Configuration file not found! Nothing to do, exiting"
         exit 0
     fi
 
