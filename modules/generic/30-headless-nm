@@ -35,4 +35,5 @@ sed -i 's|OS_NAME|'"${DIST_NAME}"'|g' /boot/WiFi-README.txt
 
 cp /files/headless-nm/headless_nm.service /etc/systemd/system/headless_nm.service
 cp /files/headless-nm/headless_nm /usr/local/bin/headless_nm
+chmod +x /usr/local/bin/headless_nm
 systemctl_if_exists enable headless_nm
