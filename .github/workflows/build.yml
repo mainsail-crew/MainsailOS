@@ -92,18 +92,11 @@ jobs:
         run: |
           # Check if special_modules are defined for this configuration
           if [ -n "${{ toJson(matrix.special_modules) }}" ] && [ "${{ toJson(matrix.special_modules) }}" != "[]" ]; then
-            echo "Copying special modules for ${{ matrix.name }}:"
-
             # Convert JSON array to bash array
             IFS=$'\n' read -d '' -ra MODULES <<< "$(echo '${{ toJson(matrix.special_modules) }}' | jq -r '.[]')"
 
             for module in "${MODULES[@]}"; do
-              echo "  - Copying special module: ${module}"
-              if [ -f "modules/special/${module}" ]; then
-                cp "modules/special/${module}" scripts/
-              else
-                echo "Warning: Special module ${module} not found!"
-              fi
+              cp "modules/special/${module}" scripts/
             done
           else
             echo "No special modules defined for ${{ matrix.name }}."
