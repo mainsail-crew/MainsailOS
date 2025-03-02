@@ -21,6 +21,8 @@ source /files/00-config
 readonly REPO="https://github.com/meteyou/sonar-dev.git"
 readonly DEPS=(git)
 
+readonly SONAR_UPDATER_CONFIG="./resources/moonraker_update.txt"
+
 ########################################
 # Install System Packages              #
 ########################################
@@ -40,6 +42,11 @@ popd &> /dev/null || exit 1
 ########################################
 pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
 make install DATA_PATH=/home/"${BASE_USER}"/printer_data UNATTENDED=1
+
+if [ -f $SONAR_UPDATER_CONFIG ] && [ -f "$MOONRAKER_CONFIG" ] ; then
+    cat $SONAR_UPDATER_CONFIG >> "$MOONRAKER_CONFIG"
+fi
+
 popd &> /dev/null || exit 1
 
 ########################################
