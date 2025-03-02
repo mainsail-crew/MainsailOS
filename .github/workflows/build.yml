@@ -93,7 +93,7 @@ jobs:
           # Check if special_modules are defined for this configuration
           if [ -n "${{ toJson(matrix.special_modules) }}" ] && [ "${{ toJson(matrix.special_modules) }}" != "[]" ]; then
             # Convert JSON array to bash array
-            IFS=$'\n' read -d '' -ra MODULES <<< "$(echo '${{ toJson(matrix.special_modules) }}' | jq -r '.[]')"
+            MODULES=$(echo '${{ toJson(matrix.special_modules) }}' | jq -r '.[]')
 
             for module in "${MODULES[@]}"; do
               cp "modules/special/${module}" scripts/
