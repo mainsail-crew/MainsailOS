@@ -5,6 +5,8 @@
   env:
     ARCH: arm64
     IMAGE_ENLARGEROOT: 5000
+  special_modules: []
+
 - name: armbian-orangepi4_lts-bookworm
   type: armbian
   img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_bookworm.img.xz"
@@ -13,3 +15,5 @@
     ARCH: arm64
     DISTRO: armbian
     IMAGE_ENLARGEROOT: 5000
+  special_modules:
+    - 20-opi-4lts-spi
