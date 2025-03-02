@@ -92,6 +92,11 @@ jobs:
         run: |
           # Check if special_modules are defined for this configuration
           if [ -n "${{ toJson(matrix.special_modules) }}" ] && [ "${{ toJson(matrix.special_modules) }}" != "[]" ]; then
+            # copy additional files for special modules
+            if [ -d "modules/special/files" ]; then
+              cp -r modules/special/files/* scripts/files/
+            fi
+
             # Convert JSON array to bash array
             MODULES=$(echo '${{ toJson(matrix.special_modules) }}' | jq -r '.[]')
 
