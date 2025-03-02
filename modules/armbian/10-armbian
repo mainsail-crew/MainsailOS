@@ -25,6 +25,9 @@ if_group_exists_run() {
 ########################################
 
 BASE_PASSWORD=armbian
+DEPS=(armbian-config avahi-daemon bash-completion iptables)
+
+apt-get install --yes "${DEPS[@]}"
 
 ########################################
 # Create user and enable sudo          #
