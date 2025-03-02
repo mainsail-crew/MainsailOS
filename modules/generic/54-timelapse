@@ -63,8 +63,8 @@ fi
 # Add config to moonraker.conf         #
 ########################################
 
-if [[ -f "${PRINTER_CONFIG_PATH}/moonraker.conf" ]]; then
-    cat /files/moonraker_timelapse.conf >> "${PRINTER_CONFIG_PATH}/moonraker.conf"
+if [[ -f $MOONRAKER_CONFIG ]]; then
+    cat /files/moonraker_timelapse.conf >> "$MOONRAKER_CONFIG"
 fi
 
 ########################################
