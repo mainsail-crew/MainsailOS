@@ -58,6 +58,7 @@ apt-get install --yes "${PKGARRAY[@]}"
 
 pushd "/home/${BASE_USER}/crowsnest" &> /dev/null || exit 1
 export CROWSNEST_UNATTENDED=1
+export CROWSNEST_ADD_CROWSNEST_MOONRAKER=1
 make install
 popd &> /dev/null || exit 1
 
