@@ -18,10 +18,8 @@ source /files/00-config
 ########################################
 
 # General settings
-readonly REPO="https://github.com/meteyou/sonar-dev.git"
+readonly REPO="https://github.com/mainsail-crew/sonar.git"
 readonly DEPS=(git)
-
-readonly SONAR_UPDATER_CONFIG="./resources/moonraker_update.txt"
 
 ########################################
 # Install System Packages              #
@@ -38,14 +36,30 @@ sudo -u "${BASE_USER}" git clone "${REPO}" sonar
 popd &> /dev/null || exit 1
 
 ########################################
-# Run Sonar Installation               #
+# Change into Sonar directory          #
 ########################################
-pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
-make install DATA_PATH=/home/"${BASE_USER}"/printer_data UNATTENDED=1
 
-if [ -f $SONAR_UPDATER_CONFIG ] && [ -f "$MOONRAKER_CONFIG" ] ; then
-    cat $SONAR_UPDATER_CONFIG >> "$MOONRAKER_CONFIG"
-fi
+pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
+
+########################################
+# Build install config file            #
+########################################
+
+touch ./tools/.config
+echo "SONAR_CONFIG_PATH=/home/${BASE_USER}/printer_data/config" >> ./tools/.config
+echo "SONAR_LOG_PATH=/home/${BASE_USER}/printer_data/logs" >> ./tools/.config
+echo "SONAR_MOONRAKER_CONF_PATH=${MOONRAKER_CONFIG}" >> ./tools/.config
+echo "SONAR_UNATTENDED=1" >> ./tools/.config
+
+########################################
+# Run make install                     #
+########################################
+
+make install
+
+########################################
+# popd from Sonar directory            #
+########################################
 
 popd &> /dev/null || exit 1
 
