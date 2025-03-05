@@ -45,7 +45,6 @@ pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
 # Create config file
 {
   echo "SONAR_DATA_PATH=/home/${BASE_USER}/printer_data"
-  echo "SONAR_MOONRAKER_CONF_PATH=${MOONRAKER_CONFIG}"
   echo "SONAR_UNATTENDED=1"
 } > ./tools/.config
 
