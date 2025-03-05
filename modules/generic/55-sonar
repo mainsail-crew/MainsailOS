@@ -19,6 +19,7 @@ source /files/00-config
 
 # General settings
 readonly REPO="https://github.com/mainsail-crew/sonar.git"
+readonly BRANCH="develop"
 readonly DEPS=(git)
 
 ########################################
@@ -32,7 +33,7 @@ apt-get install --yes "${DEPS[@]}"
 ########################################
 
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
-sudo -u "${BASE_USER}" git clone "${REPO}" sonar
+sudo -u "${BASE_USER}" git clone "${REPO}" sonar -b "${BRANCH}"
 popd &> /dev/null || exit 1
 
 ########################################
