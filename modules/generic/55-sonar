@@ -37,32 +37,26 @@ sudo -u "${BASE_USER}" git clone "${REPO}" sonar -b "${BRANCH}"
 popd &> /dev/null || exit 1
 
 ########################################
-# Change into Sonar directory          #
+# Build config and install             #
 ########################################
 
 pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
 
-########################################
-# Build install config file            #
-########################################
+# Create config file
+{
+  echo "SONAR_DATA_PATH=/home/${BASE_USER}/printer_data"
+  echo "SONAR_MOONRAKER_CONF_PATH=${MOONRAKER_CONFIG}"
+  echo "SONAR_UNATTENDED=1"
+} > ./tools/.config
 
-touch ./tools/.config
-echo "SONAR_CONFIG_PATH=/home/${BASE_USER}/printer_data/config" >> ./tools/.config
-echo "SONAR_LOG_PATH=/home/${BASE_USER}/printer_data/logs" >> ./tools/.config
-echo "SONAR_MOONRAKER_CONF_PATH=${MOONRAKER_CONFIG}" >> ./tools/.config
-echo "SONAR_UNATTENDED=1" >> ./tools/.config
-
-########################################
-# Run make install                     #
-########################################
-
+# Run install script
 make install
 
-########################################
-# popd from Sonar directory            #
-########################################
+# Remove config file
+rm ./tools/.config
 
 popd &> /dev/null || exit 1
+
 
 ########################################
 # Enable Service                       #
