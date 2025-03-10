@@ -18,8 +18,8 @@ source /files/00-config
 ########################################
 
 # General settings
-readonly REPO="https://github.com/mainsail-crew/sonar.git"
-readonly BRANCH="develop"
+readonly REPO="https://github.com/meteyou/sonar-dev.git"
+readonly BRANCH="refactor/pynar"
 readonly DEPS=(git)
 
 ########################################
@@ -44,8 +44,10 @@ pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
 
 # Create config file
 {
-  echo "SONAR_DATA_PATH=/home/${BASE_USER}/printer_data"
-  echo "SONAR_UNATTENDED=1"
+  echo "BASE_USER=\"${BASE_USER}\""
+  echo "SONAR_DATA_PATH=\"/home/${BASE_USER}/printer_data\""
+  echo "SONAR_ADD_SONAR_MOONRAKER=\"1\""
+  echo "SONAR_UNATTENDED=\"1\""
 } > ./tools/.config
 
 # Run install script
