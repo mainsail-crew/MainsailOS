@@ -17,3 +17,13 @@
     IMAGE_ENLARGEROOT: 5000
   special_modules:
     - 20-opi-4lts-spi
+
+- name: armbian-orangepi3_lts-bookworm
+  type: armbian
+  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi3_lts_bookworm.img.xz"
+  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi3_lts_bookworm.img.xz.sha256"
+  env:
+    ARCH: arm64
+    DISTRO: armbian
+    IMAGE_ENLARGEROOT: 5000
+  special_modules: []
