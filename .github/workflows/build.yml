@@ -138,8 +138,9 @@ jobs:
         working-directory: ./build
         run: |
           RELEASE_TAG="${{ env.RELEASE_TAG }}"
+          NOW="$(date +"%Y-%m-%d")"
 
-          IMAGE="MainsailOS-${{ matrix.name }}-${RELEASE_TAG}.img"
+          IMAGE="${NOW}-MainsailOS-${{ matrix.name }}-${RELEASE_TAG}.img"
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
           mv output.img "${IMAGE}"
