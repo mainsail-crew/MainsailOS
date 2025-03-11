@@ -1,3 +1,12 @@
+- name: raspberry_pi-armhf-bookworm
+  type: raspberry
+  img_download_url: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent"
+  img_hash_url: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.sha256"
+  env:
+    ARCH: armhf
+    IMAGE_ENLARGEROOT: 5000
+  special_modules: []
+
 - name: raspberry_pi-arm64-bookworm
   type: raspberry
   img_download_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.torrent"
