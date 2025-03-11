@@ -26,7 +26,8 @@
     ARCH: arm64
     DISTRO: armbian
     IMAGE_ENLARGEROOT: 5000
-  special_modules: []
+  special_modules:
+    - 20-opi-3lts-spi
 
 - name: armbian-orangepi_zero2-bookworm
   type: armbian
