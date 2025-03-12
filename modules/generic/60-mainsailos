@@ -17,6 +17,9 @@ source /files/00-config
 # Configuration                        #
 ########################################
 
+# Use DIST_NAME in lowercase as the new hostname
+NEW_HOSTNAME=${DIST_NAME,,}
+
 function get_parent {
     grep VERSION_CODENAME /etc/os-release | cut -d '=' -f2
 }
@@ -39,6 +42,20 @@ if [[ -f "/etc/armbian-release" || -f "/etc/orangepi-release" ]]; then
     echo "Applying release file workaround"
     ln -sf /etc/"${DIST_NAME,,}"-release /etc/aaaa-release
 fi
+
+########################################
+# Set Hostname to DIST_NAME            #
+########################################
+
+if [ -f /etc/hostname ]; then
+    read -r ORG_HOSTNAME < /etc/hostname
+    ORG_HOSTNAME=${ORG_HOSTNAME//$'\n'/}
+else
+    ORG_HOSTNAME=raspberrypi
+fi
+
+echo "$NEW_HOSTNAME" > /etc/hostname
+sed -i -e "s@${ORG_HOSTNAME}@$NEW_HOSTNAME@g" /etc/hosts
 
 ########################################
 # Install dependencies for other       #
