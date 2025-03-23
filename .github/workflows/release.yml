@@ -224,19 +224,19 @@ jobs:
         working-directory: ./scripts
         run: ls -la
 
-#      - name: "🏗 Run CustoPiZer"
-#        uses: OctoPrint/CustoPiZer@v1
-#        with:
-#          workspace: "${{ github.workspace }}/build"
-#          scripts:  "${{ github.workspace }}/scripts"
-#          config: "${{ github.workspace }}/config.local"
-#          environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}"}'
+      - name: "🏗 Run CustoPiZer"
+        uses: OctoPrint/CustoPiZer@v1
+        with:
+          workspace: "${{ github.workspace }}/build"
+          scripts:  "${{ github.workspace }}/scripts"
+          config: "${{ github.workspace }}/config.local"
+          environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}"}'
 
-      - name: "🏗 Create fake CustoPiZer"
-        working-directory: ./build
-        run: |
-          echo "Creating fake CustoPiZer build..."
-          mv input.img output.img
+#      - name: "🏗 Create fake CustoPiZer"
+#        working-directory: ./build
+#        run: |
+#          echo "Creating fake CustoPiZer build..."
+#          mv input.img output.img
 
       - name: "✏ Rename image"
         working-directory: ./build
@@ -251,9 +251,9 @@ jobs:
         run: |
           CPU_COUNT="$(nproc)"
           echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
-          # xz -efkvz9T"${CPU_COUNT}" ${{ env.IMAGE }} || true
-          touch ${{ env.IMAGE }}.xz
-          echo "Fake compressed image file" > ${{ env.IMAGE }}.xz
+          xz -efkvz9T"${CPU_COUNT}" ${{ env.IMAGE }} || true
+#          touch ${{ env.IMAGE }}.xz
+#          echo "Fake compressing image" >> ${{ env.IMAGE }}.xz
 
       - name: "🔐 Create hash"
         id: hashes
