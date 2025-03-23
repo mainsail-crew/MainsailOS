@@ -7,64 +7,100 @@ on:
   workflow_dispatch:
     inputs:
       release:
-        description: 'Als Release veröffentlichen'
+        description: 'Publish as Release'
         type: boolean
         default: false
       version:
-        description: 'Release-Version (Format: X.Y.Z)'
+        description: 'Release-Version (Format: X.Y.Z or X.Y.Z-alpha.N)'
         type: string
         required: false
 
 jobs:
-  prepare:
+  prepare-release:
+    if: ${{ github.event.inputs.release == 'true' }}
     runs-on: ubuntu-latest
     outputs:
-      release_tag: ${{ steps.set_release_tag.outputs.release_tag }}
-      is_release: ${{ steps.check_release.outputs.is_release }}
-    steps:
-      - name: "📥 Checkout"
-        uses: actions/checkout@v4
-
-      - name: "🔎 Check if this is a release build"
-        id: check_release
-        run: |
-          if [[ "${{ github.event.inputs.release }}" == "true" && "${{ github.event.inputs.version }}" != "" ]]; then
-            echo "is_release=true" >> $GITHUB_OUTPUT
-          else
-            echo "is_release=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: "Set release tag"
-        id: set_release_tag
-        run: |
-          if [[ "${{ steps.check_release.outputs.is_release }}" == "true" ]]; then
-            echo "release_tag=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
-          else
-            RELEASE_TAG=$(cat VERSION | tr -d '\n')
-            echo "release_tag=${RELEASE_TAG}" >> $GITHUB_OUTPUT
-          fi
-
-      - name: "Create tag if release build"
-        if: steps.check_release.outputs.is_release == 'true'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git tag -a ${{ github.event.inputs.version }} -m "Release v${{ github.event.inputs.version }}"
-          git push origin ${{ github.event.inputs.version }}
-          echo "${{ github.event.inputs.version }}" > VERSION
-          git add VERSION
-          git commit -m "chore: bump version to ${{ github.event.inputs.version }}"
-          git push
-
-  generate-matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.create-matrix.outputs.matrix }}
+      release_id: ${{ steps.create_release.outputs.id }}
     steps:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
         with:
           ref: "develop"
+          fetch-depth: 0
+
+      - name: "🔎 Check release number"
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
+            echo "::error::Version '$VERSION' is not SemVer compliant. Required format: X.Y.Z or X.Y.Z-alpha.N"
+            exit 1
+          fi
+
+          echo "Version '$VERSION' is SemVer compliant."
+
+      - name: "Get latest tag"
+        id: latest_tag
+        shell: bash
+        run: |
+          echo "TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
+
+      - name: "Setup git config"
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: "Update VERSION file"
+        run: |
+          echo "${{ github.event.inputs.version }}" > VERSION
+          git add VERSION
+          git commit -m "chore: bump version to v${{ github.event.inputs.version }}"
+          git push
+
+      - name: "Push tag"
+        run: |
+          git tag -a ${{ github.event.inputs.version }} -m "${{ github.event.inputs.version }}"
+          git push origin ${{ github.event.inputs.version }}
+
+      - name: "Generate a changelog"
+        uses: orhun/git-cliff-action@v4
+        id: changelog
+        with:
+          config: cliff-release.toml
+          args: ${{ steps.latest_tag.outputs.TAG_NAME }}..HEAD
+
+      - name: "Create Release"
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          name: MainsailOS ${{ github.event.inputs.version }}
+          body: ${{ steps.changelog.outputs.content }}
+          draft: true
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.create-matrix.outputs.matrix }}
+      branch: ${{ steps.select_branch.outputs.branch }}
+    steps:
+      - name: "Select build branch"
+        id: select_branch
+        run: |
+          if [[ "${{ github.input.release }}" == "true" ]]; then
+            echo "Using develop branch"
+            echo "branch=develop" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "Using current branch"
+          echo "branch=${{ github.ref }}" >> $GITHUB_OUTPUT
+
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.select_branch.outputs.branch }}
 
       - name: "🛠 Generate matrix from config.yml"
         id: create-matrix
@@ -79,7 +115,15 @@ jobs:
           EOF
 
   build:
-    needs: [prepare, generate-matrix]
+    needs: [ prepare-release, generate-matrix ]
+    # workaround, because prepare-release is not always executed
+    if: |
+      ${{
+          needs.generate-matrix.result == 'success' && (
+              (github.event.inputs.release != 'true' && needs.prepare-release.result == 'skipped') ||
+              (github.event.inputs.release == 'true' && needs.prepare-release.result == 'success')
+          )
+      }}
     runs-on: ubuntu-22.04-arm
     strategy:
       fail-fast: false
@@ -88,11 +132,14 @@ jobs:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
         with:
-          ref: "develop"
+          ref: ${{ needs.generate-matrix.outputs.branch }}
 
       - name: "#️⃣️ Set RELEASE_TAG from VERSION file"
         run: |
           RELEASE_TAG=$(cat VERSION | tr -d '\n')
+          DATE="$(date +"%Y-%m-%d")"
+
+          echo "DATE=${DATE}" >> $GITHUB_ENV
           echo "RELEASE_TAG=${RELEASE_TAG}" >> $GITHUB_ENV
 
       - name: "📁 Create directories"
@@ -177,21 +224,24 @@ jobs:
         working-directory: ./scripts
         run: ls -la
 
-      - name: "🏗 Run CustoPiZer"
-        uses: OctoPrint/CustoPiZer@1.3
-        with:
-          workspace: "${{ github.workspace }}/build"
-          scripts:  "${{ github.workspace }}/scripts"
-          config: "${{ github.workspace }}/config.local"
-          environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}"}'
+#      - name: "🏗 Run CustoPiZer"
+#        uses: OctoPrint/CustoPiZer@v1
+#        with:
+#          workspace: "${{ github.workspace }}/build"
+#          scripts:  "${{ github.workspace }}/scripts"
+#          config: "${{ github.workspace }}/config.local"
+#          environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}"}'
+
+      - name: "🏗 Create fake CustoPiZer"
+        working-directory: ./build
+        run: |
+          echo "Creating fake CustoPiZer build..."
+          mv input.img output.img
 
       - name: "✏ Rename image"
         working-directory: ./build
         run: |
-          RELEASE_TAG="${{ env.RELEASE_TAG }}"
-          NOW="$(date +"%Y-%m-%d")"
-
-          IMAGE="${NOW}-MainsailOS-${{ matrix.name }}-${RELEASE_TAG}.img"
+          IMAGE="${{ env.DATE }}-MainsailOS-${{ matrix.name }}-${{ env.RELEASE_TAG }}.img"
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
           mv output.img "${IMAGE}"
@@ -201,97 +251,166 @@ jobs:
         run: |
           CPU_COUNT="$(nproc)"
           echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
-          xz -efkvz9T"${CPU_COUNT}" ${{ env.IMAGE }} || true
+          # xz -efkvz9T"${CPU_COUNT}" ${{ env.IMAGE }} || true
+          touch ${{ env.IMAGE }}.xz
+          echo "Fake compressed image file" > ${{ env.IMAGE }}.xz
 
       - name: "🔐 Create hash"
+        id: hashes
         working-directory: ./build
         run: |
           sha256sum ${{ env.IMAGE }} > ${{ env.IMAGE }}.sha256
-          sha256sum ${{ env.IMAGE }}.xz > ${{ env.IMAGE }}.xz.sha256
+          image_checksum=`cat ${{ env.IMAGE }}.sha256 | awk '{ print $1 }'`
+          echo "image=${image_checksum}" >> $GITHUB_OUTPUT
 
-      - name: "📋 Upload Compressed Image"
+          sha256sum ${{ env.IMAGE }}.xz > ${{ env.IMAGE }}.xz.sha256
+          zip_checksum=`cat ${{ env.IMAGE }}.xz.sha256 | awk '{ print $1 }'`
+          echo "zip=${zip_checksum}" >> $GITHUB_OUTPUT
+
+      - name: "Calculating filesizes"
+        id: filesizes
+        working-directory: ./build
+        run: |
+          image_filesize=`wc -c ${{ env.IMAGE }} | awk '{print $1}'`
+          echo "image=${image_filesize}" >> $GITHUB_OUTPUT
+
+          zip_filesize=`wc -c ${{ env.IMAGE }}.xz | awk '{print $1}'`
+          echo "zip=${zip_filesize}" >> $GITHUB_OUTPUT
+
+      - name: "🔧 Generate RPI JSON file"
+        if: ${{ matrix.rpi_json != null }}
+        run: |
+          python3 - <<'EOF'
+          import json, os
+          from datetime import datetime
+
+          matrix = ${{ toJson(matrix) }}
+
+          rpi_data = matrix['rpi_json'].copy()
+
+          # set name, if it is not set
+          if 'name' not in rpi_data:
+              rpi_data['name'] = "MainsailOS $VERSION$"
+
+          # replace $VERSION$ in name
+          rpi_data['name'] = rpi_data['name'].replace('$VERSION$', "${{ env.RELEASE_TAG }}")
+
+          filename = "${{ env.IMAGE }}.xz"
+          repo = "${{ github.repository_owner }}/${{ github.repository }}"
+          release_tag = "${{ env.RELEASE_TAG }}"
+          rpi_data['url'] = f"https://github.com/{repo}/releases/download/{release_tag}/{filename}"
+          rpi_data['release_date'] = "${{ env.DATE }}"
+          rpi_data['extract_size'] = ${{ steps.filesizes.outputs.image }}
+          rpi_data['image_download_size'] = ${{ steps.filesizes.outputs.zip }}
+          rpi_data['extract_sha256'] = "${{ steps.hashes.outputs.image }}"
+
+          os.makedirs('build', exist_ok=True)
+          json_path = "build/${{ env.IMAGE }}.json"
+          with open(json_path, 'w') as f:
+              json.dump(rpi_data, f, indent=2)
+              print("Generated JSON file for ${{ env.IMAGE }}.json")
+
+          EOF
+
+      - name: "📋 Upload JSON to Artifact"
+        if: ${{ matrix.rpi_json != null && github.event.inputs.release != 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.IMAGE }}.json
+          path: build/${{ env.IMAGE }}.json
+
+      - name: "📋 Upload Compressed Image to Artifact"
+        if: ${{ github.event.inputs.release != 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.IMAGE }}.xz
           path: build/${{ env.IMAGE }}.xz
 
-      - name: "📋 Upload Compressed Image Checksum"
+      - name: "📋 Upload Compressed Image Checksum to Artifact"
+        if: ${{ github.event.inputs.release != 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.IMAGE }}.xz.sha256
           path: build/${{ env.IMAGE }}.xz.sha256
 
-      - name: "📋 Upload Image Checksum"
+      - name: "📋 Upload Image Checksum to Artifact"
+        if: ${{ github.event.inputs.release != 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.IMAGE }}.sha256
           path: build/${{ env.IMAGE }}.sha256
 
-  create-release:
-    needs: [ prepare, build ]
-    if: needs.prepare.outputs.is_release == 'true'
+      - name: "📋 Upload to Release"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ env.RELEASE_TAG }}"
+
+          gh release upload "$TAG" "build/${{ env.IMAGE }}.sha256" --clobber
+          gh release upload "$TAG" "build/${{ env.IMAGE }}.xz" --clobber
+          gh release upload "$TAG" "build/${{ env.IMAGE }}.xz.sha256" --clobber
+
+          if [ -f "build/${{ env.IMAGE }}.json" ]; then
+            gh release upload "$TAG" "build/${{ env.IMAGE }}.json" --clobber
+          fi
+
+  finish-release:
+    needs: [ build ]
+    if: ${{ github.event.inputs.release == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - name: "📥 Checkout"
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: "Generate changelog"
-        id: changelog
-        uses: orhun/git-cliff-action@v2
-        with:
-          config: ./cliff-release.toml
-          args: --tag ${{ needs.prepare.outputs.release_tag }}
-
-      - name: "Create Release"
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ needs.prepare.outputs.release_tag }}
-          name: MainsailOS ${{ needs.prepare.outputs.release_tag }}
-          body: ${{ steps.changelog.outputs.content }}
-          draft: false
-          prerelease: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: "Download all artifacts"
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: "Upload Release Assets"
-        run: |
-          for asset_dir in artifacts/*; do
-            for asset in "$asset_dir"/*; do
-              echo "Uploading: $asset"
-              gh release upload v${{ needs.prepare.outputs.release_tag }} "$asset" --clobber
-            done
-          done
+      - name: "Publish Release"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release edit "${{ github.event.inputs.version }}" --draft=false
 
   update-changelog:
-    needs: [ prepare, create-release ]
-    if: needs.prepare.outputs.is_release == 'true'
+    needs: [ build ]
+    if: ${{ github.event.inputs.release == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
         with:
           ref: "develop"
-          token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: "Generate a changelog"
-        uses: orhun/git-cliff-action@v2
+        uses: orhun/git-cliff-action@v4
         id: git-cliff
         with:
           config: cliff.toml
-          args: --output CHANGELOG.md
+        env:
+          OUTPUT: CHANGELOG.md
+
+      - name: "Setup git config"
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
 
       - name: "Commit updated changelog"
-        uses: stefanzweifel/git-auto-commit-action@v4
+        run: |
+          git add CHANGELOG.md
+          git commit -m "docs(changelog): update changelog"
+          git push
+
+  merge-develop-to-master:
+    needs: [ update-changelog ]
+    if: ${{ github.event.inputs.release == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
         with:
-          commit_message: "docs(changelog): update changelog"
-          file_pattern: CHANGELOG.md
+          ref: "master"
+          fetch-depth: 0
+
+      - name: "FF merge to master"
+        uses: MaximeHeckel/github-action-merge-fast-forward@v1.1.0
+        with:
+          branchtomerge: origin/develop
+          branch: master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
