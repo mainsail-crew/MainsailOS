@@ -1,4 +1,4 @@
-name: "Release"
+name: "BuildTrain and Release"
 
 on:
   push:
@@ -119,6 +119,7 @@ jobs:
     # workaround, because prepare-release is not always executed
     if: |
       ${{
+          always() &&
           needs.generate-matrix.result == 'success' && (
               (github.event.inputs.release != 'true' && needs.prepare-release.result == 'skipped') ||
               (github.event.inputs.release == 'true' && needs.prepare-release.result == 'success')
