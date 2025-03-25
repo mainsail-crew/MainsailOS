@@ -366,6 +366,61 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: gh release edit "${{ github.event.inputs.version }}" --draft=false
 
+  update-rpi-imager:
+    needs: [ build ]
+    if: ${{ github.event.inputs.release == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "📥 Download snipes"
+        uses: robinraju/release-downloader@v1
+        with:
+          tag: ${{ github.event.inputs.version }}
+          fileName: "*.json"
+          out-file-path: "downloads"
+
+      - name: "🔧 Combine JSON"
+        id: json
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const downloadFolder = './downloads/'
+            const fs = require('fs')
+            const os_list = []
+
+            fs.readdirSync(downloadFolder).forEach(file => {
+              const raw = fs.readFileSync('./downloads/' + file, {encoding:'utf8', flag:'r'})
+              try {
+                os_list.push(JSON.parse(raw))
+              } catch (err) {
+                console.log("Error parsing JSON string:", err)
+              }
+            })
+
+            const json = JSON.stringify({os_list})
+            fs.writeFileSync('rpi-imager.json', json)
+
+      - name: "📋 Upload to Release"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ env.RELEASE_TAG }}" "rpi-imager.json" --clobber
+
+      - name: "🔧 Move in seperate dir"
+        if: ${{ github.repository_owner == 'Mainsail-Crew' }}
+        run: |
+          mkdir upload
+          mv rpi-imager.json ./upload
+
+      - name: "📋 Upload to remote server"
+        if: ${{ github.repository_owner == 'Mainsail-Crew' }}
+        uses: SamKirkland/FTP-Deploy-Action@4.3.5
+        with:
+          server: ${{ secrets.OSHOST }}
+          username: ${{ secrets.OSUSER }}
+          password: ${{ secrets.OSPASSWORD }}
+          local-dir: ./upload/
+
   update-changelog:
     needs: [ build ]
     if: ${{ github.event.inputs.release == 'true' }}
