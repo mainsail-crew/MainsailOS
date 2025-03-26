@@ -374,6 +374,7 @@ jobs:
       - name: "📥 Download snipes"
         uses: robinraju/release-downloader@v1
         with:
+          repository: ${{ github.repository }}
           tag: ${{ github.event.inputs.version }}
           fileName: "*.json"
           out-file-path: "downloads"
@@ -414,7 +415,7 @@ jobs:
 
       - name: "📋 Upload to remote server"
         if: ${{ github.repository_owner == 'Mainsail-Crew' }}
-        uses: SamKirkland/FTP-Deploy-Action@4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.OSHOST }}
           username: ${{ secrets.OSUSER }}
