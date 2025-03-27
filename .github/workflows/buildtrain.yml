@@ -367,7 +367,7 @@ jobs:
         run: gh release edit "${{ github.event.inputs.version }}" --draft=false
 
   update-rpi-imager:
-    needs: [ build ]
+    needs: [ finish-release ]
     if: ${{ github.event.inputs.release == 'true' }}
     runs-on: ubuntu-latest
     steps:
@@ -405,7 +405,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release upload "${{ env.RELEASE_TAG }}" "rpi-imager.json" --clobber
+          gh release upload "${{ github.event.inputs.version }}" "rpi-imager.json" --clobber
 
       - name: "🔧 Move in seperate dir"
         if: ${{ github.repository_owner == 'Mainsail-Crew' }}
