@@ -404,6 +404,7 @@ jobs:
       - name: "📋 Upload to Release"
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           gh release upload "${{ github.event.inputs.version }}" "rpi-imager.json" --clobber
 
