@@ -31,7 +31,7 @@
     devices:
       - "pi3-64bit"
       - "pi4-64bit"
-      - "pi5-64bit",
+      - "pi5-64bit"
 
 - name: armbian-orangepi4_lts-bookworm
   type: armbian
