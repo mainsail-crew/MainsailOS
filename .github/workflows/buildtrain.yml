@@ -342,6 +342,7 @@ jobs:
           path: build/${{ env.IMAGE }}.sha256
 
       - name: "📋 Upload to Release"
+        if: ${{ github.event.inputs.release == 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
