@@ -297,7 +297,7 @@ jobs:
           rpi_data['name'] = rpi_data['name'].replace('$VERSION$', "${{ env.RELEASE_TAG }}")
 
           filename = "${{ env.IMAGE }}.xz"
-          repo = "${{ github.repository_owner }}/${{ github.repository }}"
+          repo = "${{ github.repository }}"
           release_tag = "${{ env.RELEASE_TAG }}"
           rpi_data['url'] = f"https://github.com/{repo}/releases/download/{release_tag}/{filename}"
           rpi_data['release_date'] = "${{ env.DATE }}"
