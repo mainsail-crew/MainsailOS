@@ -18,8 +18,8 @@ source /files/00-config
 ########################################
 
 # General settings
-readonly REPO="https://github.com/meteyou/sonar-dev.git"
-readonly BRANCH="refactor/pynar"
+readonly REPO="https://github.com/mainsail-crew/sonar.git"
+readonly BRANCH="main"
 readonly DEPS=(git)
 
 ########################################
