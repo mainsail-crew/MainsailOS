@@ -1,15 +1,8 @@
-name: "BuildTrain and Release"
+name: "Release"
 
 on:
-  push:
-    branches:
-      - "develop"
   workflow_dispatch:
     inputs:
-      release:
-        description: 'Publish as Release'
-        type: boolean
-        default: false
       version:
         description: 'Release-Version (Format: X.Y.Z or X.Y.Z-alpha.N)'
         type: string
@@ -17,7 +10,6 @@ on:
 
 jobs:
   prepare-release:
-    if: ${{ github.event.inputs.release == 'true' }}
     runs-on: ubuntu-latest
     outputs:
       release_id: ${{ steps.create_release.outputs.id }}
@@ -25,7 +17,7 @@ jobs:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
         with:
-          ref: "develop"
+          ref: develop
           fetch-depth: 0
 
       - name: "🔎 Check release number"
@@ -83,24 +75,11 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.create-matrix.outputs.matrix }}
-      branch: ${{ steps.select_branch.outputs.branch }}
     steps:
-      - name: "Select build branch"
-        id: select_branch
-        run: |
-          if [[ "${{ github.input.release }}" == "true" ]]; then
-            echo "Using develop branch"
-            echo "branch=develop" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          echo "Using current branch"
-          echo "branch=${{ github.ref }}" >> $GITHUB_OUTPUT
-
       - name: "📥 Checkout"
         uses: actions/checkout@v4
         with:
-          ref: ${{ steps.select_branch.outputs.branch }}
+          ref: develop
 
       - name: "🛠 Generate matrix from config.yml"
         id: create-matrix
@@ -116,15 +95,6 @@ jobs:
 
   build:
     needs: [ prepare-release, generate-matrix ]
-    # workaround, because prepare-release is not always executed
-    if: |
-      ${{
-          always() &&
-          needs.generate-matrix.result == 'success' && (
-              (github.event.inputs.release != 'true' && needs.prepare-release.result == 'skipped') ||
-              (github.event.inputs.release == 'true' && needs.prepare-release.result == 'success')
-          )
-      }}
     runs-on: ubuntu-22.04-arm
     strategy:
       fail-fast: false
@@ -133,7 +103,7 @@ jobs:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
         with:
-          ref: ${{ needs.generate-matrix.outputs.branch }}
+          ref: develop
 
       - name: "#️⃣️ Set RELEASE_TAG from VERSION file"
         run: |
@@ -233,12 +203,6 @@ jobs:
           config: "${{ github.workspace }}/config.local"
           environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}"}'
 
-#      - name: "🏗 Create fake CustoPiZer"
-#        working-directory: ./build
-#        run: |
-#          echo "Creating fake CustoPiZer build..."
-#          mv input.img output.img
-
       - name: "✏ Rename image"
         working-directory: ./build
         run: |
@@ -253,8 +217,6 @@ jobs:
           CPU_COUNT="$(nproc)"
           echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
           xz -efkvz9T"${CPU_COUNT}" ${{ env.IMAGE }} || true
-#          touch ${{ env.IMAGE }}.xz
-#          echo "Fake compressing image" >> ${{ env.IMAGE }}.xz
 
       - name: "🔐 Create hash"
         id: hashes
@@ -310,23 +272,9 @@ jobs:
           with open(json_path, 'w') as f:
               json.dump(rpi_data, f, indent=2)
               print("Generated JSON file for ${{ env.IMAGE }}.json")
-
           EOF
 
-      - name: "📋 Upload Artifacts"
-        if: ${{ github.event.inputs.release != 'true' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.IMAGE }}-artifacts
-          path: |
-            build/${{ env.IMAGE }}.json
-            build/${{ env.IMAGE }}.xz
-            build/${{ env.IMAGE }}.xz.sha256
-            build/${{ env.IMAGE }}.sha256
-          if-no-files-found: ignore
-
       - name: "📋 Upload to Release"
-        if: ${{ github.event.inputs.release == 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -342,7 +290,6 @@ jobs:
 
   finish-release:
     needs: [ build ]
-    if: ${{ github.event.inputs.release == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: "Publish Release"
@@ -353,7 +300,6 @@ jobs:
 
   update-rpi-imager:
     needs: [ finish-release ]
-    if: ${{ github.event.inputs.release == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: "📥 Download snipes"
@@ -410,13 +356,12 @@ jobs:
 
   update-changelog:
     needs: [ build ]
-    if: ${{ github.event.inputs.release == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
         with:
-          ref: "develop"
+          ref: develop
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
@@ -441,13 +386,12 @@ jobs:
 
   merge-develop-to-master:
     needs: [ update-changelog ]
-    if: ${{ github.event.inputs.release == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
         with:
-          ref: "master"
+          ref: master
           fetch-depth: 0
 
       - name: "FF merge to master"

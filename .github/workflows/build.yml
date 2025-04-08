@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - "develop"
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+    paths:
+      - "modules/**"
+      - ".github/workflows/build.yml"
+      - "config.yml"
   workflow_dispatch:
 
 concurrency:
@@ -16,8 +22,10 @@ jobs:
     outputs:
       matrix: ${{ steps.create-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Generate matrix from config.yml
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
+
+      - name: "🛠 Generate matrix from config.yml"
         id: create-matrix
         run: |
           python3 - <<'EOF'
@@ -42,6 +50,9 @@ jobs:
       - name: "#️⃣️ Set RELEASE_TAG from VERSION file"
         run: |
           RELEASE_TAG=$(cat VERSION | tr -d '\n')
+          DATE="$(date +"%Y-%m-%d")"
+
+          echo "DATE=${DATE}" >> $GITHUB_ENV
           echo "RELEASE_TAG=${RELEASE_TAG}" >> $GITHUB_ENV
 
       - name: "📁 Create directories"
@@ -127,7 +138,7 @@ jobs:
         run: ls -la
 
       - name: "🏗 Run CustoPiZer"
-        uses: meteyou/CustoPiZer-dev@main
+        uses: OctoPrint/CustoPiZer@v1
         with:
           workspace: "${{ github.workspace }}/build"
           scripts:  "${{ github.workspace }}/scripts"
@@ -137,10 +148,7 @@ jobs:
       - name: "✏ Rename image"
         working-directory: ./build
         run: |
-          RELEASE_TAG="${{ env.RELEASE_TAG }}"
-          NOW="$(date +"%Y-%m-%d")"
-
-          IMAGE="${NOW}-MainsailOS-${{ matrix.name }}-${RELEASE_TAG}.img"
+          IMAGE="${{ env.DATE }}-MainsailOS-${{ matrix.name }}-${{ env.RELEASE_TAG }}.img"
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
 
           mv output.img "${IMAGE}"
@@ -158,21 +166,13 @@ jobs:
           sha256sum ${{ env.IMAGE }} > ${{ env.IMAGE }}.sha256
           sha256sum ${{ env.IMAGE }}.xz > ${{ env.IMAGE }}.xz.sha256
 
-      - name: "📋 Upload Compressed Image"
+      - name: "📋 Upload Artifacts"
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.IMAGE }}.xz
-          path: build/${{ env.IMAGE }}.xz
-
-      - name: "📋 Upload Compressed Image Checksum"
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.IMAGE }}.xz.sha256
-          path: build/${{ env.IMAGE }}.xz.sha256
-
-      - name: "📋 Upload Image Checksum"
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.IMAGE }}.sha256
-          path: build/${{ env.IMAGE }}.sha256
+          name: ${{ env.IMAGE }}-artifacts
+          path: |
+            build/${{ env.IMAGE }}.xz
+            build/${{ env.IMAGE }}.xz.sha256
+            build/${{ env.IMAGE }}.sha256
+          if-no-files-found: ignore
 
