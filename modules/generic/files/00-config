@@ -8,7 +8,7 @@ export DIST_NAME=MainsailOS
 
 export PRINTER_DATA_DIRS="printer_data printer_data/config printer_data/comms printer_data/logs printer_data/systemd"
 export MOONRAKER_CONFIG="/home/${BASE_USER}/printer_data/config/moonraker.conf"
-export ARMBIAN_CONFIG_TXT_FILE="/boot/armbianEnv.txt"
+export ARMBIAN_CONFIG_TXT_FILE="$BOOT_PATH/armbianEnv.txt"
 
 create_user_directories() {
     echo "Creating Directories "
@@ -22,7 +22,7 @@ create_user_directories() {
 }
 
 is_raspbian() {
-    if [[ -f /boot/config.txt && -f /etc/rpi-issue ]]; then
+    if [[ -f $BOOT_PATH/config.txt && -f /etc/rpi-issue ]]; then
         echo "1"
     else
         echo "0"

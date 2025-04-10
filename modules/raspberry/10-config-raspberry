@@ -30,14 +30,14 @@ apt-get install --yes "${DEPS[@]}"
 # /boot/config.txt                     #
 ########################################
 
-cat /files/boot-config.txt >> /boot/config.txt
+cat /files/boot-config.txt >> "$BOOT_PATH"/config.txt
 
 ########################################
 # Disable serial console to enable     #
 # Hardware Serial (PL011).             #
 ########################################
 
-sed -i 's/console=serial0,115200 //' /boot/cmdline.txt
+sed -i 's/console=serial0,115200 //' "$BOOT_PATH"/cmdline.txt
 
 ########################################
 # Enable i2c modules                   #

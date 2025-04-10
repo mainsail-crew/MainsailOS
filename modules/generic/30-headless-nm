@@ -25,9 +25,9 @@ apt-get install --yes "${DEPS[@]}"
 # Copy & modify files to /boot         #
 ########################################
 
-cp /files/headless-nm/headless_nm.txt.template /boot/headless_nm.txt.template
-cp /files/headless-nm/WiFi-README.txt /boot/WiFi-README.txt
-sed -i 's|OS_NAME|'"${DIST_NAME}"'|g' /boot/WiFi-README.txt
+cp /files/headless-nm/headless_nm.txt.template "$BOOT_PATH"/headless_nm.txt.template
+cp /files/headless-nm/WiFi-README.txt "$BOOT_PATH"/WiFi-README.txt
+sed -i 's|OS_NAME|'"${DIST_NAME}"'|g' "$BOOT_PATH"/WiFi-README.txt
 
 ########################################
 # Copy & enable service                #
