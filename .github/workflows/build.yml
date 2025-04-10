@@ -138,7 +138,7 @@ jobs:
         run: ls -la
 
       - name: "🏗 Run CustoPiZer"
-        uses: OctoPrint/CustoPiZer@latest
+        uses: OctoPrint/CustoPiZer@v1
         with:
           workspace: "${{ github.workspace }}/build"
           scripts:  "${{ github.workspace }}/scripts"
