@@ -208,7 +208,7 @@ cmdltxt="/boot/cmdline.txt"
 if [[ "$(grep -c "init" "${cmdltxt}")" != "0" ]] && \
 [[ "$(grep -c "systemd.run.*" "${cmdltxt}")" != "0" ]]; then
     echo -e "[${RED}ERROR${NOC}] \
-    ${WHITE}Sdcard resize and firtrun are not finished yet ... [ABORT]${NOC}"
+    ${WHITE}Sdcard resize and firstrun are not finished yet ... [ABORT]${NOC}"
     ## Make sure not failing rc.local
     return 0
 fi
