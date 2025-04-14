@@ -6,6 +6,7 @@
     ARCH: armhf
     IMAGE_ENLARGEROOT: 5000
     MOUNT_PROC: 1
+    MOUNT_SYS: 1
   special_modules: []
   rpi_json:
     name: "MainsailOS $VERSION$ - Raspberry Pi (32-bit)"
@@ -24,6 +25,7 @@
     ARCH: arm64
     IMAGE_ENLARGEROOT: 5000
     MOUNT_PROC: 1
+    MOUNT_SYS: 1
   special_modules: []
   rpi_json:
     name: "MainsailOS $VERSION$ - Raspberry Pi (64-bit)"
@@ -44,6 +46,7 @@
     DISTRO: armbian
     IMAGE_ENLARGEROOT: 5000
     MOUNT_PROC: 1
+    MOUNT_SYS: 1
   special_modules:
     - 20-opi-4lts-spi
   rpi_json:
@@ -62,6 +65,7 @@
     DISTRO: armbian
     IMAGE_ENLARGEROOT: 5000
     MOUNT_PROC: 1
+    MOUNT_SYS: 1
   special_modules:
     - 20-opi-3lts-spi
   rpi_json:
@@ -80,6 +84,7 @@
     DISTRO: armbian
     IMAGE_ENLARGEROOT: 5000
     MOUNT_PROC: 1
+    MOUNT_SYS: 1
   special_modules:
     - 20-opi-zero2
   rpi_json:
