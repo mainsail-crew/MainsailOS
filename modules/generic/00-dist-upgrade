@@ -26,13 +26,13 @@ fi
 # hold linux kernel updates            #
 ########################################
 
-apt-mark hold "${HOLD_PKGS[@]}" > /dev/null 2>&1 || true
+#apt-mark hold "${HOLD_PKGS[@]}" > /dev/null 2>&1 || true
 
 ########################################
 # Execute upgrade                      #
 ########################################
 
-#apt-get -y dist-upgrade
+apt-get -y dist-upgrade
 
 ########################################
 # Cleanup                              #

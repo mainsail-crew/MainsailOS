@@ -17,4 +17,4 @@ source /files/00-config
 # Unhold linux kernel updates          #
 ########################################
 
-apt-mark unhold "${PKGS[@]}" > /dev/null 2>&1 || true
+#apt-mark unhold "${PKGS[@]}" > /dev/null 2>&1 || true
