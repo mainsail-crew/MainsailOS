@@ -24,8 +24,8 @@
 set -euo pipefail
 
 # Global constants
-readonly CMDLINE="$BOOT_PATH$/firmware/cmdline.txt"
-readonly ARMBIANENV="$BOOT_PATH$/armbianEnv.txt"
+readonly CMDLINE="/boot/firmware/cmdline.txt"
+readonly ARMBIANENV="/boot/armbianEnv.txt"
 readonly CONNFILE="/etc/NetworkManager/system-connections/preconfigured.nmconnection"
 readonly CFG80211="/etc/modprobe.d/cfg80211.conf"
 
@@ -34,7 +34,7 @@ DISTRO=""
 UUID=""
 PSK_HASH=""
 KEYMGMT="wpa-psk"
-SETUPFILE="$(find "$BOOT_PATH$" -type f -name "headless_nm.txt" 2>/dev/null || true)"
+SETUPFILE="$(find "/boot" -type f -name "headless_nm.txt" 2>/dev/null || true)"
 REGDOMAIN=""
 
 
