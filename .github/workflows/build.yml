@@ -136,14 +136,12 @@ jobs:
         run: ls -la
 
       - name: "🏗 Run CustoPiZer"
-        #uses: OctoPrint/CustoPiZer@v1
-        uses: meteyou/CustoPiZer-dev@main
+        uses: OctoPrint/CustoPiZer@main
         with:
           workspace: "${{ github.workspace }}/build"
           scripts:  "${{ github.workspace }}/scripts"
           config: "${{ github.workspace }}/config.local"
           environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}"}'
-          custopizer: 'main'
 
       - name: "✏ Rename image"
         working-directory: ./build
