@@ -27,15 +27,14 @@ jobs:
 
       - name: "🛠 Generate matrix from config.yml"
         id: create-matrix
+        shell: python
         run: |
-          python3 - <<'EOF'
           import os, yaml, json
           with open("config.yml", "r") as f:
               config = yaml.safe_load(f)
           matrix = {"include": config}
           with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
               print(f"matrix={json.dumps(matrix)}", file=fh)
-          EOF
 
   build:
     needs: generate-matrix
@@ -119,9 +118,9 @@ jobs:
           fi
 
       - name: "📇 Generate config.local"
+        shell: python
         run: |
-          echo "Generating config.local file..."
-          python3 - <<'EOF'
+          print("Generating config.local file...")
           import os, json
           env_vars = json.loads(os.environ.get("MATRIX_ENV", "{}"))
           with open("config.local", "w") as f:
@@ -129,7 +128,6 @@ jobs:
                   if not key.startswith("EDITBASE_"):
                       key = "EDITBASE_" + key
                   f.write(f"{key}={value}\n")
-          EOF
         env:
           MATRIX_ENV: ${{ toJson(matrix.env) }}
 
