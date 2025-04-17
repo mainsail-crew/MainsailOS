@@ -110,12 +110,12 @@ set_regdomain() {
 
 # MAIN
 main() {
-    if [[ -f "${SETUPFILE}" ]]; then
-        log "Configuration file found in ${SETUPFILE}, continuing"
-    else
+    if [[ ! -f "${SETUPFILE}" ]]; then
         log "Configuration file not found! Nothing to do, exiting"
         exit 0
     fi
+
+    log "Configuration file found in ${SETUPFILE}, continuing"
 
     if [[ -f "${ARMBIANENV}" ]]; then
         DISTRO="armbian"
