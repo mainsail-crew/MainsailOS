@@ -55,6 +55,7 @@ gen_nmconnection() {
 id=preconfigured
 uuid=${UUID}
 type=wifi
+autoconnect=true
 [wifi]
 mode=infrastructure
 ssid=${SSID}
@@ -108,16 +109,6 @@ set_regdomain() {
     esac
 }
 
-enable_wifi() {
-    log "Enabling WiFi functionality"
-
-    if ! nmcli radio wifi on; then
-        log "ERROR: Could not enable WiFi"
-        return 1
-    fi
-    return 0
-}
-
 # MAIN
 main() {
     if [[ ! -f "${SETUPFILE}" ]]; then
@@ -153,8 +144,6 @@ main() {
 
     # NetworkManager only accepts 0600 permissions for configs
     chmod 0600 "${CONNFILE}"
-
-    enable_wifi
 
     # Reload NetworkManager to apply changes, if it is active
     if systemctl is-active --quiet NetworkManager; then
