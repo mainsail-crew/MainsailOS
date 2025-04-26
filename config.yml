@@ -5,7 +5,7 @@
   env:
     ARCH: armhf
     IMAGE_ENLARGEROOT: 6000
-    MOUNT_PROC: 1
+    MOUNT_PROC: 0
     MOUNT_SYS: 0
   special_modules: []
   rpi_json:
@@ -24,7 +24,7 @@
   env:
     ARCH: arm64
     IMAGE_ENLARGEROOT: 6000
-    MOUNT_PROC: 1
+    MOUNT_PROC: 0
     MOUNT_SYS: 0
   special_modules: []
   rpi_json:
@@ -45,7 +45,7 @@
     ARCH: arm64
     DISTRO: armbian
     IMAGE_ENLARGEROOT: 5000
-    MOUNT_PROC: 1
+    MOUNT_PROC: 0
     MOUNT_SYS: 0
   special_modules:
     - 20-opi-4lts-spi
@@ -64,7 +64,7 @@
     ARCH: arm64
     DISTRO: armbian
     IMAGE_ENLARGEROOT: 5000
-    MOUNT_PROC: 1
+    MOUNT_PROC: 0
     MOUNT_SYS: 0
   special_modules:
     - 20-opi-3lts-spi
@@ -83,7 +83,7 @@
     ARCH: arm64
     DISTRO: armbian
     IMAGE_ENLARGEROOT: 5000
-    MOUNT_PROC: 1
+    MOUNT_PROC: 0
     MOUNT_SYS: 0
   special_modules:
     - 20-opi-zero2
