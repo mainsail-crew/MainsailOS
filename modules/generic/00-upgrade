@@ -26,7 +26,7 @@ fi
 # Execute upgrade                      #
 ########################################
 
-apt-get -y dist-upgrade
+apt-get -y upgrade
 
 ########################################
 # Cleanup                              #
