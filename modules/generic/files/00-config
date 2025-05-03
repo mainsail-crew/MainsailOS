@@ -7,7 +7,7 @@ export HOLD_PKGS=(
     "linux-image-*"
     "linux-kbuild-*"
     "armbian-firmware"
-    "initramfs-toos*"
+    "raspberrypi-sys-mods"
     "raspi-firmware"
     "rpi-eeprom"
 )
