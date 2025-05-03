@@ -1,7 +1,16 @@
 #!/bin/bash
 
 # list from all packages which should be hold during the upgrade process
-export HOLD_PKGS=( "linux-image-*" "linux-headers-*" "linux-kbuild-*" "armbian-firmware" "raspi-firmware" "linux-dtb-*" "rpi-eeprom" )
+export HOLD_PKGS=(
+    "linux-dtb-*"
+    "linux-headers-*"
+    "linux-image-*"
+    "linux-kbuild-*"
+    "armbian-firmware"
+    "initramfs-toos*"
+    "raspi-firmware"
+    "rpi-eeprom"
+)
 
 export BASE_USER=pi
 export DIST_NAME=MainsailOS
