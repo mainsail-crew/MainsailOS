@@ -20,7 +20,7 @@ source /common.sh
 install_cleanup_trap
 
 
-echo_green "Installing sonar ..."
+echo_green "Installing KIAUH ..."
 
 ## Step 1: Force apt update
 apt-get update --allow-releaseinfo-change

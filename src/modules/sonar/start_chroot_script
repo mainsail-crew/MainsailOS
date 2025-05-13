@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
-#### Sonar - A WiFi Keepalive daemon
-####
-#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
-#### Copyright 2022
-#### https://github.com/mainsail-crew/sonar
-####
+#### Sonar
 #### This File is distributed under GPLv3
 ####
 
@@ -18,9 +13,15 @@ set -Ee
 source /common.sh
 install_cleanup_trap
 
+mkdir -p /tmp
+chmod 1777 /tmp
+
 # Module only Variables
-SR_BUILD_INSTALL_SH="/home/${BASE_USER}/sonar/tools/install.sh"
+#SR_BUILD_INSTALL_SH="/home/pi/sonar/tools/install.sh"
 SR_BUILD_PACKAGE_FILE="/tmp/sr_packages.lst"
+#SONAR_CONFIG_PATH=/etc/sonar
+#SONAR_LOG_PATH=/var/log/sonar
+#SONAR_SYSTEMD_PATH=/etc/systemd/system
 
 echo_green "Installing sonar ..."
 
@@ -36,24 +37,13 @@ pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 echo_green "Clone sonar repository ..."
 gitclone SONAR_REPO sonar
 
-## Step 3: grep PKGLIST from install.sh for dependencies
-echo_green "Generating packages file ..."
-grep "PKGLIST=" "${SR_BUILD_INSTALL_SH}" >> "${SR_BUILD_PACKAGE_FILE}"
-
-## Step 4: Rename PKGLIST to Module usable Var
-echo_green "Rename variable PKGLIST to SONAR_DEPS ..."
-sed -i 's/PKGLIST/SONAR_DEPS/g' "${SR_BUILD_PACKAGE_FILE}"
-
-## Step 5: Source SR_package.lst file
-# shellcheck disable=SC1090
-# Shellcheck has to be disabled here,
-# because it is an dynamic generated file and not checkable
-. "${SR_BUILD_PACKAGE_FILE}"
+## Step 3-5: Set SONAR_DEPS manually (bypass dynamic detection)
+echo_green "Manually defining SONAR_DEPS ..."
+SONAR_DEPS="network-manager wireless-tools iw ethtool curl net-tools"
 
 ## Step 6: Install packages
 echo_green "Install sonar dependencies ..."
 # shellcheck disable=SC2086
-# disabled because we need 'wordsplitting'
 check_install_pkgs ${SONAR_DEPS}
 
 ## Step 7: Move to sonar as working directory
@@ -61,7 +51,35 @@ pushd "/home/${BASE_USER}/sonar" &> /dev/null || exit 1
 
 ## Step 8: Run sonar install routine
 echo_green "Launch sonar install routine ..."
-make install
+ls -la /home/"${BASE_USER}"/sonar
+cat /home/"${BASE_USER}"/sonar/tools/install.sh || echo ">> install.sh introuvable"
+make install || { echo_red "Sonar install failed"; exit 1; }
+
+## >>> MODIFICATIONS : Script wifi_checker.py + service <<<
+echo_green "Copie du script wifi_checker.py ..."
+cp /home/"${BASE_USER}"/wifi_checker.py /usr/local/bin/
+chmod +x /usr/local/bin/wifi_checker.py
+
+echo_green "Création du service wifi-checker ..."
+cat <<EOF > /etc/systemd/system/wifi-checker.service
+[Unit]
+Description=WiFi Checker Script
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/wifi_checker.py
+Restart=always
+User=${BASE_USER}
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reexec
+systemctl daemon-reload
+systemctl enable wifi-checker.service
+systemctl start wifi-checker.service
+## <<< FIN DES MODIFICATIONS <<<
 
 ## Step 9: Leave sonar
 popd &> /dev/null || exit 1

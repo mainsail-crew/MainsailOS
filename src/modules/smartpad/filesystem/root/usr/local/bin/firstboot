@@ -12,22 +12,26 @@ set -e
 
 # Debug ...
 # set -x
+echo "Démarrage du script firstboot..."
 
 DIALOGRC=/.firstboot
 export DIALOGRC
 DIALOG="$(which dialog)"
 DIALOG=("${DIALOG}" --backtitle "YumiOS for Smartpad")
 RESOLUTION=(20 60)
+#RESOLUTION=(30 60)
 
 #change active tty
 chvt 2
 
 if [[ "$(systemctl is-active KlipperScreen.service)" = "active" ]]; then
+    echo "Le service KlipperScreen est actif, il sera arrêté pour le premier démarrage."
     systemctl stop KlipperScreen.service &>/dev/null
 fi
 
 welcome_msg() {
     cat << EOF
+
 Hello dear YUMI SmartPad One user,
 Please be patient, we have to prepare your first start of your Smartpad!
 
@@ -42,6 +46,7 @@ EOF
 
 reboot_msg() {
     cat << EOF
+
 Your device will be restarted in 5 seconds...
 
 Thank you for being patient and have fun with your new
@@ -59,13 +64,48 @@ enable_ks() {
 }
 
 disable_firstboot() {
+    if systemctl list-unit-files | grep -q firstboot; then
+    systemctl disable firstboot.service
+    rm -f /etc/systemd/system/firstboot.service
+    else
+        echo "Le service firstboot n'a pas été trouvé pour la suppression."
+    fi
     systemctl --quiet disable firstboot.service &>/dev/null
     rm -f /etc/systemd/system/firstboot.service &>/dev/null
+
 }
+
+make_mcu_linux() {
+
+    #echo_green "Install klipper's linux_host_mcu ..."
+    #echo "Copying config ..."
+    cp -v "/home/pi/yumi-config/mcu_linux/smart-pi-one/linux_mcu.kconfig" "/home/pi/klipper/.config"
+    cd "/home/pi/klipper"
+    #echo "Compile linux_mcu ..."
+    #sudo -u "${BASE_USER}" make -j"$(nproc)"
+    #echo "Install linux_mcu ..."
+    sudo service klipper stop
+    make flash
+    sudo service klipper start
+    sudo usermod -a -G tty pi
+    #echo "Cleanup ..."
+    make clean
+    make distclean
+    #echo "Copy service file ..."
+    cp -v "/home/pi/klipper/scripts/klipper-mcu.service" "/etc/systemd/system"
+    #echo "Enable klipper-mcu.service ..."
+    systemctl_if_exists enable klipper-mcu.service
+    #echo_green "Install klipper's linux_host_mcu ... [DONE]"
+}
+#police plus grande avec des caractères deux fois plus hauts que la police standard
+setfont /usr/share/consolefonts/Lat15-TerminusBold20x10.psf.gz
+
 
 # Welcome msg
 "${DIALOG[@]}" --clear --title "Firstboot preperation" \
     --no-cancel --no-ok --pause "$(welcome_msg)" "${RESOLUTION[@]}" 15
+
+setfont /usr/share/consolefonts/Lat15-TerminusBold20x10.psf.gz
 
 # Init gauge
 sleep 1 | "${DIALOG[@]}" --clear --gauge "Firstboot preperation ..." "${RESOLUTION[@]}" 0
@@ -74,17 +114,32 @@ if [[ -f /boot/armbianEnv.txt ]]; then
     "${DIALOG[@]}" --clear --gauge "Firstboot preperation ..." "${RESOLUTION[@]}" 10
 fi
 
+setfont /usr/share/consolefonts/Lat15-TerminusBold20x10.psf.gz
+
 # Update initramfs
 gen_initramfs | "${DIALOG[@]}" --clear --gauge "Generate Initial RAM filesystem ..." "${RESOLUTION[@]}" 20
+
+setfont /usr/share/consolefonts/Lat15-TerminusBold20x10.psf.gz
 
 # enable KlipperScreen
 enable_ks | "${DIALOG[@]}" --clear --gauge "Enable KLipperScreen ..." "${RESOLUTION[@]}" 80
 
+setfont /usr/share/consolefonts/Lat15-TerminusBold20x10.psf.gz
+
+#make mcu linux
+#make_mcu_linux | "${DIALOG[@]}" --clear --gauge "Make MCU Linux ..." "${RESOLUTION[@]}" 80
+
+setfont /usr/share/consolefonts/Lat15-TerminusBold20x10.psf.gz
+
 # disable firstboot service
 disable_firstboot | "${DIALOG[@]}" --clear --gauge "Disable firstboot service ..." "${RESOLUTION[@]}" 90
 
+setfont /usr/share/consolefonts/Lat15-TerminusBold20x10.psf.gz
+
 # Show fake finish
 sleep 2 | "${DIALOG[@]}" --clear --gauge "Finalize Firstboot ..." "${RESOLUTION[@]}" 100
+
+setfont /usr/share/consolefonts/Lat15-TerminusBold20x10.psf.gz
 
 # Show reboot screen
 "${DIALOG[@]}" --clear --title "Firstboot preperation" \

@@ -8,7 +8,7 @@ inputs:
   custompios-repository:
     description: "Repository for CustomPiOS"
     required: false
-    default: "guysoft/CustomPiOS"
+    default: "Maxime3d77/CustomPiOS-Yumi" #"guysoft/CustomPiOS"
   custompios-ref:
     description: "Branch / Tag / SHA to checkout CustomPiOS"
     required: false
@@ -26,14 +26,27 @@ runs:
   steps:
     - name: Install Dependencies
       shell: bash
-      run: sudo apt update; sudo apt install --yes aria2 coreutils jq p7zip-full qemu-user-static zip
+      run: sudo apt update; sudo apt install --yes aria2 coreutils jq p7zip-full qemu-user-static zip; echo "install dependencies"
 
-    - name: Checkout CustomPiOS
+    #- name: Checkout CustomPiOS
+    #  uses: actions/checkout@v4
+    #  with:
+    #    repository: ${{ inputs.custompios-repository }}
+    #    ref: ${{ inputs.custompios-ref }}
+    #    path: CustomPiOS
+
+    
+    - name: Checkout CustomPiOS (Forked version)
       uses: actions/checkout@v4
       with:
-        repository: ${{ inputs.custompios-repository }}
+        repository: "Maxime3d77/CustomPiOS-Yumi"
         ref: ${{ inputs.custompios-ref }}
         path: CustomPiOS
+
+        
+    - name: Create Image Directory
+      shell: bash
+      run: mkdir -p repository/src/image
 
     - name: Read board config
       id: config

@@ -22,6 +22,15 @@ set -Ee
 source /common.sh
 install_cleanup_trap
 
+echo_green "Lock kernel and header ..."
+if dpkg -l | grep -q "linux-image-6.6.75-current-sunxi"; then
+    sudo apt remove --purge --yes linux-image-6.6.75-current-sunxi linux-headers-6.6.75-current-sunxi
+fi
+uname -r
+sudo apt-mark hold linux-image-current-sunxi
+sudo apt-mark hold linux-headers-current-sunxi
+echo_green "Lock kernel and header ...[DONE]"
+
 
 echo_green "Running 'udev' fix ..."
 

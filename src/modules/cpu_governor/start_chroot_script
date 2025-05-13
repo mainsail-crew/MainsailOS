@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+#### Smartpad Specific Tweaks for armbian images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck enable=require-variable-braces
+# Source error handling, leave this in place
+#set -Ee
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+echo_green "Fixing CPU governor to userspace and setting frequency to 912 MHz..."
+
+# Script to set up CPU governor to userspace and fix CPU freq at 912MHz
+cat << EOF > /usr/local/bin/set_cpu_freq.sh
+#!/bin/bash
+# Set CPU governor to userspace and frequency to 912MHz
+for CPU in /sys/devices/system/cpu/cpu*/cpufreq; do
+    echo userspace > \$CPU/scaling_governor
+    echo 912000 > \$CPU/scaling_setspeed
+done
+
+# Disable the service after first run
+systemctl disable set-cpu-freq.service
+EOF
+
+chmod +x /usr/local/bin/set_cpu_freq.sh
+
+# Create a systemd service to run the script at startup
+cat << EOF > /etc/systemd/system/set-cpu-freq.service
+[Unit]
+Description=Fix CPU frequency at 912MHz using userspace governor
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/sleep 120
+ExecStart=/usr/local/bin/set_cpu_freq.sh
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Reload systemd to recognize the new service
+systemctl daemon-reexec
+systemctl daemon-reload
+
+# Enable the service to run at startup
+systemctl enable set-cpu-freq.service
+
+# Start the service immediately for testing
+systemctl start set-cpu-freq.service
+
+# Check the status of the service
+systemctl status set-cpu-freq.service
+
+# Create a cron job to ensure frequency remains fixed
+cat << EOF > /etc/cron.d/cpu_freq_fix
+*/5 * * * * root for CPU in /sys/devices/system/cpu/cpu*/cpufreq; do echo userspace > \$CPU/scaling_governor; echo 912000 > \$CPU/scaling_setspeed; done
+EOF
+
+echo "Setup complete. CPU frequency fixed to 912 MHz and maintained via cron."
+
+echo_green "Set CPU frequency fixed to 912 MHz...(DONE)"
+
+

@@ -27,6 +27,14 @@ is_board_type() {
     fi
     echo "${board}"
 }
+[[ -n "${BASE_USER}" ]] || BASE_USER="pi"  # Remplacez "pi" par l'utilisateur principal si nécessaire
+#[[ -n "$BASE_USER" ]] || BASE_USER="pi"  # Remplacez "pi" par l'utilisateur principal si nécessaire
+
+if ! command -v git &>/dev/null; then
+    echo "Git n'est pas installé, veuillez l'installer avant de continuer."
+    exit 1
+fi
+
 
 echo_green "Apply SmartPad specific patches..."
 unpack /filesystem/root /
@@ -58,6 +66,14 @@ smartpad_install_theme() {
     fi
     echo_green "Set default theme to ${SMARTPAD_PLYMOUTH_THEME} ..."
     sudo plymouth-set-default-theme "${SMARTPAD_PLYMOUTH_THEME}"
+
+    if [[ -d "${src}" ]]; then
+    echo "Clonage réussi et thème disponible pour installation."
+else
+    echo "Erreur: Thème Plymouth introuvable après clonage."
+    exit 1
+fi
+
 }
 
 pushd "/home/${BASE_USER}" &>/dev/null
@@ -67,27 +83,27 @@ popd &>/dev/null
 
 echo_green "Install Yumi Lab Plymouth theme on SmartPad... [DONE]"
 
-echo_green "Install yumi-config smartpad_generic ..."
-pushd "/home/${BASE_USER}" &>/dev/null
-sudo -u "${BASE_USER}" git clone https://github.com/Yumi-Lab/yumi-config.git
-cd yumi-config
-chmod +x ./install.sh
-./install.sh
-cd ..
-popd &>/dev/null
-echo_green "Install yumi-config smartpad_generic ... [DONE]"
+ echo_green "Install YUMI_SYNC ..."
+ pushd "/home/${BASE_USER}" &>/dev/null
+ sudo -u "${BASE_USER}" git clone https://github.com/Yumi-Lab/YUMI_SYNC.git
+ cd YUMI_SYNC
+ sudo make install
 
-echo_green "Install YUMI_SYNC ..."
-pushd "/home/${BASE_USER}" &>/dev/null
-sudo -u "${BASE_USER}" git clone https://github.com/Yumi-Lab/YUMI_SYNC.git
-cd YUMI_SYNC
-make install
-cd ..
-popd &>/dev/null
-echo_green "Install YUMI_SYNC ... [DONE]"
+if [[ ! -x "$(command -v YUMI_SYNC)" ]]; then
+    echo "Erreur: YUMI_SYNC n’a pas été installé correctement."
+#    exit 1
+fi
+
+ cd ..
+ popd &>/dev/null
+sudo chown -R pi:pi /home/pi/YUMI_SYNC
+sudo chmod -R u+rw /home/pi/YUMI_SYNC
+
+ echo_green "Install YUMI_SYNC ... [DONE]"
 
 echo_green "Install moonraker-yumi-lab ..."
 pushd "/home/${BASE_USER}" &>/dev/null
+unpack /filesystem/home/"${BASE_USER}" /home/"${BASE_USER}" "${BASE_USER}"
 sudo -u "${BASE_USER}" git clone https://github.com/Yumi-Lab/moonraker-yumi-lab.git
 cd moonraker-yumi-lab
 chmod +x ./install.sh
@@ -99,37 +115,24 @@ popd &>/dev/null
 echo_green "Install moonraker-yumi-lab ... [DONE]"
 
 echo_green "Install KlipperScreen preconfiguration..."
-unpack /filesystem/home/"${BASE_USER}" /home/"${BASE_USER}" "${BASE_USER}"
+#unpack /filesystem/home/"${BASE_USER}" /home/"${BASE_USER}" "${BASE_USER}"
 
 echo_green "Disable KlipperScreen for first boot service..."
 systemctl_if_exists disable KlipperScreen.service
 
 echo_green "Enable first boot service..."
+sudo chmod +x /usr/local/bin/firstboot
 systemctl_if_exists enable firstboot.service
 
-
-echo_green "Install klipper's linux_host_mcu ..."
-if [[ -d "/home/${BASE_USER}/yumi-config" ]]; then
-    echo "Copying config ..."
-    cp -v "/home/${BASE_USER}/yumi-config/mcu_linux/smart-pi-one/linux_mcu.kconfig" \
-        "/home/${BASE_USER}/klipper/.config"
-    pushd "/home/${BASE_USER}/klipper" &>/dev/null
-    echo "Compile linux_mcu ..."
-    sudo -u "${BASE_USER}" make -j"$(nproc)"
-    echo "Install linux_mcu ..."
-    sudo -u "${BASE_USER}" make flash
-    echo "Cleanup ..."
-    sudo -u "${BASE_USER}" make clean
-    sudo -u "${BASE_USER}" make distclean
-    echo "Copy service file ..."
-    cp -v "/home/${BASE_USER}/klipper/scripts/klipper-mcu.service" \
-        "/etc/systemd/system"
-    echo "Enable klipper-mcu.service ..."
-    systemctl_if_exists enable klipper-mcu.service
-    echo_green "Install klipper's linux_host_mcu ... [DONE]"
-else
-    echo_red "WARNING! yumi-config repository not found! Abort install..."
-fi
+echo_green "Install yumi-config smartpad_generic ..."
+pushd "/home/${BASE_USER}" &>/dev/null
+sudo -u "${BASE_USER}" git clone https://github.com/Yumi-Lab/yumi-config.git
+cd yumi-config
+chmod +x ./install.sh
+./install.sh
+cd ..
+popd &>/dev/null
+echo_green "Install yumi-config smartpad_generic ... [DONE]"
 
 echo_green "Install YUMI_PLR ..."
 pushd "/home/${BASE_USER}" &>/dev/null
@@ -138,5 +141,83 @@ cd YUMI_PLR
 chmod +x ./install.sh
 ./install.sh
 cd ..
+# Pour YUMI_PLR
+if [[ ! -d "/home/${BASE_USER}/YUMI_PLR" ]]; then
+    echo "Erreur: YUMI_PLR n’a pas été installé correctement."
+    exit 1
+fi
 popd &>/dev/null
 echo_green "Install YUMI_PLR ... [DONE]"
+
+echo_green "ACL printer_data ..."
+sudo chmod 777 -R /home/pi/printer_data/
+echo_green "ACL printer_data ... [DONE]"
+
+echo_green "Cam FIX ..."
+# Ce script détecte dynamiquement la première webcam connectée et crée un lien symbolique /dev/webcam
+
+SCRIPT_PATH="/usr/local/bin/fix-webcam.sh"
+SERVICE_PATH="/etc/systemd/system/fix-webcam.service"
+
+# 1. Créer le script fix-webcam.sh
+cat << 'EOF' | sudo tee ${SCRIPT_PATH} > /dev/null
+#!/bin/bash
+
+# Attendre que le système ait fini de détecter les périphériques
+sleep 3
+
+# Supprimer l'ancien lien symbolique s'il existe
+[ -L /dev/webcam ] && rm -f /dev/webcam
+
+# Trouver le premier device video disponible
+for dev in /dev/video*; do
+    if v4l2-ctl --device="$dev" --all &>/dev/null; then
+        ln -s "$dev" /dev/webcam
+        echo "✅ Webcam trouvée: $dev => /dev/webcam"
+        exit 0
+    fi
+done
+
+echo "❌ Aucune webcam valide trouvée."
+exit 1
+EOF
+
+# Rendre exécutable
+sudo chmod +x ${SCRIPT_PATH}
+
+# 2. Créer le service systemd
+cat << EOF | sudo tee ${SERVICE_PATH} > /dev/null
+[Unit]
+Description=Fix Webcam Symlink
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=${SCRIPT_PATH}
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# 3. Activer le service
+sudo systemctl daemon-reload
+sudo systemctl enable fix-webcam.service
+
+# 4. Message final
+echo "✅ Service fix-webcam installé et activé avec succès."
+echo "Il créera automatiquement /dev/webcam au prochain démarrage."
+echo "Pointe-le dans Crowsnest: device: /dev/webcam"
+echo_green "Cam FIX ... [DONE]"
+
+echo_green "Moonraker services managed ..."
+
+FILE="/home/pi/printer_data/moonraker.asvc"
+SERVICES=("KlipperScreen" "YUMI_SYNC" "crowsnest" "sonar")
+
+for SERVICE in "${SERVICES[@]}"; do
+     grep -qxF "${SERVICE}" "${FILE}" || echo "${SERVICE}" >> "${FILE}"
+done
+cat /home/pi/printer_data/moonraker.asvc
+
+echo_green "Moonraker services managed ... [DONE]"

@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#### Smartpad Specific Tweaks for armbian images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/KwadFan
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck enable=require-variable-braces
+# Source error handling, leave this in place
+set -Ee
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+
+# Install TMC AUTOTUNE for GCODES
+echo_green "Install TMC Autotune..."
+echo_green "Install TMC Autotune git clone..."
+wget -O - https://github.com/Yumi-Lab/klipper_tmc_autotune/raw/main/install_tmc_autotune.sh | bash
+echo_green "Install TMC Autotune launch script..."
+
+#sudo chmod +x install_tmc_autotune.sh
+#sudo bash ./install_tmc_autotune.sh
+echo_green "Install TMC Autotune... [DONE]"
+

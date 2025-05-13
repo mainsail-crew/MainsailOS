@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+#### Smartpad Specific Tweaks for armbian images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/KwadFan
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck enable=require-variable-braces
+# Source error handling, leave this in place
+set -Ee
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+
+#Install USB tool for GCODES
+echo_green "Install USB Mount Scripts..."
+pushd "/home/${BASE_USER}" &>/dev/null
+sudo -u "${BASE_USER}" git clone https://github.com/Maxime3d77/automount-usb-klipper.git
+cd automount-usb-klipper/
+sudo chmod +x CONFIGURE.sh
+sudo ./CONFIGURE.sh
+cd ..
+popd &>/dev/null
+
+sudo chmod 777 -R /home/pi/printer_data
+echo_green "Install USB Mount Scripts... [DONE]"
+

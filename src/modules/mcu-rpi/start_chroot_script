@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+#### Smartpad Specific Tweaks for armbian images
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2023 - till today
+#### https://github.com/KwadFan
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck enable=require-variable-braces
+# Source error handling, leave this in place
+set -Ee
+
+# Source CustomPIOS common.sh
+# shellcheck disable=SC1091
+source /common.sh
+install_cleanup_trap
+
+
+#Install USB tool for GCODES
+echo_green "Install MCU RPI..."
+#make service
+cd /home/pi/klipper/
+sudo cp /home/pi/klipper/scripts/klipper-mcu.service /etc/systemd/system/
+sudo systemctl enable klipper-mcu.service
+
+
+
+# Install new micro-controller code
+echo "Installing micro-controller code to /usr/local/bin/"
+rm -f /usr/local/bin/klipper_mcu
+cp /home/pi/yumi-config/mcu_linux/smart-pi-one//klipper.elf /usr/local/bin/klipper_mcu
+sudo chmod 777 /usr/local/bin/klipper_mcu
+
+
+# Restart (if system install script present)
+if [ -f /etc/init.d/klipper_pru ]; then
+    echo "Attempting host PRU restart..."
+    service klipper_pru restart
+fi
+
+# Restart (if system install script present)
+if [ -f /etc/init.d/klipper_mcu ]; then
+    echo "Attempting host MCU restart..."
+    service klipper_mcu restart
+fi
+
+if [ -f /etc/systemd/system/klipper-mcu.service ]; then
+    echo "Attempting host MCU restart..."
+    systemctl restart klipper-mcu
+fi
+sudo usermod -a -G tty pi
+
+echo_green "Install MCU RPI... [DONE]"
+
