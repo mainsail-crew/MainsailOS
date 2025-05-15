@@ -1,0 +1,45 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Remove autologin                     #
+########################################
+
+if [[ -f "/etc/systemd/system/getty@.service.d/override.conf" ]]; then
+    rm -f /etc/systemd/system/getty@.service.d/override.conf
+fi
+
+########################################
+# Remove autologin via serial          #
+########################################
+
+if [[ -f "/etc/systemd/system/serial-getty@.service.d/override.conf" ]]; then
+    sed -i 's/--autologin root //' /etc/systemd/system/serial-getty@.service.d/override.conf
+fi
+
+########################################
+# Delete root passwd and lock root     #
+########################################
+
+# Delete root passwd
+passwd -d root
+# Lock root
+passwd -l root
+
+########################################
+# Remove passwordless sudo access      #
+########################################
+
+sed -i '/'"${BASE_USER}"' ALL=(ALL:ALL) NOPASSWD:ALL/d' /etc/sudoers

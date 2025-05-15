@@ -1,0 +1,52 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Set DEBIAN_FRONTEND to               #
+# noninteractive                       #
+########################################
+
+if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
+    export DEBIAN_FRONTEND=noninteractive
+fi
+
+########################################
+# hold linux kernel updates            #
+########################################
+
+#apt-mark hold "${HOLD_PKGS[@]}" > /dev/null 2>&1 || true
+
+########################################
+# Execute upgrade                      #
+########################################
+
+apt-get -y upgrade
+
+########################################
+# Cleanup                              #
+########################################
+
+apt-get -y autoremove
+apt-get clean
+
+########################################
+# Add piwheels to global pip resources #
+########################################
+
+if [[ ! -f /etc/pip.conf ]]; then
+    echo "Adding piwheels to pip.conf"
+    echo "[global]" > /etc/pip.conf
+    echo "extra-index-url=https://www.piwheels.org/simple" >> /etc/pip.conf
+fi

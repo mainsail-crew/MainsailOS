@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# Description:
+# This file installs a service based on armbians armbian_firstrun_config
+# The original work is done by the armbian developer's team
+# sources of files can be found here: https://github.com/armbian/build
+
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Configuration                        #
+########################################
+
+FIRSTRUN_FILE="/boot/armbian_first_run.txt.template"
+FIRSTRUN_SCRIPT="/usr/lib/armbian/armbian-firstrun-config"
+NC_PATH="/usr/local/bin/network-configurator"
+DEPS=(net-tools)
+
+apt-get install --yes "${DEPS[@]}"
+
+########################################
+# Remove & disable armbian firstrun    #
+########################################
+
+if [[ -f "${FIRSTRUN_FILE}" ]]; then
+    rm -rf "${FIRSTRUN_FILE}"
+fi
+
+systemctl_if_exists disable armbian-firstrun-config.service
+
+########################################
+# Copy/backup original armbian script  #
+########################################
+
+if [[ -f "${FIRSTRUN_SCRIPT}" ]]; then
+    sudo cp -p "${FIRSTRUN_SCRIPT}" "${NC_PATH}"
+fi
+
+########################################
+# Patch network-configurator           #
+########################################
+
+if [[ -f "${NC_PATH}" ]]; then
+    ### replace any armbian_first_run.txt with network_config.txt
+    sed -i 's|armbian_first_run.txt|network_config.txt|g' "${NC_PATH}"
+    ### replace any FR* Variable name with NC*
+    sed -i 's|FR|NC|g' "${NC_PATH}"
+    ### Rename function
+    sed -i 's|do_firstrun_automated_user_configuration|do_network_configuration|g' "${NC_PATH}"
+    ### Add a patch note
+    sed -i '8 i \\n\# This is a patched version of armbian-firstrun-config for MainsailOS' "${NC_PATH}"
+    sed -i '10 i # Original located at /usr/lib/armbian/armbian-firstrun-config' "${NC_PATH}"
+    sed -i '11 i # Changes made by https:\/\/github.com/mainsail-crew' "${NC_PATH}"
+fi
+
+########################################
+# Copy template file                   #
+########################################
+
+cp /files/network_config.txt.template /boot/network_config.txt.template
+
+########################################
+# Add & Enable network-configurator    #
+########################################
+
+cp /files/network-configurator.service /etc/systemd/system/network-configurator.service
+systemctl_if_exists enable network-configurator.service

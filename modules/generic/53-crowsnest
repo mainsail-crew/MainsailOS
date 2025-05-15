@@ -1,0 +1,69 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Configuration                        #
+########################################
+
+REPO="https://github.com/mainsail-crew/crowsnest.git"
+DEPS=(git)
+
+INSTALL_SCRIPT="/home/${BASE_USER}/crowsnest/tools/libs/pkglist-generic.sh"
+if [[ "$(is_raspbian)" = "1" ]]; then
+    INSTALL_SCRIPT="/home/${BASE_USER}/crowsnest/tools/libs/pkglist-rpi.sh"
+fi
+
+########################################
+# Install System Packages              #
+########################################
+
+apt-get install --yes "${DEPS[@]}"
+
+########################################
+# Clone Repository                     #
+########################################
+
+pushd "/home/${BASE_USER}" &> /dev/null || exit 1
+sudo -u "${BASE_USER}" git clone ${REPO} crowsnest
+popd &> /dev/null || exit 1
+
+########################################
+# Installation Crowsnest Dependencies  #
+########################################
+
+PKGLIST=$(
+    # shellcheck disable=SC1090
+    source "$INSTALL_SCRIPT"
+    echo "$PKGLIST"
+)
+# convert string to array
+read -ra PKGARRAY <<< "$PKGLIST"
+apt-get install --yes "${PKGARRAY[@]}"
+
+########################################
+# Installation Crowsnest               #
+########################################
+
+pushd "/home/${BASE_USER}/crowsnest" &> /dev/null || exit 1
+export CROWSNEST_UNATTENDED=1
+export CROWSNEST_ADD_CROWSNEST_MOONRAKER=1
+make install
+popd &> /dev/null || exit 1
+
+########################################
+# Enable Service                       #
+########################################
+
+systemctl_if_exists enable crowsnest.service

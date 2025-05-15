@@ -1,0 +1,26 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Enable SPI in armbianEnv             #
+########################################
+
+echo "overlays=spi-spidev1" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+
+########################################
+# Enable spi-dev module                #
+########################################
+
+echo "spi-dev" >> "/etc/modules"

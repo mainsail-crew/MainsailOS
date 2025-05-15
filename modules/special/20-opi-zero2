@@ -1,0 +1,25 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Enable SPI, i2c & UART in armbianEnv #
+########################################
+
+for overlay in spi-spidev i2c3 uart5; do
+  echo "overlays=${overlay}" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+done
+
+echo "param_spidev_spi_bus=1" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+echo "param_spidev_spi_cs=1" >> "${ARMBIAN_CONFIG_TXT_FILE}"

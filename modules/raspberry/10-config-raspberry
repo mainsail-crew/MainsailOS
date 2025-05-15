@@ -1,0 +1,77 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Configuration & Install deps         #
+########################################
+
+SWAP_CONF_FILE="/etc/dphys-swapfile"
+SWAP_SIZE="256"
+SWAP_MAX="1024"
+
+DEPS=(i2c-tools)
+
+apt-get install --yes "${DEPS[@]}"
+
+########################################
+# Add boot-config.txt to               #
+# /boot/config.txt                     #
+########################################
+
+cat /files/boot-config.txt >> "$BOOT_PATH"/config.txt
+
+########################################
+# Disable serial console to enable     #
+# Hardware Serial (PL011).             #
+########################################
+
+sed -i 's/console=serial0,115200 //' "$BOOT_PATH"/cmdline.txt
+
+########################################
+# Enable i2c modules                   #
+########################################
+
+if [[ -f /etc/modprobe.d/raspi-blacklist.conf ]]; then
+    sed /etc/modprobe.d/raspi-blacklist.conf -i -e "s/^\(blacklist[[:space:]]*i2c[-_]bcm2708\)/#\1/"
+fi
+
+[[ -f /etc/modules ]] || touch /etc/modules
+# Uncomment i2c_dev if it exists
+sed /etc/modules -i -e "s/^#[[:space:]]*\(i2c[-_]dev\)/\1/"
+# Add if doesn't exist
+if ! grep -q "^i2c[-_]dev" /etc/modules; then
+    printf "i2c-dev\n" >>/etc/modules
+fi
+
+########################################
+# Disable bluetooth and related        #
+# services                             #
+########################################
+
+systemctl disable hciuart.service
+systemctl disable bluetooth.service
+if ! grep "bookworm" /etc/os-release; then
+    systemctl disable bluealsa.service
+fi
+
+########################################
+# Increase swapfile size               #
+########################################
+
+if [[ -f "${PICONFIG_SWAP_CONF_FILE}" ]]; then
+    echo_green "Increasing swap file size to ${SWAP_SIZE} Mb. Limit to ${SWAP_MAX} Mb"
+    sed -i 's/^CONF_SWAPSIZE.*/'CONF_SWAPSIZE="${SWAP_SIZE}"'/' "${SWAP_CONF_FILE}"
+    sed -i 's/^#CONF_MAXSWAP.*/'CONF_MAXSWAP="${SWAP_MAX}"'/' "${SWAP_CONF_FILE}"
+fi

@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# list from all packages which should be hold during the upgrade process
+export HOLD_PKGS=(
+    "linux-dtb-*"
+    "linux-headers-*"
+    "linux-image-*"
+    "linux-kbuild-*"
+    "armbian-firmware"
+    "initramfs-tools"
+    "initramfs-tools-core"
+    "raspberrypi-sys-mods"
+    "raspi-firmware"
+    "rpi-eeprom"
+)
+
+export BASE_USER=pi
+export DIST_NAME=MainsailOS
+
+export PRINTER_DATA_DIRS="printer_data printer_data/config printer_data/comms printer_data/logs printer_data/systemd"
+export MOONRAKER_CONFIG="/home/${BASE_USER}/printer_data/config/moonraker.conf"
+export ARMBIAN_CONFIG_TXT_FILE="$BOOT_PATH/armbianEnv.txt"
+
+create_user_directories() {
+    echo "Creating Directories "
+    for tmp in ${PRINTER_DATA_DIRS}; do
+        if [[ ! -d "/home/${BASE_USER}/${tmp}" ]]; then
+            echo "Creating ${tmp}"
+            mkdir -p "/home/${BASE_USER}/${tmp}"
+            chown -R "${BASE_USER}:${BASE_USER}" "/home/${BASE_USER}/${tmp}"
+        fi
+    done
+}
+
+is_raspbian() {
+    if [[ -f $BOOT_PATH/config.txt && -f /etc/rpi-issue ]]; then
+        echo "1"
+    else
+        echo "0"
+    fi
+}
