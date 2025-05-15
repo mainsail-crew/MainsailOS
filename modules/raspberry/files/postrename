@@ -1,0 +1,292 @@
+#!/bin/bash
+#### Post Rename
+####
+#### Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+#### Copyright 2021
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+
+# shellcheck enable=require-variable-braces
+
+## Error handling
+set -Ee
+
+# Debug
+# set -x
+
+## Set LC_ALL to prevent errors
+export LC_ALL=C
+
+# Colored Output
+RED="\e[31m"
+YEL="\e[33m"
+GRE="\e[32m"
+WHITE="\e[97m"
+NOC="\e[0m"
+
+### Setup
+SERVICES=(moonraker klipper nginx sonar crowsnest)
+SYSTEMD_DIR="/etc/systemd/system"
+DEFAULT_USER="$(grep "1000" /etc/passwd | awk -F ':' '{print $1}')"
+
+### KlipperScreen workaround
+KS_INSTALLED="$(find /home/"${DEFAULT_USER}" -name "KlipperScreen" | wc -l)"
+if [[ "${KS_INSTALLED}" = "1" ]]; then
+    SERVICES+=(KlipperScreen)
+fi
+
+## Helper funcs
+### Mangle services
+stop_services() {
+    for srv in "${SERVICES[@]}"; do
+        if [[ "$(systemctl is-active "${srv}.service")" != "inactive" ]]; then
+            systemctl stop "${srv}.service"
+        fi
+    done
+}
+
+start_services() {
+    for srv in "${SERVICES[@]}"; do
+        systemctl start "${srv}.service"
+    done
+}
+
+### Clean up
+cleanup() {
+    # Cleanup self
+    rm -rf "${0}"
+    # Cleanup rc.local
+    sed -i '/\/postrename/d' /etc/rc.local
+}
+
+### Change nginx root
+change_www_root() {
+    bash -c "
+        sed -i 's|/home/pi/mainsail|/home/${DEFAULT_USER}/mainsail|g' \
+        /etc/nginx/sites-available/mainsail
+    "
+}
+
+### change username in service files
+change_service_user() {
+    ### Filter nginx service first!
+    local -a servicefile
+    servicefile=( "${SERVICES[@]/nginx}" )
+
+    for i in "${servicefile[@]}"; do
+        if [[ -n "${i}" ]]; then
+        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${SYSTEMD_DIR}/${i}.service"
+        fi
+    done
+}
+
+change_env_user() {
+    local env_files env_path
+    env_path="/home/${DEFAULT_USER}/printer_data/systemd"
+    env_files="$(find "${env_path}" -type f -name "*.env" -printf "%f ")"
+    for ef in ${env_files}; do
+        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${env_path}/${ef}"
+    done
+}
+
+relocate_venv() {
+    local -a venvs
+    venvs=(klippy-env moonraker-env)
+
+    ### KlipperScreen workaround
+    if [[ "${KS_INSTALLED}" = "1" ]]; then
+        venvs+=(.KlipperScreen-env)
+    fi
+
+    for venv in "${venvs[@]}"; do
+        # Move venv
+        # delete pycache (*.pyc files)
+        find "/home/${DEFAULT_USER}/${venv}" -name "__pycache__" -type d -exec rm -rf {} +
+
+        # repair shebangs
+        while IFS= read -r file ; do
+            sed -i 's|pi/'"${venv}"'|'"${DEFAULT_USER}"'/'"${venv}"'|g' "${file}"
+        done < <(grep -iR "pi/${venv}" "/home/${DEFAULT_USER}/${venv}"/* | cut -d":" -f1)
+    done
+}
+
+patch_polkit_rules() {
+    local polkit_dir polkit_legacy_dir polkit_usr_dir
+    polkit_legacy_dir="/etc/polkit-1/localauthority/50-local.d"
+    polkit_dir="/etc/polkit-1/rules.d"
+    polkit_usr_dir="/usr/share/polkit-1/rules.d"
+    if [[ -f "${polkit_dir}/moonraker.rules" ]]; then
+        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_dir}/moonraker.rules"
+    fi
+    if [[ -f "${polkit_usr_dir}/moonraker.rules" ]]; then
+        sed -i 's/ "pi"/ \"'"${DEFAULT_USER}"'\"/g' "${polkit_usr_dir}/moonraker.rules"
+    fi
+    if [[ -f "${polkit_legacy_dir}/10-moonraker.pkla" ]]; then
+        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_legacy_dir}/10-moonraker.pkla"
+    fi
+    if [[ -f "${polkit_dir}/KlipperScreen.rules" ]]; then
+        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_dir}/KlipperScreen.rules"
+    fi
+    if [[ -f "${polkit_usr_dir}/KlipperScreen.rules" ]]; then
+        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_usr_dir}/KlipperScreen.rules"
+    fi
+    if [[ -f "${polkit_legacy_dir}/20-klipperscreen.pkla" ]]; then
+        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "${polkit_legacy_dir}/20-klipperscreen.pkla"
+    fi
+}
+
+patch_cn_logpath() {
+    bash -c "
+        sed -i 's|/home/pi/printer_data/logs/crowsnest.log|/home/${DEFAULT_USER}/printer_data/logs/crowsnest.log|g' \
+        /home/${DEFAULT_USER}/printer_data/config/crowsnest.conf
+    "
+}
+
+patch_cn_logrotate() {
+    if [[ -f "/etc/logrotate.d/crowsnest" ]]; then
+        sed -i 's/pi/'"${DEFAULT_USER}"'/g' "/etc/logrotate.d/crowsnest"
+    fi
+}
+
+## Fix broken links
+fix_broken_links() {
+    local -a brokenlinks
+    local path
+    brokenlinks=(crowsnest sonar)
+    path="/usr/local/bin"
+
+    for bl in "${brokenlinks[@]}"; do
+        if [[ -h "${path}/${bl}" ]]; then
+            rm -rf "${path:?}/${bl}"
+        fi
+        find "/home/${DEFAULT_USER}" -type f -iname "${bl}" -print0 | \
+        xargs -0 -I {} ln -s {} "${path}/${bl}"
+    done
+}
+
+fix_timelapse_links() {
+    local config_dir src_dir target_dir
+    config_dir="/home/${DEFAULT_USER}/printer_data/config"
+    src_dir="/home/${DEFAULT_USER}/moonraker-timelapse"
+    target_dir="/home/${DEFAULT_USER}/moonraker/moonraker/components"
+    sudo -u "${DEFAULT_USER}" \
+    ln -sf "${src_dir}/component/timelapse.py" "${target_dir}/timelapse.py"
+    sudo -u "${DEFAULT_USER}" \
+    ln -sf "${src_dir}/klipper_macro/timelapse.cfg" "${config_dir}/timelapse.cfg"
+}
+
+fix_mainsailcfg_links() {
+    local config_dir src_dir target_dir
+    config_dir="/home/${DEFAULT_USER}/printer_data/config"
+    src_dir="/home/${DEFAULT_USER}/mainsail-config"
+    sudo -u "${DEFAULT_USER}" \
+    ln -sf "${src_dir}/mainsail.cfg" "${config_dir}/mainsail.cfg"
+}
+
+# Optional if kiauh module is used
+fix_kiauh_links() {
+    local src_dir target_dir
+    src_dir="/home/${DEFAULT_USER}/kiauh"
+    target_dir="/usr/local/bin"
+    ln -sf "${src_dir}/kiauh.sh" "${target_dir}/kiauh"
+}
+
+fix_cn_links() {
+    local tools_dir
+    tools_dir="/home/${DEFAULT_USER}/crowsnest/tools"
+    sudo -u "${DEFAULT_USER}" \
+    ln -sf "${tools_dir}/libs/pkglist-rpi.sh" "${tools_dir}/pkglist.sh"
+}
+
+main() {
+local cmdltxt
+cmdltxt="/boot/cmdline.txt"
+
+## Make sure init_resize.sh and firstrun.sh are finished
+if [[ "$(grep -c "init" "${cmdltxt}")" != "0" ]] && \
+[[ "$(grep -c "systemd.run.*" "${cmdltxt}")" != "0" ]]; then
+    echo -e "[${RED}ERROR${NOC}] \
+    ${WHITE}Sdcard resize and firstrun are not finished yet ... [ABORT]${NOC}"
+    ## Make sure not failing rc.local
+    return 0
+fi
+## Abort if user = pi
+if [[ "${DEFAULT_USER}" == "pi" ]]; then
+    echo -e "[${YEL}SKIPPED${NOC}] \
+    ${WHITE}User is ${DEFAULT_USER}! Nothing to do ...${NOC}"
+    cleanup
+    exit 0
+fi
+
+echo -e "\n\t${WHITE}Trying to fix user rename ...${NOC}"
+## Stop services
+echo -en "${WHITE}Stopping all related services ...${NOC}\r"
+stop_services
+echo -e "${WHITE}Stopping all related services ...${NOC}[${GRE}OK${NOC}]"
+## Change www root
+echo -en "${WHITE}Try changing path of nginx root ...${NOC}\r"
+change_www_root
+echo -e "${WHITE}Try changing path of nginx root ...${NOC}[${GRE}OK${NOC}]"
+## patch service files
+echo -en "${WHITE}Patching service files ...${NOC}\r"
+change_service_user
+echo -e "${WHITE}Patching service files ...${NOC}[${GRE}OK${NOC}]"
+## patch env files
+echo -en "${WHITE}Patching environment files ...${NOC}\r"
+change_env_user
+echo -e "${WHITE}Patching environment files ...${NOC}[${GRE}OK${NOC}]"
+## relocate venvs
+echo -e "${WHITE}Trying to relocate venv's ...${NOC}"
+relocate_venv
+echo -e "${WHITE}Trying to relocate venv's ...${NOC}[${GRE}OK${NOC}]"
+## patch polkit rules
+echo -e "${WHITE}Patching moonraker's polkit rules ...${NOC}"
+patch_polkit_rules
+echo -e "${WHITE}Patching moonraker's polkit rules ...${NOC}[${GRE}OK${NOC}]"
+## patch crownsnest log path
+echo -en "${WHITE}Patching crowsnest logpath ...${NOC}\r"
+patch_cn_logpath
+echo -e "${WHITE}Patching crowsnest logpath ...${NOC}[${GRE}OK${NOC}]"
+## patch crowsnest logrotate
+echo -e "${WHITE}Patching crowsnest logrotate ...${NOC}"
+patch_cn_logrotate
+echo -e "${WHITE}Patching crowsnest logrotate ...${NOC}[${GRE}OK${NOC}]"
+## fix broken links
+echo -en "${WHITE}Fix broken symlinks ...${NOC}\r"
+fix_broken_links
+fix_timelapse_links
+fix_mainsailcfg_links
+# Optional if kiauh module is used
+if [[ -d "/home/${DEFAULT_USER}/kiauh" ]]; then
+    fix_kiauh_links
+fi
+fix_cn_links
+echo -e "${WHITE}Fix broken symlinks ...${NOC}[${GRE}OK${NOC}]"
+## do a short break
+sleep 2
+## reload daemons
+echo -en "${WHITE}Apply service file changes ...${NOC}\r"
+systemctl daemon-reload
+echo -e "${WHITE}Apply service file changes ...${NOC}[${GRE}OK${NOC}]"
+## do a short break
+sleep 2
+## restart services
+echo -e "${WHITE}Trying to restart services ...${NOC}"
+start_services
+## wait 30sec to come up
+echo -e "${WHITE}Waiting 30 seconds for service restart completed ...${NOC}"
+sleep 30
+## Cleanup
+echo -e "${WHITE}Cleanup files, remove postrename ...${NOC}"
+cleanup
+sleep 2
+## reboot system
+echo -e "${WHITE}Reboot system ...${NOC}"
+reboot
+}
+
+### MAIN
+main
+exit 0

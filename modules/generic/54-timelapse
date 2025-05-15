@@ -1,0 +1,74 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Configuration                        #
+########################################
+
+REPO="https://github.com/mainsail-crew/moonraker-timelapse.git"
+SRC_DIR="/home/${BASE_USER}/moonraker-timelapse"
+MOONRAKER_COMPONENTS_PATH="/home/${BASE_USER}/moonraker/moonraker/components"
+PRINTER_CONFIG_PATH="/home/${BASE_USER}/printer_data/config"
+DEPS=(git ffmpeg)
+
+########################################
+# Install dependencies                 #
+########################################
+
+apt-get install --yes "${DEPS[@]}"
+
+########################################
+# Switch to BASE_USER home directory   #
+########################################
+
+pushd /home/"${BASE_USER}" &> /dev/null || exit 1
+
+########################################
+# Clone repository                     #
+########################################
+
+sudo -u "${BASE_USER}" git clone ${REPO} "${SRC_DIR}"
+
+########################################
+# Link component in Moonraker          #
+########################################
+
+if [[ -d "${MOONRAKER_COMPONENTS_PATH}" ]]; then
+    sudo -u "${BASE_USER}" \
+    ln -sf "${SRC_DIR}/component/timelapse.py" "${MOONRAKER_COMPONENTS_PATH}/timelapse.py"
+fi
+
+########################################
+# Link macros to printer_data/config   #
+########################################
+
+if [[ -d "${PRINTER_CONFIG_PATH}" ]]; then
+    sudo -u "${BASE_USER}" \
+    ln -sf "${SRC_DIR}/klipper_macro/timelapse.cfg" "${PRINTER_CONFIG_PATH}/timelapse.cfg"
+fi
+
+########################################
+# Add config to moonraker.conf         #
+########################################
+
+if [[ -f $MOONRAKER_CONFIG ]]; then
+    cat /files/moonraker_timelapse.conf >> "$MOONRAKER_CONFIG"
+fi
+
+########################################
+# Return to last directory             #
+########################################
+
+popd &> /dev/null || exit 1

@@ -1,0 +1,176 @@
+name: "Build Images"
+
+on:
+  push:
+    branches:
+      - "develop"
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+    paths:
+      - "modules/**"
+      - ".github/workflows/build.yml"
+      - "config.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-build-${{ github.ref }}-1
+  cancel-in-progress: true
+
+jobs:
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.create-matrix.outputs.matrix }}
+    steps:
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
+
+      - name: "🛠 Generate matrix from config.yml"
+        id: create-matrix
+        shell: python
+        run: |
+          import os, yaml, json
+          with open("config.yml", "r") as f:
+              config = yaml.safe_load(f)
+          matrix = {"include": config}
+          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+              print(f"matrix={json.dumps(matrix)}", file=fh)
+
+  build:
+    needs: generate-matrix
+    runs-on: ubuntu-22.04-arm
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+    steps:
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
+
+      - name: "#️⃣️ Set RELEASE_TAG from VERSION file"
+        run: |
+          RELEASE_TAG=$(cat VERSION | tr -d '\n')
+          DATE="$(date +"%Y-%m-%d")"
+
+          echo "DATE=${DATE}" >> $GITHUB_ENV
+          echo "RELEASE_TAG=${RELEASE_TAG}" >> $GITHUB_ENV
+
+      - name: "📁 Create directories"
+        run: |
+          mkdir -p build
+          mkdir -p scripts
+
+      - name: "⬇ Download Image via Torrent"
+        if: ${{ endsWith(matrix.img_download_url, '.torrent') }}
+        run: aria2c -d build --seed-time=0 --enable-dht=false "${{ matrix.img_download_url }}"
+
+      - name: "⬇ Download Image via wget"
+        if: ${{ !endsWith(matrix.img_download_url, '.torrent') }}
+        working-directory: ./build
+        run: wget ${{ matrix.img_download_url }}
+
+      - name: "🔐 Verify image"
+        working-directory: ./build
+        run: curl -Ls ${{  matrix.img_hash_url }} | sha256sum -c
+
+      - name: "🛠 Unpack and rename image"
+        working-directory: ./build
+        run: |
+          # search for the image file in the build directory
+          IMG_FILE=$(ls *.img.xz | head -n 1)
+          echo "Found compressed Image file: ${IMG_FILE}"
+
+          # extract the image file
+          xz -d "${IMG_FILE}"
+
+          DECOMPRESSED_FILE="${IMG_FILE%.xz}"
+          echo "Image file: ${DECOMPRESSED_FILE}"
+
+          # rename the image file
+          mv "${DECOMPRESSED_FILE}" input.img
+
+      - name: "📋 Copy generic and type scripts"
+        run: |
+          cp -r modules/generic/* scripts/
+          cp -r modules/${{ matrix.type }}/* scripts/
+          for file in scripts/*.disabled; do
+            if [ -e "$file" ]; then
+              rm "$file"
+            fi
+          done
+
+      - name: "📋 Copy special modules"
+        run: |
+          # Check if special_modules are defined for this configuration
+          if [ -n "${{ toJson(matrix.special_modules) }}" ] && [ "${{ toJson(matrix.special_modules) }}" != "[]" ]; then
+            # copy additional files for special modules
+            if [ -d "modules/special/files" ]; then
+              cp -r modules/special/files/* scripts/files/
+            fi
+
+            # Convert JSON array to bash array
+            MODULES=$(echo '${{ toJson(matrix.special_modules) }}' | jq -r '.[]')
+
+            for module in "${MODULES[@]}"; do
+              cp "modules/special/${module}" scripts/
+            done
+          else
+            echo "No special modules defined for ${{ matrix.name }}."
+          fi
+
+      - name: "📇 Generate config.local"
+        shell: python
+        run: |
+          print("Generating config.local file...")
+          import os, json
+          env_vars = json.loads(os.environ.get("MATRIX_ENV", "{}"))
+          with open("config.local", "w") as f:
+              for key, value in env_vars.items():
+                  if not key.startswith("EDITBASE_"):
+                      key = "EDITBASE_" + key
+                  f.write(f"{key}={value}\n")
+        env:
+          MATRIX_ENV: ${{ toJson(matrix.env) }}
+
+      - name: "🔎 Show scripts"
+        working-directory: ./scripts
+        run: ls -la
+
+      - name: "🏗 Run CustoPiZer"
+        uses: OctoPrint/CustoPiZer@main
+        with:
+          workspace: "${{ github.workspace }}/build"
+          scripts:  "${{ github.workspace }}/scripts"
+          config: "${{ github.workspace }}/config.local"
+          environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}"}'
+
+      - name: "✏ Rename image"
+        working-directory: ./build
+        run: |
+          IMAGE="${{ env.DATE }}-MainsailOS-${{ matrix.name }}-${{ env.RELEASE_TAG }}.img"
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+
+          mv output.img "${IMAGE}"
+
+      - name: "🛠 Compressing Image"
+        working-directory: ./build
+        run: |
+          CPU_COUNT="$(nproc)"
+          echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
+          xz -efkvz9T"${CPU_COUNT}" ${{ env.IMAGE }} || true
+
+      - name: "🔐 Create hash"
+        working-directory: ./build
+        run: |
+          sha256sum ${{ env.IMAGE }} > ${{ env.IMAGE }}.sha256
+          sha256sum ${{ env.IMAGE }}.xz > ${{ env.IMAGE }}.xz.sha256
+
+      - name: "📋 Upload Artifacts"
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.IMAGE }}-artifacts
+          path: |
+            build/${{ env.IMAGE }}.xz
+            build/${{ env.IMAGE }}.xz.sha256
+            build/${{ env.IMAGE }}.sha256
+          if-no-files-found: ignore
+

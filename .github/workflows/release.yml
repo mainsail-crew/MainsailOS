@@ -1,0 +1,400 @@
+name: "Release"
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release-Version (Format: X.Y.Z or X.Y.Z-alpha.N)'
+        type: string
+        required: false
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    outputs:
+      release_id: ${{ steps.create_release.outputs.id }}
+    steps:
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+
+      - name: "🔎 Check release number"
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
+            echo "::error::Version '$VERSION' is not SemVer compliant. Required format: X.Y.Z or X.Y.Z-alpha.N"
+            exit 1
+          fi
+
+          echo "Version '$VERSION' is SemVer compliant."
+
+      - name: "Get latest tag"
+        id: latest_tag
+        shell: bash
+        run: |
+          echo "TAG_NAME=$(git describe --tags $(git rev-list --tags --max-count=1))" >> $GITHUB_OUTPUT
+
+      - name: "Setup git config"
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: "Update VERSION file"
+        run: |
+          echo "${{ github.event.inputs.version }}" > VERSION
+          git add VERSION
+          git commit -m "chore: bump version to v${{ github.event.inputs.version }}"
+          git push
+
+      - name: "Push tag"
+        run: |
+          git tag -a ${{ github.event.inputs.version }} -m "${{ github.event.inputs.version }}"
+          git push origin ${{ github.event.inputs.version }}
+
+      - name: "Generate a changelog"
+        uses: orhun/git-cliff-action@v4
+        id: changelog
+        with:
+          config: cliff-release.toml
+          args: ${{ steps.latest_tag.outputs.TAG_NAME }}..HEAD
+
+      - name: "Create Release"
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          name: MainsailOS ${{ github.event.inputs.version }}
+          body: ${{ steps.changelog.outputs.content }}
+          draft: true
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.create-matrix.outputs.matrix }}
+    steps:
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - name: "🛠 Generate matrix from config.yml"
+        id: create-matrix
+        shell: python
+        run: |
+          import os, yaml, json
+          with open("config.yml", "r") as f:
+              config = yaml.safe_load(f)
+          matrix = {"include": config}
+          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+              print(f"matrix={json.dumps(matrix)}", file=fh)
+
+  build:
+    needs: [ prepare-release, generate-matrix ]
+    runs-on: ubuntu-22.04-arm
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+    steps:
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - name: "#️⃣️ Set RELEASE_TAG from VERSION file"
+        run: |
+          RELEASE_TAG=$(cat VERSION | tr -d '\n')
+          DATE="$(date +"%Y-%m-%d")"
+
+          echo "DATE=${DATE}" >> $GITHUB_ENV
+          echo "RELEASE_TAG=${RELEASE_TAG}" >> $GITHUB_ENV
+
+      - name: "📁 Create directories"
+        run: |
+          mkdir -p build
+          mkdir -p scripts
+
+      - name: "⬇ Download Image via Torrent"
+        if: ${{ endsWith(matrix.img_download_url, '.torrent') }}
+        run: aria2c -d build --seed-time=0 --enable-dht=false "${{ matrix.img_download_url }}"
+
+      - name: "⬇ Download Image via wget"
+        if: ${{ !endsWith(matrix.img_download_url, '.torrent') }}
+        working-directory: ./build
+        run: wget ${{ matrix.img_download_url }}
+
+      - name: "🔐 Verify image"
+        working-directory: ./build
+        run: curl -Ls ${{  matrix.img_hash_url }} | sha256sum -c
+
+      - name: "🛠 Unpack and rename image"
+        working-directory: ./build
+        run: |
+          # search for the image file in the build directory
+          IMG_FILE=$(ls *.img.xz | head -n 1)
+          echo "Found compressed Image file: ${IMG_FILE}"
+
+          # extract the image file
+          xz -d "${IMG_FILE}"
+
+          DECOMPRESSED_FILE="${IMG_FILE%.xz}"
+          echo "Image file: ${DECOMPRESSED_FILE}"
+
+          # rename the image file
+          mv "${DECOMPRESSED_FILE}" input.img
+
+      - name: "📋 Copy generic and type scripts"
+        run: |
+          cp -r modules/generic/* scripts/
+          cp -r modules/${{ matrix.type }}/* scripts/
+          for file in scripts/*.disabled; do
+            if [ -e "$file" ]; then
+              rm "$file"
+            fi
+          done
+
+      - name: "📋 Copy special modules"
+        run: |
+          # Check if special_modules are defined for this configuration
+          if [ -n "${{ toJson(matrix.special_modules) }}" ] && [ "${{ toJson(matrix.special_modules) }}" != "[]" ]; then
+            # copy additional files for special modules
+            if [ -d "modules/special/files" ]; then
+              cp -r modules/special/files/* scripts/files/
+            fi
+
+            # Convert JSON array to bash array
+            MODULES=$(echo '${{ toJson(matrix.special_modules) }}' | jq -r '.[]')
+
+            for module in "${MODULES[@]}"; do
+              cp "modules/special/${module}" scripts/
+            done
+          else
+            echo "No special modules defined for ${{ matrix.name }}."
+          fi
+
+      - name: "📇 Generate config.local"
+        shell: python
+        run: |
+          print("Generating config.local file...")
+          import os, json
+          env_vars = json.loads(os.environ.get("MATRIX_ENV", "{}"))
+          with open("config.local", "w") as f:
+              for key, value in env_vars.items():
+                  if not key.startswith("EDITBASE_"):
+                      key = "EDITBASE_" + key
+                  f.write(f"{key}={value}\n")
+        env:
+          MATRIX_ENV: ${{ toJson(matrix.env) }}
+
+      - name: "🔎 Show scripts"
+        working-directory: ./scripts
+        run: ls -la
+
+      - name: "🏗 Run CustoPiZer"
+        uses: OctoPrint/CustoPiZer@main
+        with:
+          workspace: "${{ github.workspace }}/build"
+          scripts:  "${{ github.workspace }}/scripts"
+          config: "${{ github.workspace }}/config.local"
+          environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}"}'
+
+      - name: "✏ Rename image"
+        working-directory: ./build
+        run: |
+          IMAGE="${{ env.DATE }}-MainsailOS-${{ matrix.name }}-${{ env.RELEASE_TAG }}.img"
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+
+          mv output.img "${IMAGE}"
+
+      - name: "🛠 Compressing Image"
+        working-directory: ./build
+        run: |
+          CPU_COUNT="$(nproc)"
+          echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
+          xz -efkvz9T"${CPU_COUNT}" ${{ env.IMAGE }} || true
+
+      - name: "🔐 Create hash"
+        id: hashes
+        working-directory: ./build
+        run: |
+          sha256sum ${{ env.IMAGE }} > ${{ env.IMAGE }}.sha256
+          image_checksum=`cat ${{ env.IMAGE }}.sha256 | awk '{ print $1 }'`
+          echo "image=${image_checksum}" >> $GITHUB_OUTPUT
+
+          sha256sum ${{ env.IMAGE }}.xz > ${{ env.IMAGE }}.xz.sha256
+          zip_checksum=`cat ${{ env.IMAGE }}.xz.sha256 | awk '{ print $1 }'`
+          echo "zip=${zip_checksum}" >> $GITHUB_OUTPUT
+
+      - name: "Calculating filesizes"
+        id: filesizes
+        working-directory: ./build
+        run: |
+          image_filesize=`wc -c ${{ env.IMAGE }} | awk '{print $1}'`
+          echo "image=${image_filesize}" >> $GITHUB_OUTPUT
+
+          zip_filesize=`wc -c ${{ env.IMAGE }}.xz | awk '{print $1}'`
+          echo "zip=${zip_filesize}" >> $GITHUB_OUTPUT
+
+      - name: "🔧 Generate RPI JSON file"
+        if: ${{ matrix.rpi_json != null }}
+        shell: python
+        run: |
+          import json, os
+          from datetime import datetime
+
+          matrix = ${{ toJson(matrix) }}
+
+          rpi_data = matrix['rpi_json'].copy()
+
+          # set name, if it is not set
+          if 'name' not in rpi_data:
+              rpi_data['name'] = "MainsailOS $VERSION$"
+
+          # replace $VERSION$ in name
+          rpi_data['name'] = rpi_data['name'].replace('$VERSION$', "${{ env.RELEASE_TAG }}")
+
+          filename = "${{ env.IMAGE }}.xz"
+          repo = "${{ github.repository }}"
+          release_tag = "${{ env.RELEASE_TAG }}"
+          rpi_data['url'] = f"https://github.com/{repo}/releases/download/{release_tag}/{filename}"
+          rpi_data['release_date'] = "${{ env.DATE }}"
+          rpi_data['extract_size'] = ${{ steps.filesizes.outputs.image }}
+          rpi_data['image_download_size'] = ${{ steps.filesizes.outputs.zip }}
+          rpi_data['extract_sha256'] = "${{ steps.hashes.outputs.image }}"
+
+          os.makedirs('build', exist_ok=True)
+          json_path = "build/${{ env.IMAGE }}.json"
+          with open(json_path, 'w') as f:
+              json.dump(rpi_data, f, indent=2)
+              print("Generated JSON file for ${{ env.IMAGE }}.json")
+
+      - name: "📋 Upload to Release"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ env.RELEASE_TAG }}"
+
+          gh release upload "$TAG" "build/${{ env.IMAGE }}.sha256" --clobber
+          gh release upload "$TAG" "build/${{ env.IMAGE }}.xz" --clobber
+          gh release upload "$TAG" "build/${{ env.IMAGE }}.xz.sha256" --clobber
+
+          if [ -f "build/${{ env.IMAGE }}.json" ]; then
+            gh release upload "$TAG" "build/${{ env.IMAGE }}.json" --clobber
+          fi
+
+  finish-release:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Publish Release"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release edit "${{ github.event.inputs.version }}" --draft=false
+
+  update-rpi-imager:
+    needs: [ finish-release ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "📥 Download snipes"
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: ${{ github.repository }}
+          tag: ${{ github.event.inputs.version }}
+          fileName: "*.json"
+          out-file-path: "downloads"
+
+      - name: "🔧 Combine JSON"
+        id: json
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const downloadFolder = './downloads/'
+            const fs = require('fs')
+            const os_list = []
+
+            fs.readdirSync(downloadFolder).forEach(file => {
+              const raw = fs.readFileSync('./downloads/' + file, {encoding:'utf8', flag:'r'})
+              try {
+                os_list.push(JSON.parse(raw))
+              } catch (err) {
+                console.log("Error parsing JSON string:", err)
+              }
+            })
+
+            const json = JSON.stringify({os_list})
+            fs.writeFileSync('rpi-imager.json', json)
+
+      - name: "📋 Upload to Release"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release upload "${{ github.event.inputs.version }}" "rpi-imager.json" --clobber
+
+      - name: "🔧 Move in seperate dir"
+        if: ${{ github.repository_owner == 'Mainsail-Crew' }}
+        run: |
+          mkdir upload
+          mv rpi-imager.json ./upload
+
+      - name: "📋 Upload to remote server"
+        if: ${{ github.repository_owner == 'Mainsail-Crew' }}
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.OSHOST }}
+          username: ${{ secrets.OSUSER }}
+          password: ${{ secrets.OSPASSWORD }}
+          local-dir: ./upload/
+
+  update-changelog:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: "Generate a changelog"
+        uses: orhun/git-cliff-action@v4
+        id: git-cliff
+        with:
+          config: cliff.toml
+        env:
+          OUTPUT: CHANGELOG.md
+
+      - name: "Setup git config"
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: "Commit updated changelog"
+        run: |
+          git add CHANGELOG.md
+          git commit -m "docs(changelog): update changelog"
+          git push
+
+  merge-develop-to-master:
+    needs: [ update-changelog ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "📥 Checkout"
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: "FF merge to master"
+        uses: MaximeHeckel/github-action-merge-fast-forward@v1.1.0
+        with:
+          branchtomerge: origin/develop
+          branch: master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

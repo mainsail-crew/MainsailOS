@@ -1,0 +1,29 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Copy motd config                     #
+########################################
+
+cp /files/motd/10-mainsailos /etc/update-motd.d/10-mainsailos
+chmod +x /etc/update-motd.d/10-mainsailos
+
+########################################
+# Patch dynamic motd                   #
+########################################
+
+if [ -f /etc/default/armbian-motd ] ; then
+    sed -i 's/MOTD_DISABLE=""/MOTD_DISABLE="header"/' /etc/default/armbian-motd
+fi

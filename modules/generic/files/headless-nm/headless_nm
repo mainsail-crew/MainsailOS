@@ -1,0 +1,162 @@
+#!/usr/bin/env bash
+# headless_nm
+#
+# Written by Stephan Wendel aka KwadFan <me@stephanwe.de>
+# refactored by Stefan Dej aka meteyou <meteyou@mainsail.xyz>
+#
+# Copyright 2024 - till today
+# https://github.com/mainsail-crew/MainsailOS
+#
+# This file is distributed under GPLv3
+#
+# Description:
+# This is a wrapper for NetworkManager to set up WiFi connections on a headless
+# SBC. It reads the configuration from a file in /boot and recreates the
+# Raspberry 'preconfigured.nmconnection'.
+#
+# Copyright hint:
+# This file contains code snippets from Raspberry raspi-config (see LICENSE) and
+# reuses parts of raspberry-sys-mods.
+#
+# https://github.com/RPi-Distro/raspi-config/blob/bookworm/LICENSE
+# https://github.com/RPi-Distro/raspberrypi-sys-mods/blob/bookworm/usr/lib/raspberrypi-sys-mods/imager_custom
+
+set -euo pipefail
+
+# Global constants
+readonly CMDLINE="/boot/firmware/cmdline.txt"
+readonly ARMBIANENV="/boot/armbianEnv.txt"
+readonly CONNFILE="/etc/NetworkManager/system-connections/preconfigured.nmconnection"
+readonly CFG80211="/etc/modprobe.d/cfg80211.conf"
+
+# Global variables
+DISTRO=""
+UUID=""
+PSK_HASH=""
+KEYMGMT="wpa-psk"
+SETUPFILE="$(find "/boot" -type f -name "headless_nm.txt" 2>/dev/null || true)"
+REGDOMAIN=""
+
+
+# functions
+log() {
+    local msg="$1"
+    logger -t headless_nm "$msg"
+}
+
+gen_uuid() {
+    log "Generating UUID for connection"
+    UUID="$(uuid -v4)"
+}
+
+gen_nmconnection() {
+    cat <<- EOF >"${CONNFILE}"
+[connection]
+id=preconfigured
+uuid=${UUID}
+type=wifi
+autoconnect=true
+[wifi]
+mode=infrastructure
+ssid=${SSID}
+hidden=${HIDDEN,,}
+[ipv4]
+method=auto
+[ipv6]
+addr-gen-mode=default
+method=auto
+[proxy]
+EOF
+}
+
+gen_keymgmt() {
+    if [[ -n "${PASSWORD:-}" ]]; then
+        PSK_HASH="$(gen_psk)"
+        cat <<- EOF >>${CONNFILE}
+[wifi-security]
+key-mgmt=${KEYMGMT}
+psk=${PSK_HASH}
+EOF
+    fi
+}
+
+gen_psk() {
+    wpa_passphrase "${SSID}" "${PASSWORD}" | sed -n '/[[:space:]]psk=/s/.*[[:space:]]psk=//p'
+}
+
+set_regdomain() {
+    log "Set registration domain to '${REGDOMAIN}'"
+
+    # Shameless borrowed from
+    # https://github.com/RPi-Distro/raspi-config/blob/d22643ade3851c42648f3676e577a622c34af49a/raspi-config#L830C3-L832C5
+    if ! ischroot; then
+        iw reg set "${REGDOMAIN}"
+    fi
+
+    case "${DISTRO}" in
+        "rpi")
+            # Shameless borrowed from
+            # https://github.com/RPi-Distro/raspi-config/blob/d22643ade3851c42648f3676e577a622c34af49a/raspi-config#L822C3-L825C15
+            sed -i \
+                -e "s/\s*cfg80211.ieee80211_regdom=\S*//" \
+                -e "s/\(.*\)/\1 cfg80211.ieee80211_regdom=${REGDOMAIN}/" \
+                "${CMDLINE}"
+            ;;
+        "armbian")
+            [[ -f "${CFG80211}" ]] && rm -f "${CFG80211}"
+            echo "options cfg80211 ieee80211_regdom=${REGDOMAIN}" > "${CFG80211}"
+            ;;
+    esac
+}
+
+# MAIN
+main() {
+    if [[ ! -f "${SETUPFILE}" ]]; then
+        log "Configuration file not found! Nothing to do, exiting"
+        exit 0
+    fi
+
+    log "Configuration file found in ${SETUPFILE}, continuing"
+
+    if [[ -f "${ARMBIANENV}" ]]; then
+        DISTRO="armbian"
+    elif [[ -f "${CMDLINE}" ]]; then
+        DISTRO="rpi"
+    else
+        log "ERROR: Could not determine distribution"
+        exit 1
+    fi
+
+    log "Using setup profile: ${DISTRO}"
+
+    # Remove preconfiguration if present
+    [[ -f "${CONNFILE}" ]] && rm -f "${CONNFILE}"
+
+    # Read config file
+    # shellcheck disable=SC1090
+    source "${SETUPFILE}"
+
+    gen_uuid
+    gen_nmconnection
+    gen_keymgmt
+
+    set_regdomain
+
+    # NetworkManager only accepts 0600 permissions for configs
+    chmod 0600 "${CONNFILE}"
+
+    # Reload NetworkManager to apply changes, if it is active
+    if systemctl is-active --quiet NetworkManager; then
+        nmcli connection reload
+    fi
+
+    # Cleanup
+    unset PSK_HASH PASSWORD SSID
+
+    log "Configuration successful written"
+    rm -f "${SETUPFILE}"
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main
+fi

@@ -1,0 +1,68 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+if_group_exists_run() {
+    group=$1
+    if grep -q "${group}" /etc/group; then
+        "${@:2}"
+    fi
+}
+
+########################################
+# Configuration                        #
+########################################
+
+BASE_PASSWORD=armbian
+DEPS=(armbian-config avahi-daemon bash-completion iptables)
+
+apt-get install --yes "${DEPS[@]}"
+
+########################################
+# Create user and enable sudo          #
+########################################
+
+echo "Adding base user ${BASE_USER}"
+password=$(perl -e 'printf("%s\n", crypt($ARGV[0], "password"))' "${BASE_PASSWORD}")
+useradd -m -p "${password}" -s /bin/bash "${BASE_USER}"
+usermod -a -G sudo "${BASE_USER}"
+
+echo "${BASE_USER} ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+
+########################################
+# Create groups and add user           #
+########################################
+
+groupadd gpio
+
+if_group_exists_run i2c usermod -aG i2c "${BASE_USER}"
+usermod -aG video,audio,plugdev,games,netdev,sudo,systemd-journal,gpio "${BASE_USER}"
+
+########################################
+# patch sshd_config                    #
+########################################
+
+sed -i 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+sed -i 's/^X11Forwarding/#X11Forwarding/' /etc/ssh/sshd_config
+sed -i 's/^#MaxAuthTries 6/MaxAuthTries 3/' /etc/ssh/sshd_config
+
+########################################
+# remove .not_logged_in_yet to disable #
+# first boot routine                   #
+########################################
+
+if [[ -f "/root/.not_logged_in_yet" ]]; then
+    rm -f /root/.not_logged_in_yet
+fi
