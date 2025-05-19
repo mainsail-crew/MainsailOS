@@ -2,6 +2,34 @@
 # Changelog
 All notable changes to MainsailOS will be documented in this file.
 
+## [2.0.0](https://github.com/mainsail-crew/MainsailOS/releases/tag/2.0.0) - 2025-05-19
+### Features
+
+- **ci**: Add KlipperScreen module ([#284](https://github.com/mainsail-crew/MainsailOS/pull/284))
+
+### Bug Fixes and Improvements
+
+- **build**: Fix location of boot partition ([#289](https://github.com/mainsail-crew/MainsailOS/pull/289))
+- **build**: Fix log file upload ([#297](https://github.com/mainsail-crew/MainsailOS/pull/297))
+- **ci**: Fix annotations from actions ([#285](https://github.com/mainsail-crew/MainsailOS/pull/285))
+- **moonraker**: PKGLIST variable rename ([#298](https://github.com/mainsail-crew/MainsailOS/pull/298))
+- Add supported sbc to non rpi images ([#277](https://github.com/mainsail-crew/MainsailOS/pull/277))
+- Fix current version number ([#317](https://github.com/mainsail-crew/MainsailOS/pull/317))
+
+### Refactor
+
+- Change version handling ([#296](https://github.com/mainsail-crew/MainsailOS/pull/296))
+- Transition from CustomPiOs to CustoPiZer ([#314](https://github.com/mainsail-crew/MainsailOS/pull/314))
+
+### Other
+
+- **ci**: Skip build on push to master branch ([#280](https://github.com/mainsail-crew/MainsailOS/pull/280))
+- Update urls and base image version ([#288](https://github.com/mainsail-crew/MainsailOS/pull/288))
+- Add piwheels config, if it doesnt exists ([#290](https://github.com/mainsail-crew/MainsailOS/pull/290))
+- Change module order ([#291](https://github.com/mainsail-crew/MainsailOS/pull/291))
+- Switch to armbian for Opi Zero2 ([#292](https://github.com/mainsail-crew/MainsailOS/pull/292))
+- Bump version to v2.0.0
+
 ## [1.3.2](https://github.com/mainsail-crew/MainsailOS/releases/tag/1.3.2) - 2024-01-20
 ### Bug Fixes and Improvements
 
@@ -39,6 +67,10 @@ All notable changes to MainsailOS will be documented in this file.
 ### Other
 
 - **build**: Add new matrix workflow ([#253](https://github.com/mainsail-crew/MainsailOS/pull/253))
+- **release**: Skip the ftp upload, if repo != Mainsail-Crew ([#269](https://github.com/mainsail-crew/MainsailOS/pull/269))
+- **release**: Generate changelog from 0.0.0, if repo != Mainsail-Crew ([#270](https://github.com/mainsail-crew/MainsailOS/pull/270))
+- **release**: Update publish release action ([#268](https://github.com/mainsail-crew/MainsailOS/pull/268))
+- **release**: Fix changelog workflow ([#271](https://github.com/mainsail-crew/MainsailOS/pull/271))
 - Update download urls for armbian & orangepi ([#233](https://github.com/mainsail-crew/MainsailOS/pull/233))
 - Update .gitignore ([#254](https://github.com/mainsail-crew/MainsailOS/pull/254))
 - Refactor build & release workflow to remove external actions ([#264](https://github.com/mainsail-crew/MainsailOS/pull/264))
@@ -162,8 +194,8 @@ All notable changes to MainsailOS will be documented in this file.
 
 - **moonraker.conf**: Add mainsail subscription to announcements ([#115](https://github.com/mainsail-crew/MainsailOS/pull/115))
 - Stop part fan on CANCEL_PRINT ([#103](https://github.com/mainsail-crew/MainsailOS/pull/103))
-- Add sonar by default to image ([#107](https://github.com/mainsail-crew/MainsailOS/pull/107))
 - Add on_error_gcode to mainsail.cfg ([#116](https://github.com/mainsail-crew/MainsailOS/pull/116))
+- Add sonar by default to image ([#107](https://github.com/mainsail-crew/MainsailOS/pull/107))
 - Add on_error_gcode to mainsail.cfg ([#116](https://github.com/mainsail-crew/MainsailOS/pull/116))
 - Add python3-serial CanBoot dependency ([#129](https://github.com/mainsail-crew/MainsailOS/pull/129))
 - Add postrename module ([#128](https://github.com/mainsail-crew/MainsailOS/pull/128))
@@ -263,4 +295,5 @@ All notable changes to MainsailOS will be documented in this file.
 ### Other
 
 - Moves $httpupgrade and upstream servers to common config
+
 
