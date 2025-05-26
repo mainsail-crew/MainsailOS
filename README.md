@@ -7,7 +7,7 @@
 
 # MainsailOS
 
-A [Raspberry Pi OS](https://www.raspberrypi.org/software/) based distribution for 3D Printers. \
+A [Raspberry Pi OS](https://www.raspberrypi.org/software/) based distribution for 3D Printers.  
 It includes everything to get started with Klipper Firmware and Mainsail.
 
 Learn more about:
@@ -43,10 +43,10 @@ Here a list of included and preinstalled Software:
 
 ## also includes
 
--   Enabled Serial Connection by default. \
+-   Enabled Serial Connection by default.  
     Using Hardware UART (PL011) for Boards like BTT SKR Mini E3 V3
--   Preinstalled Dependencies for Klipper's Input Shaper. \
-    You only need to build the [klipper_mcu](https://www.klipper3d.org/RPi_microcontroller.html) and installing the service. \
+-   Preinstalled Dependencies for Klipper's Input Shaper.  
+    You only need to build the [klipper_mcu](https://www.klipper3d.org/RPi_microcontroller.html) and installing the service.  
     See [Klipper documentation](https://www.klipper3d.org/Measuring_Resonances.html) for more information.
 -   Preinstalled python3-serial package, needed for [Katapult (formerly known as CanBoot)](https://github.com/Arksine/katapult)
 
@@ -65,8 +65,8 @@ Here a list of included and preinstalled Software:
 -   sonar
 
 If there is a bug that belongs to the OS itself,
-please look first at the official Forum of Raspberry Pi OS.\
-MainsailOS is based on Raspberry Pi OS and is only slightly modified to\
+please look first at the official Forum of Raspberry Pi OS.  
+MainsailOS is based on Raspberry Pi OS and is only slightly modified to  
 carry the basics to run Klipper on your 3D Printer.
 Most configuration of the single components is up to you.
 We only want to provide an Image as a starting point.
@@ -76,7 +76,7 @@ Please use the issue section for that.
 Please provide as much information as you can.
 
 **Q:** What is the philosophy behind MainsailOS?
-**A:** KISS - Keep it simple and stupid.\
+**A:** KISS - Keep it simple and stupid.  
 We only do a bit of modification. All other documented things of the Raspberry Foundation apply.
 
 And that's our main goal of staying compatible with existing documentation.
@@ -88,11 +88,11 @@ Please take a closer look to [CONTRIBUTING.md](https://github.com/mainsail-crew/
 
 # Build your own / Developing
 
-To prevent you have to deal with an entire build chain setup, \
+To prevent you have to deal with an entire build chain setup,  
 simply fork this repository.
 
-Enable the workflows in your fork and you are good to go. \
+Enable the workflows in your fork and you are good to go.  
 On each push you make, an image is build and uploaded as an artifact.
 
-If you want or need to build locally please visit [CustomPiOS](https://github.com/guysoft/CustomPiOS). \
+If you want or need to build locally please visit [CustomPiOS](https://github.com/guysoft/CustomPiOS).  
 Especially ["Build a Distro From within Raspbian / Debian / Ubuntu / CustomPiOS Distros"](https://github.com/guysoft/CustomPiOS#build-a-distro-from-within-raspbian--debian--ubuntu--custompios-distros)
