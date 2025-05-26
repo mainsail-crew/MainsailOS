@@ -48,7 +48,7 @@ Here a list of included and preinstalled Software:
 -   Preinstalled Dependencies for Klipper's Input Shaper. \
     You only need to build the [klipper_mcu](https://www.klipper3d.org/RPi_microcontroller.html) and installing the service. \
     See [Klipper documentation](https://www.klipper3d.org/Measuring_Resonances.html) for more information.
--   Preinstalled python3-serial package, needed for [CanBoot](https://github.com/Arksine/CanBoot)
+-   Preinstalled python3-serial package, needed for [Katapult (formerly known as CanBoot)](https://github.com/Arksine/katapult)
 
 ## Screenshots
 
