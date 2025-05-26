@@ -56,7 +56,7 @@ Here a list of included and preinstalled Software:
 
 # FAQ
 
-**Q:** How do I report a Bug?
+**Q:** How do I report a Bug?  
 **A:** First of all make sure it is _not_ an misconfiguration of
 
 -   moonraker
@@ -66,7 +66,7 @@ Here a list of included and preinstalled Software:
 
 If there is a bug that belongs to the OS itself,
 please look first at the official Forum of Raspberry Pi OS.  
-MainsailOS is based on Raspberry Pi OS and is only slightly modified to  
+MainsailOS is based on Raspberry Pi OS and is only slightly modified to
 carry the basics to run Klipper on your 3D Printer.
 Most configuration of the single components is up to you.
 We only want to provide an Image as a starting point.
@@ -75,14 +75,14 @@ If there is something that is a bug caused due to the misconfiguration of Mainsa
 Please use the issue section for that.
 Please provide as much information as you can.
 
-**Q:** What is the philosophy behind MainsailOS?
+**Q:** What is the philosophy behind MainsailOS?  
 **A:** KISS - Keep it simple and stupid.  
 We only do a bit of modification. All other documented things of the Raspberry Foundation apply.
 
 And that's our main goal of staying compatible with existing documentation.
 We will provide documentation if something is handled differently than the original documentation.
 
-**Q:** How do I contribute/support?
+**Q:** How do I contribute/support?  
 **A:** There are several ways to contribute or support our work.
 Please take a closer look to [CONTRIBUTING.md](https://github.com/mainsail-crew/MainsailOS/blob/develop/CONTRIBUTING.md)
 
