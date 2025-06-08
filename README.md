@@ -2,97 +2,113 @@
 [![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/mainsail)
 
 <p align="center">
-<img src=".github/sdcard-logo.png" style="width:40%" >
+<img src=".github/sdcard-logo.png" style="width:40%; max-width: 300px;" >
 </p>
 
 # MainsailOS
 
-A [Raspberry Pi OS](https://www.raspberrypi.org/software/) based distribution for 3D Printers.  
-It includes everything to get started with Klipper Firmware and Mainsail.
+MainsailOS is a pre-configured operating system for your 3D printer's
+single-board computer (SBC). It simplifies getting started with Klipper and the
+[Mainsail](https://github.com/mainsail-crew/mainsail) web interface by providing
+everything you need in one ready-to-use package.
 
-Learn more about:
+Our images are built on stable, well-supported distributions:
 
--   [Klipper Firmware](https://www.klipper3d.org/)
--   [Moonraker](https://moonraker.readthedocs.io/en/latest/)
--   [Mainsail](https://docs.mainsail.xyz/)
+-   **Raspberry Pi:** Based on the official [Raspberry Pi OS](https://www.raspberrypi.com/software/).
+-   **Other SBCs:** Based on [Armbian](https://www.armbian.com/) or
+    vendor-specific OS builds (e.g., [OrangePiOS](https://github.com/orangepi-xunlong/orangepi-build)).
 
-## How to install MainsailOS ?
+All images come with the necessary software pre-installed and configured, so you
+can focus on printing. For a complete list of what's included, see the
+[Features & Components](#features--components) section below.
 
-You can find detailed instructions in our [documentation](https://docs-os.mainsail.xyz).
+## Documentation
 
-We recommend the installation via [Raspberry Pi Imager](https://docs-os.mainsail.xyz/getting-started/raspberry-pi-os-based).
+For detailed installation and setup guides, please visit our official
+documentation:
 
-## How to get help?
+**[docs-os.mainsail.xyz](https://docs-os.mainsail.xyz)**
 
-Please join us on [Discord](https://discord.gg/mainsail), if you need additional help.
+## Community & Support
+
+Have questions or need help with your setup? Join our active community on
+Discord!
+
+**[Mainsail Discord Server](https://discord.gg/mainsail)**
 
 [![discord](https://img.shields.io/discord/758059413700345988?color=%235865F2&label=discord&logo=discord&logoColor=white&style=flat)](https://discord.gg/mainsail)
 
-Also see the [FAQ](#faq) section.
+## Features & Components
 
-## What is included?
+MainsailOS comes ready to use with a complete software stack and several key
+configurations designed to streamline your setup process.
 
-Here a list of included and preinstalled Software:
+### Core Software Stack
 
--   [Klipper (3D Printer Firmware)](https://github.com/Klipper3d/klipper)
--   [Moonraker (API Web Server for Klipper)](https://github.com/Arksine/moonraker)
--   [Mainsail (Web interface for Klipper/Moonraker)](https://github.com/mainsail-crew/mainsail)
--   [Crowsnest (Webcam streaming)](https://github.com/mainsail-crew/crowsnest)
--   [Sonar (Keepalive daemon)](https://github.com/mainsail-crew/sonar)
--   [Nginx (Webserver & Proxy)](https://nginx.org/en/)
+-   **[Klipper](https://github.com/Klipper3d/klipper):** The core 3D printer
+    firmware.
+-   **[Moonraker](https://github.com/Arksine/moonraker):** The API server for
+    Klipper.
+-   **[Mainsail](https://github.com/mainsail-crew/mainsail):** Our modern web
+    interface for Klipper.
+-   **[Crowsnest](https://github.com/mainsail-crew/crowsnest):** A simple and
+    effective webcam streamer wrapper.
+-   **[Sonar](https://github.com/mainsail-crew/sonar):** A keepalive daemon to
+    ensure WiFi stability.
+-   **[Nginx](https://nginx.org/):** A high-performance web server and reverse
+    proxy to provide Mainsail and proxy the API.
 
-## also includes
+### Key Configurations & Conveniences
 
--   Enabled Serial Connection by default.  
-    Using Hardware UART (PL011) for Boards like BTT SKR Mini E3 V3
--   Preinstalled Dependencies for Klipper's Input Shaper.  
-    You only need to build the [klipper_mcu](https://www.klipper3d.org/RPi_microcontroller.html) and installing the service.  
-    See [Klipper documentation](https://www.klipper3d.org/Measuring_Resonances.html) for more information.
--   Preinstalled python3-serial package, needed for [Katapult (formerly known as CanBoot)](https://github.com/Arksine/katapult)
+-   **Ready-to-use UART:** The serial connection is enabled by default,
+    allowing you to directly connect your printer board without a USB cable.
+-   **Input Shaper Ready:** All required Python dependencies for Klipper's
+    Input Shaper are pre-installed, saving you setup time and letting you start
+    tuning right away.
+-   **Katapult Support:** The `python3-serial` package is included, which is a
+    necessary dependency for flashing firmware via
+    [Katapult (formerly CanBoot)](https://github.com/Arksine/katapult).
 
-## Screenshots
+## Support the Mainsail-Crew
 
-![screenshot-dashboard](https://github.com/mainsail-crew/docs/raw/master/assets/img/screenshot.png)
+MainsailOS is a passion project developed and maintained by the Mainsail Crew.
+We dedicate a significant amount of our free time, almost daily, to keep the
+project alive and moving forward.
 
-# FAQ
+Your support directly fuels our development efforts. Donations help us cover
+essential costs for hardware, such as new SBCs and SD cards, which are crucial
+for testing, developing new features, and expanding board compatibility.
 
-**Q:** How do I report a Bug?  
-**A:** First of all make sure it is _not_ an misconfiguration of
+If you find MainsailOS useful, please consider supporting our work. Every
+contribution, no matter the size, makes a real difference.
 
--   moonraker
--   klipper
--   crowsnest
--   sonar
+- [GitHub Sponsors](https://github.com/sponsors/mainsail-crew)
+- [Patreon](https://www.patreon.com/meteyou)
+- [Ko-Fi](https://ko-fi.com/mainsail)
 
-If there is a bug that belongs to the OS itself,
-please look first at the official Forum of Raspberry Pi OS.  
-MainsailOS is based on Raspberry Pi OS and is only slightly modified to
-carry the basics to run Klipper on your 3D Printer.
-Most configuration of the single components is up to you.
-We only want to provide an Image as a starting point.
+## Building & Development
 
-If there is something that is a bug caused due to the misconfiguration of MainsailOS itself, please let us know, and we will take action as soon as possible.
-Please use the issue section for that.
-Please provide as much information as you can.
+We've streamlined the build process, allowing you to create your own custom
+MainsailOS image without needing a complex local development environment.
 
-**Q:** What is the philosophy behind MainsailOS?  
-**A:** KISS - Keep it simple and stupid.  
-We only do a bit of modification. All other documented things of the Raspberry Foundation apply.
+### How it Works
 
-And that's our main goal of staying compatible with existing documentation.
-We will provide documentation if something is handled differently than the original documentation.
+1.  **Fork** this repository.
+2.  **Customize** your settings or add your own modules.
+3.  **Push** your changes to your fork.
 
-**Q:** How do I contribute/support?  
-**A:** There are several ways to contribute or support our work.
-Please take a closer look to [CONTRIBUTING.md](https://github.com/mainsail-crew/MainsailOS/blob/develop/CONTRIBUTING.md)
+Our GitHub Actions workflow will then automatically handle the rest.
 
-# Build your own / Developing
+### Build Outcomes
 
-To prevent you have to deal with an entire build chain setup,  
-simply fork this repository.
+-   **On every push:** A new image is built and uploaded as a workflow
+    `artifact`, perfect for testing.
+-   **For a new release:** Manually trigger the `Release` action to publish a
+    formal release with your modifications.
 
-Enable the workflows in your fork and you are good to go.  
-On each push you make, an image is build and uploaded as an artifact.
+### Need Help?
 
-If you want or need to build locally please visit [CustomPiOS](https://github.com/guysoft/CustomPiOS).  
-Especially ["Build a Distro From within Raspbian / Debian / Ubuntu / CustomPiOS Distros"](https://github.com/guysoft/CustomPiOS#build-a-distro-from-within-raspbian--debian--ubuntu--custompios-distros)
+If you need guidance on customizing the build process or developing your own
+modules, feel free to connect with the Crew on our
+[Discord](https://discord.gg/mainsail) server in the `#public-dev-talk`
+channel.
