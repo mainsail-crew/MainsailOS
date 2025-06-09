@@ -99,7 +99,7 @@ jobs:
           done
 
       - name: "📋 Copy special modules"
-        if: matrix.special_modules && toJson(matrix.special_modules) }}" != "[]"
+        if: matrix.special_modules && toJson(matrix.special_modules) != "[]"
         run: |
           echo "Special modules found for ${{ matrix.name }}: ${{ toJson(matrix.special_modules) }}"
 
