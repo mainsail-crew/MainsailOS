@@ -99,23 +99,23 @@ jobs:
           done
 
       - name: "📋 Copy special modules"
+        if: matrix.special_modules && toJson(matrix.special_modules) != '[]'
         run: |
-          # Check if special_modules are defined for this configuration
-          if [ -n "${{ toJson(matrix.special_modules) }}" ] && [ "${{ toJson(matrix.special_modules) }}" != "[]" ]; then
-            # copy additional files for special modules
-            if [ -d "modules/special/files" ]; then
-              cp -r modules/special/files/* scripts/files/
-            fi
+          echo "Special modules found for ${{ matrix.name }}: ${{ toJson(matrix.special_modules) }}"
 
-            # Convert JSON array to bash array
-            MODULES=$(echo '${{ toJson(matrix.special_modules) }}' | jq -r '.[]')
-
-            for module in "${MODULES[@]}"; do
-              cp "modules/special/${module}" scripts/
-            done
-          else
-            echo "No special modules defined for ${{ matrix.name }}."
+          # copy additional files for special modules
+          if [ -d "modules/special/files" ]; then
+            echo "Copying common special files..."
+            cp -r modules/special/files/* scripts/files/
           fi
+
+          # Convert JSON array to bash array
+          MODULES=$(echo '${{ toJson(matrix.special_modules) }}' | jq -r '.[]')
+
+          for module in "${MODULES[@]}"; do
+            echo "Copying module: ${module}"
+            cp "modules/special/${module}" scripts/
+          done
 
       - name: "📇 Generate config.local"
         shell: python
