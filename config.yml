@@ -104,8 +104,6 @@
     IMAGE_ENLARGEROOT: 5000
     MOUNT_PROC: 1
     MOUNT_SYS: 1
-  special_modules:
-    - 20-opi-zero2
   rpi_json:
     name: "MainsailOS $VERSION$ - Orange Pi Zero2W (64-bit)"
     description: "A port of Armbian with preinstalled Klipper/Moonraker/Mainsail for 3D printers"
