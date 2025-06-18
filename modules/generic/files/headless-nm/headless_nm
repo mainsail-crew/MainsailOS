@@ -28,6 +28,7 @@ readonly CMDLINE="/boot/firmware/cmdline.txt"
 readonly ARMBIANENV="/boot/armbianEnv.txt"
 readonly CONNFILE="/etc/NetworkManager/system-connections/preconfigured.nmconnection"
 readonly CFG80211="/etc/modprobe.d/cfg80211.conf"
+readonly RPI_IMAGE_CUSTOM="/usr/lib/raspberrypi-sys-mods/imager_custom"
 
 # Global variables
 DISTRO=""
@@ -109,6 +110,27 @@ set_regdomain() {
     esac
 }
 
+use_image_custom() {
+    if [[ -n "${REGDOMAIN:-}" ]]; then
+        "${RPI_IMAGE_CUSTOM}" set_wlan_country "${REGDOMAIN}"
+    fi
+
+    CMD_ARGS=("set_wlan")
+
+    if [ "$HIDDEN" -eq 1 ]; then
+        CMD_ARGS+=("--hidden")
+    fi
+
+    CMD_ARGS+=("$SSID")
+
+    if [[ -n "${PASSWORD:-}" ]]; then
+        PSK_HASH="$(gen_psk)"
+        CMD_ARGS+=("$PSK_HASH")
+    fi
+
+   "${RPI_IMAGE_CUSTOM}" "${CMD_ARGS[@]}"
+}
+
 # MAIN
 main() {
     if [[ ! -f "${SETUPFILE}" ]]; then
@@ -136,11 +158,15 @@ main() {
     # shellcheck disable=SC1090
     source "${SETUPFILE}"
 
-    gen_uuid
-    gen_nmconnection
-    gen_keymgmt
+    if [ -f "${RPI_IMAGE_CUSTOM}" ]; then
+        use_image_custom
+    else
+        gen_uuid
+        gen_nmconnection
+        gen_keymgmt
 
-    set_regdomain
+        set_regdomain
+    fi
 
     # NetworkManager only accepts 0600 permissions for configs
     chmod 0600 "${CONNFILE}"
