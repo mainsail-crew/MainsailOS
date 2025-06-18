@@ -117,7 +117,7 @@ use_image_custom() {
 
     CMD_ARGS=("set_wlan")
 
-    if [ "$HIDDEN" -eq 1 ]; then
+    if [ "$HIDDEN" = "true" ]; then
         CMD_ARGS+=("--hidden")
     fi
 
