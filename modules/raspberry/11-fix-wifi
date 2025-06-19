@@ -21,6 +21,7 @@ source /files/00-config
 ########################################
 
 NM_STATE="/var/lib/NetworkManager/NetworkManager.state"
+CMDLINE="${BOOT_PATH}/cmdline.txt"
 
 ########################################
 # Unblock rfkill wifi                  #
@@ -45,4 +46,4 @@ fi
 sed -i \
     -e "s/\s*cfg80211.ieee80211_regdom=\S*//" \
     -e "s/\(.*\)/\1 cfg80211.ieee80211_regdom=00/" \
-    "$BOOT_PATH"/cmdline.txt
+    "${CMDLINE}"
