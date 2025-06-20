@@ -35,5 +35,5 @@ elif
 ########################################
 
 if [[ -f "$NM_STATE" ]]; then
-    sed -i 's/^WirelessEnabled=.*/WirelessEnabled=true/' "$NM_STATE"
+    sed -i 's/^WirelessEnabled=.*/WirelessEnabled=true/g' "$NM_STATE"
 fi
