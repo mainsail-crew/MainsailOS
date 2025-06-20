@@ -21,7 +21,6 @@ source /files/00-config
 ########################################
 
 NM_STATE="/var/lib/NetworkManager/NetworkManager.state"
-CMDLINE="${BOOT_PATH}/cmdline.txt"
 
 ########################################
 # Unblock rfkill wifi                  #
@@ -38,12 +37,3 @@ elif
 if [[ -f "$NM_STATE" ]]; then
     sed -i 's/^WirelessEnabled=.*/WirelessEnabled=true/' "$NM_STATE"
 fi
-
-########################################
-# Set Wifi to international            #
-########################################
-
-sed -i \
-    -e "s/\s*cfg80211.ieee80211_regdom=\S*//" \
-    -e "s/\(.*\)/\1 cfg80211.ieee80211_regdom=00/" \
-    "${CMDLINE}"
