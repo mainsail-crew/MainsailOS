@@ -28,12 +28,12 @@ NM_STATE="/var/lib/NetworkManager/NetworkManager.state"
 
 if hash rfkill 2> /dev/null; then
     rfkill unblock wifi
-elif
+fi
 
 ########################################
 # Fix Wireless State                   #
 ########################################
 
 if [[ -f "$NM_STATE" ]]; then
-    sed -i 's/^WirelessEnabled=.*/WirelessEnabled=true/g' "$NM_STATE"
+    sed -i 's/^WirelessEnabled=.*/WirelessEnabled=true/' "$NM_STATE"
 fi
