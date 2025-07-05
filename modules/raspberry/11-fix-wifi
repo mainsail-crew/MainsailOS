@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# this module is based on the rasp-config
+
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Configuration                        #
+########################################
+
+NM_STATE="/var/lib/NetworkManager/NetworkManager.state"
+
+########################################
+# Unblock rfkill wifi                  #
+########################################
+
+if hash rfkill 2> /dev/null; then
+    rfkill unblock wifi
+fi
+
+########################################
+# Fix Wireless State                   #
+########################################
+
+if [[ -f "$NM_STATE" ]]; then
+    sed -i 's/^WirelessEnabled=.*/WirelessEnabled=true/' "$NM_STATE"
+fi
