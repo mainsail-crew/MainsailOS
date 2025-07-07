@@ -1,0 +1,24 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Enable SPI, i2c & UART in armbianEnv #
+########################################
+
+# cs1 is PH9 for SPI1
+# cs0 is PH5 for SPI1
+for overlay in ph-i2c3 ph-uart5 spi1-cs1-spidev; do
+  echo "overlays=${overlay}" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+done
