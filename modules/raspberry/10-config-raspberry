@@ -60,10 +60,10 @@ fi
 # services                             #
 ########################################
 
-systemctl disable hciuart.service
-systemctl disable bluetooth.service
+systemctl_if_exists disable hciuart.service
+systemctl_if_exists disable bluetooth.service
 if ! grep "bookworm" /etc/os-release; then
-    systemctl disable bluealsa.service
+    systemctl_if_exists disable bluealsa.service
 fi
 
 ########################################
