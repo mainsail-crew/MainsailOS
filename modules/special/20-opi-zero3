@@ -17,8 +17,18 @@ source /files/00-config
 # Enable SPI, i2c & UART in armbianEnv #
 ########################################
 
-# cs1 is PH9 for SPI1
-# cs0 is PH5 for SPI1
-for overlay in ph-i2c3 ph-uart5 spi1-cs1-spidev; do
-  echo "overlays=${overlay}" >> "${ARMBIAN_CONFIG_TXT_FILE}"
-done
+# i2c3-ph > /dev/i2c-2 > i2c.2
+# - SDA: PH5 > Pin3
+# - SCL: PH4 > Pin5
+
+# spi-spidev spidev1_1 > /dev/spidev1.1 > spidev1.1
+# - MOSI: PH7 > Pin19
+# - MISO: PH8 > Pin21
+# - CLK:  PH6 > Pin23
+# - CS:   PH9 > Pin24 > gpiochip1/gpio233
+
+# uart5: /dev/....
+# - TX: PH2 > Pin8
+# - RX: PH3 > Pin10
+
+echo "overlays=i2c3-ph spi-spidev spidev1_1 uart5" >> "${ARMBIAN_CONFIG_TXT_FILE}"
