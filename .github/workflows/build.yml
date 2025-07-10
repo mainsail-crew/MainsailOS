@@ -110,7 +110,7 @@ jobs:
           fi
 
           # Convert JSON array to bash array
-          MODULES=$(echo '${{ toJson(matrix.special_modules) }}' | jq -r '.[]')
+          readarray -t MODULES < <(echo "${{ toJson(matrix.special_modules) }}" | jq -r '.[]')
 
           for module in "${MODULES[@]}"; do
             echo "Copying module: ${module}"
