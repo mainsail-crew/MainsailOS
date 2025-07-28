@@ -1,26 +1,7 @@
-- name: raspberry_pi-armhf-bookworm
-  type: raspberry
-  img_download_url: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent"
-  img_hash_url: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.sha256"
-  env:
-    ARCH: armhf
-    IMAGE_ENLARGEROOT: 6000
-    MOUNT_PROC: 1
-    MOUNT_SYS: 1
-  special_modules: []
-  rpi_json:
-    name: "MainsailOS $VERSION$ - Raspberry Pi (32-bit)"
-    description: "A port of Raspberry Pi OS with preinstalled Klipper/Moonraker/Mainsail for 3D printers"
-    icon: "https://os.mainsail.xyz/rpi-imager.png"
-    init_format: "systemd"
-    devices:
-      - "pi1-32bit"
-      - "pi2-32bit"
-
-- name: raspberry_pi-arm64-bookworm
-  type: raspberry
-  img_download_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.torrent"
-  img_hash_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.sha256"
+- name: orange_pi-arm64-noble-numbat
+  type: orangepi
+  img_download_url: "https://github.com/Joshua-Riek/ubuntu-rockchip/releases/download/v2.4.0/ubuntu-24.04-preinstalled-server-arm64-orangepi-5-max.img.xz"
+  img_hash_url: "https://github.com/Joshua-Riek/ubuntu-rockchip/releases/download/v2.4.0/ubuntu-24.04-preinstalled-server-arm64-orangepi-5-max.img.xz.sha256"
   env:
     ARCH: arm64
     IMAGE_ENLARGEROOT: 6000
@@ -28,68 +9,9 @@
     MOUNT_SYS: 1
   special_modules: []
   rpi_json:
-    name: "MainsailOS $VERSION$ - Raspberry Pi (64-bit)"
-    description: "A port of Raspberry Pi OS with preinstalled Klipper/Moonraker/Mainsail for 3D printers"
+    name: "MainsailOS $VERSION$ - Orange Pi 5 Max (64-bit)"
+    description: "A port of Ubuntu Server 24.04 with preinstalled Klipper/Moonraker/Mainsail for 3D printers"
     icon: "https://os.mainsail.xyz/rpi-imager.png"
     init_format: "systemd"
     devices:
-      - "pi3-64bit"
-      - "pi4-64bit"
-      - "pi5-64bit"
-
-- name: armbian-orangepi4_lts-bookworm
-  type: armbian
-  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_bookworm.img.xz"
-  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_bookworm.img.xz.sha256"
-  env:
-    ARCH: arm64
-    DISTRO: armbian
-    IMAGE_ENLARGEROOT: 5000
-    MOUNT_PROC: 1
-    MOUNT_SYS: 1
-  special_modules:
-    - 20-opi-4lts-spi
-  rpi_json:
-    name: "MainsailOS $VERSION$ - Orange Pi 4 LTS (64-bit)"
-    description: "A port of Armbian with preinstalled Klipper/Moonraker/Mainsail for 3D printers"
-    icon: "https://os.mainsail.xyz/rpi-imager.png"
-    devices:
-      - "opi4-64bit"
-
-- name: armbian-orangepi3_lts-bookworm
-  type: armbian
-  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi3_lts_bookworm.img.xz"
-  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi3_lts_bookworm.img.xz.sha256"
-  env:
-    ARCH: arm64
-    DISTRO: armbian
-    IMAGE_ENLARGEROOT: 5000
-    MOUNT_PROC: 1
-    MOUNT_SYS: 1
-  special_modules:
-    - 20-opi-3lts-spi
-  rpi_json:
-    name: "MainsailOS $VERSION$ - Orange Pi 3 LTS (64-bit)"
-    description: "A port of Armbian with preinstalled Klipper/Moonraker/Mainsail for 3D printers"
-    icon: "https://os.mainsail.xyz/rpi-imager.png"
-    devices:
-      - "opi3-64bit"
-
-- name: armbian-orangepi_zero2-bookworm
-  type: armbian
-  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero2_bookworm.img.xz"
-  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero2_bookworm.img.xz.sha256"
-  env:
-    ARCH: arm64
-    DISTRO: armbian
-    IMAGE_ENLARGEROOT: 5000
-    MOUNT_PROC: 1
-    MOUNT_SYS: 1
-  special_modules:
-    - 20-opi-zero2
-  rpi_json:
-    name: "MainsailOS $VERSION$ - Orange Pi Zero2 (64-bit)"
-    description: "A port of Armbian with preinstalled Klipper/Moonraker/Mainsail for 3D printers"
-    icon: "https://os.mainsail.xyz/rpi-imager.png"
-    devices:
-      - "opizero2-64bit"
+      - "opi5max-64bit"
