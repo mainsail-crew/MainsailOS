@@ -32,7 +32,10 @@ fi
 # Test Fix                             #
 ########################################
 
-echo "#!/bin/sh\nexit 101" > /usr/sbin/policy-rc.d
+tee /usr/sbin/policy-rc.d >/dev/null <<'SH'
+#!/bin/sh
+exit 101
+SH
 chmod +x /usr/sbin/policy-rc.d
 
 
