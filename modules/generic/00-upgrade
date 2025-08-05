@@ -29,10 +29,20 @@ fi
 #apt-mark hold "${HOLD_PKGS[@]}" > /dev/null 2>&1 || true
 
 ########################################
+# Test Fix                             #
+########################################
+
+echo "#!/bin/sh\nexit 101" > /usr/sbin/policy-rc.d
+chmod +x /usr/sbin/policy-rc.d
+
+
+########################################
 # Execute upgrade                      #
 ########################################
 
-apt-get -y upgrade
+apt-get -y -o Dpkg::Options::="--force-confnew" upgrade
+
+rm -f /usr/sbin/policy-rc.d
 
 ########################################
 # Cleanup                              #
