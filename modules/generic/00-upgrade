@@ -43,14 +43,15 @@ chmod +x /usr/sbin/policy-rc.d
 # Execute upgrade                      #
 ########################################
 
-apt-get -y -o Dpkg::Options::="--force-confnew" upgrade
+#apt-get -y -o Dpkg::Options::="--force-confnew" upgrade
+apt-get -y upgrade
 
-rm -f /usr/sbin/policy-rc.d
 
 ########################################
 # Cleanup                              #
 ########################################
 
+rm -f /usr/sbin/policy-rc.d
 apt-get -y autoremove
 apt-get clean
 
