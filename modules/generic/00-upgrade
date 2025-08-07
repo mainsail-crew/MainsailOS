@@ -32,7 +32,7 @@ fi
 # Execute upgrade                      #
 ########################################
 
-apt-get -y upgrade
+apt-get -y -o Dpkg::Options::="--force-confold" upgrade
 
 ########################################
 # Cleanup                              #
