@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#########################################################
+# CANBUS Module                                         #
+# Implemented based on this guide:                      #
+# https://canbus.esoterical.online/Getting_Started.html #
+#########################################################
+
 set -xe
 export LC_ALL=C
 
