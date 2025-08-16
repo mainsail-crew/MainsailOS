@@ -49,6 +49,7 @@
     MOUNT_SYS: 1
   special_modules:
     - 20-opi-4lts-spi
+    - 25-opi-wiringop
   rpi_json:
     name: "MainsailOS $VERSION$ - Orange Pi 4 LTS (64-bit)"
     description: "A port of Armbian with preinstalled Klipper/Moonraker/Mainsail for 3D printers"
@@ -68,6 +69,7 @@
     MOUNT_SYS: 1
   special_modules:
     - 20-opi-3lts-spi
+    - 25-opi-wiringop
   rpi_json:
     name: "MainsailOS $VERSION$ - Orange Pi 3 LTS (64-bit)"
     description: "A port of Armbian with preinstalled Klipper/Moonraker/Mainsail for 3D printers"
@@ -87,6 +89,7 @@
     MOUNT_SYS: 1
   special_modules:
     - 20-opi-zero2
+    - 25-opi-wiringop
   rpi_json:
     name: "MainsailOS $VERSION$ - Orange Pi Zero2 (64-bit)"
     description: "A port of Armbian with preinstalled Klipper/Moonraker/Mainsail for 3D printers"
