@@ -1,5 +1,6 @@
 - name: raspberry_pi-armhf-bookworm
   type: raspberry
+  build_only: True
   img_download_url: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent"
   img_hash_url: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.sha256"
   env:
@@ -19,6 +20,7 @@
 
 - name: raspberry_pi-arm64-bookworm
   type: raspberry
+  build_only: True
   img_download_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.torrent"
   img_hash_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.sha256"
   env:
@@ -39,6 +41,7 @@
 
 - name: armbian-orangepi4_lts-bookworm
   type: armbian
+  build_only: True
   img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_bookworm.img.xz"
   img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_bookworm.img.xz.sha256"
   env:
@@ -58,6 +61,7 @@
 
 - name: armbian-orangepi3_lts-bookworm
   type: armbian
+  build_only: True
   img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi3_lts_bookworm.img.xz"
   img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi3_lts_bookworm.img.xz.sha256"
   env:
@@ -77,6 +81,7 @@
 
 - name: armbian-orangepi_zero2-bookworm
   type: armbian
+  build_only: True
   img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero2_bookworm.img.xz"
   img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero2_bookworm.img.xz.sha256"
   env:

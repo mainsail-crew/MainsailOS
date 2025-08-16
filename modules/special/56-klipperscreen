@@ -1,0 +1,62 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Configuration                        #
+########################################
+
+REPO="https://github.com/KlipperScreen/KlipperScreen.git"
+SRC_DIR="/home/${BASE_USER}/KlipperScreen"
+KS_BUILD_INSTALL_SH="/home/${BASE_USER}/KlipperScreen/scripts/KlipperScreen-install.sh"
+
+BACKEND="X"
+SERVICE="Y"
+START=0
+NETWORK="N"
+
+########################################
+# Switch to BASE_USER home directory   #
+########################################
+
+pushd /home/"${BASE_USER}" &> /dev/null || exit 1
+
+########################################
+# Clone repository                     #
+########################################
+
+sudo -u "${BASE_USER}" git clone ${REPO} "${SRC_DIR}"
+
+########################################
+# Run KlipperScreen install routine    #
+########################################
+
+sudo -u "${BASE_USER}" env \
+    BACKEND="$BACKEND" SERVICE="$SERVICE" START="$START" NETWORK="$NETWORK" \
+    "${KS_BUILD_INSTALL_SH}"
+
+########################################
+# Add config to moonraker.conf         #
+########################################
+
+if [[ -f $MOONRAKER_CONFIG ]]; then
+    cat /files/moonraker_klipperscreen.conf >> "$MOONRAKER_CONFIG"
+fi
+
+########################################
+# Return to last directory             #
+########################################
+
+popd &> /dev/null || exit 1
+
