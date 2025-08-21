@@ -132,9 +132,11 @@ main() {
     # Remove preconfiguration if present
     [[ -f "${CONNFILE}" ]] && rm -f "${CONNFILE}"
 
-    # Read config file
-    # shellcheck disable=SC1090
-    source "${SETUPFILE}"
+    # Extract configuration from configuration file
+    SSID=$(grep '^SSID=' "${SETUPFILE}" | sed -E 's/^SSID="(.*)"$/\1/')
+    PASSWORD=$(grep '^PASSWORD=' "${SETUPFILE}" | sed -E 's/^PASSWORD="(.*)"$/\1/')
+    HIDDEN=$(grep '^HIDDEN=' "${SETUPFILE}" | sed -E 's/^HIDDEN="(.*)"$/\1/')
+    REGDOMAIN=$(grep '^REGDOMAIN=' "${SETUPFILE}" | sed -E 's/^REGDOMAIN="(.*)"$/\1/')
 
     gen_uuid
     gen_nmconnection
