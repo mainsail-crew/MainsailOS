@@ -94,6 +94,25 @@
     devices:
       - "opizero2-64bit"
 
+- name: armbian-orangepi_zero3-bookworm
+  type: armbian
+  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero3_bookworm.img.xz"
+  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero3_bookworm.img.xz.sha256"
+  env:
+    ARCH: arm64
+    DISTRO: armbian
+    IMAGE_ENLARGEROOT: 5000
+    MOUNT_PROC: 1
+    MOUNT_SYS: 1
+  special_modules:
+    - 20-opi-zero3
+  rpi_json:
+    name: "MainsailOS $VERSION$ - Orange Pi Zero3 (64-bit)"
+    description: "A port of Armbian with preinstalled Klipper/Moonraker/Mainsail for 3D printers"
+    icon: "https://os.mainsail.xyz/rpi-imager.png"
+    devices:
+      - "opizero3-64bit"
+
 - name: armbian-btt_cb1-bookworm
   type: armbian
   build_only: True
