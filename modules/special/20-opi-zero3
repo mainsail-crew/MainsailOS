@@ -17,17 +17,24 @@ source /files/00-config
 # Enable SPI, i2c & UART in armbianEnv #
 ########################################
 
-# i2c3-ph > /dev/i2c-2 > i2c.2
+# i2c3-ph > /dev/i2c-2
 # - SDA: PH5 > Pin3
 # - SCL: PH4 > Pin5
+#
+# Klipper
+# i2c_bus: i2c.2
 
-# spi-spidev spidev1_1 > /dev/spidev1.1 > spidev1.1
+# spi-spidev spidev1_1 > /dev/spidev1.1
 # - MOSI: PH7 > Pin19
 # - MISO: PH8 > Pin21
 # - CLK:  PH6 > Pin23
-# - CS:   PH9 > Pin24 > gpiochip1/gpio233
+# - CS:   PH9 > Pin24
+#
+# Klipper
+# cs_pin: gpiochip1/gpio233
+# spi_bus: spidev1.1
 
-# uart5: /dev/....
+# uart5: /dev/ttyS1
 # - TX: PH2 > Pin8
 # - RX: PH3 > Pin10
 
