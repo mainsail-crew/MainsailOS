@@ -2,10 +2,13 @@
 # Changelog
 All notable changes to MainsailOS will be documented in this file.
 
-## [2.0.0](https://github.com/mainsail-crew/MainsailOS/releases/tag/2.0.0) - 2025-05-19
+## [2.1.0](https://github.com/mainsail-crew/MainsailOS/releases/tag/2.1.0) - 2025-08-15
 ### Features
 
 - **ci**: Add KlipperScreen module ([#284](https://github.com/mainsail-crew/MainsailOS/pull/284))
+- Add module for KIAUH ([#318](https://github.com/mainsail-crew/MainsailOS/pull/318))
+- Add CANBUS support ([#339](https://github.com/mainsail-crew/MainsailOS/pull/339))
+- Add btt cb1 build_only image ([#328](https://github.com/mainsail-crew/MainsailOS/pull/328))
 
 ### Bug Fixes and Improvements
 
@@ -15,11 +18,22 @@ All notable changes to MainsailOS will be documented in this file.
 - **moonraker**: PKGLIST variable rename ([#298](https://github.com/mainsail-crew/MainsailOS/pull/298))
 - Add supported sbc to non rpi images ([#277](https://github.com/mainsail-crew/MainsailOS/pull/277))
 - Fix current version number ([#317](https://github.com/mainsail-crew/MainsailOS/pull/317))
+- Improve special modules check in build & release workflow ([#329](https://github.com/mainsail-crew/MainsailOS/pull/329))
+- Enable WiFi per default on RPI SBCs ([#334](https://github.com/mainsail-crew/MainsailOS/pull/334))
+- Fix parsing array to copy special modules ([#338](https://github.com/mainsail-crew/MainsailOS/pull/338))
+- Fix upgrade rpi images ([#342](https://github.com/mainsail-crew/MainsailOS/pull/342))
 
 ### Refactor
 
 - Change version handling ([#296](https://github.com/mainsail-crew/MainsailOS/pull/296))
 - Transition from CustomPiOs to CustoPiZer ([#314](https://github.com/mainsail-crew/MainsailOS/pull/314))
+- Use systemctl_if_exists in 10-config-raspberry ([#332](https://github.com/mainsail-crew/MainsailOS/pull/332))
+
+### Documentation
+
+- Readme CanBoot -> katapult ([#320](https://github.com/mainsail-crew/MainsailOS/pull/320))
+- Readme fix newline ([#321](https://github.com/mainsail-crew/MainsailOS/pull/321))
+- Update README.md ([#327](https://github.com/mainsail-crew/MainsailOS/pull/327))
 
 ### Other
 
@@ -29,6 +43,8 @@ All notable changes to MainsailOS will be documented in this file.
 - Change module order ([#291](https://github.com/mainsail-crew/MainsailOS/pull/291))
 - Switch to armbian for Opi Zero2 ([#292](https://github.com/mainsail-crew/MainsailOS/pull/292))
 - Bump version to v2.0.0
+- Add attribute to config.yml to add "build_only" images ([#325](https://github.com/mainsail-crew/MainsailOS/pull/325))
+- Bump version to v2.1.0
 
 ## [1.3.2](https://github.com/mainsail-crew/MainsailOS/releases/tag/1.3.2) - 2024-01-20
 ### Bug Fixes and Improvements
@@ -296,4 +312,5 @@ All notable changes to MainsailOS will be documented in this file.
 
 - Moves $httpupgrade and upstream servers to common config
 
+## [0.0.7](https://github.com/mainsail-crew/MainsailOS/releases/tag/0.0.7) - 2020-09-24
 
