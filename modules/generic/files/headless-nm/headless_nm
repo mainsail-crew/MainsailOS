@@ -44,6 +44,24 @@ log() {
     logger -t headless_nm "$msg"
 }
 
+get_config() {
+    # read params from file
+    while IFS= read -r line; do
+        # filter params by containing capital letters
+        if [[ "${line}" =~ ^[A-Z]*= ]]; then
+            # echo "DEBUG: $line"
+        # create array with params
+            params+=("$(cut -d'=' -f1 <<< "${line}")")
+        fi
+    done < "${SETUPFILE}"
+
+    # iterate over params and export as variables
+    for _ in "${params[@]}"; do
+        declare -r "$(grep "^${_}" "${SETUPFILE}" | \
+        sed -e "1s/\"//; s/\"$//")"
+    done
+}
+
 gen_uuid() {
     log "Generating UUID for connection"
     UUID="$(uuid -v4)"
@@ -132,10 +150,7 @@ main() {
     # Remove preconfiguration if present
     [[ -f "${CONNFILE}" ]] && rm -f "${CONNFILE}"
 
-    # Read config file
-    # shellcheck disable=SC1090
-    source "${SETUPFILE}"
-
+    get_config
     gen_uuid
     gen_nmconnection
     gen_keymgmt
