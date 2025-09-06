@@ -94,7 +94,7 @@ remove_quotes() {
         # Remove first quote
         str="${str:1}"
 
-        # Check if closing quote is present
+        # Return an error if no closing quote is found
         if [[ "$str" != *"$quote"* ]]; then
             return 1
         fi
