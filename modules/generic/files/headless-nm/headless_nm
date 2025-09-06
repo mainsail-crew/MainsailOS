@@ -54,7 +54,7 @@ get_value() {
         fi
 
         # extract key and trim whitespace
-        key_part=$(trim_whitespace "${line%%=*}")
+        key_part="$(trim_whitespace "${line%%=*}")"
 
         # Continue with next line if key does not match
         if [[ "$key_part" != "$key" ]]; then
@@ -62,10 +62,10 @@ get_value() {
         fi
 
         # extract value and trim whitespace
-        val_part=$(trim_whitespace "${line#*=}")
+        val_part="$(trim_whitespace "${line#*=}")"
 
         # Remove quotes from value if present
-        val_part=$(remove_quotes "$val_part") || {
+        val_part="$(remove_quotes "$val_part")" || {
             log "ERROR: Could not remove quotes from value for key '$key'"
             exit 1
         }
