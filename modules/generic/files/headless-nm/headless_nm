@@ -44,6 +44,70 @@ log() {
     logger -t headless_nm "$msg"
 }
 
+get_value() {
+    local key="$1" line
+
+    while IFS= read -r line; do
+        # Skip comments, empty lines or lines without '='
+        if [[ "$line" =~ ^#.*$ || -z "$line" || "$line" != *"="* ]]; then
+            continue
+        fi
+
+        # extract key and trim whitespace
+        key_part="${line%%=*}"
+        key_part=$(trim_whitespace "$key_part")
+
+        # Continue with next line if key does not match
+        if [[ "$key_part" != "$key" ]]; then
+            continue
+        fi
+
+        # extract value and trim whitespace
+        val_part="${line#*=}"
+        val_part=$(trim_whitespace "$val_part")
+        val_part=$(remove_quotes "$val_part") || {
+            log "ERROR: Could not remove quotes from value for key '$key'"
+            exit 1
+        }
+
+        echo "$val_part"
+        return 0
+    done < "${SETUPFILE}"
+}
+
+trim_whitespace() {
+    sed -e 's/^[[:space:]]\+//' -e 's/[[:space:]]\+$//' <<<"$1"
+}
+
+remove_quotes() {
+    local str=$1
+    local quotes=('"'
+                "'"
+                '`'
+                '´')
+
+    for quote in "${quotes[@]}"; do
+        if [[ "${str:0:1}" != "$quote" ]]; then
+            continue
+        fi
+
+        # Remove first quote
+        str="${str:1}"
+
+        # Check if closing quote is present
+        if [[ "$str" != *"$quote"* ]]; then
+            return 1
+        fi
+
+        # Extract until next quote
+        str="${str%%"$quote"*}"
+        break
+    done
+
+    echo "$str"
+    return 0
+}
+
 gen_uuid() {
     log "Generating UUID for connection"
     UUID="$(uuid -v4)"
@@ -133,10 +197,10 @@ main() {
     [[ -f "${CONNFILE}" ]] && rm -f "${CONNFILE}"
 
     # Extract configuration from configuration file
-    SSID=$(grep '^SSID=' "${SETUPFILE}" | sed -E 's/^SSID="(.*)"$/\1/')
-    PASSWORD=$(grep '^PASSWORD=' "${SETUPFILE}" | sed -E 's/^PASSWORD="(.*)"$/\1/')
-    HIDDEN=$(grep '^HIDDEN=' "${SETUPFILE}" | sed -E 's/^HIDDEN="(.*)"$/\1/')
-    REGDOMAIN=$(grep '^REGDOMAIN=' "${SETUPFILE}" | sed -E 's/^REGDOMAIN="(.*)"$/\1/')
+    SSID="$(get_value SSID)"
+    PASSWORD="$(get_value PASSWORD)"
+    HIDDEN="$(get_value HIDDEN)"
+    REGDOMAIN="$(get_value REGDOMAIN)"
 
     gen_uuid
     gen_nmconnection
