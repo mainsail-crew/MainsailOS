@@ -44,22 +44,16 @@ log() {
     logger -t headless_nm "$msg"
 }
 
-get_config() {
-    # read params from file
-    while IFS= read -r line; do
-        # filter params by containing capital letters
-        if [[ "${line}" =~ ^[A-Z]*= ]]; then
-            # echo "DEBUG: $line"
-        # create array with params
-            params+=("$(cut -d'=' -f1 <<< "${line}")")
-        fi
-    done < "${SETUPFILE}"
+get_value() {
+    key="${1}"
+    file="${2}"
+    grep "${key}" "${file}" | cut -d"=" -f2 | sed -e "s/\"//; s/\"$//"
+}
 
-    # iterate over params and export as variables
-    for _ in "${params[@]}"; do
-        declare -r "$(grep "^${_}" "${SETUPFILE}" | \
-        sed -e "1s/\"//; s/\"$//")"
-    done
+get_config() {
+    SSID="$(get_value SSID "${CONNFILE}")"
+    PASSWORD="$(get_value PASSWORD "${CONNFILE}")"
+    HIDDEN="$(get_value HIDDEN "${CONNFILE}")"
 }
 
 gen_uuid() {
