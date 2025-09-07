@@ -193,14 +193,14 @@ main() {
 
     log "Using setup profile: ${DISTRO}"
 
-    # Remove preconfiguration if present
-    [[ -f "${CONNFILE}" ]] && rm -f "${CONNFILE}"
-
     # Extract configuration from configuration file
     SSID="$(get_value SSID)"
     PASSWORD="$(get_value PASSWORD)"
     HIDDEN="$(get_value HIDDEN)"
     REGDOMAIN="$(get_value REGDOMAIN)"
+
+    # Remove preconfiguration if present
+    [[ -f "${CONNFILE}" ]] && rm -f "${CONNFILE}"
 
     gen_uuid
     gen_nmconnection
