@@ -45,7 +45,7 @@ log() {
 }
 
 get_value() {
-    local key="$1" line
+    local key="$1" line key_part val_part
 
     while IFS= read -r line; do
         # Skip comments, empty lines or lines without '='
@@ -72,7 +72,7 @@ get_value() {
 
         echo "$val_part"
         return 0
-    done < "${SETUPFILE}"
+    done < <(tac -- "$SETUPFILE")
 }
 
 trim_whitespace() {
