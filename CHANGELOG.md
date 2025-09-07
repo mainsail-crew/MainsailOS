@@ -2,6 +2,19 @@
 # Changelog
 All notable changes to MainsailOS will be documented in this file.
 
+## [2.2.0](https://github.com/mainsail-crew/MainsailOS/releases/tag/2.2.0) - 2025-09-07
+### Features
+
+- Add support for orangepi zero3 ([#336](https://github.com/mainsail-crew/MainsailOS/pull/336))
+
+### Bug Fixes and Improvements
+
+- **headless_nm**: Fix reading SSID or PW with special chars ([#347](https://github.com/mainsail-crew/MainsailOS/pull/347))
+
+### Other
+
+- Bump version to v2.2.0
+
 ## [2.1.0](https://github.com/mainsail-crew/MainsailOS/releases/tag/2.1.0) - 2025-08-15
 ### Features
 
