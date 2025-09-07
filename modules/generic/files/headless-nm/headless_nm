@@ -44,6 +44,70 @@ log() {
     logger -t headless_nm "$msg"
 }
 
+get_value() {
+    local key="$1" line key_part val_part
+
+    while IFS= read -r line; do
+        # Skip comments, empty lines or lines without '='
+        if [[ "$line" =~ ^#.*$ || -z "$line" || "$line" != *"="* ]]; then
+            continue
+        fi
+
+        # extract key and trim whitespace
+        key_part="$(trim_whitespace "${line%%=*}")"
+
+        # Continue with next line if key does not match
+        if [[ "$key_part" != "$key" ]]; then
+            continue
+        fi
+
+        # extract value and trim whitespace
+        val_part="$(trim_whitespace "${line#*=}")"
+
+        # Remove quotes from value if present
+        val_part="$(remove_quotes "$val_part")" || {
+            log "ERROR: Could not remove quotes from value for key '$key'"
+            exit 1
+        }
+
+        echo "$val_part"
+        return 0
+    done < <(tac -- "$SETUPFILE")
+}
+
+trim_whitespace() {
+    sed -e 's/^[[:space:]]\+//' -e 's/[[:space:]]\+$//' <<<"$1"
+}
+
+remove_quotes() {
+    local str=$1
+    local quotes=('"'
+                "'"
+                '`'
+                '´')
+
+    for quote in "${quotes[@]}"; do
+        if [[ "${str:0:1}" != "$quote" ]]; then
+            continue
+        fi
+
+        # Remove first quote
+        str="${str:1}"
+
+        # Return an error if no closing quote is found
+        if [[ "$str" != *"$quote"* ]]; then
+            return 1
+        fi
+
+        # Extract until next quote
+        str="${str%%"$quote"*}"
+        break
+    done
+
+    echo "$str"
+    return 0
+}
+
 gen_uuid() {
     log "Generating UUID for connection"
     UUID="$(uuid -v4)"
@@ -129,12 +193,14 @@ main() {
 
     log "Using setup profile: ${DISTRO}"
 
+    # Extract configuration from configuration file
+    SSID="$(get_value SSID)"
+    PASSWORD="$(get_value PASSWORD)"
+    HIDDEN="$(get_value HIDDEN)"
+    REGDOMAIN="$(get_value REGDOMAIN)"
+
     # Remove preconfiguration if present
     [[ -f "${CONNFILE}" ]] && rm -f "${CONNFILE}"
-
-    # Read config file
-    # shellcheck disable=SC1090
-    source "${SETUPFILE}"
 
     gen_uuid
     gen_nmconnection
