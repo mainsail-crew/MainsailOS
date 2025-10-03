@@ -3,7 +3,6 @@ Name=can*
 
 [CAN]
 BitRate=1M
-RestartSec=0.1s
 
 [Link]
 RequiredForOnline=no
