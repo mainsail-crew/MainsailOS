@@ -83,7 +83,7 @@ sudo -u "${BASE_USER}" virtualenv -p python3 "${ENV_DIR}"
 echo "Installing Python Dependencies ..."
 sudo -u "${BASE_USER}" "${ENV_DIR}"/bin/pip install -r "${SRC_DIR}"/scripts/klippy-requirements.txt
 echo "Installing NumPy in Virtualenv"
-sudo -u "${BASE_USER}" "${ENV_DIR}"/bin/pip install "numpy<1.26"
+sudo -u "${BASE_USER}" "${ENV_DIR}"/bin/pip install "numpy"
 
 ########################################
 # Return to saved directory            #
