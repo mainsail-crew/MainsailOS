@@ -39,8 +39,8 @@
 
 - name: armbian-orangepi4_lts-bookworm
   type: armbian
-  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_bookworm.img.xz"
-  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_bookworm.img.xz.sha256"
+  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_trixie.img.xz"
+  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_trixie.img.xz.sha256"
   env:
     ARCH: arm64
     DISTRO: armbian
@@ -58,8 +58,8 @@
 
 - name: armbian-orangepi3_lts-bookworm
   type: armbian
-  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi3_lts_bookworm.img.xz"
-  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi3_lts_bookworm.img.xz.sha256"
+  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi3_lts_trixie.img.xz"
+  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi3_lts_trixie.img.xz.sha256"
   env:
     ARCH: arm64
     DISTRO: armbian
@@ -77,8 +77,8 @@
 
 - name: armbian-orangepi_zero2-bookworm
   type: armbian
-  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero2_bookworm.img.xz"
-  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero2_bookworm.img.xz.sha256"
+  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero2_trixie.img.xz"
+  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero2_trixie.img.xz.sha256"
   env:
     ARCH: arm64
     DISTRO: armbian
@@ -96,8 +96,8 @@
 
 - name: armbian-orangepi_zero3-bookworm
   type: armbian
-  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero3_bookworm.img.xz"
-  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero3_bookworm.img.xz.sha256"
+  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero3_trixie.img.xz"
+  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero3_trixie.img.xz.sha256"
   env:
     ARCH: arm64
     DISTRO: armbian
@@ -116,9 +116,9 @@
 - name: armbian-btt_cb1-bookworm
   type: armbian
   build_only: True
-  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-bigtreetech_cb1_bookworm.img.xz
+  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-bigtreetech_cb1_trixie.img.xz
 "
-  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-bigtreetech_cb1_bookworm.img.xz.sha256"
+  img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-bigtreetech_cb1_trixie.img.xz.sha256"
   env:
     ARCH: arm64
     DISTRO: armbian
