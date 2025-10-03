@@ -1,4 +1,4 @@
-- name: raspberry_pi-armhf-bookworm
+- name: raspberry_pi-armhf-trixie
   type: raspberry
   img_download_url: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent"
   img_hash_url: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.sha256"
@@ -17,7 +17,7 @@
       - "pi1-32bit"
       - "pi2-32bit"
 
-- name: raspberry_pi-arm64-bookworm
+- name: raspberry_pi-arm64-trixie
   type: raspberry
   img_download_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.torrent"
   img_hash_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.sha256"
@@ -37,7 +37,7 @@
       - "pi4-64bit"
       - "pi5-64bit"
 
-- name: armbian-orangepi4_lts-bookworm
+- name: armbian-orangepi4_lts-trixie
   type: armbian
   img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_trixie.img.xz"
   img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi4_lts_trixie.img.xz.sha256"
@@ -56,7 +56,7 @@
     devices:
       - "opi4-64bit"
 
-- name: armbian-orangepi3_lts-bookworm
+- name: armbian-orangepi3_lts-trixie
   type: armbian
   img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi3_lts_trixie.img.xz"
   img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi3_lts_trixie.img.xz.sha256"
@@ -75,7 +75,7 @@
     devices:
       - "opi3-64bit"
 
-- name: armbian-orangepi_zero2-bookworm
+- name: armbian-orangepi_zero2-trixie
   type: armbian
   img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero2_trixie.img.xz"
   img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero2_trixie.img.xz.sha256"
@@ -94,7 +94,7 @@
     devices:
       - "opizero2-64bit"
 
-- name: armbian-orangepi_zero3-bookworm
+- name: armbian-orangepi_zero3-trixie
   type: armbian
   img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero3_trixie.img.xz"
   img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-orangepi_zero3_trixie.img.xz.sha256"
@@ -113,7 +113,7 @@
     devices:
       - "opizero3-64bit"
 
-- name: armbian-btt_cb1-bookworm
+- name: armbian-btt_cb1-trixie
   type: armbian
   build_only: True
   img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-bigtreetech_cb1_trixie.img.xz
