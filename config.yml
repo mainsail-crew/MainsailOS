@@ -1,7 +1,7 @@
 - name: raspberry_pi-armhf-bookworm
   type: raspberry
-  img_download_url: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent"
-  img_hash_url: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.sha256"
+  img_download_url: "https://downloads.raspberrypi.com/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2025-10-02/2025-10-01-raspios-bookworm-armhf-lite.img.xz.torrent"
+  img_hash_url: "https://downloads.raspberrypi.com/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2025-10-02/2025-10-01-raspios-bookworm-armhf-lite.img.xz.sha256"
   env:
     ARCH: armhf
     IMAGE_ENLARGEROOT: 6000
@@ -19,8 +19,8 @@
 
 - name: raspberry_pi-arm64-bookworm
   type: raspberry
-  img_download_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.torrent"
-  img_hash_url: "https://downloads.raspberrypi.org/raspios_lite_arm64_latest.sha256"
+  img_download_url: "https://downloads.raspberrypi.com/raspios_oldstable_lite_arm64/images/raspios_oldstable_lite_arm64-2025-10-02/2025-10-01-raspios-bookworm-arm64-lite.img.xz.torrent"
+  img_hash_url: "https://downloads.raspberrypi.com/raspios_oldstable_lite_arm64/images/raspios_oldstable_lite_arm64-2025-10-02/2025-10-01-raspios-bookworm-arm64-lite.img.xz.sha256"
   env:
     ARCH: arm64
     IMAGE_ENLARGEROOT: 6000
