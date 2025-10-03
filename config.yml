@@ -116,8 +116,7 @@
 - name: armbian-btt_cb1-trixie
   type: armbian
   build_only: True
-  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-bigtreetech_cb1_trixie.img.xz
-"
+  img_download_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-bigtreetech_cb1_trixie.img.xz"
   img_hash_url: "https://github.com/mainsail-crew/armbian-builds/releases/latest/download/armbian-bigtreetech_cb1_trixie.img.xz.sha256"
   env:
     ARCH: arm64
