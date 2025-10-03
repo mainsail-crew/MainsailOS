@@ -2,6 +2,24 @@
 # Changelog
 All notable changes to MainsailOS will be documented in this file.
 
+## [2.2.2](https://github.com/mainsail-crew/MainsailOS/releases/tag/2.2.2) - 2025-10-03
+### Bug Fixes and Improvements
+
+- **RpiOS**: Fix download urls to raspios oldstable (bookworm) ([#350](https://github.com/mainsail-crew/MainsailOS/pull/350))
+
+### Other
+
+- Bump version to v2.2.2
+
+## [2.2.1](https://github.com/mainsail-crew/MainsailOS/releases/tag/2.2.1) - 2025-10-03
+### Bug Fixes and Improvements
+
+- **Canbus**: Remove `RestartSec=0.1s` from the 25-can.network config. ([#349](https://github.com/mainsail-crew/MainsailOS/pull/349))
+
+### Other
+
+- Bump version to v2.2.1
+
 ## [2.2.0](https://github.com/mainsail-crew/MainsailOS/releases/tag/2.2.0) - 2025-09-07
 ### Features
 
