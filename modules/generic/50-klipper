@@ -35,7 +35,9 @@ DEPS=(git \
       stm32flash dfu-util libnewlib-arm-none-eabi \
       gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0-0 \
       # Input shaper dependencies
-      python3-numpy python3-matplotlib libatlas-base-dev libopenblas-dev \
+      python3-numpy python3-matplotlib libopenblas-dev \
+      # Removed packages in Trixie
+      # - libatlas-base-dev replaced by libopenblas-dev
       )
 
 ########################################
@@ -81,7 +83,10 @@ sudo -u "${BASE_USER}" virtualenv -p python3 "${ENV_DIR}"
 echo "Installing Python Dependencies ..."
 sudo -u "${BASE_USER}" "${ENV_DIR}"/bin/pip install -r "${SRC_DIR}"/scripts/klippy-requirements.txt
 echo "Installing NumPy in Virtualenv"
-sudo -u "${BASE_USER}" "${ENV_DIR}"/bin/pip install "numpy<1.26"
+
+# Normally klipper would use "numpy<1.26", but that version does not support
+# Python 3.13 which is now in Debian Trixie.
+sudo -u "${BASE_USER}" "${ENV_DIR}"/bin/pip install "numpy"
 
 ########################################
 # Return to saved directory            #

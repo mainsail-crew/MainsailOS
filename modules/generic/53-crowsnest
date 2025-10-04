@@ -17,7 +17,8 @@ source /files/00-config
 # Configuration                        #
 ########################################
 
-REPO="https://github.com/mainsail-crew/crowsnest.git"
+REPO="https://github.com/mryel00/crowsnest-dev.git"
+BRANCH="pynest"
 DEPS=(git)
 
 INSTALL_SCRIPT="/home/${BASE_USER}/crowsnest/tools/libs/pkglist-generic.sh"
@@ -36,7 +37,7 @@ apt-get install --yes "${DEPS[@]}"
 ########################################
 
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
-sudo -u "${BASE_USER}" git clone ${REPO} crowsnest
+sudo -u "${BASE_USER}" git clone ${REPO} crowsnest -b ${BRANCH}
 popd &> /dev/null || exit 1
 
 ########################################
