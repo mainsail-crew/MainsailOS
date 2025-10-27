@@ -87,12 +87,12 @@ fi
 ########################################
 # Finalize user setup                  #
 ########################################
+
 if [ -f /usr/lib/userconf-pi/userconf ]; then
     /usr/lib/userconf-pi/userconf "$BASE_USER" "$(get_pw_hash)"
 fi
 
 systemctl_if_exists disable userconfig.service
-
 
 ########################################
 # Enable getty                         #
