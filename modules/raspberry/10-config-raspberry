@@ -13,6 +13,14 @@ install_cleanup_trap
 # Load additional configuration (e.g., BASE_USER)
 source /files/00-config
 
+# passwd hash helper func
+get_pw_hash() {
+    local passwd
+    passwd="$BASE_USER_PASSWD"
+    echo "${passwd}" | openssl -6 -stdin
+    return 0
+}
+
 ########################################
 # Configuration & Install deps         #
 ########################################
@@ -75,3 +83,19 @@ if [[ -f "${PICONFIG_SWAP_CONF_FILE}" ]]; then
     sed -i 's/^CONF_SWAPSIZE.*/'CONF_SWAPSIZE="${SWAP_SIZE}"'/' "${SWAP_CONF_FILE}"
     sed -i 's/^#CONF_MAXSWAP.*/'CONF_MAXSWAP="${SWAP_MAX}"'/' "${SWAP_CONF_FILE}"
 fi
+
+########################################
+# Finalize user setup                  #
+########################################
+if [ -f /usr/lib/userconf-pi/userconf ]; then
+    /usr/lib/userconf-pi/userconf "$BASE_USER" "$(get_passwd_hash)"
+fi
+
+systemctl_if_exists disable userconfig.service
+
+
+########################################
+# Enable getty                         #
+########################################
+
+systemctl --quiet enable getty@tty1
