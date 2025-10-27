@@ -81,9 +81,3 @@ fi
 ########################################
 
 systemctl_if_exists enable ssh.service
-
-########################################
-# Disable userconfig dialog            #
-########################################
-
-systemctl_if_exists disable userconfig.service
