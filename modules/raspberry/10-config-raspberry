@@ -99,3 +99,13 @@ systemctl_if_exists disable userconfig.service
 ########################################
 
 systemctl --quiet enable getty@tty1
+
+########################################
+# Enable sshd                          #
+########################################
+
+if [ -f /usr/lib/raspberrypi-sys-mods/imager_custom ]; then
+    /usr/lib/raspberrypi-sys-mods/imager_custom enable_ssh
+else
+    systemctl enable ssh
+fi
