@@ -16,7 +16,7 @@ source /files/00-config
 # passwd hash helper func
 get_pw_hash() {
     local passwd
-    passwd="$BASE_USER_PASSWD"
+    passwd="$BASE_PASSWORD"
     echo "${passwd}" | openssl passwd -6 -stdin
     return 0
 }

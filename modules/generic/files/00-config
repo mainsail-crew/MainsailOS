@@ -15,7 +15,7 @@ export HOLD_PKGS=(
 )
 
 export BASE_USER=pi
-export BASE_USER_PASSWD=raspberry
+export BASE_PASSWORD=raspberry
 export DIST_NAME=MainsailOS
 
 export PRINTER_DATA_DIRS="printer_data printer_data/config printer_data/comms printer_data/logs printer_data/systemd"
