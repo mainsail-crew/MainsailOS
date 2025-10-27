@@ -13,14 +13,6 @@ install_cleanup_trap
 # Load additional configuration (e.g., BASE_USER)
 source /files/00-config
 
-# passwd hash helper func
-get_pw_hash() {
-    local passwd
-    passwd="$BASE_PASSWORD"
-    echo "${passwd}" | openssl passwd -6 -stdin
-    return 0
-}
-
 ########################################
 # Configuration & Install deps         #
 ########################################
@@ -89,7 +81,8 @@ fi
 ########################################
 
 if [ -f /usr/lib/userconf-pi/userconf ]; then
-    /usr/lib/userconf-pi/userconf "$BASE_USER" "$(get_pw_hash)"
+    hash="$(echo "$BASE_PASSWORD" | openssl passwd -6 -stdin)"
+    /usr/lib/userconf-pi/userconf "$BASE_USER" "${hash}"
 fi
 
 systemctl_if_exists disable userconfig.service
