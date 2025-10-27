@@ -77,7 +77,7 @@ if [[ -f "${PICONFIG_SWAP_CONF_FILE}" ]]; then
 fi
 
 ########################################
-# Finalize user setup                  #
+# Finalize user setup and set password #
 ########################################
 
 if [ -f /usr/lib/userconf-pi/userconf ]; then
