@@ -35,7 +35,7 @@ VENDORTEMP="${VENDOR}"
 # Get MainsailOS informations
 if [[ -f /etc/mainsailos-release ]]; then
     OS_NAME="$(cat /etc/mainsailos-release | cut -d ' ' -f1)"
-    MSOS_VERSION="$(cat /etc/mainsailos-release | cut -d ' ' -f2)"
+    MSOS_VERSION="$(cat /etc/mainsailos-release | cut -d ' ' -f3)"
 fi
 
 # Keep the VENDOR from image if its defined there
@@ -136,7 +136,7 @@ if [[ ${BOARD:-} == rpi4b ]]; then
 fi
 
 # Display version, board, and kernel version
-echo -e " Version $(cut -d ' ' -f3 /etc/mainsailos-release), based on \
+echo -e " Version ${MSOS_VERSION}, based on \
 \e[34mArmbian v${VERSION/-trunk/} ${DISTRIBUTION_CODENAME^}\e[0m $([[ ${BRANCH} == edge ]])"
 echo -e " Running on \e[34m$(echo "${BOARD_NAME}" | sed 's/Orange Pi/OPi/' | \
 sed 's/NanoPi/NPi/' | sed 's/Banana Pi/BPi/')\e[0m with \e[34mLinux ${KERNELID}\e[0m\n"
