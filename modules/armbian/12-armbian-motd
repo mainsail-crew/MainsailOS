@@ -18,7 +18,7 @@ source /files/00-config
 ########################################
 
 cp /files/motd/10-mainsailos-header /etc/update-motd.d/10-mainsailos-header
-chmod +x /etc/update-motd.d/10-mainsailos
+chmod +x /etc/update-motd.d/10-mainsailos-header
 
 ########################################
 # Patch dynamic motd                   #
