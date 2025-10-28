@@ -17,7 +17,7 @@ source /files/00-config
 # Copy motd config                     #
 ########################################
 
-cp /files/motd/10-mainsailos /etc/update-motd.d/10-mainsailos
+cp /files/motd/10-mainsailos-header /etc/update-motd.d/10-mainsailos-header
 chmod +x /etc/update-motd.d/10-mainsailos
 
 ########################################
@@ -25,5 +25,8 @@ chmod +x /etc/update-motd.d/10-mainsailos
 ########################################
 
 if [ -f /etc/default/armbian-motd ] ; then
+    # pre bookworm
     sed -i 's/MOTD_DISABLE=""/MOTD_DISABLE="header"/' /etc/default/armbian-motd
+    # bookworm and newer
+    sed -i 's/MOTD_DISABLE="clear"/MOTD_DISABLE="clear header"/' /etc/default/armbian-motd
 fi
