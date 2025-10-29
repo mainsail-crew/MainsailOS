@@ -18,7 +18,19 @@ source /files/00-config
 ########################################
 
 cp /files/motd/10-mainsailos-header /etc/update-motd.d/10-mainsailos-header
-chmod +x /etc/update-motd.d/10-mainsailos-header
+
+########################################
+# fix file permissions                 #
+########################################
+
+for f in $(find /etc/update-motd.d/ -type f | sort); do
+    # skip unattended stuff like in original image
+    if [[ ! "${f}" =~ unattended ]]; then
+        chmod +x "${f}"
+    else
+        continue
+    fi
+done
 
 ########################################
 # Patch dynamic motd                   #
