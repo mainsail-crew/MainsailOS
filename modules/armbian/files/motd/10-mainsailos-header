@@ -201,14 +201,21 @@ all_ip6_address=" IPv6:        "
 for i in ${ipv4s}; do
     intf="$(echo "${i}" | cut -d"@" -f1)"
     ip="$(echo "${i}" | cut -d"@" -f2)"
-    all_ip_address+=" \x1B[93m(${intf})\x1B[0m ${ip}"
+	if [[ -n "${ip}" ]]; then
+        all_ip_address+=" \x1B[93m(${intf})\x1B[0m ${ip}"
+	else
+		continue
+	fi
 done
 for i in ${ipv6s}; do
     intf="$(echo "${i}" | cut -d"@" -f1)"
     ip6="$(echo "${i}" | cut -d"@" -f2)"
-    all_ip6_address+=" \x1B[93m(${intf})\x1B[0m ${ip6}"
+	if [[ -n "${ip6}" ]]; then
+        all_ip6_address+=" \x1B[93m(${intf})\x1B[0m ${ip6}"
+	else
+		continue
+	fi
 done
 echo -e "${all_ip_address}"
 echo -e "${all_ip6_address}"
-
 echo ""
