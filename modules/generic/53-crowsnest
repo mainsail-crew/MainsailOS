@@ -19,7 +19,7 @@ source /files/00-config
 
 REPO="https://github.com/mryel00/crowsnest-dev.git"
 BRANCH="pynest"
-DEPS=(git)
+DEPS=(git build-essential)
 
 ########################################
 # Install System Packages              #
