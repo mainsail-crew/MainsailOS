@@ -37,7 +37,7 @@ DEPS=(git \
       # Input shaper dependencies
       python3-numpy python3-matplotlib libopenblas-dev \
       # Removed packages in Trixie
-      # - libatlas-base-dev replaced by libopenblas-dev
+      # - libatlas-base-dev merged into libopenblas-dev and no longer available
       )
 
 ########################################
