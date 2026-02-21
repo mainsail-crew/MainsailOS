@@ -36,9 +36,12 @@ DEPS=(git \
       gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0-0 \
       # Input shaper dependencies
       python3-numpy python3-matplotlib libopenblas-dev \
-      # Removed packages in Trixie
-      # - libatlas-base-dev merged into libopenblas-dev and no longer available
       )
+
+# libatlas-base-dev was merged into libopenblas-dev in Trixie and is no longer available
+if [ "$(is_in_apt libatlas-base-dev)" -eq 1 ]; then
+  DEPS+=(libatlas-base-dev)
+fi
 
 ########################################
 # Install Dependencies                 #
