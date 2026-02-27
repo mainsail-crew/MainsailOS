@@ -55,7 +55,7 @@ pushd "moonraker" &> /dev/null || exit 1
 
 # Workaround for 32-bit ARM (armhf) builds:
 if [ "$(dpkg --print-architecture)" = "armhf" ]; then
-  echo "armhf detected: pre-installing pillow as root (QEMU build workaround)"
+  echo "armhf detected: pre-installing pillow"
   # Install pillow build dependencies before building from source
   apt-get install --yes libjpeg-dev zlib1g-dev
   MOONRAKER_VENV="/home/${BASE_USER}/moonraker-env"
