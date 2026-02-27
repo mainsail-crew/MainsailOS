@@ -52,10 +52,13 @@ create_user_directories
 
 echo "Execute installer"
 pushd "moonraker" &> /dev/null || exit 1
-# Ensure pip build temp directory is writable by BASE_USER
-export TMPDIR="/tmp"
-chmod 1777 /tmp
-sudo -u "${BASE_USER}" TMPDIR="/tmp" ./scripts/install-moonraker.sh -s -z
+# Create a user-owned temp directory for pip builds
+# Workaround for Permission denied errors in QEMU chroot builds
+USER_TMPDIR="/home/${BASE_USER}/.pip-tmp"
+mkdir -p "${USER_TMPDIR}"
+chown "${BASE_USER}":"${BASE_USER}" "${USER_TMPDIR}"
+sudo -u "${BASE_USER}" TMPDIR="${USER_TMPDIR}" HOME="/home/${BASE_USER}" ./scripts/install-moonraker.sh -s -z
+rm -rf "${USER_TMPDIR}"
 popd &> /dev/null || exit 1
 
 ########################################
