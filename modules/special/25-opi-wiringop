@@ -1,0 +1,69 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Configuration                        #
+########################################
+
+REPO="https://github.com/orangepi-xunlong/wiringOP.git"
+
+DEPS=(git)
+
+########################################
+# Install Dependencies                 #
+########################################
+
+echo "Installing Dependencies"
+apt-get install --yes "${DEPS[@]}"
+
+########################################
+# Switch into /opt                     #
+########################################
+
+pushd "/opt" &> /dev/null || exit 1
+
+########################################
+# Clone repo                           #
+########################################
+
+echo "Cloning repo ..."
+git clone ${REPO} wiringOP
+
+########################################
+# Switch into /opt/wiringOP            #
+########################################
+
+pushd "/opt/wiringOP" &> /dev/null || exit 1
+
+########################################
+# Switch into /opt/wiringOP            #
+########################################
+
+./build clean
+./build
+
+########################################
+# Copy gpio to /usr/bin                #
+########################################
+
+cp ./gpio/gpio /usr/bin
+chmod +x /usr/bin/gpio
+
+########################################
+# Return to saved directory            #
+########################################
+
+popd &> /dev/null || exit 1
+popd &> /dev/null || exit 1
