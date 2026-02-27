@@ -17,9 +17,7 @@ source /files/00-config
 # Enable SPI, i2c & UART in armbianEnv #
 ########################################
 
-for overlay in spi-spidev i2c3 uart5; do
-  echo "overlays=${overlay}" >> "${ARMBIAN_CONFIG_TXT_FILE}"
-done
-
+echo "overlay_prefix=sun50i-h616" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+echo "overlays=i2c3-ph spi-spidev spidev1_1 uart5" >> "${ARMBIAN_CONFIG_TXT_FILE}"
 echo "param_spidev_spi_bus=1" >> "${ARMBIAN_CONFIG_TXT_FILE}"
 echo "param_spidev_spi_cs=1" >> "${ARMBIAN_CONFIG_TXT_FILE}"
