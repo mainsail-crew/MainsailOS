@@ -52,7 +52,10 @@ create_user_directories
 
 echo "Execute installer"
 pushd "moonraker" &> /dev/null || exit 1
-sudo -u "${BASE_USER}" ./scripts/install-moonraker.sh -s -z
+# Ensure pip build temp directory is writable by BASE_USER
+export TMPDIR="/tmp"
+chmod 1777 /tmp
+sudo -u "${BASE_USER}" TMPDIR="/tmp" ./scripts/install-moonraker.sh -s -z
 popd &> /dev/null || exit 1
 
 ########################################
