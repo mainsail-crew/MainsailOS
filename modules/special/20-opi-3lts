@@ -14,10 +14,31 @@ install_cleanup_trap
 source /files/00-config
 
 ########################################
-# Enable SPI in armbianEnv             #
+# Enable SPI, i2c & UART in armbianEnv #
 ########################################
 
-echo "overlays=spi-spidev1" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+# i2c0 > /dev/i2c-0
+# - SDA: PD26 > Pin3
+# - SCL: PD25 > Pin5
+#
+# Klipper
+# i2c_bus: i2c.0
+
+# spi-spidev1 > /dev/spidev1.0
+# - MOSI: PH5 > Pin19
+# - MISO: PH6 > Pin21
+# - CLK:  PH4 > Pin23
+# - CS:   PH3 > Pin24
+#
+# Klipper
+# cs_pin: gpiochip1/gpio227
+# spi_bus: spidev1.0
+
+# uart3: /dev/ttyS3
+# - TX: PD23 > Pin8
+# - RX: PD24 > Pin10
+
+echo "overlays=i2c0 spi-spidev1 uart3" >> "${ARMBIAN_CONFIG_TXT_FILE}"
 
 ########################################
 # Enable spi-dev module                #
