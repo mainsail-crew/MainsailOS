@@ -1,0 +1,51 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Fix overlay_prefix for RK3399        #
+########################################
+
+# U-Boot needs the full prefix to find rockchip-rk3399-*.dtbo overlays.
+if grep -q "^overlay_prefix=" "${ARMBIAN_CONFIG_TXT_FILE}"; then
+    sed -i 's/^overlay_prefix=.*/overlay_prefix=rockchip-rk3399/' "${ARMBIAN_CONFIG_TXT_FILE}"
+else
+    echo "overlay_prefix=rockchip-rk3399" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+fi
+
+########################################
+# Copy fixup script for RK3399 prefix  #
+########################################
+
+# The fixup script is named rockchip-fixup.scr but U-Boot looks for
+# ${overlay_prefix}-fixup.scr. Copy it so it can be found.
+FIXUP_SRC="/boot/dtb/rockchip/overlay/rockchip-fixup.scr"
+FIXUP_DST="/boot/dtb/rockchip/overlay/rockchip-rk3399-fixup.scr"
+
+if [ -f "${FIXUP_SRC}" ] && [ ! -f "${FIXUP_DST}" ]; then
+    cp "${FIXUP_SRC}" "${FIXUP_DST}"
+fi
+
+########################################
+# Enable SPI in armbianEnv             #
+########################################
+
+echo "overlays=spi-spidev" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+echo "param_spidev_spi_bus=1" >> "${ARMBIAN_CONFIG_TXT_FILE}"
+
+########################################
+# Enable spi-dev module                #
+########################################
+
+echo "spi-dev" >> "/etc/modules"
