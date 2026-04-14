@@ -46,6 +46,18 @@ jobs:
       - name: "📥 Checkout"
         uses: actions/checkout@v4
 
+      - name: "🔧 Set up QEMU for cross-compilation"
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm,arm64
+        # This step enables cross-compilation of ARM images on x86_64 runners.
+        # It is a no-op on native ARM runners (ubuntu-22.04-arm) and adds no
+        # overhead there. It is included so that contributors who fork this
+        # repo and build on a personal GitHub account (which only has access
+        # to free x86_64 runners, not the arm runners required by GitHub Team/
+        # Enterprise plans) can switch `runs-on` to `ubuntu-latest` and have
+        # the ARM chroot work transparently via QEMU user-mode emulation.
+
       - name: "#️⃣️ Set RELEASE_TAG from VERSION file"
         run: |
           RELEASE_TAG=$(cat VERSION | tr -d '\n')
