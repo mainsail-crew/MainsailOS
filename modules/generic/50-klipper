@@ -92,6 +92,16 @@ echo "Installing NumPy in Virtualenv"
 sudo -u "${BASE_USER}" "${ENV_DIR}"/bin/pip install "numpy"
 
 ########################################
+# Remove pre-compiled C extension      #
+########################################
+
+# c_helper.so is compiled for the build host architecture (e.g. x86_64) and
+# will fail to load on aarch64 with "wrong ELF class: ELFCLASS32".
+# Deleting it here is safe: Klipper auto-recompiles it on first startup.
+echo "Removing pre-compiled C helper to ensure correct arch on first boot ..."
+find "${SRC_DIR}/klippy/chelper" -name "*.so" -delete
+
+########################################
 # Return to saved directory            #
 ########################################
 

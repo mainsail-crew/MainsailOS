@@ -19,7 +19,10 @@ source /files/00-config
 
 REPO="https://github.com/mryel00/crowsnest-dev.git"
 BRANCH="pynest"
-DEPS=(git make)
+DEPS=(git make \
+      # ustreamer build dependencies
+      libevent-dev libjpeg-dev libbsd-dev \
+      )
 
 ########################################
 # Install System Packages              #
@@ -44,6 +47,37 @@ export CROWSNEST_UNATTENDED=1
 export CROWSNEST_ADD_CROWSNEST_MOONRAKER=1
 make install
 popd &> /dev/null || exit 1
+
+########################################
+# Recompile ustreamer for target arch  #
+########################################
+
+# The crowsnest installer may ship a prebuilt ustreamer binary compiled for a
+# different architecture (e.g. 32-bit ARM on an aarch64 image), which fails
+# with "cannot execute: required file not found". Delete any prebuilt binary
+# and recompile from source inside the chroot so the arch is always correct.
+USTREAMER_DIR="/home/${BASE_USER}/crowsnest/bin/ustreamer"
+if [ -d "${USTREAMER_DIR}" ]; then
+    echo "Recompiling ustreamer for target architecture ..."
+    find "${USTREAMER_DIR}" -name "*.bin" -delete
+    pushd "${USTREAMER_DIR}" &> /dev/null || exit 1
+    sudo -u "${BASE_USER}" make
+    popd &> /dev/null || exit 1
+fi
+
+########################################
+# Fix crowsnest.service ExecStart      #
+########################################
+
+# The crowsnest installer incorrectly sets ExecStart to /bin/python3, but
+# crowsnest is a bash script. Python tries to parse it as code and throws
+# SyntaxError. Fix the service file to use /bin/bash explicitly.
+CROWSNEST_SERVICE="/etc/systemd/system/crowsnest.service"
+if [ -f "${CROWSNEST_SERVICE}" ]; then
+    echo "Patching crowsnest.service ExecStart to use /bin/bash ..."
+    sed -i "s|ExecStart=/bin/python3 \(.*\)|ExecStart=/bin/bash /home/${BASE_USER}/crowsnest/crowsnest \1|" \
+        "${CROWSNEST_SERVICE}"
+fi
 
 ########################################
 # Enable Service                       #
