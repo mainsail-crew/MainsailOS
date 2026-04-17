@@ -10,3 +10,10 @@ src/build.log
 # Ignore vscode settings
 .vscode
 .vscode/**
+
+# Ignore JetBrains IDE settings
+.idea
+
+# Ignore Clankers
+.pi
+.claude
