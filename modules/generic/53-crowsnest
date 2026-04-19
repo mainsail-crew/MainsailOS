@@ -18,12 +18,7 @@ source /files/00-config
 ########################################
 
 REPO="https://github.com/mainsail-crew/crowsnest.git"
-DEPS=(git)
-
-INSTALL_SCRIPT="/home/${BASE_USER}/crowsnest/tools/libs/pkglist-generic.sh"
-if [[ "$(is_raspbian)" = "1" ]]; then
-    INSTALL_SCRIPT="/home/${BASE_USER}/crowsnest/tools/libs/pkglist-rpi.sh"
-fi
+DEPS=(git make)
 
 ########################################
 # Install System Packages              #
@@ -38,19 +33,6 @@ apt-get install --yes "${DEPS[@]}"
 pushd "/home/${BASE_USER}" &> /dev/null || exit 1
 sudo -u "${BASE_USER}" git clone ${REPO} crowsnest
 popd &> /dev/null || exit 1
-
-########################################
-# Installation Crowsnest Dependencies  #
-########################################
-
-PKGLIST=$(
-    # shellcheck disable=SC1090
-    source "$INSTALL_SCRIPT"
-    echo "$PKGLIST"
-)
-# convert string to array
-read -ra PKGARRAY <<< "$PKGLIST"
-apt-get install --yes "${PKGARRAY[@]}"
 
 ########################################
 # Installation Crowsnest               #
