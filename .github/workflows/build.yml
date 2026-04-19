@@ -23,7 +23,7 @@ jobs:
       matrix: ${{ steps.create-matrix.outputs.matrix }}
     steps:
       - name: "📥 Checkout"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: "🛠 Generate matrix from config.yml"
         id: create-matrix
@@ -44,7 +44,7 @@ jobs:
       matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     steps:
       - name: "📥 Checkout"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: "#️⃣️ Set RELEASE_TAG from VERSION file"
         run: |
@@ -142,6 +142,7 @@ jobs:
           scripts:  "${{ github.workspace }}/scripts"
           config: "${{ github.workspace }}/config.local"
           environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}"}'
+          custopizer: "main"
 
       - name: "✏ Rename image"
         working-directory: ./build
@@ -165,7 +166,7 @@ jobs:
           sha256sum ${{ env.IMAGE }}.xz > ${{ env.IMAGE }}.xz.sha256
 
       - name: "📋 Upload Artifacts"
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.IMAGE }}-artifacts
           path: |
