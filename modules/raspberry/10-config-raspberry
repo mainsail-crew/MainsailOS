@@ -17,7 +17,10 @@ source /files/00-config
 # Configuration & Install deps         #
 ########################################
 
+# Legacy swap backend (dphys-swapfile) - used on Bookworm and older
 SWAP_CONF_FILE="/etc/dphys-swapfile"
+# Modern swap backend (rpi-swap) - used on Trixie and newer.
+RPI_SWAP_DROP_IN="/etc/rpi/swap.conf.d/10-mainsailos.conf"
 SWAP_SIZE="256"
 SWAP_MAX="1024"
 
@@ -70,8 +73,65 @@ fi
 # Increase swapfile size               #
 ########################################
 
-if [[ -f "${PICONFIG_SWAP_CONF_FILE}" ]]; then
-    echo_green "Increasing swap file size to ${SWAP_SIZE} Mb. Limit to ${SWAP_MAX} Mb"
+# Raspberry Pi OS Trixie replaced dphys-swapfile with rpi-swap.
+if [[ -f "${SWAP_CONF_FILE}" ]]; then
+    # Legacy: dphys-swapfile (Bookworm and older)
+    echo_green "Configuring swap (dphys-swapfile): ${SWAP_SIZE} MB, max ${SWAP_MAX} MB"
     sed -i 's/^CONF_SWAPSIZE.*/'CONF_SWAPSIZE="${SWAP_SIZE}"'/' "${SWAP_CONF_FILE}"
     sed -i 's/^#CONF_MAXSWAP.*/'CONF_MAXSWAP="${SWAP_MAX}"'/' "${SWAP_CONF_FILE}"
+elif dpkg-query -s rpi-swap &>/dev/null; then
+    # Modern: rpi-swap (Trixie and newer)
+    echo_green "Configuring swap (rpi-swap): ${SWAP_SIZE} MiB, max ${SWAP_MAX} MiB"
+    mkdir -p "$(dirname "${RPI_SWAP_DROP_IN}")"
+    cat > "${RPI_SWAP_DROP_IN}" <<EOF
+# Managed by MainsailOS build - swap size tuning
+[File]
+FixedSizeMiB=${SWAP_SIZE}
+MaxSizeMiB=${SWAP_MAX}
+EOF
+fi
+
+########################################
+# Finalize user setup and set password #
+########################################
+
+if [ -f /usr/lib/userconf-pi/userconf ]; then
+    hash="$(echo "$BASE_PASSWORD" | openssl passwd -6 -stdin)"
+    /usr/lib/userconf-pi/userconf "$BASE_USER" "${hash}"
+fi
+
+systemctl_if_exists disable userconfig.service
+
+########################################
+# Enable getty                         #
+########################################
+
+systemctl_if_exists enable getty@tty1.service
+
+########################################
+# Enable sshd                          #
+########################################
+
+if [ -f /usr/lib/raspberrypi-sys-mods/imager_custom ]; then
+    /usr/lib/raspberrypi-sys-mods/imager_custom enable_ssh
+else
+    systemctl_if_exists enable ssh
+fi
+
+########################################
+# Enable passwordless sudo (build)     #
+########################################
+
+# Trixie+: raspberrypi-sys-mods no longer ships /etc/sudoers.d/010_${BASE_USER}-nopasswd
+# Bookworm and earlier: /etc/sudoers.d/010_${BASE_USER}-nopasswd may already exist
+#
+# 98-remove-passwordless-sudo reverts both cases at the end of the build.
+RASPI_CONFIG="$(command -v raspi-config || true)"
+if [ -n "${RASPI_CONFIG}" ] && grep -q "^do_sudo_pass" "${RASPI_CONFIG}"; then
+    SUDO_USER="${BASE_USER}" raspi-config nonint do_sudo_pass 1
+elif [ ! -f "/etc/sudoers.d/010_${BASE_USER}-nopasswd" ]; then
+    # Fallback for legacy images that neither have the raspi-config
+    # helper nor the pre-shipped nopasswd file.
+    echo "${BASE_USER} ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/010_${BASE_USER}-nopasswd"
+    chmod 440 "/etc/sudoers.d/010_${BASE_USER}-nopasswd"
 fi
