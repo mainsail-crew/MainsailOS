@@ -75,3 +75,48 @@ if [[ -f "${PICONFIG_SWAP_CONF_FILE}" ]]; then
     sed -i 's/^CONF_SWAPSIZE.*/'CONF_SWAPSIZE="${SWAP_SIZE}"'/' "${SWAP_CONF_FILE}"
     sed -i 's/^#CONF_MAXSWAP.*/'CONF_MAXSWAP="${SWAP_MAX}"'/' "${SWAP_CONF_FILE}"
 fi
+
+########################################
+# Finalize user setup and set password #
+########################################
+
+if [ -f /usr/lib/userconf-pi/userconf ]; then
+    hash="$(echo "$BASE_PASSWORD" | openssl passwd -6 -stdin)"
+    /usr/lib/userconf-pi/userconf "$BASE_USER" "${hash}"
+fi
+
+systemctl_if_exists disable userconfig.service
+
+########################################
+# Enable getty                         #
+########################################
+
+systemctl_if_exists enable getty@tty1.service
+
+########################################
+# Enable sshd                          #
+########################################
+
+if [ -f /usr/lib/raspberrypi-sys-mods/imager_custom ]; then
+    /usr/lib/raspberrypi-sys-mods/imager_custom enable_ssh
+else
+    systemctl_if_exists enable ssh
+fi
+
+########################################
+# Enable passwordless sudo (build)     #
+########################################
+
+# Trixie+: raspberrypi-sys-mods no longer ships /etc/sudoers.d/010_pi-nopasswd
+# Bookworm and earlier: /etc/sudoers.d/010_pi-nopasswd is already
+#
+# 98-remove-passwordless-sudo reverts both cases at the end of the build.
+RASPI_CONFIG="$(command -v raspi-config || true)"
+if [ -n "${RASPI_CONFIG}" ] && grep -q "^do_sudo_pass" "${RASPI_CONFIG}"; then
+    SUDO_USER="${BASE_USER}" raspi-config nonint do_sudo_pass 1
+elif [ ! -f /etc/sudoers.d/010_pi-nopasswd ]; then
+    # Fallback for legacy images that neither have the raspi-config
+    # helper nor the pre-shipped nopasswd file.
+    echo "${BASE_USER} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/010_pi-nopasswd
+    chmod 440 /etc/sudoers.d/010_pi-nopasswd
+fi
