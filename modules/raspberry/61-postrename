@@ -14,11 +14,44 @@ install_cleanup_trap
 source /files/00-config
 
 ########################################
-# Copy script & set user rights        #
+# Gate on INIT_FORMAT                  #
 ########################################
 
-cp /files/postrename /postrename
-chmod 0755 /postrename
+# This module installs the legacy rc.local-based post-rename hook that is
+# paired with the RPi-Imager "systemd" init_format (firstrun.sh). When the
+# image uses the cloud-init flow instead, the post-rename service is installed
+# by modules/generic/61-postrename-cloudinit, so we skip this one.
+INIT_FORMAT="${EDITBASE_INIT_FORMAT:-systemd}"
+case "${INIT_FORMAT}" in
+    cloudinit|cloudinit-rpi)
+        echo "Skipping legacy rc.local post-rename hook (INIT_FORMAT=${INIT_FORMAT})"
+        exit 0
+        ;;
+esac
+
+########################################
+# Install script + shared lib          #
+########################################
+
+# The rename transforms are shared with the cloud-init variant and live in
+# modules/generic/files/cloudinit/postrename-lib. Install it to the same
+# canonical path the cloud-init flow uses so both entry points source the
+# exact same code.
+install -d -m 0755 /usr/local/lib/mainsailos
+
+install -m 0755 /files/postrename /postrename
+install -m 0644 /files/cloudinit/postrename-lib \
+    /usr/local/lib/mainsailos/postrename-lib
+
+# Substitute build-time placeholders:
+#   @BASE_USER@ - pre-built default user that firstrun.sh will rename
+INSTALLED_FILES=(
+    /postrename
+    /usr/local/lib/mainsailos/postrename-lib
+)
+for f in "${INSTALLED_FILES[@]}"; do
+    sed -i "s|@BASE_USER@|${BASE_USER}|g" "${f}"
+done
 
 ########################################
 # Create rc.local, if it doesnt exists #

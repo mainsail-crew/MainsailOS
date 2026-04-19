@@ -1,0 +1,174 @@
+#!/bin/bash
+#### Pre-rename for cloud-init based images
+####
+#### Runs Before=cloud-init-local.service and renames the default "@BASE_USER@"
+#### user to the one requested in /boot[/firmware]/user-data so cloud-init's
+#### users module then operates on the correct, pre-existing user.
+
+set -eu
+export LC_ALL=C
+
+LOG_TAG="mainsailos-prerename"
+STATE_DIR="/var/lib/mainsailos"
+STATE_FILE="${STATE_DIR}/prerename.done"
+USER_DATA_CANDIDATES=(/boot/firmware/user-data /boot/user-data)
+
+log() {
+    logger -s -t "${LOG_TAG}" -- "$*" || echo "${LOG_TAG}: $*"
+}
+
+find_userdata() {
+    local candidate
+    for candidate in "${USER_DATA_CANDIDATES[@]}"; do
+        if [[ -f "${candidate}" ]]; then
+            printf '%s\n' "${candidate}"
+            return 0
+        fi
+    done
+    return 1
+}
+
+parse_user() {
+    python3 - "$1" <<'PY'
+import sys, yaml
+
+with open(sys.argv[1], "r") as fh:
+    data = yaml.safe_load(fh) or {}
+
+users = data.get("users")
+if not isinstance(users, list):
+    sys.exit(0)
+
+for user in users:
+    name = None
+    passwd = ""
+    lock = False
+
+    if isinstance(user, str):
+        name = user
+    elif isinstance(user, dict):
+        name = user.get("name")
+        passwd = user.get("passwd") or ""
+        lock = bool(user.get("lock_passwd", False))
+
+    if name and name not in ("default", "@BASE_USER@"):
+        print(name)
+        print(passwd)
+        print("true" if lock else "false")
+        sys.exit(0)
+PY
+}
+
+load_requested_user() {
+    local userdata="$1"
+    local parsed_user parse_rc
+
+    log "parsing user-data at ${userdata}"
+
+    set +e
+    parsed_user="$(parse_user "${userdata}")"
+    parse_rc=$?
+    set -e
+
+    if [[ ${parse_rc} -ne 0 ]]; then
+        log "ERROR: failed to parse ${userdata} (python exit ${parse_rc}); refusing to rename '@BASE_USER@' -- fix the user-data and reboot"
+        exit 1
+    fi
+
+    mapfile -t USER_FIELDS <<< "${parsed_user}"
+
+    NEW_USER="$(printf '%s' "${USER_FIELDS[0]:-}" | tr -d '[:space:]')"
+    NEW_PASSWD="${USER_FIELDS[1]:-}"
+    NEW_LOCK_PASSWD="${USER_FIELDS[2]:-false}"
+}
+
+nothing_to_rename() {
+    if [[ -z "${NEW_USER}" ]]; then
+        log "user-data keeps '@BASE_USER@' (or has no custom user), nothing to rename"
+        return 0
+    fi
+
+    if ! id -u @BASE_USER@ >/dev/null 2>&1; then
+        log "no '@BASE_USER@' user present, nothing to rename"
+        return 0
+    fi
+
+    if ! [[ "${NEW_USER}" =~ ^[a-z_][a-z0-9_-]*[$]?$ ]]; then
+        log "invalid username '${NEW_USER}', nothing to rename"
+        return 0
+    fi
+
+    if id -u "${NEW_USER}" >/dev/null 2>&1; then
+        log "target user '${NEW_USER}' already exists, leaving system untouched"
+        return 0
+    fi
+
+    return 1
+}
+
+rename_user() {
+    log "renaming '@BASE_USER@' to '${NEW_USER}' (home: /home/${NEW_USER})"
+
+    usermod -l "${NEW_USER}" @BASE_USER@
+
+    if getent group @BASE_USER@ >/dev/null 2>&1; then
+        groupmod -n "${NEW_USER}" @BASE_USER@
+    fi
+
+    if [[ -d /home/@BASE_USER@ ]]; then
+        usermod -d "/home/${NEW_USER}" -m "${NEW_USER}"
+    else
+        usermod -d "/home/${NEW_USER}" "${NEW_USER}"
+    fi
+}
+
+apply_password() {
+    if [[ -n "${NEW_PASSWD}" && "${NEW_LOCK_PASSWD}" != "true" ]]; then
+        log "applying passwd hash from user-data for '${NEW_USER}'"
+        usermod -p "${NEW_PASSWD}" "${NEW_USER}"
+    fi
+}
+
+update_sudoers() {
+    local old_file="/etc/sudoers.d/010_@BASE_USER@-nopasswd"
+    local new_file="/etc/sudoers.d/010_${NEW_USER}-nopasswd"
+
+    if [[ -f "${old_file}" ]]; then
+        mv "${old_file}" "${new_file}"
+        sed -i "s/^@BASE_USER@ /${NEW_USER} /" "${new_file}"
+        chmod 0440 "${new_file}"
+    fi
+}
+
+main() {
+    mkdir -p "${STATE_DIR}"
+    if [[ -f "${STATE_FILE}" ]]; then
+        log "already completed, nothing to do"
+        exit 0
+    fi
+
+    local userdata
+    userdata="$(find_userdata)"
+    if [[ -z "${userdata}" ]]; then
+        log "no user-data found, nothing to do"
+        touch "${STATE_FILE}"
+        exit 0
+    fi
+
+    load_requested_user "${userdata}"
+    if nothing_to_rename; then
+        touch "${STATE_FILE}"
+        exit 0
+    fi
+
+    rename_user
+    apply_password
+    update_sudoers
+
+    touch "${STATE_FILE}"
+    log "rename complete; cloud-init will configure '${NEW_USER}' next"
+
+    exit 0
+}
+
+main
