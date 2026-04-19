@@ -1,0 +1,125 @@
+#!/bin/bash
+#### Post-rename for cloud-init based images
+####
+#### Copyright 2024 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+#### Runs After=cloud-final.service (paired with cloud-init.target). By that
+#### time cloud-init has applied user-data (groups, SSH keys, password). We now
+#### patch all paths/service-files/venvs/polkit/logrotate/symlinks that still
+#### point at /home/pi so the rename from the prerename step becomes effective
+#### for every MainsailOS component.
+####
+#### Design notes:
+####  * NO `set -e` / `set -Ee` — a single sed-on-missing-file must not kill
+####    the whole post-rename. Each step is wrapped in `run_step` which logs
+####    the failure and continues with the next transform.
+####  * The EXIT trap always writes STATE_FILE so we never retry-loop, even
+####    if the process gets killed mid-way (e.g. power cut or reboot race).
+####  * `self_disable` only detaches the systemd units (symlinks, enabled
+####    state) — the scripts themselves stay under /usr/local/sbin/ so a
+####    user can always re-run `sudo /usr/local/sbin/mainsailos-postrename`
+####    to finish a half-done migration.
+
+set -u
+export LC_ALL=C
+
+LIB="/usr/local/lib/mainsailos/postrename-lib"
+STATE_DIR="/var/lib/mainsailos"
+STATE_FILE="${STATE_DIR}/postrename.done"
+LOG_FILE="/var/log/mainsailos-postrename.log"
+SERVICE_NAME="mainsailos-postrename.service"
+PRERENAME_UNIT="mainsailos-prerename.service"
+
+## Tee everything to both the journal (via service StandardOutput=) and a
+## persistent log file, so the user can inspect what happened even if the
+## journal is still volatile on the first boot.
+mkdir -p "${STATE_DIR}" "$(dirname "${LOG_FILE}")"
+exec > >(stdbuf -oL tee -a "${LOG_FILE}") 2>&1
+
+log()   { printf '[%s] %s\n' "$(date -Iseconds)" "$*"; }
+fatal() { log "FATAL: $*"; exit 1; }
+
+## Always mark done on exit so subsequent boots don't retry blindly. The
+## user can still re-run the script manually at any time (and touch the
+## STATE_FILE again at the end).
+on_exit() {
+    local rc=$?
+    log "=== exit rc=${rc} - writing ${STATE_FILE} ==="
+    touch "${STATE_FILE}" 2>/dev/null || true
+}
+trap on_exit EXIT
+
+log "=== mainsailos-postrename starting ==="
+
+self_disable() {
+    ## Detach systemd units only — keep /usr/local/sbin scripts around so the
+    ## user can trigger a manual rerun if something went sideways.
+    systemctl disable "${SERVICE_NAME}"   >/dev/null 2>&1 || true
+    systemctl disable "${PRERENAME_UNIT}" >/dev/null 2>&1 || true
+    rm -f "/etc/systemd/system/multi-user.target.wants/${SERVICE_NAME}" \
+          "/etc/systemd/system/cloud-init.target.wants/${SERVICE_NAME}" \
+          "/etc/systemd/system/cloud-init.target.wants/${PRERENAME_UNIT}"
+    systemctl daemon-reload >/dev/null 2>&1 || true
+}
+
+run_step() {
+    local name="$1"; shift
+    log "--- step: ${name} ---"
+    if "$@"; then
+        log "    OK: ${name}"
+    else
+        log "    FAILED: ${name} (rc=$?) — continuing"
+    fi
+}
+
+if [[ -f "${STATE_FILE}" ]]; then
+    log "already completed on a previous boot — detaching units"
+    self_disable
+    exit 0
+fi
+
+if [[ ! -f "${LIB}" ]]; then
+    fatal "missing library ${LIB}"
+fi
+# shellcheck source=/dev/null
+source "${LIB}"
+
+if [[ -z "${DEFAULT_USER:-}" ]] || [[ "${DEFAULT_USER}" == "pi" ]]; then
+    log "default user is '${DEFAULT_USER:-unset}' — nothing to rename, detaching"
+    self_disable
+    exit 0
+fi
+
+log "applying MainsailOS rename transforms for user '${DEFAULT_USER}'"
+
+run_step "stop_services"            stop_services
+run_step "change_www_root"          change_www_root
+run_step "change_service_user"      change_service_user
+run_step "change_env_user"          change_env_user
+run_step "relocate_venv"            relocate_venv
+run_step "patch_polkit_rules"       patch_polkit_rules
+run_step "patch_cn_logpath"         patch_cn_logpath
+run_step "patch_cn_logrotate"       patch_cn_logrotate
+run_step "fix_broken_links"         fix_broken_links
+run_step "fix_timelapse_links"      fix_timelapse_links
+run_step "fix_mainsailcfg_links"    fix_mainsailcfg_links
+if [[ -d "/home/${DEFAULT_USER}/kiauh" ]]; then
+    run_step "fix_kiauh_links"      fix_kiauh_links
+fi
+run_step "systemctl daemon-reload"  systemctl daemon-reload
+run_step "start_services"           start_services
+
+log "all transforms applied — detaching units and scheduling reboot"
+touch "${STATE_FILE}"
+self_disable
+
+## We must exit from this oneshot service before systemd can start the
+## shutdown transaction triggered by `systemctl reboot`. Detach the reboot
+## into the background so ExecStart returns, then let systemd take over.
+( sleep 3 && systemctl --no-wall reboot ) >/dev/null 2>&1 &
+disown
+log "=== mainsailos-postrename done ==="
+exit 0

@@ -1,0 +1,161 @@
+#!/bin/bash
+#### Pre-rename for cloud-init based images
+####
+#### Runs Before=cloud-init-local.service and renames the default "pi" user to
+#### the one requested in /boot[/firmware]/user-data so cloud-init's users
+#### module then operates on the correct, pre-existing user (setting password,
+#### SSH keys, groups, etc.) instead of creating a second user next to "pi".
+
+set -eu
+export LC_ALL=C
+
+LOG_TAG="mainsailos-prerename"
+STATE_DIR="/var/lib/mainsailos"
+STATE_FILE="${STATE_DIR}/prerename.done"
+CANDIDATES=(/boot/firmware/user-data /boot/user-data)
+
+log() { logger -s -t "${LOG_TAG}" -- "$*" || echo "${LOG_TAG}: $*"; }
+
+mkdir -p "${STATE_DIR}"
+
+if [[ -f "${STATE_FILE}" ]]; then
+    log "already completed, nothing to do"
+    exit 0
+fi
+
+### Locate user-data (RPi Imager writes it to the boot FAT)
+USERDATA=""
+for c in "${CANDIDATES[@]}"; do
+    if [[ -f "${c}" ]]; then
+        USERDATA="${c}"
+        break
+    fi
+done
+
+if [[ -z "${USERDATA}" ]]; then
+    log "no user-data found, nothing to do"
+    touch "${STATE_FILE}"
+    exit 0
+fi
+
+log "parsing user-data at ${USERDATA}"
+
+### Parse the first concrete user entry out of the cloud-init users block.
+### We skip the "default" keyword (cloud-init's reference to /etc/cloud/cloud.cfg)
+### and anything that is already "pi". We also surface the passwd hash and the
+### lock_passwd flag so we can apply them ourselves -- cloud-init's
+### cc_users_groups refuses to overwrite passwords on pre-existing users
+### (logs "'passwd' in user-data is ignored for existing user <name>") which
+### would otherwise leave the build-time default password in place after we
+### rename 'pi' to the requested user.
+###
+### Output format (one value per line, exactly 3 lines):
+###   1) username
+###   2) passwd hash        (empty if not set)
+###   3) lock_passwd        ("true" or "false")
+PARSED_USER="$(python3 - "${USERDATA}" <<'PY' || true
+import sys, yaml
+
+path = sys.argv[1]
+try:
+    with open(path, "r") as fh:
+        data = yaml.safe_load(fh) or {}
+except Exception:
+    sys.exit(0)
+
+users = data.get("users")
+if not isinstance(users, list):
+    sys.exit(0)
+
+for entry in users:
+    name = None
+    passwd = ""
+    lock = False
+    if isinstance(entry, str):
+        # plain "default" string or a bare username (no passwd info possible)
+        if entry and entry != "default" and entry != "pi":
+            name = entry
+    elif isinstance(entry, dict):
+        n = entry.get("name")
+        if n and n != "default" and n != "pi":
+            name = n
+            passwd = entry.get("passwd") or ""
+            lock = bool(entry.get("lock_passwd", False))
+    if name:
+        print(name)
+        print(passwd)
+        print("true" if lock else "false")
+        sys.exit(0)
+PY
+)"
+mapfile -t _fields <<< "${PARSED_USER}"
+NEW_USER="$(printf '%s' "${_fields[0]:-}" | tr -d '[:space:]')"
+NEW_PASSWD="${_fields[1]:-}"
+NEW_LOCK_PASSWD="${_fields[2]:-false}"
+
+if [[ -z "${NEW_USER}" ]]; then
+    log "user-data keeps 'pi' (or has no custom user), nothing to rename"
+    touch "${STATE_FILE}"
+    exit 0
+fi
+
+### Reject anything that looks suspicious
+if ! [[ "${NEW_USER}" =~ ^[a-z_][a-z0-9_-]*[$]?$ ]]; then
+    log "refusing to rename to invalid username '${NEW_USER}'"
+    touch "${STATE_FILE}"
+    exit 0
+fi
+
+### Abort if "pi" doesn't exist (nothing to rename)
+if ! id -u pi >/dev/null 2>&1; then
+    log "no 'pi' user present, nothing to rename"
+    touch "${STATE_FILE}"
+    exit 0
+fi
+
+### Abort if the target user already exists (cloud-init previously ran, or
+### someone set the name to an existing system user). Don't touch anything.
+if id -u "${NEW_USER}" >/dev/null 2>&1; then
+    log "target user '${NEW_USER}' already exists, leaving system untouched"
+    touch "${STATE_FILE}"
+    exit 0
+fi
+
+log "renaming 'pi' to '${NEW_USER}' (home: /home/${NEW_USER})"
+
+### Rename login name first
+usermod -l "${NEW_USER}" pi
+
+### Rename the matching primary group if it exists
+if getent group pi >/dev/null 2>&1; then
+    groupmod -n "${NEW_USER}" pi
+fi
+
+### Move home directory (UID stays 1000, ownership is preserved automatically)
+if [[ -d /home/pi ]]; then
+    usermod -d "/home/${NEW_USER}" -m "${NEW_USER}"
+else
+    usermod -d "/home/${NEW_USER}" "${NEW_USER}"
+fi
+
+### Apply password hash from user-data. Cloud-init's cc_users_groups would
+### skip this because the user now exists (we just renamed 'pi' to it); if we
+### didn't do it here, the build-time default password ('raspberry' on RPi,
+### 'armbian' on Armbian) would stay active and the hash the user supplied via
+### RPi Imager would be silently ignored. Skipped if lock_passwd: true was
+### requested (user opted out of password login, typically for SSH-key-only
+### setups).
+if [[ -n "${NEW_PASSWD}" && "${NEW_LOCK_PASSWD}" != "true" ]]; then
+    log "applying passwd hash from user-data for '${NEW_USER}'"
+    usermod -p "${NEW_PASSWD}" "${NEW_USER}"
+fi
+
+### Update well-known sudoers drop-in the image may ship for "pi"
+if [[ -f /etc/sudoers.d/010_pi-nopasswd ]]; then
+    mv /etc/sudoers.d/010_pi-nopasswd "/etc/sudoers.d/010_${NEW_USER}-nopasswd"
+    sed -i "s/^pi /${NEW_USER} /" "/etc/sudoers.d/010_${NEW_USER}-nopasswd"
+    chmod 0440 "/etc/sudoers.d/010_${NEW_USER}-nopasswd"
+fi
+
+touch "${STATE_FILE}"
+log "rename complete; cloud-init will configure '${NEW_USER}' next"

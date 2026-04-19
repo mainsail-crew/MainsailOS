@@ -1,0 +1,4 @@
+# cloud-init network-config placeholder shipped by MainsailOS.
+# This file is overwritten by RPi Imager when WiFi credentials are supplied.
+# On an unmodified image we fall back to whatever network configuration the
+# base Armbian image ships with.

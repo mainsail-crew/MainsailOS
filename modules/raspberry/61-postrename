@@ -14,6 +14,22 @@ install_cleanup_trap
 source /files/00-config
 
 ########################################
+# Gate on INIT_FORMAT                  #
+########################################
+
+# This module installs the legacy rc.local-based post-rename hook that is
+# paired with the RPi-Imager "systemd" init_format (firstrun.sh). When the
+# image uses the cloud-init flow instead, the post-rename service is installed
+# by modules/generic/61-postrename-cloudinit, so we skip this one.
+INIT_FORMAT="${EDITBASE_INIT_FORMAT:-systemd}"
+case "${INIT_FORMAT}" in
+    cloudinit|cloudinit-rpi)
+        echo "Skipping legacy rc.local post-rename hook (INIT_FORMAT=${INIT_FORMAT})"
+        exit 0
+        ;;
+esac
+
+########################################
 # Copy script & set user rights        #
 ########################################
 

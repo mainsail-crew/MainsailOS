@@ -193,20 +193,24 @@ fix_kiauh_links() {
     ln -sf "${src_dir}/kiauh.sh" "${target_dir}/kiauh"
 }
 
-fix_cn_links() {
-    local tools_dir
-    tools_dir="/home/${DEFAULT_USER}/crowsnest/tools"
-    sudo -u "${DEFAULT_USER}" \
-    ln -sf "${tools_dir}/libs/pkglist-rpi.sh" "${tools_dir}/pkglist.sh"
-}
-
 main() {
 local cmdltxt
-cmdltxt="/boot/cmdline.txt"
+## Boot partition is mounted under /boot/firmware since Bookworm;
+## older Raspberry Pi OS releases mounted it under /boot.
+if [[ -f "/boot/firmware/cmdline.txt" ]]; then
+    cmdltxt="/boot/firmware/cmdline.txt"
+else
+    cmdltxt="/boot/cmdline.txt"
+fi
 
-## Make sure init_resize.sh and firstrun.sh are finished
-if [[ "$(grep -c "init" "${cmdltxt}")" != "0" ]] && \
-[[ "$(grep -c "systemd.run.*" "${cmdltxt}")" != "0" ]]; then
+## Make sure sdcard resize and first-boot provisioning are finished.
+## Bookworm and earlier: cmdline.txt contains `init=.../firstboot` and
+##                       `systemd.run=.../firstrun.sh` until both finish.
+## Trixie and later:     cmdline.txt contains the `resize` keyword which
+##                       is removed by the initramfs once resize completed.
+if { grep -Eq 'init=[^[:space:]]*firstboot' "${cmdltxt}" \
+     && grep -q 'systemd.run=' "${cmdltxt}"; } \
+   || grep -Eq '(^|[[:space:]])resize([[:space:]]|$)' "${cmdltxt}"; then
     echo -e "[${RED}ERROR${NOC}] \
     ${WHITE}Sdcard resize and firstrun are not finished yet ... [ABORT]${NOC}"
     ## Make sure not failing rc.local
@@ -262,7 +266,6 @@ fix_mainsailcfg_links
 if [[ -d "/home/${DEFAULT_USER}/kiauh" ]]; then
     fix_kiauh_links
 fi
-fix_cn_links
 echo -e "${WHITE}Fix broken symlinks ...${NOC}[${GRE}OK${NOC}]"
 ## do a short break
 sleep 2
