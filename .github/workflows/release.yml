@@ -204,6 +204,7 @@ jobs:
           scripts:  "${{ github.workspace }}/scripts"
           config: "${{ github.workspace }}/config.local"
           environment: '{ "RELEASE_TAG": "${{ env.RELEASE_TAG }}"}'
+          custopizer: "main"
 
       - name: "✏ Rename image"
         working-directory: ./build
@@ -259,6 +260,11 @@ jobs:
 
           # replace $VERSION$ in name
           rpi_data['name'] = rpi_data['name'].replace('$VERSION$', "${{ env.RELEASE_TAG }}")
+
+          # derive init_format from env.INIT_FORMAT, unless already set in rpi_json
+          env_init_format = matrix.get('env', {}).get('INIT_FORMAT', '')
+          if env_init_format and 'init_format' not in rpi_data:
+              rpi_data['init_format'] = env_init_format
 
           filename = "${{ env.IMAGE }}.xz"
           repo = "${{ github.repository }}"

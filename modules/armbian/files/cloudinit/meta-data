@@ -1,0 +1,4 @@
+# cloud-init NoCloud meta-data placeholder shipped by MainsailOS.
+# RPi Imager (and any compatible tool) overwrites this file when the user
+# applies OS customisation, so we ship only a static instance-id.
+instance-id: mainsailos-armbian

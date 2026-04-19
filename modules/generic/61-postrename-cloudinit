@@ -1,0 +1,82 @@
+#!/bin/bash
+set -xe
+export LC_ALL=C
+
+########################################
+# Functions and Basic Configuration    #
+########################################
+
+# Load common functions and set up cleanup trap
+source /common.sh
+install_cleanup_trap
+
+# Load additional configuration (e.g., BASE_USER)
+source /files/00-config
+
+########################################
+# Gate on INIT_FORMAT                  #
+########################################
+
+INIT_FORMAT="${EDITBASE_INIT_FORMAT:-systemd}"
+case "${INIT_FORMAT}" in
+    cloudinit|cloudinit-rpi)
+        echo_green "Installing cloud-init pre/post-rename services (INIT_FORMAT=${INIT_FORMAT})"
+        ;;
+    *)
+        echo "Skipping cloud-init post-rename setup (INIT_FORMAT=${INIT_FORMAT})"
+        exit 0
+        ;;
+esac
+
+########################################
+# Pick the correct boot path           #
+########################################
+
+# The service needs the boot FAT mounted before it can read user-data.
+if [[ "${BOOT_PATH}" == "/boot/firmware" ]]; then
+    BOOT_REQUIRE="/boot/firmware"
+else
+    BOOT_REQUIRE="/boot"
+fi
+
+########################################
+# Install dependencies                 #
+########################################
+
+DEPS=(python3-yaml cloud-init)
+apt-get install --yes "${DEPS[@]}"
+
+########################################
+# Install scripts & systemd units      #
+########################################
+
+install -d -m 0755 /usr/local/sbin /usr/local/lib/mainsailos /var/lib/mainsailos
+
+install -m 0755 /files/cloudinit/prerename /usr/local/sbin/mainsailos-prerename
+install -m 0755 /files/cloudinit/postrename /usr/local/sbin/mainsailos-postrename
+install -m 0644 /files/cloudinit/postrename-lib /usr/local/lib/mainsailos/postrename-lib
+
+install -m 0644 /files/cloudinit/mainsailos-prerename.service \
+    /etc/systemd/system/mainsailos-prerename.service
+install -m 0644 /files/cloudinit/mainsailos-postrename.service \
+    /etc/systemd/system/mainsailos-postrename.service
+
+# Substitute build-time placeholders in the installed files:
+#   @BOOT_REQUIRE@ - boot partition mount path (/boot vs /boot/firmware)
+#   @BASE_USER@   - pre-built default user that the prerename step will rename
+INSTALLED_FILES=(
+    /usr/local/sbin/mainsailos-prerename
+    /usr/local/sbin/mainsailos-postrename
+    /usr/local/lib/mainsailos/postrename-lib
+    /etc/systemd/system/mainsailos-prerename.service
+    /etc/systemd/system/mainsailos-postrename.service
+)
+for f in "${INSTALLED_FILES[@]}"; do
+    sed -i \
+        -e "s|@BOOT_REQUIRE@|${BOOT_REQUIRE}|g" \
+        -e "s|@BASE_USER@|${BASE_USER}|g" \
+        "${f}"
+done
+
+systemctl_if_exists enable mainsailos-prerename.service
+systemctl_if_exists enable mainsailos-postrename.service

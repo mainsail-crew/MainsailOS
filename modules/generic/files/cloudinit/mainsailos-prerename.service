@@ -1,0 +1,19 @@
+[Unit]
+Description=MainsailOS pre-rename (rename @BASE_USER@ -> custom user from user-data, before cloud-init)
+DefaultDependencies=no
+After=systemd-remount-fs.service local-fs.target
+# BOOT_REQUIRE is substituted at install time with "/boot/firmware" on RPi,
+# "/boot" on Armbian, so that the boot FAT is mounted before we parse user-data.
+RequiresMountsFor=@BOOT_REQUIRE@
+Before=cloud-init-local.service cloud-init.service cloud-init.target shutdown.target
+Conflicts=shutdown.target
+ConditionPathExists=!/var/lib/mainsailos/prerename.done
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/mainsailos-prerename
+StandardOutput=journal+console
+
+[Install]
+WantedBy=cloud-init.target

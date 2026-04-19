@@ -1,0 +1,197 @@
+#!/bin/bash
+#### Post-rename common library
+####
+#### This library is sourced by both the legacy rc.local post-rename script
+#### (modules/raspberry/files/postrename) and the cloud-init post-rename
+#### wrapper (modules/generic/files/cloudinit/postrename).
+
+# shellcheck enable=require-variable-braces
+# shellcheck disable=SC2034  # variables exported for callers
+
+### Setup (variables are intentionally exported for callers)
+SERVICES=(moonraker klipper nginx sonar crowsnest)
+SYSTEMD_DIR="/etc/systemd/system"
+DEFAULT_USER="$(getent passwd 1000 | cut -d: -f1)"
+LIB_DIR="/usr/local/lib/mainsailos"
+LIB_FILE="${LIB_DIR}/postrename-lib"
+
+### KlipperScreen workaround
+if [[ -n "${DEFAULT_USER}" ]] && [[ -d "/home/${DEFAULT_USER}" ]]; then
+    KS_INSTALLED="$(find "/home/${DEFAULT_USER}" -maxdepth 1 -name "KlipperScreen" | wc -l)"
+else
+    KS_INSTALLED=0
+fi
+if [[ "${KS_INSTALLED}" = "1" ]]; then
+    SERVICES+=(KlipperScreen)
+fi
+
+log() { printf '%s\n' "$*"; }
+
+### Step wrapper: continue-on-error with structured logging.
+run_step() {
+    local name="$1"; shift
+    log "--- step: ${name} ---"
+    if "$@"; then
+        log "    OK: ${name}"
+    else
+        log "    FAILED: ${name} (rc=$?) — continuing"
+    fi
+}
+
+## Helper funcs
+### Mangle services
+stop_services() {
+    for srv in "${SERVICES[@]}"; do
+        if [[ "$(systemctl is-active "${srv}.service" 2>/dev/null)" != "inactive" ]]; then
+            systemctl stop "${srv}.service" 2>/dev/null || true
+        fi
+    done
+}
+
+start_services() {
+    for srv in "${SERVICES[@]}"; do
+        systemctl start "${srv}.service" 2>/dev/null || true
+    done
+}
+
+### Change nginx root
+change_www_root() {
+    if [[ -f /etc/nginx/sites-available/mainsail ]]; then
+        sed -i "s|/home/@BASE_USER@/mainsail|/home/${DEFAULT_USER}/mainsail|g" \
+            /etc/nginx/sites-available/mainsail
+    fi
+}
+
+### change username in service files
+change_service_user() {
+    ### Filter nginx service first!
+    local -a servicefile
+    servicefile=( "${SERVICES[@]/nginx}" )
+
+    for i in "${servicefile[@]}"; do
+        if [[ -n "${i}" && -f "${SYSTEMD_DIR}/${i}.service" ]]; then
+            sed -i "s/@BASE_USER@/${DEFAULT_USER}/g" "${SYSTEMD_DIR}/${i}.service"
+        fi
+    done
+}
+
+change_env_user() {
+    local env_files env_path
+    env_path="/home/${DEFAULT_USER}/printer_data/systemd"
+    [[ -d "${env_path}" ]] || return 0
+    env_files="$(find "${env_path}" -type f -name "*.env" -printf "%f ")"
+    for ef in ${env_files}; do
+        sed -i "s/@BASE_USER@/${DEFAULT_USER}/g" "${env_path}/${ef}"
+    done
+}
+
+relocate_venv() {
+    local -a venvs
+    venvs=(klippy-env moonraker-env crowsnest-env .KlipperScreen-env)
+
+    for venv in "${venvs[@]}"; do
+        [[ -d "/home/${DEFAULT_USER}/${venv}" ]] || continue
+
+        # delete pycache (*.pyc files)
+        find "/home/${DEFAULT_USER}/${venv}" -name "__pycache__" -type d -exec rm -rf {} +
+
+        # repair shebangs
+        while IFS= read -r file ; do
+            sed -i "s|@BASE_USER@/${venv}|${DEFAULT_USER}/${venv}|g" "${file}"
+        done < <(grep -iR "@BASE_USER@/${venv}" "/home/${DEFAULT_USER}/${venv}"/* 2>/dev/null | cut -d":" -f1 | sort -u)
+    done
+}
+
+patch_polkit_rules() {
+    local polkit_dir polkit_legacy_dir polkit_usr_dir
+    polkit_legacy_dir="/etc/polkit-1/localauthority/50-local.d"
+    polkit_dir="/etc/polkit-1/rules.d"
+    polkit_usr_dir="/usr/share/polkit-1/rules.d"
+    if [[ -f "${polkit_dir}/moonraker.rules" ]]; then
+        sed -i "s/@BASE_USER@/${DEFAULT_USER}/g" "${polkit_dir}/moonraker.rules"
+    fi
+    if [[ -f "${polkit_usr_dir}/moonraker.rules" ]]; then
+        sed -i "s/ \"@BASE_USER@\"/ \"${DEFAULT_USER}\"/g" "${polkit_usr_dir}/moonraker.rules"
+    fi
+    if [[ -f "${polkit_legacy_dir}/10-moonraker.pkla" ]]; then
+        sed -i "s/@BASE_USER@/${DEFAULT_USER}/g" "${polkit_legacy_dir}/10-moonraker.pkla"
+    fi
+    if [[ -f "${polkit_dir}/KlipperScreen.rules" ]]; then
+        sed -i "s/@BASE_USER@/${DEFAULT_USER}/g" "${polkit_dir}/KlipperScreen.rules"
+    fi
+    if [[ -f "${polkit_usr_dir}/KlipperScreen.rules" ]]; then
+        sed -i "s/@BASE_USER@/${DEFAULT_USER}/g" "${polkit_usr_dir}/KlipperScreen.rules"
+    fi
+    if [[ -f "${polkit_legacy_dir}/20-klipperscreen.pkla" ]]; then
+        sed -i "s/@BASE_USER@/${DEFAULT_USER}/g" "${polkit_legacy_dir}/20-klipperscreen.pkla"
+    fi
+}
+
+## Fix broken links
+fix_bin_links() {
+    local -a brokenlinks
+    local path
+    brokenlinks=(sonar)
+    path="/usr/local/bin"
+
+    for bl in "${brokenlinks[@]}"; do
+        if [[ -h "${path}/${bl}" ]]; then
+            rm -rf "${path:?}/${bl}"
+        fi
+        find "/home/${DEFAULT_USER}" -type f -iname "${bl}" -print0 | \
+            xargs -0 -I {} ln -s {} "${path}/${bl}"
+    done
+}
+
+fix_timelapse_links() {
+    local config_dir src_dir target_dir
+    config_dir="/home/${DEFAULT_USER}/printer_data/config"
+    src_dir="/home/${DEFAULT_USER}/moonraker-timelapse"
+    target_dir="/home/${DEFAULT_USER}/moonraker/moonraker/components"
+    [[ -d "${src_dir}" ]] || return 0
+    [[ -d "${target_dir}" ]] && sudo -u "${DEFAULT_USER}" \
+        ln -sf "${src_dir}/component/timelapse.py" "${target_dir}/timelapse.py"
+    [[ -d "${config_dir}" ]] && sudo -u "${DEFAULT_USER}" \
+        ln -sf "${src_dir}/klipper_macro/timelapse.cfg" "${config_dir}/timelapse.cfg"
+}
+
+fix_mainsailcfg_links() {
+    local config_dir src_dir
+    config_dir="/home/${DEFAULT_USER}/printer_data/config"
+    src_dir="/home/${DEFAULT_USER}/mainsail-config"
+    [[ -d "${src_dir}" && -d "${config_dir}" ]] || return 0
+    sudo -u "${DEFAULT_USER}" \
+        ln -sf "${src_dir}/mainsail.cfg" "${config_dir}/mainsail.cfg"
+}
+
+# Optional if kiauh module is used
+fix_kiauh_links() {
+    local src_dir target_dir
+    src_dir="/home/${DEFAULT_USER}/kiauh"
+    target_dir="/usr/local/bin"
+    [[ -d "${src_dir}" ]] || return 0
+    ln -sf "${src_dir}/kiauh.sh" "${target_dir}/kiauh"
+}
+
+### Apply all transforms via run_step (continue-on-error).
+postrename_apply_all() {
+    run_step "stop_services"           stop_services
+    run_step "change_www_root"         change_www_root
+    run_step "change_service_user"     change_service_user
+    run_step "change_env_user"         change_env_user
+    run_step "relocate_venv"           relocate_venv
+    run_step "patch_polkit_rules"      patch_polkit_rules
+    run_step "fix_bin_links"           fix_bin_links
+    run_step "fix_timelapse_links"     fix_timelapse_links
+    run_step "fix_mainsailcfg_links"   fix_mainsailcfg_links
+    run_step "fix_kiauh_links"         fix_kiauh_links
+    run_step "systemctl daemon-reload" systemctl daemon-reload
+    sleep 2
+    run_step "start_services"          start_services
+}
+
+### Self-cleanup of the shared library
+postrename_cleanup_lib() {
+    rm -f "${LIB_FILE}"
+    rmdir --ignore-fail-on-non-empty "${LIB_DIR}" 2>/dev/null || true
+}

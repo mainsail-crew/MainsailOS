@@ -1,0 +1,8 @@
+#cloud-config
+# cloud-init user-data placeholder shipped by MainsailOS.
+# This file is overwritten by RPi Imager (or any compatible tool) when the
+# user applies OS customisation; on an unmodified image it deliberately does
+# nothing so the pre-built "pi" user with its default password remains the
+# way to log in.
+#
+# See https://cloudinit.readthedocs.io/ for the full reference.

@@ -1,0 +1,117 @@
+#!/bin/bash
+#### Post-rename for cloud-init based images
+####
+#### Copyright 2024 - till today
+#### https://github.com/mainsail-crew/MainsailOS
+####
+#### This File is distributed under GPLv3
+####
+#### Runs After=cloud-final.service (paired with cloud-init.target). By that
+#### time cloud-init has applied user-data (groups, SSH keys, password). We now
+#### patch all paths/service-files/venvs/polkit/logrotate/symlinks that still
+#### point at /home/@BASE_USER@ so the rename from the prerename step becomes
+#### effective for every MainsailOS component.
+####
+#### Design notes:
+####  * NO `set -e` / `set -Ee` — handled by `run_step` in the shared library
+####    (every transform is logged and the loop continues on individual
+####    failures, mirroring the legacy rc.local variant).
+####  * STATE_FILE is only written on the explicit success path at the end
+####    of main. If the script dies mid-way (OOM, segfault in a transform,
+####    `set -u` on an unset var, power cut), the file stays absent, the
+####    systemd unit goes to `failed`, and the next boot will retry — which
+####    is the only safe behaviour because a half-migrated system has
+####    services running as the renamed user while nginx root / polkit /
+####    venv shebangs / env files may still point at @BASE_USER@.
+####  * `cleanup` is HARD: detach systemd units, remove unit files, remove
+####    /usr/local/sbin scripts and the shared library. The STATE_FILE under
+####    /var/lib/mainsailos stays as an audit marker.
+
+set -u
+export LC_ALL=C
+
+LIB="/usr/local/lib/mainsailos/postrename-lib"
+STATE_DIR="/var/lib/mainsailos"
+STATE_FILE="${STATE_DIR}/postrename.done"
+LOG_FILE="/var/log/mainsailos-postrename.log"
+SERVICE_NAME="mainsailos-postrename.service"
+PRERENAME_UNIT="mainsailos-prerename.service"
+SBIN_PRE="/usr/local/sbin/mainsailos-prerename"
+SBIN_POST="/usr/local/sbin/mainsailos-postrename"
+
+## Tee everything to both the journal (via service StandardOutput=) and a
+## persistent log file, so the user can inspect what happened even if the
+## journal is still volatile on the first boot.
+mkdir -p "${STATE_DIR}" "$(dirname "${LOG_FILE}")"
+exec > >(stdbuf -oL tee -a "${LOG_FILE}") 2>&1
+
+# shellcheck source=/dev/null
+source "${LIB}"
+
+## Log only — STATE_FILE is written on the explicit success path at the
+## end of main. Any non-zero / unexpected exit must leave STATE_FILE
+## absent so the unit stays `failed` and the next boot retries, instead
+## of silently locking in a half-migrated system.
+on_exit() {
+    local rc=$?
+    log "=== exit rc=${rc} ==="
+}
+trap on_exit EXIT
+
+cleanup() {
+    log "cleanup: detaching systemd units"
+    systemctl disable "${SERVICE_NAME}"   >/dev/null 2>&1 || true
+    systemctl disable "${PRERENAME_UNIT}" >/dev/null 2>&1 || true
+    rm -f "/etc/systemd/system/multi-user.target.wants/${SERVICE_NAME}" \
+          "/etc/systemd/system/cloud-init.target.wants/${SERVICE_NAME}" \
+          "/etc/systemd/system/cloud-init.target.wants/${PRERENAME_UNIT}"
+
+    log "cleanup: removing unit files"
+    rm -f "/etc/systemd/system/${SERVICE_NAME}" \
+          "/etc/systemd/system/${PRERENAME_UNIT}"
+
+    log "cleanup: removing scripts"
+    rm -f "${SBIN_PRE}" "${SBIN_POST}"
+
+    log "cleanup: removing shared library"
+    postrename_cleanup_lib
+
+    systemctl daemon-reload >/dev/null 2>&1 || true
+}
+
+check_skip() {
+    if [[ -f "${STATE_FILE}" ]]; then
+        log "already completed on a previous boot — running cleanup sweep"
+        cleanup
+        exit 0
+    fi
+
+    if [[ -z "${DEFAULT_USER:-}" ]] || [[ "${DEFAULT_USER}" == "@BASE_USER@" ]]; then
+        log "default user is '${DEFAULT_USER:-unset}' — nothing to rename, cleaning up"
+        touch "${STATE_FILE}"
+        cleanup
+        exit 0
+    fi
+}
+
+main() {
+    log "=== mainsailos-postrename starting ==="
+
+    check_skip
+
+    log "applying MainsailOS rename transforms for user '${DEFAULT_USER}'"
+    postrename_apply_all
+
+    log "all transforms applied — marking done, cleaning up, scheduling reboot"
+    touch "${STATE_FILE}"
+    cleanup
+
+    ## Schedule the reboot as an independent transient timer unit via systemd-run.
+    systemd-run --on-active=3s --timer-property=AccuracySec=1s \
+        --unit=mainsailos-reboot systemctl --no-wall reboot
+
+    log "=== mainsailos-postrename done ==="
+    exit 0
+}
+
+main

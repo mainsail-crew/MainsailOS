@@ -1,0 +1,22 @@
+[Unit]
+Description=MainsailOS post-rename (fix paths, services, venvs, polkit, symlinks after cloud-init)
+# cloud-init.target is ordered "After=multi-user.target", and cloud-final.service
+# is WantedBy=cloud-init.target — so cloud-final runs AFTER the rest of
+# multi-user.target is already up. We therefore hook into the same target as
+# cloud-final and explicitly wait for it, instead of WantedBy=multi-user.target
+# (which would race against cloud-final and silently drop the After= edge).
+After=cloud-final.service
+Wants=cloud-final.service
+ConditionPathExists=!/var/lib/mainsailos/postrename.done
+ConditionPathExists=/usr/local/sbin/mainsailos-postrename
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/mainsailos-postrename
+TimeoutStartSec=10min
+StandardOutput=journal+console
+StandardError=journal+console
+
+[Install]
+WantedBy=cloud-init.target
