@@ -3,7 +3,7 @@
   img_download_url: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent"
   img_hash_url: "https://downloads.raspberrypi.org/raspios_lite_armhf_latest.sha256"
   env:
-    ARCH: armhf
+    ARCH: armv7l
     IMAGE_ENLARGEROOT: 6000
     MOUNT_PROC: 1
     MOUNT_SYS: 1
