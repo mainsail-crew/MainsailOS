@@ -2,6 +2,31 @@
 # Changelog
 All notable changes to MainsailOS will be documented in this file.
 
+## [3.0.0](https://github.com/mainsail-crew/MainsailOS/releases/tag/3.0.0) - 2026-05-06
+### Features
+
+- **cloudinit**: Add cloud-init init_format with pre/post-rename flow
+- **crowsnest**: Switch to v5 branch and drop legacy pkglist installer
+
+### Bug Fixes and Improvements
+
+- **build**: Update architecture to armv7l
+- **klipper**: Adapt numpy and libatlas-base-dev for Trixie
+- **opi-zero2**: Update overlay configuration for SPI, I2C, and UART ([#355](https://github.com/mainsail-crew/MainsailOS/pull/355))
+- **opi3lts**: Update configuration to enable i2c and UART alongside SPI ([#357](https://github.com/mainsail-crew/MainsailOS/pull/357))
+- **opi4lts**: Update overlay_prefix for RK3399 and copy fixup script ([#356](https://github.com/mainsail-crew/MainsailOS/pull/356))
+- **raspberry**: Configure user, ssh, getty and passwordless sudo for Trixie
+- Fix armbian-motd ([#352](https://github.com/mainsail-crew/MainsailOS/pull/352))
+- Armbian-motd ([#353](https://github.com/mainsail-crew/MainsailOS/pull/353))
+- Fix building wheels on armhf images ([#358](https://github.com/mainsail-crew/MainsailOS/pull/358))
+
+### Other
+
+- **build**: Update runner to ubuntu-24.04-arm
+- **workflow**: Update build & release workflow actions ([#362](https://github.com/mainsail-crew/MainsailOS/pull/362))
+- Update .gitignore to include JetBrains and Clankers ([#361](https://github.com/mainsail-crew/MainsailOS/pull/361))
+- Bump version to v3.0.0
+
 ## [2.2.2](https://github.com/mainsail-crew/MainsailOS/releases/tag/2.2.2) - 2025-10-03
 ### Bug Fixes and Improvements
 
