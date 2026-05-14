@@ -23,12 +23,6 @@ if [[ "${DEBIAN_FRONTEND}" != "noninteractive" ]]; then
 fi
 
 ########################################
-# hold linux kernel updates            #
-########################################
-
-#apt-mark hold "${HOLD_PKGS[@]}" > /dev/null 2>&1 || true
-
-########################################
 # Execute upgrade                      #
 ########################################
 
