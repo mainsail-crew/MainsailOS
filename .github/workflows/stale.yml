@@ -9,6 +9,7 @@ on:
     - cron: '30 1 * * *'
 
 permissions:
+  actions: write
   issues: write
   pull-requests: write
 
@@ -32,7 +33,7 @@ jobs:
             this issue. If you created this issue and no longer
             consider it to get merged, then please login to github
             and close it. Otherwise, if there is no further activity
-            on this issue, it will be automatically closedwithin the
+            on this issue, it will be automatically closed within the
             next 7 days.
             Fair wind and a following sea!
             ~ Your friendly MainsailGithubBot
